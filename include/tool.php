@@ -173,9 +173,9 @@ namespace gp{
 			global $page, $config;
 
 			if( !is_object($page) || $page->pagetype === 'admin_display' ){
-				return false;
+				return '';
 			}
-		
+
 			if( isset($page->TitleInfo['gpLayout']) ){
 				// page uses a custom layout
 				return $page->TitleInfo['gpLayout'];
@@ -400,7 +400,7 @@ namespace gp{
 			// gp_indexphp is deprecated since 4.1
 			}elseif( defined('gp_indexphp') ){
 
-				if( gp_indexphp === false ){
+				if( \gp_indexphp === false ){
 					$_SERVER['gp_rewrite'] = true;
 				}
 
@@ -657,7 +657,7 @@ namespace gp{
 			if( $nonce_action ){
 				$nonce = self::new_nonce($nonce_action);
 				if( !empty($query) ){
-					$query .= '&amp;'; //in the cases where $ampersands is false, nonces are not used
+					$query .= '&'; //in the cases where $ampersands is false, nonces are not used
 				}
 				$query .= '_gpnonce=' . $nonce;
 			}
@@ -924,7 +924,7 @@ namespace gp{
 		 *
 		 * @static
 		 * @since 2.0b1
-		 * @param $names can be either a csv (with or without space characters) or an array. Since 5.1.1
+		 * @param array|string $names can be either a csv (with or without space characters) or an array. Since 5.1.1
 		 */
 		public static function LoadComponents($names=''){
 			if( gettype($names) == 'array' ){
@@ -1116,9 +1116,9 @@ namespace gp{
 			die(
 				'<p>Notice: The site configuration did not load properly.</p>'
 				. '<p>If you are the site administrator, you can troubleshoot the problem turning '
-				. 'debugging "on" or bypass it by enabling ' . CMS_NAME . ' safe mode.</p>'
+				. 'debugging "on" or bypass it by enabling ' . \CMS_NAME . ' safe mode.</p>'
 				. '<p>More information is available in the '
-				. '<a href="' . CMS_DOMAIN . '/Docs/Main/Troubleshooting">Documentation</a>.</p>'
+				. '<a href="' . \CMS_DOMAIN . '/Docs/Main/Troubleshooting">Documentation</a>.</p>'
 				. self::ErrorBuffer(true, false)
 			);
 		}
@@ -1139,30 +1139,9 @@ namespace gp{
 		 */
 		public static function GetPagesPHP(){
 			global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $config;
-			$gp_index = array();
 
-			$pages = \gp\tool\Files::Get('_site/pages');
 
-			//update for < 2.0a3
-			if( array_key_exists('gpmenu', $pages)
-				&& array_key_exists('gptitles', $pages)
-				&& !array_key_exists('gp_titles', $pages)
-				&& !array_key_exists('gp_menu', $pages)
-				){
-
-				foreach($pages['gptitles'] as $title => $info){
-					$index = self::NewFileIndex();
-					$gp_index[$title] = $index;
-					$gp_titles[$index] = $info;
-				}
-
-				foreach($pages['gpmenu'] as $title => $level){
-					$index = $gp_index[$title];
-					$gp_menu[$index] = array('level' => $level);
-				}
-				return;
-			}
-
+			$pages			= \gp\tool\Files::Get('_site/pages');
 			$gpLayouts		= $pages['gpLayouts'];
 			$gp_index		= $pages['gp_index'];
 			$gp_titles		= $pages['gp_titles'];
@@ -1170,27 +1149,6 @@ namespace gp{
 
 			if( !is_array($gp_menu) ){
 				self::stop();
-			}
-
-			//update for 3.5,
-			if( !isset($gp_titles['special_gpsearch']) ){
-				$gp_titles['special_gpsearch'] = array();
-				$gp_titles['special_gpsearch']['label'] = 'Search';
-				$gp_titles['special_gpsearch']['type'] = 'special';
-				$gp_index['Search'] = 'special_gpsearch'; //may overwrite special_search settings
-			}
-
-			//fix the gpmenu
-			if( version_compare(\gp\tool\Files::$last_version, '3.0b1', '<') ){
-				$gp_menu = \gp\tool\Output::FixMenu($gp_menu);
-
-				// fix gp_titles for 3.0+
-				// just make sure any ampersands in the label are escaped
-				foreach($gp_titles as $key => $value){
-					if( isset($gp_titles[$key]['label']) ){
-						$gp_titles[$key]['label'] = self::GetLabelIndex($key, true);
-					}
-				}
 			}
 
 			//title related configuration settings
@@ -1202,7 +1160,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Generate a new file index
 		 * skip indexes that are just numeric
@@ -1210,7 +1167,8 @@ namespace gp{
 		public static function NewFileIndex(){
 			global $gp_index, $gp_titles, $dataDir, $config;
 
-			$num_index = 0;
+			$last_index = 'a';
+			$num_index	= 0;
 
 			/*prevent reusing old indexes */
 			if( count($gp_index) > 0 ){
@@ -1320,10 +1278,11 @@ namespace gp{
 				return $titles;
 			}
 
-			$start_level = $menu[$index]['level'];
-			$menu_ids = array_keys($menu);
-			$key = array_search($index,$menu_ids);
-			for($i = ($key+1); $i < count($menu); $i++){
+			$start_level	= $menu[$index]['level'];
+			$menu_ids		= array_keys($menu);
+			$key			= array_search($index,$menu_ids);
+			$count			= count($menu);
+			for($i = ($key+1); $i < $count; $i++){
 				$id = $menu_ids[$i];
 				$level = $menu[$id]['level'];
 
@@ -1374,7 +1333,7 @@ namespace gp{
 				$string .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 			}
 
-			$string = str_repeat($string, round($len / 2));
+			$string = str_repeat($string, (int)round($len / 2));
 			$string = str_shuffle($string);
 			$start = mt_rand(1, (strlen($string) - $len));
 
@@ -1526,7 +1485,6 @@ namespace gp{
 		 * Remove $dirPrefix and index.php from a path to get the page title
 		 *
 		 * @param string $path A full relative url like /install_dir/index.php/request_title
-		 * @param string The request_title portion of $path
 		 *
 		 */
 		public static function CleanRequest($path){
@@ -1745,8 +1703,8 @@ namespace gp{
 			\gp\tool\Output::$inline_vars['post_nonce']			= '';
 			\gp\tool\Output::$inline_vars['req_type']			= strtolower(htmlspecialchars($_SERVER['REQUEST_METHOD']));
 
-			if( gpdebugjs ){
-				if( is_string(gpdebugjs) ){
+			if( \gpdebugjs ){
+				if( is_string(\gpdebugjs) ){
 					\gp\tool\Output::$inline_vars['debugjs']	= 'send';
 				}else{
 					\gp\tool\Output::$inline_vars['debugjs']	= true;
@@ -1948,7 +1906,7 @@ namespace gp{
 			//add php and cms info
 			$debug['lang_key']		= $lang_key;
 			$debug['phpversion']	= phpversion();
-			$debug['gpversion']		= gpversion;
+			$debug['gpversion']		= \gpversion;
 			$debug['Rewrite']		= $_SERVER['gp_rewrite'];
 			$debug['Server']		= isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '';
 
@@ -1960,7 +1918,7 @@ namespace gp{
 
 			$label	= isset($langmessage[$lang_key]) ? $langmessage[$lang_key] : $lang_key;
 
-			return ' <span>' . $label . ' <a href="' . debug_path . '?data=' . $debug . '" target="_blank">More Info...</a></span>';
+			return ' <span>' . $label . ' <a href="' . \debug_path . '?data=' . $debug . '" target="_blank">More Info...</a></span>';
 		}
 
 

@@ -29,6 +29,7 @@ namespace gp{
 		public $language;
 
 		public $file_stats			= array();
+		public $fileModTime			= 0;
 
 		//layout & theme
 		public $theme_name			= false;
@@ -58,8 +59,6 @@ namespace gp{
 		public $css_admin			= array();
 
 
-		/* @deprecated 3.0 */
-		public $fileModTime			= 0;
 
 		/* @deprecated 3.5 */
 		public $theme_is_addon		= false;

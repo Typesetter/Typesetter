@@ -614,7 +614,7 @@ namespace gp\admin{
 				);
 			}
 
-			if( defined('gpdebug') && \gpdebug ){
+			if( \gpdebug ){
 				$label = 'gpdebug is enabled';
 				$debug_note[] = array(
 					'type'		=> 'superuser',
@@ -625,7 +625,7 @@ namespace gp\admin{
 				);
 			}
 
-			if( defined('create_css_sourcemaps') && \create_css_sourcemaps ){
+			if( \create_css_sourcemaps ){
 				$label = 'create_css_sourcemaps is enabled';
 				$debug_note[] = array(
 					'type'		=> 'superuser',

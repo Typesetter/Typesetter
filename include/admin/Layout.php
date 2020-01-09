@@ -1059,7 +1059,6 @@ class Layout extends \gp\admin\Addon\Install{
 			uksort($this->avail_addons,'strnatcasecmp');
 		}
 
-		$this->avail_count = count($this->avail_addons);
 	}
 
 
@@ -1380,7 +1379,7 @@ class Layout extends \gp\admin\Addon\Install{
 			//remote version
 			}elseif( gp_remote_themes && isset(\gp\admin\Tools::$new_versions[$addon_id]) && version_compare(\gp\admin\Tools::$new_versions[$addon_id]['version'],$version,'>') ){
 				$version_info = \gp\admin\Tools::$new_versions[$addon_id];
-				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; ('.CMS_READABLE_DOMAIN.')';
+				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (' . \CMS_READABLE_DOMAIN . ')';
 				echo '<div class="gp_notice">';
 				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=RemoteInstall&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
 				echo '</div>';
@@ -1828,9 +1827,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//remove from $gp_titles
 		foreach($gp_titles as $title => $titleInfo){
-			if( isset($titleThemes[$title]) ){
-				continue;
-			}
+
 			if( empty($titleInfo['gpLayout']) ){
 				continue;
 			}

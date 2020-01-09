@@ -8,7 +8,7 @@ class PreferencesTest extends \gptest_bootstrap{
 	 * Test changing the admin user's password
 	 *
 	 */
-	function testChangePassword(){
+	public function testChangePassword(){
 
 		$this->Login();
 
@@ -67,7 +67,7 @@ class PreferencesTest extends \gptest_bootstrap{
 	 * Helper function for changing password from old to new
 	 *
 	 */
-	function ChangePreferences( $params, $check_field = 'password' ){
+	public function ChangePreferences( $params ){
 
 		$params += [
 			'verified'		=> \gp\tool::new_nonce('post', true),
@@ -82,7 +82,7 @@ class PreferencesTest extends \gptest_bootstrap{
 		$this->PostRequest('Admin/Preferences',$params);
 	}
 
-	function GetUserInfo(){
+	public function GetUserInfo(){
 		$users				= \gp\tool\Files::Get('_site/users');
 		$this->assertArrayHasKey(static::user_name, $users);
 

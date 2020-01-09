@@ -29,7 +29,7 @@ class Addons extends \gp\admin\Addon\Install{
 	public $dataFile;
 
 
-	function __construct( $args ){
+	public function __construct( $args ){
 		global $langmessage;
 
 		parent::__construct($args);
@@ -42,7 +42,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 	}
 
-	function RunScript(){
+	public function RunScript(){
 
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
@@ -102,7 +102,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Remove unused code folders created by incomplete addon installations
 	 *
 	 */
-	function CleanAddonFolder(){
+	public function CleanAddonFolder(){
 		global $config;
 
 
@@ -137,7 +137,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Get a list of folders within $dir that
 	 *
 	 */
-	function GetCleanFolders($relative){
+	public function GetCleanFolders($relative){
 		global $dataDir;
 
 		$dir = $dataDir.$relative;
@@ -166,7 +166,7 @@ class Addons extends \gp\admin\Addon\Install{
 
 
 
-	function GadgetVisibility($cmd){
+	public function GadgetVisibility($cmd){
 		global $config, $langmessage;
 
 		$this->page->ajaxReplace = array();
@@ -197,7 +197,7 @@ class Addons extends \gp\admin\Addon\Install{
 		$this->page->ajaxReplace[] = array('replace','.gadget_link_'.md5($gadget),$link);
 	}
 
-	function GadgetLink($name){
+	public function GadgetLink($name){
 		global $config, $langmessage;
 		$info =& $config['gadgets'][$name];
 		if( !$info ){
@@ -217,7 +217,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Addon Data
 	 *
 	 */
-	function GetData(){
+	public function GetData(){
 		global $dataDir,$config;
 
 		//new
@@ -249,7 +249,7 @@ class Addons extends \gp\admin\Addon\Install{
 	/**
 	 * Prompt User about uninstalling an addon
 	 */
-	function Uninstall(){
+	public function Uninstall(){
 		global $config,$langmessage;
 
 		echo '<div class="inline_box">';
@@ -280,7 +280,7 @@ class Addons extends \gp\admin\Addon\Install{
 		echo '</div>';
 	}
 
-	function Confirm_Uninstall(){
+	public function Confirm_Uninstall(){
 
 		$addon =& $_POST['addon'];
 
@@ -294,7 +294,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Display addon details
 	 *
 	 */
-	function ShowAddon($encoded_key){
+	public function ShowAddon($encoded_key){
 		global $config, $langmessage;
 
 		$addon_key	= \gp\admin\Tools::decode64($encoded_key);
@@ -347,7 +347,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Get a list of available addons
 	 *
 	 */
-	function GetAvailAddons(){
+	public function GetAvailAddons(){
 		global $dataDir;
 
 		$addonPath			= $dataDir.'/addons';
@@ -386,10 +386,6 @@ class Addons extends \gp\admin\Addon\Install{
 				}
 			}
 
-
-			if( !$info['upgrade_key'] ){
-				$this->avail_count++;
-			}
 		}
 
 		if( gp_unique_addons ){
@@ -404,7 +400,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Filter the list of addons so we only have a list of the most recent versions
 	 *
 	 */
-	protected function FilterUnique($addons, $versions){
+	protected static function FilterUnique($addons, $versions){
 
 		$temp = array();
 		foreach($addons as $key => $info){
@@ -428,9 +424,9 @@ class Addons extends \gp\admin\Addon\Install{
 	}
 
 
-	function Instructions(){
+	public function Instructions(){
 		echo '<hr/>';
-		echo '<a href="'.CMS_DOMAIN.'/Docs/Plugins">Plugin Documentation</a>';
+		echo '<a href="' . \CMS_DOMAIN . '/Docs/Plugins">Plugin Documentation</a>';
 	}
 
 
@@ -438,77 +434,10 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Show installed and locally available plugins
 	 *
 	 */
-	function Select(){
+	public function Select(){
 		$this->ShowHeader();
 		$this->ShowInstalled();
 		$this->Instructions();
-	}
-
-	function ShowAvailable(){
-		global $langmessage;
-
-		$this->ShowHeader();
-
-		echo '<div class="nodisplay" id="gpeasy_addons"></div>';
-
-		if( count($this->avail_addons) == 0 ){
-			//echo ' -empty- ';
-		}else{
-			echo '<table class="bordered full_width">';
-			echo '<tr><th>';
-			echo $langmessage['name'];
-			echo '</th><th>';
-			echo $langmessage['version'];
-			echo '</th><th>';
-			echo $langmessage['options'];
-			echo '</th><th>';
-			echo $langmessage['description'];
-			echo '</th></tr>';
-
-			$avail_addons = $this->avail_addons;
-
-			// sort available addons by name
-			uasort($avail_addons, function($a, $b) {
-				return strnatcmp($a['Addon_Name'], $b['Addon_Name']);
-			});
-
-			$i=0;
-			foreach($avail_addons as $folder => $info ){
-
-				if( $info['upgrade_key'] ){
-					continue;
-				}
-
-				$info += array('About' => '');
-
-				echo '<tr class="' . ($i % 2 ? 'even' : '') . '"><td>';
-				echo str_replace(' ', '&nbsp;', $info['Addon_Name']);
-				echo '<br/><em class="admin_note">/addons/' . $folder . '</em>';
-				echo '</td><td>';
-				echo $info['Addon_Version'];
-				echo '</td><td>';
-				echo \gp\tool::Link(
-					'Admin/Addons',
-					$langmessage['Install'],
-					'cmd=LocalInstall&source=' . $folder,
-					array('data-cmd' => 'cnreq')
-				);
-				echo '</td><td>';
-				echo $info['About'];
-				if( isset($info['Addon_Unique_ID']) && is_numeric($info['Addon_Unique_ID']) ){
-					echo '<br/>';
-					echo $this->DetailLink('plugins', $info['Addon_Unique_ID'], 'More Info...');
-				}
-				echo '</td></tr>';
-				$i++;
-			}
-			echo '</table>';
-
-		}
-
-		$this->InvalidFolders();
-		$this->Instructions();
-
 	}
 
 
@@ -516,7 +445,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Show installed addons
 	 *
 	 */
-	function ShowInstalled(){
+	public function ShowInstalled(){
 
 		$show = $this->GetDisplayInfo();
 
@@ -534,7 +463,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Get addon configuration along with upgrade info
 	 *
 	 */
-	function GetDisplayInfo(){
+	public function GetDisplayInfo(){
 		global $config;
 
 		//show installed addons
@@ -572,7 +501,7 @@ class Addons extends \gp\admin\Addon\Install{
 	}
 
 
-	function PluginPanelGroup($addon_key,$info){
+	public function PluginPanelGroup($addon_key,$info){
 		global $langmessage, $gpLayouts;
 
 		$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
@@ -602,7 +531,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Plugin Upgrade links
 	 *
 	 */
-	function UpgradeLinks($addon_config){
+	public function UpgradeLinks($addon_config){
 		global $langmessage;
 
 		//upgrade local
@@ -637,7 +566,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Plugin option links
 	 *
 	 */
-	function OptionLinks($addon_key, $addon_config, $format = false){
+	public function OptionLinks($addon_key, $addon_config, $format = false){
 		global $langmessage, $gpLayouts;
 
 		$list	= array();
@@ -675,7 +604,7 @@ class Addons extends \gp\admin\Addon\Install{
 				$list[] = '<span>'.$label. '</span>';
 			}
 
-			echo $this->FormatList($list,$langmessage['options'],$format);
+			$this->FormatList($list,$langmessage['options'],$format);
 			return;
 		}
 
@@ -694,7 +623,7 @@ class Addons extends \gp\admin\Addon\Install{
 			$list[] = $item;
 		}
 
-		echo $this->FormatList($list,$langmessage['layouts'],$format);
+		$this->FormatList($list,$langmessage['layouts'],$format);
 	}
 
 
@@ -702,7 +631,7 @@ class Addons extends \gp\admin\Addon\Install{
 	 * Install Local Packages
 	 *
 	 */
-	function LocalInstall(){
+	public function LocalInstall(){
 		global $dataDir, $langmessage;
 
 		$_REQUEST				+= array('source'=>'');

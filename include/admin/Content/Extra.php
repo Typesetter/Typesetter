@@ -10,11 +10,15 @@ class Extra extends \gp\Page\Edit{
 	public $areas = array();
 	protected $page;
 	protected $area_info;
+	protected $vis;
 
 
 	public function __construct($args){
 		global $dataDir;
-		$this->page = $args['page'];
+
+		if( array_key_exists('page',$args) ){
+			$this->page = $args['page'];
+		}
 
 		$this->folder = $dataDir . '/data/_extra';
 		$this->SetVars();
@@ -113,7 +117,6 @@ class Extra extends \gp\Page\Edit{
 	}
 
 
-
 	/**
 	 * Add $file to the list of areas
 	 *
@@ -122,17 +125,17 @@ class Extra extends \gp\Page\Edit{
 
 		$title = self::AreaExists($title);
 
-		if ($title == false){
+		if( $title === false ){
 			return;
 		}
 
-		$this->areas[$title] = array();
-		$this->areas[$title]['title'] = $title;
-		$this->areas[$title]['file_path'] = $this->folder . '/' . $title . '/page.php';
-		$this->areas[$title]['draft_path'] = $this->folder . '/' . $title . '/draft.php';
-		$this->areas[$title]['legacy_path'] = $this->folder . '/' . $title . '.php';
+		$this->areas[$title] = [
+								'title'			=> $title,
+								'file_path'		=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/page.php'),
+								'draft_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/draft.php'),
+								'legacy_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '.php'),
+							];
 	}
-
 
 
 	/**
@@ -389,7 +392,7 @@ class Extra extends \gp\Page\Edit{
 
 		echo '<h2>';
 		echo \gp\tool::Link('Admin/Extra', $langmessage['theme_content']);
-		echo ' &#187; ' . str_replace('_', ' ', $this->title) . '</h2>';
+		echo ' &#187; ' . str_replace('_', ' ', $this->title);
 		echo '</h2>';
 		echo '<hr/>';
 
@@ -472,7 +475,7 @@ class Extra extends \gp\Page\Edit{
 	}
 
 	public function EditVisibility(){
-		echo ' <style> 
+		echo ' <style>
 				.tablesorter-header-inner{
 				width:90%;
 				}
@@ -584,15 +587,15 @@ class Extra extends \gp\Page\Edit{
 			};
 		})
 		$("#check_all").click(function(){
-			
+
 			if($(this).prop("checked") == true) {
 				$(".check_page").prop("checked", true);
 			} else {
 				$(".check_page").prop("checked", false);
 			}
-			
+
 		})
-		
+
 		';
 	}
 

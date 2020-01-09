@@ -46,6 +46,7 @@ class About{
 		echo '<p><a href="https://www.opensourcecms.com/typesetter-cms/" target="_blank">OpensourceCMS.com</a></p>';
 
 
+		$projects					= [];
 		$projects['ckEditor']		= 'ckeditor.com/ckeditor-4';
 		$projects['elFinder']		= 'studio-42.github.io/elFinder';
 		$projects['ColorBox']		= 'www.jacklmoore.com/colorbox';

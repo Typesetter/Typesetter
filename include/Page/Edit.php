@@ -457,16 +457,6 @@ class Edit extends \gp\Page{
 	public function SaveSections(){
 		global $langmessage, $dataDir;
 
-		/*
-		 * FIX for too many sections issue -- start
-		 * with large amounts of sections, we may exceed max_post_values
-		 * which causes an error and prevents further editing of the page.
-		 * sending all the section data in a single JSON string
-		 * instead of parametrizing all values will address this issue.
-		 * the current implementation should be considered as a hot fix.
-		 * it should eventually be done more elegant.
-		 * See its client counterpart in /include/js/inline_edit/manage_sections.js line 87-129
-		 */
 		if( isset($_POST['sections_json']) ){
 			// section data is posted as JSON
 			$section_data = json_decode(rawurldecode($_POST['sections_json']), true);
@@ -474,9 +464,6 @@ class Edit extends \gp\Page{
 			$_POST += $section_data;
 			unset($_POST['sections_json']);
 		}
-		/*
-		 * FIX for too many sections issue -- end
-		 */
 
 		$this->ajaxReplace		= array();
 		$original_sections		= $this->file_sections;
@@ -1506,25 +1493,8 @@ class Edit extends \gp\Page{
 			$section_data['attributes']['data-gp-area-id']		= $edit_index;
 
 			//included page target
-			$include_link = '';
-			if( $section_data['type'] == 'include' && isset($section_data['include_type']) ){
-				// msg("section_data:" . pre($section_data));
-				switch( $section_data['include_type'] ){
-					case false: // include is a page
-						$include_link = \gp\tool::Link($section_data['content'], $langmessage['view/edit_page']);
-						break;
-					case 'extra':
-						$include_link = \gp\tool::Link(
-							'Admin/Extra',
-							$langmessage['edit'] . ' &raquo; ' . htmlspecialchars($section_data['content']), // $langmessage['theme_content']
-							'cmd=EditExtra&file=' . rawurlencode($section_data['content'])
-						);
-						break;
-					case 'gadget':
-					default:
-						break;
-				}
-			}
+			$include_link = self::IncludeLink($section_data);
+
 
 			//section control links
 			if( $section_data['type'] != 'wrapper_section' ){
@@ -1588,6 +1558,33 @@ class Edit extends \gp\Page{
 		return $content;
 	}
 
+	/**
+	 * Return a link to the included page or extra area
+	 *
+	 * @return string
+	 *
+	 */
+	public static function IncludeLink($section_data){
+		global $langmessage;
+
+		if( $section_data['type'] != 'include' || !array_key_exists('include_type',$section_data) ){
+			return '';
+		}
+
+		if( isset($section_data['index']) ){
+			return \gp\tool::Link($section_data['content'], $langmessage['view/edit_page']);
+		}
+
+		if( $section_data['include_type'] == 'extra' ){
+			return \gp\tool::Link(
+				'Admin/Extra',
+				$langmessage['edit'] . ' &raquo; ' . htmlspecialchars($section_data['content']), // $langmessage['theme_content']
+				'cmd=EditExtra&file=' . rawurlencode($section_data['content'])
+			);
+		}
+
+		return '';
+	}
 
 
 	public function GetSectionForClipboard(&$section_num){

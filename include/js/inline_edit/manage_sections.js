@@ -1154,19 +1154,47 @@
 
 		//available classes
 		html += '<div id="gp_avail_classes">';
-		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th colspan="2">' + gplang.AvailableClasses + '</th></tr></thead>';
-		html += '<tbody>';
-		for( var i=0; i < gp_avail_classes.length; i++ ){
-			html += '<tr><td>';
-			html += ClassSelect(gp_avail_classes[i].names, current_classes);
-			html += '</td><td class="sm text-muted">';
-			html += gp_avail_classes[i].desc;
-			html += '</td></tr>';
-		}
+		/*
+			html += '<table class="bordered full_width">';
+			html += '<thead><tr><th colspan="2">' + gplang.AvailableClasses + '</th></tr></thead>';
+			html += '<tbody>';
+			for( var i=0; i < gp_avail_classes.length; i++ ){
+				html += '<tr><td>';
+				html += ClassSelect(gp_avail_classes[i].names, current_classes);
+				html += '</td><td class="sm text-muted">';
+				html += gp_avail_classes[i].desc;
+				html += '</td></tr>';
+			}
 
-		html += '</table>';
-		html += '</tbody>';
+			html += '</table>';
+			html += '</tbody>';
+			html += '</div>';
+
+			html += '<p>';
+			html += '<input type="button" name="" value="' + gplang.up + '" class="gpsubmit" data-cmd="UpdateAttrs" /> ';
+			html += '<input type="button" name="" value="' + gplang.ca + '" class="gpcancel" data-cmd="admin_box_close" />';
+			html += '</p>';
+
+			html += '</form></div>';
+			var $html = $(html);
+		*/
+
+		html += '<table class="bordered full_width">';
+		html += '<thead><tr><th>' + gplang.AvailableClasses + '</th></tr></thead>';
+		html += '<tbody><tr><td>';
+
+		html += '<div class="avail_classes_container">';
+		for( var i=0; i < gp_avail_classes.length; i++ ){
+			html += '<div class="avail_classes_col">';
+			html += ClassSelect(gp_avail_classes[i].names, current_classes);
+			html += '</div>';
+			html += '<div class="avail_classes_desc">' + gp_avail_classes[i].desc + '<span x-arrow="true" class="popover_arrow"></span></div>';
+		}
+		html += '</div>';
+
+		html += '</td></tr>';
+		html += '</tbody></table>';
+
 		html += '</div>';
 
 		html += '<p>';
@@ -1177,11 +1205,50 @@
 		html += '</form></div>';
 		var $html = $(html);
 
-		var selects = $html.find('select').on('change input', function(){
-			var $checkbox = $(this).closest('label').find('.gpcheck');
-			$checkbox.prop('checked', true);
-			$gp.inputs.ClassChecked.apply($checkbox);
-		});
+
+		var $cols = $html.find('.avail_classes_col')
+			.on('mouseenter', function(){
+				var $popup = $(this).next('.avail_classes_desc:not(:empty)');
+
+				if( $popup.text().trim() == '' ){
+					// empty / no description provided
+					return;
+				}
+
+				$popup.fadeIn(150);
+
+				var popup = new Popper(this, $popup.get(0), {
+					placement : 'auto',
+					onCreate : function(){
+						// console.log('Popper.onCreate() called with arguments: ', arguments);
+					},
+					modifiers : {
+						arrow : {
+							enabled : true
+						}
+						/*
+						, offset : {
+							enabled: true,
+							offset: '24px,24px'
+						}
+						*/
+				 	}
+				});
+				// console.log('popper created');
+			})
+			.on('mouseleave', function(){
+				var $popup = $(this).next('.avail_classes_desc:not(:empty)')
+					.fadeOut(150);
+			});
+
+
+		var $selects = $html.find('select')
+			.on('change input', function(){
+				var $checkbox = $(this).closest('label').find('.gpcheck');
+				$checkbox.prop('checked', true);
+				$gp.inputs.ClassChecked.apply($checkbox);
+			});
+
 
 		$gp.AdminBoxC( $html );
 
@@ -1283,7 +1350,7 @@
 		}else{
 			tmp.removeClass(classNames);
 		}
-		input.val(tmp.attr('class'));
+		input.val(tmp.attr('class')).trigger('change');
 		tmp.remove();
 	}
 

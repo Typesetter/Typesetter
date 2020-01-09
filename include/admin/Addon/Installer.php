@@ -127,6 +127,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Remove an addon from the site configuration
 	 * Delete code folders if needed
 	 *
+	 * @return bool
 	 */
 	public function Uninstall( $addon ){
 		global $config, $langmessage, $gp_titles, $gp_menu, $gp_index;
@@ -136,7 +137,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		$addon_config = \gp\tool\Plugins::GetAddonConfig($addon);
 		if( !$addon_config ){
 			$this->message($langmessage['OOPS'].' (Already uninstalled)');
-			return;
+			return false;
 		}
 
 		unset($config['addons'][$addon]);
@@ -447,7 +448,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 		if( !$this->ini_contents ){
 			$error = $langmessage['Ini_Error'].' '.$langmessage['Ini_Submit_Bug'];
-			$error = preg_replace('#href="[^"]+"#','href="'.CMS_DOMAIN.'/Docs/Addon.ini"',$error);
+			$error = preg_replace('#href="[^"]+"#','href="' . \CMS_DOMAIN . '/Docs/Addon.ini"',$error);
 			return false;
 		}
 
@@ -464,7 +465,7 @@ class Installer extends \gp\admin\Addon\Tools{
 		}
 
 		// Check Versions
-		if( !empty($this->ini_contents['min_gpeasy_version']) && version_compare($this->ini_contents['min_gpeasy_version'], gpversion,'>') ){
+		if( !empty($this->ini_contents['min_gpeasy_version']) && version_compare($this->ini_contents['min_gpeasy_version'], \gpversion,'>') ){
 			$error = sprintf($langmessage['min_version'],$this->ini_contents['min_gpeasy_version']).' '.$langmessage['min_version_upgrade'];
 			return false;
 		}
@@ -762,7 +763,7 @@ class Installer extends \gp\admin\Addon\Tools{
 	 * Recursive copy folder
 	 *
 	 */
-	public function CopyAddonDir($fromDir,$toDir){
+	public static function CopyAddonDir($fromDir,$toDir){
 
 		if( !\gp\tool\Files::CheckDir($toDir) ){
 			return 'Copy failed: '.$fromDir.' to '.$toDir;
@@ -828,7 +829,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 	/**
 	 * Get a stored order/purchase id
-	 * @param int addon id
+	 * @param int $id addon id
 	 *
 	 */
 	public function GetOrder($id){
@@ -1006,9 +1007,7 @@ class Installer extends \gp\admin\Addon\Tools{
 
 
 		//prepare a list with all titles converted to lower case
-		$lower_titles = array_keys($gp_index);
-		$lower_titles = array_combine($lower_titles, $lower_titles);
-		$lower_titles = array_change_key_case($lower_titles, CASE_LOWER);
+		$lower_titles = array_change_key_case($gp_index, CASE_LOWER);
 
 
 		//add new links ... similar to AddToConfig()

@@ -458,10 +458,9 @@ namespace gp\admin\Content{
 						$query_string,
 						array(
 							'class'=>'delete fa fa-trash gpconfirm',
-							'data-cmd'=>'gpajax',
+							'data-cmd'=>'postlink',
 							'title'=>$langmessage['delete_confirm']
-						),
-						'delete'
+						)
 					)
 					. '</span>'
 					. '</div>';
@@ -515,7 +514,6 @@ namespace gp\admin\Content{
 			}
 
 
-			$upload_moved = false;
 			$fName = $this->SanitizeName($fName);
 			$from = $_FILES['userfiles']['tmp_name'][$key];
 
@@ -526,17 +524,12 @@ namespace gp\admin\Content{
 			$fName = $this->WindowsName($fName);
 			$to = $this->FixRepeatNames($fName);
 
-			if( $upload_moved ){
-				if( !rename($from,$to) ){
-					$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (Rename Failed from '.$to.')', $fName);
-					return false;
-				}
-			}elseif( !move_uploaded_file($from,$to) ){
+			if( !move_uploaded_file($from,$to) ){
 				$this->errorMessages[] = sprintf($langmessage['UPLOAD_ERROR'].' (Move Upload Failed)', $fName);
 				return false;
 			}
 
-			@chmod( $to, 0666 );
+			@chmod( $to, gp_chmod_file);
 
 			//for images
 			$file_type = self::GetFileType($fName);
@@ -675,44 +668,48 @@ namespace gp\admin\Content{
 		/**
 		 * Build a list of allowed file extensions
 		 *
+		 * @return array
 		 */
 		public static function AllowedExtensions(){
 			global $upload_extensions_allow, $upload_extensions_deny, $config;
-			static $allowed_types = false;
+			static $allowed_types;
 
-			if( $allowed_types === false ){
+			if( is_array($allowed_types) ){
+				return $allowed_types;
+			}
 
+			$allowed_types = array();
+
+			if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
 				$allowed_types = array();
-
-				if( is_string($upload_extensions_deny) && strtolower($upload_extensions_deny) === 'all' ){
-					$allowed_types = array();
-				}else{
-					$allowed_types = array(
-						/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp',
-						/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv',
-						/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
-						/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'webmanifest', 'xls', 'xlsx', 'xml', 'xsl',
-						/** Fonts **/		'eot', 'otf', 'ttf', 'woff', 'woff2',
-					);
-					if( !empty($config['allow_svg_upload']) ){
-						$allowed_types[] = 'svg';
-						$allowed_types[] = 'svgz';
-					}
-				}
-
-				if( is_array($upload_extensions_allow) ){
-					$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
-					$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
-					$allowed_types				= array_merge($allowed_types,$upload_extensions_allow);
-				}
-				if( is_array($upload_extensions_deny) ){
-					$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
-					$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
-					$allowed_types				= array_diff($allowed_types,$upload_extensions_deny);
+			}else{
+				$allowed_types = array(
+					/** Images **/		'bmp', 'gif', 'ico', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp',
+					/** Media **/		'aiff', 'asf', 'avi', 'fla', 'flac', 'flv', 'm4v', 'mid', 'mov', 'mp3', 'mp4', 'mpc', 'mpeg', 'mpg', 'ogg', 'oga', 'ogv', 'opus', 'qt', 'ram', 'rm', 'rmi', 'rmvb', 'swf', 'wav', 'wma', 'webm', 'wmv',
+					/** Archives **/	'7z', 'bz', 'gz', 'gzip', 'rar', 'tar', 'tgz', 'zip',
+					/** Text/Docs **/	'css', 'csv', 'doc', 'docx', 'htm', 'html', 'js', 'json', 'less', 'md', 'ods', 'odt', 'pages', 'pdf', 'ppt', 'pptx', 'rtf', 'txt', 'scss', 'sxc', 'sxw', 'vsd', 'webmanifest', 'xls', 'xlsx', 'xml', 'xsl',
+					/** Fonts **/		'eot', 'otf', 'ttf', 'woff', 'woff2',
+				);
+				if( !empty($config['allow_svg_upload']) ){
+					$allowed_types[] = 'svg';
+					$allowed_types[] = 'svgz';
 				}
 			}
 
-			return \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
+			if( is_array($upload_extensions_allow) ){
+				$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
+				$allowed_types				= array_merge($allowed_types,$upload_extensions_allow);
+			}
+			if( is_array($upload_extensions_deny) ){
+				$upload_extensions_allow	= array_map('trim',$upload_extensions_allow);
+				$upload_extensions_allow	= array_map('strtolower',$upload_extensions_allow);
+				$allowed_types				= array_diff($allowed_types,$upload_extensions_deny);
+			}
+
+			$allowed_types = \gp\tool\Plugins::Filter('AllowedTypes',array($allowed_types));
+
+			return $allowed_types;
 		}
 
 
@@ -745,8 +742,8 @@ namespace gp\admin\Content{
 				return false;
 			}
 
-			if( \gp\tool\Nonce::Verify('delete') === false ){
-				message($langmessage['OOPS'].' (Invalid Nonce)');
+			if( $_SERVER['REQUEST_METHOD'] != 'POST'){
+				msg($langmessage['OOPS'].' (Not POST)'); // using data-cmd="postlink" instead of gpajax
 				return;
 			}
 

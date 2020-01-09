@@ -192,8 +192,8 @@ namespace gp\admin{
 																	);
 
 			if( gp_remote_themes ){
-				$scripts['Admin_Theme_Content/Remote']	= array(	'class'		=> '\\gp\\admin\\Layout',
-																	'method'	=> 'RemoteBrowse',
+				$scripts['Admin_Theme_Content/Remote']	= array(	'class'		=> '\\gp\\admin\\Layout\\Remote',
+																	'method'	=> 'DefaultDisplay',
 																	'label' 	=> $langmessage['Search']
 																					. ' (' . $langmessage['layouts'] . ')',
 																	);
@@ -272,15 +272,15 @@ namespace gp\admin{
 																'label' 	=> $langmessage['plugins'],
 													);
 
-			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\\gp\\admin\\Addons',
-																'method'	=> 'ShowAvailable',
+			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\\gp\\admin\\Addon\\Available',
+																'method'	=> 'DefaultDisplay',
 																'label' 	=> $langmessage['Available']
 																				. ' (' . $langmessage['plugins'] . ')',
 													);
 
 			if( gp_remote_plugins ){
-				$scripts['Admin/Addons/Remote']		= array(	'class'		=> '\\gp\\admin\\Addons',
-																'method'	=> 'RemoteBrowse',
+				$scripts['Admin/Addons/Remote']		= array(	'class'		=> '\\gp\\admin\\Addon\\Remote',
+																'method'	=> 'DefaultDisplay',
 																'label'		=> $langmessage['Search']
 																				. ' (' . $langmessage['plugins'] . ')',
 													);

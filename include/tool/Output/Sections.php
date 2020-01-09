@@ -301,9 +301,11 @@ namespace gp\tool\Output{
 			global $langmessage, $gp_index;
 
 			if( isset($data['index']) ){
-				$requested = \gp\tool::IndexToTitle($data['index']);
+				$requested	= \gp\tool::IndexToTitle($data['index']);
+				$type		= \gp\tool::SpecialOrAdmin($requested);
 			}else{
-				$requested = $data['content'];
+				$requested	= $data['content'];
+				$type		= $data['include_type'];
 			}
 
 			if( empty($requested) ){
@@ -311,17 +313,10 @@ namespace gp\tool\Output{
 			}
 
 			if( self::$title == $requested ){
-				if( \gp\tool::LoggedIn() ){
-					msg('Infinite loop detected: '.htmlspecialchars($requested) );
-				}
+				debug('Infinite loop detected: '.htmlspecialchars($requested) );
 				return '';
 			}
 
-			if( isset($data['include_type']) ){
-				$type = $data['include_type'];
-			}else{
-				$type = \gp\tool::SpecialOrAdmin($requested);
-			}
 
 			switch($type){
 				case 'gadget':

@@ -23,7 +23,7 @@ namespace gp\tool{
 			global $config, $dataDir;
 
 			$src_img = self::getSrcImg($img_path); //memory usage before and after this call are small 1093804 vs 1094616
-			if( !$src_img ){
+			if( $src_img === false ){
 				return false;
 			}
 
@@ -81,7 +81,7 @@ namespace gp\tool{
 			$new_w = $new_h = $size;
 
 			$src_img = self::getSrcImg($source_path,$type_file);
-			if( !$src_img ){
+			if( $src_img === false ){
 				return false;
 			}
 
@@ -135,7 +135,7 @@ namespace gp\tool{
 			}
 
 			$src_img = self::getSrcImg($source_path,$img_type);
-			if( !$src_img ){
+			if( $src_img === false ){
 				return false;
 			}
 
@@ -152,10 +152,10 @@ namespace gp\tool{
 
 			if( $keep_aspect_ratio ){
 				// scale to fit into new width/height
-				if( $old_aspect_ratio > $new_aspect_ratio ){ 
+				if( $old_aspect_ratio > $new_aspect_ratio ){
 					// old img is wider than new one
 					$new_h = round($new_h / $old_aspect_ratio * $new_aspect_ratio);
-				}else{ 
+				}else{
 					// old img is narrower than new one
 					$new_w = round($new_w / $new_aspect_ratio * $old_aspect_ratio);
 				}
@@ -301,7 +301,7 @@ namespace gp\tool{
 
 
 		/**
-		* Return pixel value from value+units 
+		* Return pixel value from value+units
 		*/
 		static function getPxVal($size) {
 			$map = array('px'=>1, 'pt'=>1.3333333, 'mm'=>3.7795276, 'ex'=>8, 'em'=>16, 'pc'=>16, 'cm'=>37.795276, 'in'=>96);
@@ -418,7 +418,7 @@ namespace gp\tool{
 		/**
 		 * Save the GD image ($src_img) to the desired location ($dest_path) with the sizing arguments
 		 *
-		 * $src_path is required for ICC/meta data 
+		 * $src_path is required for ICC/meta data
 		 * The method will still work w/o it but will not retain ICC/meta data (for possible plugin calls)
 		 *
 		 */
@@ -462,7 +462,7 @@ namespace gp\tool{
 								$debug_metadata .= $mk . ' : ' . $mv . "\n";
 							}
 						}
-						\gp\tool\Files::Save($debug_metadata_file, $debug_metadata); 
+						\gp\tool\Files::Save($debug_metadata_file, $debug_metadata);
 						*/
 					}
 				}

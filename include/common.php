@@ -36,6 +36,8 @@ gp_defined('gp_data_type','.php');
 gp_defined('gp_default_theme','Bootswatch_Scss/Flatly');
 gp_defined('gp_allowed_fatal_errors', 10 );		// number of fatal errors to allow before disabling a component
 gp_defined('gp_prefix_urls',false);				// Since 5.1.1
+gp_defined('create_css_sourcemaps',false);
+gp_defined('load_css_in_body',false);
 
 
 //gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');
@@ -51,7 +53,7 @@ gp_defined('gp_random',\gp\tool::RandomString());
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
-@ini_set( 'html_errors', false );
+@ini_set( 'html_errors', "0" );
 
 if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');

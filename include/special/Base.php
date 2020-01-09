@@ -9,6 +9,8 @@ class Base extends \gp\Base{
 	protected $page;
 
 	public function __construct($args){
-		$this->page	= $args['page'];
+		if( array_key_exists('page',$args) ){
+			$this->page	= $args['page'];
+		}
 	}
 }

@@ -702,7 +702,7 @@ namespace gp\tool{
 				}
 
 				if( !file_exists($full_path) ){
-					self::ExecError(CMS_NAME . ' Error: Addon hook script doesn\'t exist.', $info, 'script');
+					self::ExecError(\CMS_NAME . ' Error: Addon hook script doesn\'t exist.', $info, 'script');
 					return $args;
 				}
 
@@ -735,7 +735,7 @@ namespace gp\tool{
 		private static function ExecClass($has_script, $exec_class, $info, $args){
 
 			if( !class_exists($exec_class) ){
-				self::ExecError(CMS_NAME . ' Error: Addon class doesn\'t exist.', $info, 'class');
+				self::ExecError(\CMS_NAME . ' Error: Addon class doesn\'t exist.', $info, 'class');
 				return $args;
 			}
 
@@ -745,7 +745,7 @@ namespace gp\tool{
 				if( method_exists($object, $info['method']) ){
 					$args[0] = call_user_func_array(array($object, $info['method']), $args );
 				}elseif( $has_script ){
-					self::ExecError(CMS_NAME . ' Error: Addon hook method doesn\'t exist (1).', $info, 'method');
+					self::ExecError(\CMS_NAME . ' Error: Addon hook method doesn\'t exist (1).', $info, 'method');
 				}
 			}
 			return $args;
@@ -777,7 +777,7 @@ namespace gp\tool{
 				$args[0] = call_user_func_array($callback,$args);
 
 			}elseif( $has_script ){
-				self::ExecError(CMS_NAME.' Error: Addon hook method doesn\'t exist (2).', $info, 'method');
+				self::ExecError(\CMS_NAME.' Error: Addon hook method doesn\'t exist (2).', $info, 'method');
 			}
 
 			return $args;
@@ -1084,13 +1084,7 @@ namespace gp\tool{
 				)
 			);
 
-			$include_link = '';
-			if( $extra_content[0]['type'] == 'include' && isset($extra_content[0]['include_type']) && $extra_content[0]['include_type'] == false ){
-				$include_link = \gp\tool::Link(
-					$extra_content[0]['content'],
-					$langmessage['view/edit_page']
-				);
-			}
+			$include_link = \gp\Page\Edit::IncludeLink($extra_content[0]);
 
 			ob_start();
 			echo '<span class="nodisplay" id="ExtraEditLnks' . $edit_index . '">';
@@ -1210,7 +1204,6 @@ namespace gp\tool{
 			$container_id = self::GetContainerID($container_id);
 
 			//select custom image
-			$image = false;
 			if( isset($gpLayouts[$page->gpLayout])
 				&& isset($gpLayouts[$page->gpLayout]['images'])
 				&& isset($gpLayouts[$page->gpLayout]['images'][$container_id])
@@ -1427,7 +1420,7 @@ namespace gp\tool{
 		 public static function GetHead(){
 			\gp\tool\Plugins::Action('GetHead');
 			self::PrepGadgetContent();
-			echo '<!-- get_head_placeholder ' . gp_random . ' -->';
+			echo '<!-- get_head_placeholder ' . \gp_random . ' -->';
 		}
 
 
@@ -1700,7 +1693,7 @@ namespace gp\tool{
 
 			//just local jquery
 			if( !count($page->head_js) && count($scripts) === 1 && isset($scripts['jquery']) ){
-				echo '<!-- jquery_placeholder ' . gp_random . ' -->';
+				echo '<!-- jquery_placeholder ' . \gp_random . ' -->';
 				return;
 			}
 
@@ -1749,7 +1742,7 @@ namespace gp\tool{
 			}
 
 			// disable 'combine css' if 'create_css_sourcemaps' is set to true in /gpconfig.php
-			$combinecss = (defined('create_css_sourcemaps') && create_css_sourcemaps) ? false : $config['combinecss'];
+			$combinecss = \create_css_sourcemaps ? false : $config['combinecss'];
 
 			Output\Assets::CombineFiles($scripts, 'css', $combinecss);
 		}
@@ -1767,7 +1760,6 @@ namespace gp\tool{
 			}
 
 			$cdn		= $config['cdn'];
-			$packages	= array();
 
 			foreach($scripts as $key => $script_info){
 
@@ -1844,30 +1836,22 @@ namespace gp\tool{
 			//add error notice if there was a fatal error
 			if( !ini_get('display_errors') ){
 				$last_error	= self::LastFatal();
-				if($last_error){
+				if( !empty($last_error) ){
 					self::RecordFatal($last_error);
 					$buffer .= self::FatalMessage($last_error);
 				}
 			}
 
 			//remove lock
-			if( defined('gp_has_lock') && gp_has_lock ){
-				\gp\tool\Files::Unlock('write', gp_random);
+			if( defined('gp_has_lock') && \gp_has_lock ){
+				\gp\tool\Files::Unlock('write', \gp_random);
 			}
 
 			//make sure whe have a complete html request
-			$placeholder = '<!-- get_head_placeholder ' . gp_random . ' -->';
+			$placeholder = '<!-- get_head_placeholder ' . \gp_random . ' -->';
 			if( strpos($buffer,$placeholder) === false ){
 				return $buffer;
 			}
-
-			//add css to bottom of <body>
-			if( defined('load_css_in_body') && load_css_in_body == true ){
-				$buffer = self::AddToBody($buffer, self::$head_css);
-			}
-
-			//add js to bottom of <body>
-			$buffer = self::AddToBody($buffer, self::$head_js);
 
 			$replacements		= array();
 
@@ -1876,15 +1860,22 @@ namespace gp\tool{
 				$replacements	= self::PerformanceStats();
 			}
 
+
 			//head content
-			if( defined('load_css_in_body') && load_css_in_body == true  ){
+			//add css to bottom of <body>
+			if( \load_css_in_body ){
+				$buffer = self::AddToBody($buffer, self::$head_css);
 				$replacements[$placeholder]	= self::$head_content;
 			}else{
 				$replacements[$placeholder]	= self::$head_css . self::$head_content;
 			}
 
+			//add js to bottom of <body>
+			$buffer = self::AddToBody($buffer, self::$head_js);
+
+
 			//add jquery if needed
-			$placeholder = '<!-- jquery_placeholder ' . gp_random . ' -->';
+			$placeholder = '<!-- jquery_placeholder ' . \gp_random . ' -->';
 			$replacement = '';
 			if( !empty(self::$head_js) || stripos($buffer, '<script') !== false ){
 				//$replacement = Output\Assets::FormatAsset('js',\gp\tool::GetDir('/include/thirdparty/js/jquery.js')); // TODO: restore this line
@@ -1894,7 +1885,7 @@ namespace gp\tool{
 			$replacements[$placeholder]	= $replacement;
 
 			//messages
-			$pos = strpos($buffer, '<!-- message_start ' . gp_random . ' -->');
+			$pos = strpos($buffer, '<!-- message_start ' . \gp_random . ' -->');
 			$len = strpos($buffer, '<!-- message_end -->') - $pos;
 			if( $pos && $len ){
 				$replacement = GetMessages(false);
@@ -1945,9 +1936,9 @@ namespace gp\tool{
 					$message .= '<p>If you are the site administrator, you can troubleshoot '
 						. 'the problem by changing php\'s display_errors setting to 1 in '
 						. 'the gpconfig.php file.</p><p>If the problem is being caused by an addon, '
-						. 'you may also be able to bypass the error by enabling ' . CMS_NAME . '\'s '
+						. 'you may also be able to bypass the error by enabling ' . \CMS_NAME . '\'s '
 						. 'safe mode in the gpconfig.php file.</p><p>More information is available '
-						. 'in the <a href="' . CMS_DOMAIN . '/Docs/Main/Troubleshooting">Documentation</a>.'
+						. 'in the <a href="' . \CMS_DOMAIN . '/Docs/Main/Troubleshooting">Documentation</a>.'
 						. '</p><p><a href="?">Reload this page to continue</a>.</p>';
 				}
 
@@ -1987,7 +1978,7 @@ namespace gp\tool{
 		 * Record fatal errors in /data/_site/ so we can prevent subsequent requests from having the same issue
 		 *
 		 */
-		static function RecordFatal($last_error){
+		public static function RecordFatal($last_error){
 			global $config, $addon_current_id, $addonFolderName;
 
 			$last_error['request'] = $_SERVER['REQUEST_URI'];
@@ -2066,7 +2057,7 @@ namespace gp\tool{
 		 */
 		public static function DetectBot(){
 			$user_agent =& $_SERVER['HTTP_USER_AGENT'];
-			return preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider|crawler#i', $user_agent);
+			return (bool)preg_match('#bot|yahoo\! slurp|ask jeeves|ia_archiver|spider|crawler#i', $user_agent);
 		}
 
 		/**
@@ -2124,7 +2115,7 @@ namespace gp\tool{
 			if( !isset($config['showgplink']) || $config['showgplink'] ){
 				if( self::is_front_page() ){
 					echo ' <span id="powered_by_link">';
-					echo 'Powered by <a href="' . CMS_DOMAIN . '" target="_blank">' . CMS_NAME . '</a>';
+					echo 'Powered by <a href="' . \CMS_DOMAIN . '" target="_blank">' . \CMS_NAME . '</a>';
 					echo '</span>';
 				}
 			}

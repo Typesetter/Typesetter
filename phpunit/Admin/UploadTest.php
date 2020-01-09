@@ -33,6 +33,19 @@ class UploadTest extends \gptest_bootstrap{
 	}
 
 
+	public function testInvalidUpload(){
+		global $dataDir;
+
+		$this->Login();
+
+		$file			= $dataDir . '/include/main.php';
+		$upload		 	= $dataDir.'/data/_uploaded/image/main.php';
+		$this->UploadRequest('Admin/Uploaded',$file);
+		$this->assertFileNotExists($upload);
+
+	}
+
+
 	/**
 	 * Send a POST request to the test server
 	 *

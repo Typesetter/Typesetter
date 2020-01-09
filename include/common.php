@@ -53,7 +53,7 @@ gp_defined('gp_random',\gp\tool::RandomString());
 
 @ini_set( 'session.use_only_cookies', '1' );
 @ini_set( 'default_charset', 'utf-8' );
-@ini_set( 'html_errors', false );
+@ini_set( 'html_errors', "0" );
 
 if( function_exists('mb_internal_encoding') ){
 	mb_internal_encoding('UTF-8');

@@ -1742,7 +1742,7 @@ namespace gp\tool{
 			}
 
 			// disable 'combine css' if 'create_css_sourcemaps' is set to true in /gpconfig.php
-			$combinecss = (defined('create_css_sourcemaps') && \create_css_sourcemaps) ? false : $config['combinecss'];
+			$combinecss = \create_css_sourcemaps ? false : $config['combinecss'];
 
 			Output\Assets::CombineFiles($scripts, 'css', $combinecss);
 		}
@@ -1853,14 +1853,6 @@ namespace gp\tool{
 				return $buffer;
 			}
 
-			//add css to bottom of <body>
-			if( defined('load_css_in_body') && \load_css_in_body == true ){
-				$buffer = self::AddToBody($buffer, self::$head_css);
-			}
-
-			//add js to bottom of <body>
-			$buffer = self::AddToBody($buffer, self::$head_js);
-
 			$replacements		= array();
 
 			//performace stats
@@ -1868,12 +1860,19 @@ namespace gp\tool{
 				$replacements	= self::PerformanceStats();
 			}
 
+
 			//head content
-			if( defined('load_css_in_body') && \load_css_in_body == true  ){
+			//add css to bottom of <body>
+			if( \load_css_in_body ){
+				$buffer = self::AddToBody($buffer, self::$head_css);
 				$replacements[$placeholder]	= self::$head_content;
 			}else{
 				$replacements[$placeholder]	= self::$head_css . self::$head_content;
 			}
+
+			//add js to bottom of <body>
+			$buffer = self::AddToBody($buffer, self::$head_js);
+
 
 			//add jquery if needed
 			$placeholder = '<!-- jquery_placeholder ' . \gp_random . ' -->';

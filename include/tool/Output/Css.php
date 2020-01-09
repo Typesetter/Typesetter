@@ -88,14 +88,14 @@ class Css{
 
 	/**
 	 * Rename source map file and set permissions
-	 * 
+	 *
 	 * @param string temporary sourcemap filename, created by parser
 	 * @param string target sourcemap filename to match compiled css
-	 * 
+	 *
 	 */
 	private static function RenameSourceMap($temp_sourcemap_name, $sourcemap_name){
 		global $dataDir;
-		
+
 		// for debugging only! \gp\tool\Files::SaveData($dataDir . '/data/_cache/debug.php', 'debug', array($temp_sourcemap_name, $sourcemap_name));
 		if( $temp_sourcemap_name == false ){
 			return false;
@@ -157,7 +157,7 @@ class Css{
 
 			$temp_sourcemap_name = false;
 			// create sourcemaps, see gpconfig.php to enable it
-			if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+			if( \create_css_sourcemaps ){
 
 				\gp\tool\Files::CheckDir($dataDir . '/data/_cache');
 
@@ -165,7 +165,7 @@ class Css{
 
 				// see https://github.com/leafo/scssphp/wiki/Source-Maps
 				$compiler->setSourceMap(Scss::SOURCE_MAP_FILE);
-	
+
 				$compiler->setSourceMapOptions(array(
 					// absolute path to write .map file
 					'sourceMapWriteTo'		=> $dataDir . '/data/_cache/' . $temp_sourcemap_name,
@@ -178,12 +178,12 @@ class Css{
 
 					// partial path (server root) removed (normalized) to create a relative url
 					// difference between file & url locations, removed from ALL source files in .map
-					'sourceMapBasepath'		=> strlen($dirPrefix) != 0 ? substr($dataDir, 0, strlen($dirPrefix) * -1) : $dataDir,  
+					'sourceMapBasepath'		=> strlen($dirPrefix) != 0 ? substr($dataDir, 0, strlen($dirPrefix) * -1) : $dataDir,
 
 					// (optional) prepended to 'source' field entries for relocating source files
 					'sourceRoot'			=> '/',
 				));
-	
+
 			}
 
 			$compiled	= $compiler->compile(implode("\n", $combined));
@@ -238,7 +238,7 @@ class Css{
 
 		$temp_sourcemap_name = false;
 		// create sourcemaps, see gpconfig.php to enable it
-		if( defined('create_css_sourcemaps') && create_css_sourcemaps ){
+		if( \create_css_sourcemaps ){
 			\gp\tool\Files::CheckDir($dataDir . '/data/_cache');
 			$temp_sourcemap_name 			= 'tmp_' . \gp\tool::RandomString(12) . ".map";  // will be renamed later
 			$options['sourceMap'] 			= true;

@@ -135,7 +135,7 @@ namespace gp\tool{
 
 			//compare to actual size
 			$src_img = \gp\tool\Image::getSrcImg($src_path);
-			if( !$src_img ){
+			if( $src_img === false ){
 				return false;
 			}
 
@@ -822,6 +822,7 @@ namespace gp\tool{
 
 		/**
 		 * Get the posted content for an image area
+		 * @return bool
 		 *
 		 */
 		public static function SectionFromPost_Image( &$section, $dest_dir = '/data/_resized/img_type/' ){
@@ -830,16 +831,23 @@ namespace gp\tool{
 			$page->ajaxReplace = array();
 
 			//source file
-			if( !empty($_REQUEST['file']) ){
-				$source_file_rel = $_REQUEST['file'];
-			}
 			if( !empty($_REQUEST['src']) ){
 				$source_file_rel = rawurldecode($_REQUEST['src']);
 				if( !empty($dirPrefix) ){
 					$len = strlen($dirPrefix);
 					$source_file_rel = substr($source_file_rel,$len);
 				}
+
+			}elseif( !empty($_REQUEST['file']) ){
+				$source_file_rel = $_REQUEST['file'];
+
+			}else{
+				msg($langmessage['OOPS']);
+				return false;
 			}
+
+
+
 			$source_file_rel	= '/'.ltrim($source_file_rel,'/');
 			$source_file_full	= $dataDir.$source_file_rel;
 
@@ -848,7 +856,7 @@ namespace gp\tool{
 				return false;
 			}
 			$src_img = \gp\tool\Image::getSrcImg($source_file_full);
-			if( !$src_img ){
+			if( $src_img === false ){
 				msg($langmessage['OOPS'].' (Couldn\'t create image [1])');
 				return false;
 			}

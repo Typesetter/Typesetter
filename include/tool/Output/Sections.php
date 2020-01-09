@@ -301,9 +301,11 @@ namespace gp\tool\Output{
 			global $langmessage, $gp_index;
 
 			if( isset($data['index']) ){
-				$requested = \gp\tool::IndexToTitle($data['index']);
+				$requested	= \gp\tool::IndexToTitle($data['index']);
+				$type		= \gp\tool::SpecialOrAdmin($requested);
 			}else{
-				$requested = $data['content'];
+				$requested	= $data['content'];
+				$type		= $data['include_type'];
 			}
 
 			if( empty($requested) ){
@@ -315,11 +317,6 @@ namespace gp\tool\Output{
 				return '';
 			}
 
-			if( isset($data['include_type']) ){
-				$type = $data['include_type'];
-			}else{
-				$type = \gp\tool::SpecialOrAdmin($requested);
-			}
 
 			switch($type){
 				case 'gadget':

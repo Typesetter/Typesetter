@@ -1084,13 +1084,7 @@ namespace gp\tool{
 				)
 			);
 
-			$include_link = '';
-			if( $extra_content[0]['type'] == 'include' && isset($extra_content[0]['include_type']) && $extra_content[0]['include_type'] == false ){
-				$include_link = \gp\tool::Link(
-					$extra_content[0]['content'],
-					$langmessage['view/edit_page']
-				);
-			}
+			$include_link = \gp\Page\Edit::IncludeLink($extra_content[0]);
 
 			ob_start();
 			echo '<span class="nodisplay" id="ExtraEditLnks' . $edit_index . '">';

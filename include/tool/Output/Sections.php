@@ -300,12 +300,13 @@ namespace gp\tool\Output{
 		public static function IncludeContent($data){
 			global $langmessage, $gp_index;
 
+			$data		+= ['include_type'=>'file'];
+			$type		= $data['include_type'];
+			$requested	= $data['content'];
+
 			if( isset($data['index']) ){
 				$requested	= \gp\tool::IndexToTitle($data['index']);
 				$type		= \gp\tool::SpecialOrAdmin($requested);
-			}else{
-				$requested	= $data['content'];
-				$type		= $data['include_type'];
 			}
 
 			if( empty($requested) ){

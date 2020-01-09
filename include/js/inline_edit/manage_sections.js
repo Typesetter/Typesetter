@@ -1350,7 +1350,7 @@
 		}else{
 			tmp.removeClass(classNames);
 		}
-		input.val(tmp.attr('class'));
+		input.val(tmp.attr('class')).trigger('change');
 		tmp.remove();
 	}
 

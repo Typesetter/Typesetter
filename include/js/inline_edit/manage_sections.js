@@ -1225,6 +1225,9 @@
 					modifiers : {
 						arrow : {
 							enabled : true
+						},
+						preventOverflow: {
+							escapeWithReference : true
 						}
 						/*
 						, offset : {

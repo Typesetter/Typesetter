@@ -354,11 +354,8 @@ ul#section-clipboard-items li.clipboard-empty-msg {
  * Available classes
  *
  */
-#gp_avail_classes tbody {
-	display: block;
+ #gp_avail_classes tbody {
 	background: #f8f8f8;
-	max-height: 256px;
-	overflow-y: auto;
 }
 #gp_avail_classes td {
 	background: #f8f8f8;
@@ -369,35 +366,110 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 	display: block !important;
 }
 
-#gp_avail_classes label.gpcheckbox input[type=checkbox] {
+#gp_avail_classes label.gpcheckbox input[type='checkbox'] {
 	margin-right: 6px !important;
 }
 
 #gp_avail_classes label.gpcheckbox select {
 	margin-right: 0 !important;
-	padding: 1px 0 !important;
+	padding: 0 16px 0 0 !important;
 	position: relative;
-	left: -5px;
-	width: 114px;
+	margin-left: -4px;
+	width: 134px;
 	border: none !important;
 	border-radius: 0 !important;
 	appearance: none;
-	-moz-appearance: none;
 	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
 	background: none;
 	outline: none;
+	cursor: pointer;
+}
+
+#gp_avail_classes label.gpcheckbox select::-ms-expand {
+	display: none;
+}
+
+#gp_avail_classes .avail_classes_container {
+	margin: -4px;
+	display: block;
+	max-height: 256px;
+	overflow-y: auto;
+}
+
+#gp_avail_classes .avail_classes_col {
+	display: block;
+	position: relative;
+	box-sizing: border-box;
+	float: left;
+	width: 33.33%;
+	padding: 4px;
+}
+
+#gp_avail_classes .avail_classes_col label {
+	position: relative;
+	margin: 0;
+}
+
+#gp_avail_classes .avail_classes_desc {
+	display: none; /* will be a popover */
+	z-index: 11100;
+	background: #2b2b2b;
+	color: #eee;
+	padding: 8px 12px;
+	width: 180px;
+	border-radius: 3px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+#gp_avail_classes .avail_classes_desc .popover_arrow {
+	display: none;
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background: #2b2b2b;
+	top: 50%;
+	left: 50%;
+	transform: rotate(-45deg);
+}
+
+#gp_avail_classes .avail_classes_desc[x-placement^="bottom"] .popover_arrow {
+	display: block;
+	top: -5px;
+}
+
+#gp_avail_classes .avail_classes_desc[x-placement^="top"] .popover_arrow {
+	display: block;
+	top: auto;
+	bottom: -5px;
+}
+
+#gp_avail_classes .avail_classes_desc[x-placement^="left"] .popover_arrow {
+	display: block;
+	left: auto;
+	right: -5px;
+}
+
+#gp_avail_classes .avail_classes_desc[x-placement^="right"] .popover_arrow {
+	display: block;
+	left: -5px;
 }
 
 .gpcaret {
 	border-left: 4px solid transparent;
 	border-right: 4px solid transparent;
 	border-top: 4px dashed;
-	display: inline-block;
 	height: 0;
-	margin-left: 2px;
-	vertical-align: middle;
 	width: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	z-index: 10;
+	cursor: pointer;
 }
+
 
 
 /**

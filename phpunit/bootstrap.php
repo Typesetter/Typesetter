@@ -28,6 +28,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	protected static $requests		= 0;
 	protected static $proc_output	= [];
 	protected static $phpinfo;
+	protected static $tracking		= [];
 
 
 	const user_name		= 'phpunit_username';
@@ -117,6 +118,21 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		register_shutdown_function(function(){
 			self::Console('Stopping server process');
 			gptest_bootstrap::$process->stop();
+
+			usort(self::$tracking,function($a,$b){
+				if( $a['time'] == $b['time'] ){
+			        return 0;
+			    }
+			    return ($a['time'] < $b['time']) ? 1 : -1;
+			});
+
+			self::Console('Slowest requests');
+			self::$tracking = array_slice(self::$tracking,0,5);
+
+			foreach(self::$tracking as $req){
+				self::Console(' - '.$req['url'].' in '.$req['class'].' took '.$req['time']);
+			}
+
 		});
 	}
 
@@ -183,17 +199,24 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
 		global $dataDir;
 
+		$start			= microtime(true);
 		$response		= null;
 		$debug_file		= $dataDir . '/data/response-' . self::$requests . '-anon-' . $type . '-' . str_replace('/','_',$url);
 		if( self::$is_admin ){
 			$debug_file		= $dataDir . '/data/response-' . self::$requests . '-admin-' . $type . '-' . str_replace('/','_',$url);
 		}
 
-		$url			= 'http://localhost:8081' . $url;
+		$tracking		= [
+							'url'		=> $url,
+							'is_admin'	=> self::$is_admin,
+							'class'		=> get_called_class(),
+						];
+
 
 		try{
 			self::$proc_output		= [];
 			$options['headers']		= ['X-REQ-ID' => self::$requests];
+			$url					= 'http://localhost:8081' . $url;
 			$response				= self::$client_current->request($type, $url, $options);
 			$body					= $response->getBody();
 
@@ -222,6 +245,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			self::Fail('Exception fetching url '.$url.$e->getMessage());
 		}
 
+		$tracking['time']	= microtime(true) - $start;
+		self::$tracking[]	= $tracking;
 
 		return $response;
 	}

@@ -113,35 +113,27 @@ class Extra extends \gp\Page\Edit{
 	 */
 	public function GetAreas(){
 
-		$this->areas = array();
-		$files = scandir($this->folder);
+		$this->areas	= [];
+		$files			= scandir($this->folder);
 
-		foreach ($files as $file) {
-			$this->AddArea($file);
+		foreach( $files as $file ){
+
+			$title = self::AreaExists($file);
+
+			if( $title === false ){
+				continue;
+			}
+
+			$this->areas[$title] = [
+									'title'			=> $title,
+									'file_path'		=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/page.php'),
+									'draft_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/draft.php'),
+									'legacy_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '.php'),
+								];
+
 		}
 
 		uksort($this->areas, 'strnatcasecmp');
-	}
-
-
-	/**
-	 * Add $file to the list of areas
-	 *
-	 */
-	private function AddArea($title){
-
-		$title = self::AreaExists($title);
-
-		if( $title === false ){
-			return;
-		}
-
-		$this->areas[$title] = [
-								'title'			=> $title,
-								'file_path'		=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/page.php'),
-								'draft_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/draft.php'),
-								'legacy_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '.php'),
-							];
 	}
 
 
@@ -320,16 +312,19 @@ class Extra extends \gp\Page\Edit{
 	public function NewExtraForm(){
 		global $langmessage;
 
-		$types = \gp\tool\Output\Sections::GetTypes();
+		$types	= \gp\tool\Output\Sections::GetTypes();
+		$_types	= [];
+		foreach( $types as $type => $info ){
+			$_types[$type] = $info['label'];
+		}
+
 		echo '<p>';
 		echo '<form action="' . \gp\tool::GetUrl('Admin/Extra') . '" method="post">';
 		echo '<input type="hidden" name="cmd" value="NewSection" />';
 		echo '<input type="text" name="new_title" value="" size="15" class="gpinput" required/> ';
-		echo '<select name="type" class="gpselect">';
-		foreach ($types as $type => $info) {
-			echo '<option value="' . $type . '">' . $info['label'] . '</option>';
-		}
-		echo '</select> ';
+
+		echo \gp\tool\HTML::Select( $_types, key($_types), ' name="type" class="gpselect"');
+
 		echo '<input type="submit" name="" value="' . $langmessage['Add New Area'] . '" class="gpsubmit gpvalidate" data-cmd="gppost"/>';
 		echo '</form>';
 		echo '</p>';
@@ -505,14 +500,7 @@ class Extra extends \gp\Page\Edit{
 			'2' => 'Only on the pages selected',
 			'3' => 'On all pages except those selected');
 
-		$vis_type = $this->vis['visibility_type'];
-
-		echo '<select id="vis_type" name="visibility_type" class="gpselect">';
-		foreach ($sel_dat as $key => $val) {
-			$selected = ($vis_type == $key) ? 'selected' : '';
-			echo '<option value="' . $key . '" ' . $selected . ' >' . $val . '</option>';
-		}
-		echo '</select>';
+		echo \gp\tool\HTML::Select( $sel_dat, $this->vis['visibility_type'], ' name="visibility_type" id="vis_type" class="gpselect"');
 		echo '</p>';
 
 

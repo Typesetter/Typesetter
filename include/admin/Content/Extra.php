@@ -444,11 +444,7 @@ class Extra extends \gp\Page\Edit{
 		$this->page->file_sections =& $this->file_sections; //hack so the SaveSection filter works
 		$_REQUEST['section'] = 0;
 
-		if (!parent::SectionEdit()){
-			return false;
-		}
-
-		return true;
+		return parent::SectionEdit();
 	}
 
 

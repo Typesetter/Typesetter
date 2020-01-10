@@ -1102,12 +1102,7 @@ namespace gp\tool{
 			$attrs['data-gp_label']		= str_replace('_', ' ', $name);
 			$attrs['class']				= 'editable_area';
 			$attrs['id']				= 'ExtraEditArea' . $edit_index;
-
-			if( $is_draft ){
-				$attrs['data-draft']	= 1;
-			}else{
-				$attrs['data-draft']	= 0;
-			}
+			$attrs['data-draft']		= (int)$is_draft;
 
 			echo '<div' . \gp\tool\Output\Sections::SectionAttributes($attrs, $extra_content[0]['type']) . '>';
 			echo \gp\tool\Output\Sections::RenderSection($extra_content[0], 0, '', $file_stats);
@@ -1156,33 +1151,33 @@ namespace gp\tool{
 
 		public static function ExtraIsVisible($title){
 			global $page;
-			if( isset($page->pagetype) && $page->pagetype == 'admin_display' ){
+
+			if( $page->pagetype == 'admin_display' ){
 				return true;
 			}
+
 			$vis = \gp\tool\Files::Get('_extra/' . $title . '/visibility', 'data');
-			if( !$vis || !array_key_exists('visibility_type', $vis) ){
+			if( !$vis ){
 				return true;
 			}
-			if( $vis['visibility_type'] == 0 ){
-				return true;
-			}
+
+			$vis += ['visibility_type'=>0,'pages'=>[]];
+
+			// not visible on any pages
 			if( $vis['visibility_type'] == 1 ){
 				return false;
 			}
+
+			// visible on pages in list
 			if( $vis['visibility_type'] == 2 ){
-				if( is_array($vis['pages']) && in_array($page->gp_index, array_keys($vis['pages'])) ){
-					return true;
-				}else{
-					return false;
-				}
+				return array_key_exists($page->gp_index,$vis['pages']);
 			}
+
+			// hidden on pages in list
 			if( $vis['visibility_type'] == 3 ){
-				if( is_array($vis['pages']) && in_array($page->gp_index,array_keys($vis['pages'])) ){
-					return false;
-				}else{
-					return true;
-				}
+				return !array_key_exists($page->gp_index,$vis['pages']);
 			}
+
 			return true;
 		}
 

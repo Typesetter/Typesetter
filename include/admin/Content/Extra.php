@@ -90,7 +90,7 @@ class Extra extends \gp\Page\Edit{
 		$this->title			= \gp\tool\Editing::CleanTitle($area_info['title']);
 		$this->draft_file		= $area_info['draft_path'];
 
-		$this->file_sections	= \gp\tool\Output::ExtraContent($this->title);
+		$this->file_sections	= \gp\tool\Output\Extra::ExtraContent($this->title);
 		$this->meta_data		= \gp\tool\Files::$last_meta;
 		$this->fileModTime		= \gp\tool\Files::$last_modified;
 		$this->file_stats		= \gp\tool\Files::$last_stats;
@@ -263,7 +263,7 @@ class Extra extends \gp\Page\Edit{
 	public function ExtraRow($info, $types){
 		global $langmessage;
 
-		$sections = \gp\tool\Output::ExtraContent($info['title']);
+		$sections = \gp\tool\Output\Extra::ExtraContent($info['title']);
 		$section = $sections[0];
 
 		echo '<tr><td style="white-space:nowrap">';

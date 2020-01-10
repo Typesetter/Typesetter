@@ -378,12 +378,9 @@ namespace gp\tool\Output{
 		 *
 		 */
 		public static function IncludeExtra($requested){
-			if( \gp\admin\Content\Extra::AreaExists($requested) === false && \gp\admin\Content\Extra::AreaExists($requested.'.php') === false ){
-				return '{{Extra Area Not Found: '.htmlspecialchars($requested).'}}';
-			}
 
 			ob_start();
-			\gp\tool\Output::GetExtra($requested);
+			\gp\tool\Output\Extra::GetExtra($requested);
 			return ob_get_clean();
 		}
 

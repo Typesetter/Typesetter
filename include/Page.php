@@ -332,7 +332,7 @@ namespace gp{
 		}
 		public function GetExtra($area,$info=array()){
 			trigger_error('deprecated functions');
-			\gp\tool\Output\Extra::GetExtra($area,$info);
+			\gp\tool\Output\Extra::GetExtra($area);
 		}
 		public function GetMenu(){
 			trigger_error('deprecated functions');

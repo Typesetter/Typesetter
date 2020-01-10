@@ -38,7 +38,7 @@ class HTML{
 		$html = '';
 		foreach($array as $key => $value){
 			if( is_array($value) ){
-				$html .= '<optgroup label="'.$value.'">';
+				$html .= '<optgroup label="'.$key.'">';
 				self::Options($value,$current_value);
 				$html .= '</optgroup>';
 				continue;

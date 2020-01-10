@@ -158,7 +158,7 @@ class Configuration extends \gp\special\Base{
 		}
 
 		//resize thumbnails
-		if( 
+		if(
 			$config_before['preserve_icc_profiles'] !== $config['preserve_icc_profiles']
 			|| $config_before['preserve_image_metadata'] !== $config['preserve_image_metadata']
 			|| $config_before['maxthumbsize'] !== $config['maxthumbsize']
@@ -372,6 +372,8 @@ class Configuration extends \gp\special\Base{
 
 			if( is_array($possible_value) ){
 				self::formSelect($key,$possible_value,$value);
+
+
 			}else{
 				switch($possible_value){
 					case 'boolean':
@@ -494,43 +496,17 @@ class Configuration extends \gp\special\Base{
 	}
 
 	public static function formSelect($name,$possible,$value=null){
-
-		echo '<div>';
-		echo "\n".'<select name="'.$name.'" class="gpselect">';
-		if( !isset($possible[$value]) ){
-			echo '<option value="" selected="selected"></option>';
-		}
-
-		self::formOptions($possible,$value);
-		echo '</select>';
-		echo '</div>';
-	}
-
-	public static function formOptions($array,$current_value){
 		global $languages;
 
-		foreach($array as $key => $value){
-			if( is_array($value) ){
-				echo '<optgroup label="'.$value.'">';
-				self::formOptions($value,$current_value);
-				echo '</optgroup>';
-				continue;
+		foreach($possible as $key => &$val){
+			if( isset($languages[$val]) ){
+				$val = $languages[$val].' ('.$val.')';
 			}
-
-			if($key == $current_value){
-				$focus = ' selected="selected" ';
-			}else{
-				$focus = '';
-			}
-			if( isset($languages[$value]) ){
-				$value = $languages[$value];
-			}
-
-			echo '<option value="'.htmlspecialchars($key).'" '.$focus.'>'.$value.'</option>';
-
 		}
 
+		echo \gp\tool\HTML::Select( $possible, $value, ' name="'.$name.'" class="gpselect"');
 	}
+
 
 	/**
 	 * Recreate all of the thumbnails according to the size in the configuration

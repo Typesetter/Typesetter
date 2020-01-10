@@ -164,7 +164,7 @@ class Extra extends \gp\Page\Edit{
 			return $title;
 		}
 
-		if( (substr($title, -4) === '.php') && \gp\tool\Files::Exists($legacy) ){
+		if( substr($title, -4) === '.php' ){
 			return substr($title, 0, -4);
 		}
 

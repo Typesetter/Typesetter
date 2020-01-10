@@ -1,3 +1,4 @@
+/** global: CKEDITOR */
 
 $(function(){
 

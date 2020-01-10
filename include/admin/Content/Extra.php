@@ -430,7 +430,7 @@ class Extra extends \gp\Page\Edit{
 
 		msg($langmessage['SAVED']);
 
-		$this->AddArea($title);
+		$this->GetAreas();
 	}
 
 

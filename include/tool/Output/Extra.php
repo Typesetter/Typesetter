@@ -10,9 +10,9 @@ class Extra{
 
 		$attrs			= [];
 		$name			= str_replace(' ', '_', $name);
-		$file_stats		= [];
 		$is_draft		= false;
-		$extra_content	= self::ExtraContent( $name, $file_stats, $is_draft );
+		$extra_content	= self::ExtraContent( $name, $is_draft );
+		$file_stats		= \gp\tool\Files::$last_stats;
 		$wrap			= \gp\tool\Output::ShowEditLink('Admin_Extra');
 
 		if( !self::ExtraIsVisible($name) ){
@@ -68,7 +68,7 @@ class Extra{
 	 * Get and return the extra content specified by $title
 	 *
 	 */
-	public static function ExtraContent($title, &$file_stats=[], &$is_draft=false){
+	public static function ExtraContent($title, &$is_draft=false){
 
 		//draft?
 		$draft_file = '_extra/'.$title.'/draft';

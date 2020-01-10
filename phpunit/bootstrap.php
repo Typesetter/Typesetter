@@ -57,12 +57,12 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		self::PrepInstall();
 		self::StartServer();
 
-		if( empty(static::$phpinfo) ){
-			static::Console('set phpinfo');
+		if( empty(self::$phpinfo) ){
+			self::Console('set phpinfo');
 			$url				= 'http://localhost:8081/phpinfo.php';
 			$response			= self::GuzzleRequest('GET',$url);
 			$body				= $response->getBody();
-			static::$phpinfo	= (string)$body;
+			self::$phpinfo		= (string)$body;
 		}
 
 
@@ -72,10 +72,9 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function StartServer(){
 		global $dataDir;
 
-		if( static::$process ){
-			static::$process->stop();
+		if( self::$process ){
+			return;
 		}
-
 
 		$proc		= ['php','-S','localhost:8081'];
 
@@ -95,14 +94,20 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$proc[]		= 'auto_prepend_file='.__DIR__ . '/ServerPrepend.php';
 
 
-		static::$process = new \Symfony\Component\Process\Process($proc);
-        static::$process->start(function($type,$buffer){
-			static::$proc_output[] = ['type'=>$type,'buffer'=>(string)$buffer];
+		self::$process = new \Symfony\Component\Process\Process($proc);
+        self::$process->start(function($type,$buffer){
+			self::$proc_output[] = ['type'=>$type,'buffer'=>(string)$buffer];
 		});
         usleep(100000); //wait for server to get going
 
-		static::$client				= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
-		static::$logged_in			= false;
+		self::$client				= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
+		self::$logged_in			= false;
+
+
+		register_shutdown_function(function(){
+			self::Console('Stopping server process');
+			gptest_bootstrap::$process->stop();
+		});
 	}
 
 
@@ -113,23 +118,15 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function ProcessOutput($type,$url){
 
 		echo "\n\n----------------------------------------------------------------";
-		static::Console('Begin Process Output: '.$type.' '.$url);
+		self::Console('Begin Process Output: '.$type.' '.$url);
 		echo "\n";
 
-		if( !empty(static::$proc_output) ){
-			static::Console('Proc Output');
-			print_r(static::$proc_output);
+		if( !empty(self::$proc_output) ){
+			self::Console('Proc Output');
+			print_r(self::$proc_output);
 		}
 		echo "\nEnd Process Output\n----------------------------------------------------------------\n\n";
 	}
-
-
-	/**
-	 * Stop web-server process
-	 */
-	public static function tearDownAfterClass(){
-        static::$process->stop();
-    }
 
 
 	/**
@@ -164,28 +161,28 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$response = null;
 
 		try{
-			static::$proc_output	= [];
-			$options['headers']		= ['X-REQ-ID' => static::$requests];
-			$response				= static::$client->request($type, $url, $options);
-			$debug_file				= $dataDir . '/data/response-' . static::$requests . '-' . $type . '-' . str_replace('/','_',$url);
+			self::$proc_output		= [];
+			$options['headers']		= ['X-REQ-ID' => self::$requests];
+			$response				= self::$client->request($type, $url, $options);
+			$debug_file				= $dataDir . '/data/response-' . self::$requests . '-' . $type . '-' . str_replace('/','_',$url);
 			$body					= $response->getBody();
 
 			file_put_contents($debug_file, $body);
-			static::$requests++;
+			self::$requests++;
 
-			static::$process->getOutput(); # makes symfony/process populate our static::$proc_output
+			self::$process->getOutput(); # makes symfony/process populate our self::$proc_output
 
 
 			if( $expected_resonse !== $response->getStatusCode() ){
-				static::ProcessOutput($type,$url);
-				static::Console('PHPINFO()');
-				echo (string)static::$phpinfo;
+				self::ProcessOutput($type,$url);
+				self::Console('PHPINFO()');
+				echo (string)self::$phpinfo;
 			}
-			static::assertEquals($expected_resonse, $response->getStatusCode());
+			self::assertEquals($expected_resonse, $response->getStatusCode());
 
 		}catch( \Exception $e ){
-			static::ServerErrors($type,$url);
-			static::Fail('Exception fetching url '.$url.$e->getMessage());
+			self::ServerErrors($type,$url);
+			self::Fail('Exception fetching url '.$url.$e->getMessage());
 		}
 
 
@@ -211,7 +208,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		}
 
 		echo "\n\n----------------------------------------------------------------";
-		static::Console('Error Log for '.$type.' '.$url);
+		self::Console('Error Log for '.$type.' '.$url);
 		echo "\n";
 
 		echo $content;
@@ -221,7 +218,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		ftruncate($fp, 0);
 		fclose($fp);
 
-		static::assertEmpty($content,'php error log was not empty');
+		self::assertEmpty($content,'php error log was not empty');
 	}
 
 
@@ -232,7 +229,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public function LogIn(){
 		global $config;
 
-		if( static::$logged_in ){
+		if( self::$logged_in ){
 			return;
 		}
 
@@ -242,11 +239,11 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		$params						= [];
 		$params['cmd']				= 'login';
-		$params['username']			= static::user_name;
-		$params['password']			= static::user_pass;
+		$params['username']			= self::user_name;
+		$params['password']			= self::user_pass;
 		$params['login_nonce']		= \gp\tool::new_nonce('login_nonce',true,300);
 		$response					= self::PostRequest('Admin',$params);
-		static::$logged_in			= true;
+		self::$logged_in			= true;
 
 	}
 
@@ -259,7 +256,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		global $dataDir, $languages, $config;
 
 		if( function_exists('showError') ){
-			static::$installed		= true;
+			self::$installed		= true;
 			return;
 		}
 
@@ -285,7 +282,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			$target		= $_SERVER['PWD'].'/'.$name;
 
 			if( !file_exists($target) ){
-				static::Console('symlink target does not exist: '. $target);
+				self::Console('symlink target does not exist: '. $target);
 				continue;
 			}
 
@@ -309,8 +306,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		require dirname(__DIR__) . '/vendor/autoload.php';
 		includeFile('tool/functions.php');
 
-		static::Console('datadir = '.$dataDir);
-		static::Console('gp_data_type = '.gp_data_type);
+		self::Console('datadir = '.$dataDir);
+		self::Console('gp_data_type = '.gp_data_type);
 
 
 
@@ -323,7 +320,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		// reset coverage folder
 		$cov_dir	= dirname(__DIR__).'/x_coverage';
 		if( file_exists($cov_dir) ){
-			static::Console('resetting coverage folder: '.$cov_dir);
+			self::Console('resetting coverage folder: '.$cov_dir);
 			\gp\tool\Files::RmAll($cov_dir);
 		}
 		mkdir($cov_dir);
@@ -350,11 +347,11 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		global $config;
 
 		// don't attempt to install twice
-		if( static::$installed ){
+		if( self::$installed ){
 			return;
 		}
 
-		static::$installed		= true;
+		self::$installed		= true;
 
 
 
@@ -387,10 +384,10 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		//attempt to install
 		$params					= [];
 		$params['site_title']	= 'unit tests';
-		$params['email']		= static::user_email;
-		$params['username']		= static::user_name;
-		$params['password']		= static::user_pass;
-		$params['password1']	= static::user_pass;
+		$params['email']		= self::user_email;
+		$params['username']		= self::user_name;
+		$params['password']		= self::user_pass;
+		$params['password1']	= self::user_pass;
 		$params['cmd']			= 'Install';
 		$response				= self::PostRequest('',$params);
 
@@ -408,7 +405,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function assertStrpos( $haystack, $needle , $msg = 'String not found' ){
 
 		if( strpos($haystack, $needle) === false ){
-			static::fail($msg);
+			self::fail($msg);
 		}
 
 	}

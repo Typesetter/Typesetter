@@ -156,15 +156,15 @@ class Extra extends \gp\Page\Edit{
 			return false;
 		}
 
-		$legacy = $dataDir . '/data/_extra/' . $title;
-		$new = $dataDir . '/data/_extra/' . $title . '/page.php';
-		$php = (substr($title, -4) === '.php');
+		$legacy		= $dataDir . '/data/_extra/' . $title;
+		$new		= $dataDir . '/data/_extra/' . $title . '/page.php';
 
-		if (!$php && is_dir($legacy) && \gp\tool\Files::Exists($new)){ //is_dir() used to prevent open_basedir notice http://www.typesettercms.com/Forum?show=t2110
+
+		if( is_dir($legacy) && \gp\tool\Files::Exists($new) ){ //is_dir() used to prevent open_basedir notice http://www.typesettercms.com/Forum?show=t2110
 			return $title;
 		}
 
-		if ($php && \gp\tool\Files::Exists($legacy)){
+		if( (substr($title, -4) === '.php') && \gp\tool\Files::Exists($legacy) ){
 			return substr($title, 0, -4);
 		}
 

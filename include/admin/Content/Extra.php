@@ -529,7 +529,6 @@ class Extra extends \gp\Page\Edit{
 		echo '</tr></thead>';
 		echo '<tbody>';
 
-		$pages = array_keys($this->vis['pages']);
 		foreach( $gp_index as $title => $index ){
 			echo '<tr><td>';
 

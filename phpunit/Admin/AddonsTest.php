@@ -15,8 +15,6 @@ class AddonsTest extends \gptest_bootstrap{
 
 	public function testAddonExample(){
 
-		$this->UseAdmin();
-
 		$this->GetRequest('Admin/Addons');
 		$this->GetRequest('Admin/Addons/Available');
 

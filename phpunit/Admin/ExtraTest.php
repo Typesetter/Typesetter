@@ -16,7 +16,6 @@ class ExtraTest extends \gptest_bootstrap{
 	public function testCreateExtra(){
 
 
-		$this->UseAdmin();
 		$this->GetRequest('Admin/Extra');
 
 

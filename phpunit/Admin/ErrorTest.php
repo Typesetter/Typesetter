@@ -12,8 +12,6 @@ class ErrorTest extends \gptest_bootstrap{
 		//$this->expectException('\Exception');
 		//\gp\tool\Output::InvalidMethod();
 
-		$this->UseAdmin();
-
 		$response = $this->GetRequest('Admin/Errors');
 	}
 

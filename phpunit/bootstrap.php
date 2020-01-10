@@ -23,6 +23,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	protected static $client_user;			// guzzle client for making anonymous user requests
 	protected static $client_admin;			// guzzle client for making admin user requests
 	protected static $client_current;
+	protected static $is_admin		= false;
 	protected static $installed		= false;
 	protected static $requests		= 0;
 	protected static $proc_output	= [];
@@ -34,10 +35,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	const user_email	= 'test@typesettercms.com';
 
 
-	function setUP(){
-		\gp\tool::GetLangFile();
-	}
-
 	static function log($msg){
 		static $fp;
 
@@ -46,6 +43,10 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			$fp		= fopen($log, 'a');
 		}
 		fwrite($fp, "\n".print_r($msg, TRUE));
+	}
+
+	function setUp(){
+		self::UseAdmin();
 	}
 
 	/**
@@ -60,7 +61,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		if( empty(self::$phpinfo) ){
 			self::Console('set phpinfo');
-			$url				= 'http://localhost:8081/phpinfo.php';
+			$url				= '/phpinfo.php';
 			$response			= self::GuzzleRequest('GET',$url);
 			$body				= $response->getBody();
 			self::$phpinfo		= (string)$body;
@@ -68,6 +69,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 
 		self::Install();
+		\gp\tool::GetLangFile();
     }
 
 	public static function StartServer(){
@@ -123,6 +125,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
  	public static function UseAdmin(){
 		self::$client_current		= self::$client_admin;
+		self::$is_admin				= true;
  	}
 
 	/**
@@ -130,6 +133,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
 	public static function UseAnon(){
 		self::$client_current		= self::$client_user;
+		self::$is_admin				= false;
 	}
 
 	/**
@@ -155,7 +159,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 *
 	 */
 	public static function GetRequest( $slug, $query='', $nonce_action=false ){
-		$url		= 'http://localhost:8081' . \gp\tool::GetUrl( $slug, $query, false, $nonce_action);
+		$url		= \gp\tool::GetUrl( $slug, $query, false, $nonce_action);
 		return self::GuzzleRequest('GET',$url);
 	}
 
@@ -166,7 +170,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
 	public static function PostRequest($slug, $params = []){
 
-		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug);
+		$url		= \gp\tool::GetUrl($slug);
 		$options	= ['form_params' => $params];
 
 		return self::GuzzleRequest('POST',$url,200,$options);
@@ -179,13 +183,18 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function GuzzleRequest($type,$url,$expected_resonse = 200, $options = []){
 		global $dataDir;
 
-		$response = null;
+		$response		= null;
+		$debug_file		= $dataDir . '/data/response-' . self::$requests . '-anon-' . $type . '-' . str_replace('/','_',$url);
+		if( self::$is_admin ){
+			$debug_file		= $dataDir . '/data/response-' . self::$requests . '-admin-' . $type . '-' . str_replace('/','_',$url);
+		}
+
+		$url			= 'http://localhost:8081' . $url;
 
 		try{
 			self::$proc_output		= [];
 			$options['headers']		= ['X-REQ-ID' => self::$requests];
 			$response				= self::$client_current->request($type, $url, $options);
-			$debug_file				= $dataDir . '/data/response-' . self::$requests . '-' . $type . '-' . str_replace('/','_',$url);
 			$body					= $response->getBody();
 
 			file_put_contents($debug_file, $body);
@@ -200,6 +209,13 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 				echo (string)self::$phpinfo;
 			}
 			self::assertEquals($expected_resonse, $response->getStatusCode());
+
+
+			// make sure the response doesn't have <div id="gp_admin_html">
+			if( self::$is_admin === false ){
+				self::assertNotStrpos($body,'gp_admin_html');
+			}
+
 
 		}catch( \Exception $e ){
 			self::ServerErrors($type,$url);
@@ -419,6 +435,14 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function assertStrpos( $haystack, $needle , $msg = 'String not found' ){
 
 		if( strpos($haystack, $needle) === false ){
+			self::fail($msg);
+		}
+
+	}
+
+	public static function assertNotStrpos( $haystack, $needle , $msg = 'String found' ){
+
+		if( strpos($haystack, $needle) !== false ){
 			self::fail($msg);
 		}
 

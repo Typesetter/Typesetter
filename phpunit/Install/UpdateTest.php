@@ -40,7 +40,7 @@ class phpunit_Update extends gptest_bootstrap{
 	function UpdateOutputTest(){
 		global $page;
 
-		$url		= 'http://localhost:8081/include/install/update.php';
+		$url		= '/include/install/update.php';
 		$response	= static::GuzzleRequest('GET',$url);
 
 

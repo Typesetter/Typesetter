@@ -9,7 +9,6 @@ class PermissionsTest extends \gptest_bootstrap{
 
 		\gp\tool::GetPagesPHP();
 
-		$this->UseAdmin();
 		$this->CheckEditing('all');
 
 

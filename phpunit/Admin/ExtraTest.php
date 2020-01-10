@@ -53,7 +53,12 @@ class ExtraTest extends \gptest_bootstrap{
 
 
 		// publish draft ... make sure the draft file no longer exists
-		$this->GetRequest('Admin/Extra','cmd=PublishDraft&file=Footer');
+		$params = [
+			'cmd'		=> 'PublishDraft',
+			'file'		=> 'Footer',
+			'verified'		=> \gp\tool::new_nonce('post', true),
+		];
+		$this->PostRequest('Admin/Extra',$params);
 		$this->assertFileNotExists($area_info['draft_path']);
 
 		// make sure the new text still shows

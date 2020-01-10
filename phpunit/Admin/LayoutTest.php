@@ -15,7 +15,7 @@ class LayoutTest extends \gptest_bootstrap{
 
 	public function testLayout(){
 
-		$this->Login();
+		$this->UseAdmin();
 
 
 		$this->GetRequest('Admin_Theme_Content');

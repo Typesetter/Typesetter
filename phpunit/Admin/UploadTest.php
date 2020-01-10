@@ -8,7 +8,7 @@ class UploadTest extends \gptest_bootstrap{
 	public function testUpload(){
 		global $dataDir;
 
-		$this->Login();
+		$this->UseAdmin();
 
 		$file = $dataDir . '/include/imgs/stars.png';
 		$this->UploadRequest('Admin/Uploaded',$file);
@@ -36,7 +36,7 @@ class UploadTest extends \gptest_bootstrap{
 	public function testInvalidUpload(){
 		global $dataDir;
 
-		$this->Login();
+		$this->UseAdmin();
 
 		$file			= $dataDir . '/include/main.php';
 		$upload		 	= $dataDir.'/data/_uploaded/image/main.php';

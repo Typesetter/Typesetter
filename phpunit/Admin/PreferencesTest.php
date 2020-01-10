@@ -10,7 +10,7 @@ class PreferencesTest extends \gptest_bootstrap{
 	 */
 	public function testChangePassword(){
 
-		$this->Login();
+		$this->UseAdmin();
 
 		// password_hash -> password_hash
 		$params = [

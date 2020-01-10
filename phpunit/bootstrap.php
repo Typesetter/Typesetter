@@ -20,8 +20,9 @@ if (!class_exists('\PHPUnit_Framework_TestCase') && class_exists('\PHPUnit\Frame
 class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 	protected static $process;
-	protected static $client;
-	protected static $logged_in		= false;
+	protected static $client_user;			// guzzle client for making anonymous user requests
+	protected static $client_admin;			// guzzle client for making admin user requests
+	protected static $client_current;
 	protected static $installed		= false;
 	protected static $requests		= 0;
 	protected static $proc_output	= [];
@@ -100,8 +101,15 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		});
         usleep(100000); //wait for server to get going
 
-		self::$client				= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
-		self::$logged_in			= false;
+
+		// create client for user requests
+		self::$client_user			= new \GuzzleHttp\Client(['http_errors' => false]);
+
+
+		// create client for admin requests
+		self::$client_admin			= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
+		self::UseAdmin();
+		self::LogIn();
 
 
 		register_shutdown_function(function(){
@@ -110,6 +118,19 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		});
 	}
 
+	/**
+	 * Switch current guzzle client to $client_admin
+	 */
+ 	public static function UseAdmin(){
+		self::$client_current		= self::$client_admin;
+ 	}
+
+	/**
+	 * Switch current guzzle client to $client_user
+	 */
+	public static function UseAnon(){
+		self::$client_current		= self::$client_user;
+	}
 
 	/**
 	 * Print process output
@@ -163,7 +184,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		try{
 			self::$proc_output		= [];
 			$options['headers']		= ['X-REQ-ID' => self::$requests];
-			$response				= self::$client->request($type, $url, $options);
+			$response				= self::$client_current->request($type, $url, $options);
 			$debug_file				= $dataDir . '/data/response-' . self::$requests . '-' . $type . '-' . str_replace('/','_',$url);
 			$body					= $response->getBody();
 
@@ -226,13 +247,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 * Log In
 	 *
 	 */
-	public function LogIn(){
-		global $config;
-
-		if( self::$logged_in ){
-			return;
-		}
-
+	public static function LogIn(){
 
 		// load login page to set cookies
 		$response					= self::GetRequest('Admin');
@@ -243,9 +258,8 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$params['password']			= self::user_pass;
 		$params['login_nonce']		= \gp\tool::new_nonce('login_nonce',true,300);
 		$response					= self::PostRequest('Admin',$params);
-		self::$logged_in			= true;
-
 	}
+
 
 
 	/**

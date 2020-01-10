@@ -13,10 +13,10 @@ class ExtraTest extends \gptest_bootstrap{
 	}
 
 
-	public function testChangePassword(){
+	public function testCreateExtra(){
 
 
-		$this->Login();
+		$this->UseAdmin();
 		$this->GetRequest('Admin/Extra');
 
 
@@ -107,6 +107,14 @@ class ExtraTest extends \gptest_bootstrap{
 
 	}
 
+	/**
+	 *
+	 *
+	public function testVisibility(){
+
+
+	}
+	*/
 
 
 }

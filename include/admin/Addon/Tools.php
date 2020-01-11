@@ -655,7 +655,7 @@ class Tools extends \gp\special\Base{
 	public function AdminLinkList($links, $label, $format){
 		$_links = array();
 		foreach($links as $linkName => $linkInfo){
-			$_links[] 	 = \gp\tool::Link($linkName, $linkInfo['label']);
+			$_links[] 	 = \gp\tool::Link($linkName, str_replace('_',' ',$linkInfo['label']));
 		}
 		$this->FormatList($_links, $label, $format);
 	}

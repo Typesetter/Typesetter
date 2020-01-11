@@ -1810,7 +1810,7 @@ namespace gp\tool{
 		 */
 		public static function StyleType($dir){
 
-			$types = ['less','scss'];
+			$types = ['css','less','scss'];
 
 			foreach($types as $type){
 				$path = $dir . '/style.'.$type;
@@ -1818,7 +1818,7 @@ namespace gp\tool{
 					return $type;
 				}
 			}
-			return 'css';
+			return false;
 		}
 
 

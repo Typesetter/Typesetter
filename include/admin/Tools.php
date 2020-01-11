@@ -1643,7 +1643,7 @@ namespace gp\admin{
 				if( self::HasPermission($linkName) ){
 					$any_permissions = true;
 					$result 	.= '<li>';
-					$linkLabel	 = $linkInfo['label'];
+					$linkLabel	 = str_replace('_',' ',$linkInfo['label']);
 					$result 	.= \gp\tool::Link($linkName, $linkLabel);
 					$result 	.= '</li>';
 				}

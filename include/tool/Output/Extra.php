@@ -37,12 +37,11 @@ class Extra{
 			)
 		);
 
-		$include_link = \gp\Page\Edit::IncludeLink($extra_content[0]);
 
 		ob_start();
 		echo '<span class="nodisplay" id="ExtraEditLnks' . $edit_index . '">';
 		echo $edit_link;
-		echo $include_link;
+		echo \gp\Page\Edit::IncludeLink($extra_content[0]);
 		echo \gp\tool::Link(
 			'Admin/Extra',
 			$langmessage['theme_content'],
@@ -110,7 +109,8 @@ class Extra{
 	public static function ExtraIsVisible($title){
 		global $page;
 
-		if( $page->pagetype == 'admin_display' ){
+
+		if( is_object($page) && $page->pagetype == 'admin_display' ){
 			return true;
 		}
 

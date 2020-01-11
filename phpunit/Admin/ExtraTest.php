@@ -106,14 +106,55 @@ class ExtraTest extends \gptest_bootstrap{
 
 	}
 
-	/**
-	 *
-	 *
 	public function testVisibility(){
+
+		ob_start();
+		\gp\tool\Output\Extra::GetExtra('Header');
+		$content	= ob_get_clean();
+
+		// assert the homepage does not contain extra content
+		$response	= $this->GetRequest('');
+		$body		= $response->GetBody();
+
+		$this->assertNotStrpos($body,$content);
+
+
+		// add footer extra to bottom of page
+		// get container query from theme editor
+		// look for url like http://localhost/index.php/Admin_Theme_Content/Edit/default?cmd=SelectContent&param=QWZ0ZXJDb250ZW50Og_0%7C
+		$response	= $this->GetRequest('Admin_Theme_Content/Edit/default','cmd=in_iframe');
+		$body		= $response->GetBody();
+
+		preg_match('#cmd=SelectContent&amp;param=([^"]+)#',$body,$match);
+
+		$param = rawurldecode($match[1]);
+
+
+		// open dialog
+		// /Admin_Theme_Content/Edit/default?cmd=SelectContent&param=QWZ0ZXJDb250ZW50Og_0%7C
+		$response	= $this->GetRequest('Admin_Theme_Content/Edit/default','cmd=SelectContent&param='.$param);
+		$body		= $response->GetBody();
+		$count		= preg_match_all('#data-cmd="tabs"#',$body);
+		$this->assertEquals( $count, 4 , 'Tab count didnt match expected');
+
+
+		// add Header
+		// /Admin_Theme_Content/Edit/default?cmd=addcontent&where=QWZ0ZXJDb250ZW50Og_0%7C&insert=Extra%3AHeader
+		preg_match('#href="([^"]*)?([^"]*cmd=addcontent[^"]*Header[^"]*)"#',$body,$match);
+		$page		= rawurldecode($match[1]);
+		$query		= rawurldecode($match[2]);
+		$response	= $this->GetRequest($page,$query);
+
+
+		// confirm the homepage page contains the extra content
+		$this->UseAnon();
+		$response	= $this->GetRequest('');
+		$body		= $response->GetBody();
+
+		$this->assertStrpos($body,$content,'Header extra content not found in body');
 
 
 	}
-	*/
 
 
 }

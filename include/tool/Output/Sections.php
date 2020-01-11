@@ -177,12 +177,13 @@ namespace gp\tool\Output{
 		 *
 		 */
 		public static function TextContent(&$content){
+			global $dirPrefix;
 
 			self::$meta += array('modified'=>'');
 
 			//variables
 			$vars = array(
-				'dirPrefix'		=> $GLOBALS['dirPrefix'],
+				'dirPrefix'		=> $dirPrefix,
 				'linkPrefix'	=> \gp\tool::HrefEncode($GLOBALS['linkPrefix']),
 				'fileModTime'	=> self::$meta['modified'],
 				'title'			=> self::$title,

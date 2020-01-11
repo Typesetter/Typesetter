@@ -24,7 +24,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	protected static $client_admin;			// guzzle client for making admin user requests
 	protected static $client_current;
 	protected static $is_admin		= false;
-	protected static $installed		= false;
 	protected static $requests		= 0;
 	protected static $proc_output	= [];
 	protected static $phpinfo;
@@ -46,7 +45,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		fwrite($fp, "\n".print_r($msg, TRUE));
 	}
 
-	function setUp(){
+	public function setUp(){
 		self::UseAdmin();
 	}
 
@@ -57,16 +56,19 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
 	public static function setUpBeforeClass(){
 
+		if( function_exists('showError') ){
+			return;
+		}
+
+		self::Console('Start server, set phpinfo...');
+
 		self::PrepInstall();
 		self::StartServer();
 
-		if( empty(self::$phpinfo) ){
-			self::Console('set phpinfo');
-			$url				= '/phpinfo.php';
-			$response			= self::GuzzleRequest('GET',$url);
-			$body				= $response->getBody();
-			self::$phpinfo		= (string)$body;
-		}
+		$url				= '/phpinfo.php';
+		$response			= self::GuzzleRequest('GET',$url);
+		$body				= $response->getBody();
+		self::$phpinfo		= (string)$body;
 
 
 		self::Install();
@@ -76,9 +78,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	public static function StartServer(){
 		global $dataDir;
 
-		if( self::$process ){
-			return;
-		}
 
 		$proc		= ['php','-S','localhost:8081'];
 
@@ -97,6 +96,21 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$proc[]		= '-d';
 		$proc[]		= 'auto_prepend_file='.__DIR__ . '/ServerPrepend.php';
 
+		// xdebug profiling
+		/*
+		$proc[]		= '-d';
+		$proc[]		= 'xdebug.profiler_enable=1';
+
+		$proc[]		= '-d';
+		$proc[]		= 'xdebug.profiler_output_dir=/tmp/test-profiler';
+
+		$profile_dir = '/tmp/test-profiler';
+		if( file_exists($profile_dir) ){
+			\gp\tool\Files::RmAll($profile_dir);
+		}
+		mkdir($profile_dir);
+		*/
+
 
 		self::$process = new \Symfony\Component\Process\Process($proc);
         self::$process->start(function($type,$buffer){
@@ -105,8 +119,9 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
         usleep(100000); //wait for server to get going
 
 
+
 		// create client for user requests
-		self::$client_user			= new \GuzzleHttp\Client(['http_errors' => false]);
+		self::$client_user			= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
 
 
 		// create client for admin requests
@@ -215,10 +230,12 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		try{
 			self::$proc_output		= [];
-			$options['headers']		= ['X-REQ-ID' => self::$requests];
+			$options['headers']		= ['X-REQ-ID' => self::$requests,'Connection'=>'close'];
 			$url					= 'http://localhost:8081' . $url;
 			$response				= self::$client_current->request($type, $url, $options);
 			$body					= $response->getBody();
+			$status					= $response->getStatusCode();
+
 
 			file_put_contents($debug_file, $body);
 			self::$requests++;
@@ -226,12 +243,12 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			self::$process->getOutput(); # makes symfony/process populate our self::$proc_output
 
 
-			if( $expected_resonse !== $response->getStatusCode() ){
+			if( $expected_resonse !== $status ){
 				self::ProcessOutput($type,$url);
 				self::Console('PHPINFO()');
 				echo (string)self::$phpinfo;
 			}
-			self::assertEquals($expected_resonse, $response->getStatusCode());
+			self::assertEquals($expected_resonse, $status);
 
 
 			// make sure the response doesn't have <div id="gp_admin_html">
@@ -309,11 +326,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
 	public static function PrepInstall(){
 		global $dataDir, $languages, $config;
-
-		if( function_exists('showError') ){
-			self::$installed		= true;
-			return;
-		}
 
 
 
@@ -400,14 +412,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 	 */
 	public static function Install(){
 		global $config;
-
-		// don't attempt to install twice
-		if( self::$installed ){
-			return;
-		}
-
-		self::$installed		= true;
-
 
 
 		//make sure it's not installed

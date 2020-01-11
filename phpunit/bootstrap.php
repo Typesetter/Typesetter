@@ -98,18 +98,19 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		// xdebug profiling
 		/*
-		$proc[]		= '-d';
-		$proc[]		= 'xdebug.profiler_enable=1';
-
-		$proc[]		= '-d';
-		$proc[]		= 'xdebug.profiler_output_dir=/tmp/test-profiler';
-
-		$profile_dir = '/tmp/test-profiler';
+		$profile_dir = sys_get_temp_dir().'/test-profiler';
 		if( file_exists($profile_dir) ){
 			\gp\tool\Files::RmAll($profile_dir);
 		}
 		mkdir($profile_dir);
+
+		$proc[]		= '-d';
+		$proc[]		= 'xdebug.profiler_enable=1';
+
+		$proc[]		= '-d';
+		$proc[]		= 'xdebug.profiler_output_dir='.$profile_dir;
 		*/
+
 
 
 		self::$process = new \Symfony\Component\Process\Process($proc);
@@ -141,7 +142,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 			    return ($a['time'] < $b['time']) ? 1 : -1;
 			});
 
-			self::Console('Slowest requests');
+			self::Console('Slowest requests (the slowest will usually be because of scss compilation');
 			self::$tracking = array_slice(self::$tracking,0,5);
 
 			foreach(self::$tracking as $req){

@@ -366,7 +366,7 @@
 
 			if( gp_editing.get_edit_area($gp.curr_edit_id) ){
 				editor_info.section = gp_editing.get_edit_area($gp.curr_edit_id);
-				var section_type = $section.attr('class').match(/filetype-\w*/gi).toString();
+				var section_type = editor_info.section.attr('class').match(/filetype-\w*/gi).toString();
 				editor_info.section_type = section_type.substring(section_type.indexOf('filetype-') + 9);
 			}
 			

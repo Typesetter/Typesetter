@@ -266,7 +266,6 @@
 				$('#gp_admin_html').append(html);
 
 				$('html').addClass('gpEditing');
-				$(document).trigger('editor_area:loaded');
 
 				$ck_area_wrap = $('#ck_area_wrap');
 			}
@@ -283,7 +282,7 @@
 			html += '</div>';
 			$ck_area_wrap.html(html);
 
-			$(document).trigger('editor_area:shown');
+			$(document).trigger('editor_area:loaded');
 			gp_editing.ShowEditor();
 		},
 

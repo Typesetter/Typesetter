@@ -5,15 +5,15 @@
 * Bootstrap 4: Typesetter now adds support for Bootstrap 4.4.1 and ships the 'Bootswatch 4 Scss' theme. There is also a new Bootstrap 4 preset loadable for 'Available Classes'. But no worries, Bootstrap 3 and all its Bootswatch themes are still there.
 * elFinder 2.1.50: Our file manager was updated to the most recent version and comes with a fresh new look and some interesting new features.
 * CK Editor 4.13: We now use the most recent version of the CK Editor 4 branch.
-* jQuery 2.2.4: We would have even chosen jQuery 3, but Bootstrap 3 doesn't play along
+* jQuery 2.2.4: We would have even chosen jQuery 3, but Bootstrap 3 doesn't play along.
 * Less.php 1.8.1: With the newest version of our LESS CSS compiler we gain some performance boost and support for less 2.5.3
-* ScssPhp 1.0.5: Version 1.0.5 comes with better support for recent development of the the Scss language
+* ScssPhp 1.0.5: Version 1.0.5 comes with better support for recent development of the the Scss language.
 * Colorbox 1.6.4: Merely an update to the latest version but we also added a modern Colorbox style called 'Minimalistic'
-* PHPmailer 5.2.27: fixes a security issue
+* PHPmailer 5.2.27: fixes a security issue.
 
 
 ## Security ##
-* SVG upload warning: SVG file upload is now prevented by default but can be activated during setup or via configuration
+* SVG upload warning: SVG file upload is now prevented by default but can be activated during setup or via configuration.
 
 
 ## CSS Compilation ##
@@ -35,12 +35,13 @@
 * Gallery Editor: gallery style variants can now be choosen via icons instead of dropdowns.
 * The 'Plugins &raquo; Available' list (merely for developer installations) will now be sorted alphanmerical.
 * Manage sections: Admin actions in (now called) 'Sections' editor mode will be saved immediately. Internal data changes like wrapper collapse state and changes to color and text labels will not cause a new working draft of the page anyomre.
-* Manage sections: [Ctrl] + click bypasses the 'Are you sure you want to … ?' dialog and removes sectios immediately.
+* Manage sections: [Ctrl] + click bypasses the 'Are you sure you want to â€¦ ?' dialog and immediately removes sections.
 * Layout Editor now handles themes with vh units and flexbox on the html and body elements.
 
 
 ## Supported Languages ##
 * Thanks to GitHub user sveinki, Typsesetter now also speaks Icelandic.
+* There are also many improvements to already existing translations.
 
 
 ## Extra Content ##
@@ -48,17 +49,17 @@
 
 
 ## Bug Fixes ##
-* Section Clipboaard now also works with nested content of any depht.
+* Section Clipboaard now also works with nested content structures of any depht.
 * Forgotten password: New password sent via e-mail now also works with 'password_hash' algorithm. 
 * Change password: Now also works with 'password_hash' algorithm. 
 * Fix page corruption with too many sections: With lots os sections, posting discrete values came to its limits (depending on server config) and saving a page failed. We now post all in a single JSON value, which is safe.
-* Multiple section operations in quick succession: It now shouldn't be possible to cause 'Not a Draft' and 'Invalid Section Number" errors anymore (fingers crossed ;)
+* Multiple section operations in quick succession: It now shouldn't be possible anymore to cause 'Not a Draft' and 'Invalid Section Number" errors (fingers crossed ;).
 
 
 ## Development ##
-* General note: We made quite a lot of changes, even architectural ones, but with backward compatibility in mind. If your custom code doesn't work in Typesetter 5.2 anymore, we probably will be able to assist you via GitHub issues or the forum on TypesetterCMS.com
-* Theme development: Bootstrap based themes shipping with Typesetter now have a new Addon.ini section called [FrontEndFramework] wich declares Bootstrap and version used by the theme. This makes server-side framework detection possible and allows plugins to adapt their output accordingly. Although it's not mandatory, please consider adding this information to all new themes, even if they use other frameworks like Foundation.
-* Supported PHP versions: Typesetter dropped PHP 5.3 to 5.5 and added support for PHP up to version 7.4
+* General note: We made quite a lot of changes, even architectural ones, but with backward compatibility in mind. If your custom code is broken using Typesetter 5.2, we will most likely be able to assist you via GitHub issues or the forum on TypesetterCMS.com
+* Theme development: Bootstrap based themes shipping with Typesetter now have a new Addon.ini section called 'FrontEndFramework' wich declares Bootstrap and version used by the theme. This makes server-side framework detection possible and allows plugins to adapt their output accordingly. Although it's not mandatory, please consider adding this information to all new themes, even if they use other frameworks like Foundation, Materialize, you name it.
+* Supported PHP versions: Typesetter dropped support for PHP 5.3 to 5.5 and added support for PHP up to version 7.4.
 * CSS helper classes: In addition to body.gpAdmin we now have html.gpEditing (when editor is open) html.isPrivate (on private pages) and html.gpAdmin (for consistency).
 * Popper.js, the JS positioning library behind Bootstrap tooltips is now also available outside of Bootstrap themes as loadable component. 
 \gp\tool::LoadComponents('popper'); Popper.js will be loaded by default when you are logged in. 
@@ -69,9 +70,9 @@
 
 
 ## New Plugin Hooks ###
-* 'AvailableClasses' filter hook can be used to dynamically manipulate the Available Classes array 
-* 'Notifications' filter hook can be used to manipulate Notifications before they are displayed
-* 'ReplaceContentVars' is a new filter hook to manage content variables to be replaced in output, such as $currentYear => 2020.
+* 'AvailableClasses' filter hook can be used to dynamically manipulate the Available Classes array.
+* 'Notifications' filter hook can be used to manipulate Notifications before they are displayed.
+* 'ReplaceContentVars' is a new filter hook to manage content variables to be replaced in output, such as $myName (in content) => John Doe (in output).
 * 'AdminLinkLabel' filter hook allows better plugin internationalization.
 
 

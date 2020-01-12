@@ -1,4 +1,4 @@
-### New in Typesetter CMS 5.2 ###
+### New in Typesetter CMS 5.2 (release pending) ###
 
 ## Thirdparty Components and Libraries ##
 

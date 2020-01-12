@@ -283,6 +283,7 @@
 			html += '</div>';
 			$ck_area_wrap.html(html);
 
+			$(document).trigger('editor_area:shown');
 			gp_editing.ShowEditor();
 		},
 

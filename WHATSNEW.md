@@ -29,7 +29,7 @@
 * Admin Panel (AKA top bar): we re-arranged some items here to save more space, e.g. for plugin-added links.
 * Page Revision History: page revisions moved from the former modal box to a sidebar (similar to Layout Editor) which makes preview and restoration more convenient.
 * Notifications: Contrary to messages (the yellow bar) which rather show immediate feedback, the new notificaton system shows things that an administrator should pay attention to sooner or later, such as working drafts, pages set to 'visibility: private', available updates and debugging warnings. Notifications persist unless their issues are solved but can be muted.
-* Section Attributes: Attribute value fields now grow multi-line if required. Available Classes no use a more compact representation and tooltips for descriptions.
+* Section Attributes: Attribute value fields now grow multi-line if required. Available Classes now use a more compact representation and tooltips for descriptions.
 * CK Editor skin and built-in plugins: We now use the more modern, monochromatic 'moono-lisa' skin. The Source code dialog now features CodeMirror with syntax highlighting and pretty printing.
 * Image sections now have an 'Alternative Text' input field.
 * Gallery Editor: gallery style variants can now be choosen via icons instead of dropdowns.
@@ -52,7 +52,7 @@
 * Section Clipboaard now also works with nested content structures of any depht.
 * Forgotten password: New password sent via e-mail now also works with 'password_hash' algorithm. 
 * Change password: Now also works with 'password_hash' algorithm. 
-* Fix page corruption with too many sections: With lots os sections, posting discrete values came to its limits (depending on server config) and saving a page failed. We now post all in a single JSON value, which is safe.
+* Fix page corruption with too many sections: With lots of sections, posting discrete values came to its limits (depending on server config) and saving a page failed. We now post all in a single JSON value, which is safe.
 * Multiple section operations in quick succession: It now shouldn't be possible anymore to cause 'Not a Draft' and 'Invalid Section Number" errors (fingers crossed ;).
 
 

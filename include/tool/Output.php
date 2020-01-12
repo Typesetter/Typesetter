@@ -1823,6 +1823,25 @@ namespace gp\tool{
 
 
 		/**
+		 * Determines whether the passed directory qualifies as layout
+		 * by checking whether a style.css, style.less or style.css file exists
+		 * @return boolean
+		 */
+		public static function IsLayoutDir($dir){
+
+			$types = ['less','scss','css'];
+
+			foreach($types as $type){
+				$path = $dir . '/style.' . $type;
+				if( file_exists($path) ){
+					return true;
+				}
+			}
+			return false;
+		}
+
+
+		/**
 		 * Complete the response by adding final content to the <head> of the document
 		 * @static
 		 * @since 2.4.1

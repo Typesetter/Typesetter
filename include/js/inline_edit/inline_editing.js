@@ -350,17 +350,20 @@
 
 			// gather information passed to the editor:loaded event
 			var editor_info = {
+				editor			: gp_editor,
 				section 		: false,
 				section_type 	: false,
 				label			: label
 			}
 
 			if( gp_editing.get_edit_area($gp.curr_edit_id) ){
-				editor_info.section = gp_editing.get_edit_area($gp.curr_edit_id);
-				var section_type = editor_info.section.attr('class').match(/filetype-\w*/gi).toString();
-				editor_info.section_type = section_type.substring(section_type.indexOf('filetype-') + 9);
+				editor_info.section 		= gp_editing.get_edit_area($gp.curr_edit_id);
+				var section_type 			= editor_info.section.attr('class').match(/filetype-\w*/gi).toString();
+				editor_info.section_type 	= section_type.substring(section_type.indexOf('filetype-') + 9);
 			}
-			
+
+			// console.log('editor_info = ', editor_info);
+
 			$(document).trigger('editor:loaded', editor_info);
 
 			gp_editing.PublishButton( $edit_area );

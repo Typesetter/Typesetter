@@ -565,6 +565,7 @@ namespace gp\tool{
 
 			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/thirdparty/ckeditor/ckeditor.js').'?'.rawurlencode(gpversion).'"></script>';
 			$page->head .= "\n".'<script type="text/javascript" src="'.\gp\tool::GetDir('/include/js/ckeditor_config.js').'?'.rawurlencode(gpversion).'"></script>';
+			$page->head .= "\n".'<script type="text/javascript">$(function(){$(document).trigger(\'editor:loaded\', {section : false,	section_type : false, label : \'CKE_example\'});})</script>';
 
 			\gp\tool::LoadComponents('autocomplete');
 			$page->head_script .= self::AutoCompleteValues(true);

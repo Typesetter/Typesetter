@@ -980,7 +980,7 @@ class Edit extends \gp\Page{
 	 */
 	public static function NewSections($checkboxes = false){
 
-		$types_with_imgs = array('text','image','gallery');
+		$types_with_imgs = array('text','image','gallery','wrapper_section','include');
 
 		$section_types = \gp\tool\Output\Sections::GetTypes();
 		$links = array();

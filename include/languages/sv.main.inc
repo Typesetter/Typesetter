@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Aktuell sida',
 	'Notifications'                   => 'Meddelanden',
 	'Notification'                    => 'Meddelande',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Privata sidor',
 	'Private Page'                    => 'Privat sida',
 	'Working Drafts'                  => 'Utkast',

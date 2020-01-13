@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => '現在のページ',
 	'Notifications'                   => '特記事項',
 	'Notification'                    => 'お知らせ',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'プライベートページ',
 	'Private Page'                    => 'プライベートページ',
 	'Working Drafts'                  => '下書き中',

@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Υπάρχουσα Σελίδα',
 	'Notifications'                   => 'Ειδοποιήσεις',
 	'Notification'                    => 'Γνωστοποίηση',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Ιδιωτικές σελίδες',
 	'Private Page'                    => 'διωτική σελίδα',
 	'Working Drafts'                  => 'Σχέδια εργασίας',

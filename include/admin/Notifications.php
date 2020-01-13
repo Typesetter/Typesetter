@@ -56,6 +56,8 @@ namespace gp\admin{
 			echo '<div class="inline_box show-notifications-box">';
 
 
+			$muted_count = 0;
+			$muted = $_REQUEST['cmd'] != 'ShowHiddenNotifications' ? 'nodisplay' : '';
 
 			$filter_list_by = '';
 			if( isset($_REQUEST['type']) ){
@@ -89,7 +91,8 @@ namespace gp\admin{
 					$link_icon	= '<i class="fa fa-bell"></i>';
 					$link_title	= $langmessage['Hide'];
 					if( $item['priority'] < 0 ){
-						$tr_class	= ' class="notification-item-muted"';
+						$muted_count += 1;
+						$tr_class	= ' class="notification-item-muted ' . $muted . '"';
 						$link_icon	= '<i class="fa fa-bell-slash"></i>';
 						$link_title	= $langmessage['Show'];
 					}
@@ -121,6 +124,16 @@ namespace gp\admin{
 			}
 
 			echo '<p>';
+
+			if ( $muted_count > 0 && $muted ){
+				echo \gp\tool::Link(
+					'Admin/Notifications',
+					$langmessage['Show Hidden Notifications'] . ' (' . $muted_count . ')',
+					'cmd=ShowHiddenNotifications&type=' . rawurlencode($filter_list_by),
+					'data-cmd="gpabox"'
+				);
+			}
+
 			echo '<button style="float:right;margin-right:0;" class="admin_box_close gpcancel">';
 			echo $langmessage['Close'];
 			echo '</button>';

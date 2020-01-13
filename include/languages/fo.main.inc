@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Verandi Síða',
 	'Notifications'                   => 'Notifications',
 	'Notification'                    => 'Notification',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Private Pages',
 	'Private Page'                    => 'Private Page',
 	'Working Drafts'                  => 'Arbeiðs Kladda',

@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Esamas puslapis',
 	'Notifications'                   => 'Pranešimai',
 	'Notification'                    => 'Pranešimas',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Privatūs puslapiai',
 	'Private Page'                    => 'Privatus puslapis',
 	'Working Drafts'                  => 'Darbiniai juodraščiai',

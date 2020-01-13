@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Aktuális oldal',
 	'Notifications'                   => 'Értesítések',
 	'Notification'                    => 'Értesítés',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Privát oldalak',
 	'Private Page'                    => 'Privát oldal',
 	'Working Drafts'                  => 'Munkavázlatok',

@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Nykyinen sivu',
 	'Notifications'                   => 'Ilmoitukset',
 	'Notification'                    => 'Ilmoitus',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Yksityiset sivut',
 	'Private Page'                    => 'Yksityinen sivu',
 	'Working Drafts'                  => 'Työluonnokset',

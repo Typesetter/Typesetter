@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Сегашна страница',
 	'Notifications'                   => 'Известия',
 	'Notification'                    => 'Уведомление',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Частни страници',
 	'Private Page'                    => 'Частна страница',
 	'Working Drafts'                  => 'Работни чернови',

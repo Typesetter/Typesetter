@@ -210,6 +210,7 @@ $langmessage = array (
 	'Current Page'                    => 'Aktuálna stránka',
 	'Notifications'                   => 'Oznámenia',
 	'Notification'                    => 'Oznámenia',
+	'Show Hidden Notifications'       => 'Show Hidden Notifications',
 	'Private Pages'                   => 'Súkromná stránky',
 	'Private Page'                    => 'Súkromná stránka',
 	'Working Drafts'                  => 'Pracovný koncepty',

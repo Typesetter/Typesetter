@@ -335,7 +335,7 @@
 
 			var label = false;
 			if( $edit_area.length != 0 ){
-				label 			= gp_editing.SectionLabel($edit_area);
+				label			= gp_editing.SectionLabel($edit_area);
 				$('<a>').text(label).appendTo( $tabs );
 			}
 
@@ -347,15 +347,6 @@
 				$('#ckeditor_save').show();
 				$('#ckeditor_close').hide();
 			}
-
-
-			/* example how to use the 'editor:loaded' event
-			$(document).on('editor:loaded', function(evt, data){
-				console.log('editor:loaded triggered');
-				console.log('evt = ', evt);
-				console.log('data = ', data);
-			});
-			*/
 
 			// gather information passed to the editor:loaded event
 			var editor_info = {

@@ -1215,7 +1215,7 @@ class Layout extends \gp\admin\Addon\Install{
 		asort($subdirs);
 		foreach($subdirs as $subdir){
 
-			if( \gp\tool\Output::StyleType($dir.'/'.$subdir) !== false ){
+			if( \gp\tool\Output::IsLayoutDir($dir.'/'.$subdir) !== false ){
 				$colors[$subdir] = $subdir;
 			}
 

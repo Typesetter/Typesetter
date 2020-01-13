@@ -319,10 +319,10 @@ namespace gp\admin{
 			// Addon admin links
 			if( isset($config['admin_links']) && is_array($config['admin_links']) ){
 
-				foreach( $config['admin_links'] as $addonName => $addonInfo ){
-					$addonLabel = $addonInfo['label'];
-					$addonLabel	= \gp\tool\Plugins::Filter('AdminLinkLabel', array($addonName, $addonLabel));
-					$config['admin_links'][$addonName]['label'] = $addonLabel;
+				foreach( $config['admin_links'] as $link_name => $addon_info ){
+					$link_label = $addon_info['label'];
+					$link_label	= \gp\tool\Plugins::Filter('AdminLinkLabel', array($link_label, $link_name));
+					$config['admin_links'][$link_name]['label'] = $link_label;
 				}
 
 				//prefix admin link labels with plugin icon

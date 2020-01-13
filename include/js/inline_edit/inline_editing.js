@@ -326,16 +326,17 @@
 			if( extra_mode ){
 				$ckeditor_wrap.addClass('edit_mode_extra');
 				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" '
-					+ 'data-arg="manage_sections">' + gplang.Extra + '</a>');
+					+ 'data-arg="manage_sections" title="' + gplang.Extra + '">' + gplang.Extra + '</a>');
 			}else{
 				$ckeditor_wrap.removeClass('edit_mode_extra');
 				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" '
-					+ 'data-arg="manage_sections">' + gplang.Sections + '</a>');
+					+ 'data-arg="manage_sections" title="' + gplang.Sections + '">' + gplang.Sections + '</a>');
 			}
 
+			var label = false;
 			if( $edit_area.length != 0 ){
-				var label		= gp_editing.SectionLabel($edit_area);
-				$('<a>').text(label).appendTo( $tabs );
+				label			= gp_editing.SectionLabel($edit_area);
+				$('<a>').attr('title', label).text(label).appendTo( $tabs );
 			}
 
 			// Hide save buttons for extra content list
@@ -346,6 +347,21 @@
 				$('#ckeditor_save').show();
 				$('#ckeditor_close').hide();
 			}
+
+			// gather information passed to the editor:loaded event
+			var editor_info = {
+				section 		: false,
+				section_type 	: false,
+				label			: label
+			}
+
+			if( gp_editing.get_edit_area($gp.curr_edit_id) ){
+				editor_info.section = gp_editing.get_edit_area($gp.curr_edit_id);
+				var section_type = editor_info.section.attr('class').match(/filetype-\w*/gi).toString();
+				editor_info.section_type = section_type.substring(section_type.indexOf('filetype-') + 9);
+			}
+			
+			$(document).trigger('editor:loaded', editor_info);
 
 			gp_editing.PublishButton( $edit_area );
 		},

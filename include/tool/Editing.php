@@ -580,7 +580,11 @@ namespace gp\tool{
 			}
 
 			echo '$(".CKEDITAREA").each(function(){';
-			echo 'CKEDITOR.replace( this, '.$config.' );';
+			echo	'CKEDITOR.replace( this, '.$config.' );';
+			echo	'CKEDITOR.on("instanceReady", function(evt){';
+			/* echo		'console.log("triggered editor:loaded event with ", { section: evt.editor.element["$"], section_type: "other", label: evt.editor.name });'; */
+			echo		'$(document).trigger("editor:loaded", { section: evt.editor.element["$"], section_type: "other", label: evt.editor.name });';
+			echo	'});';
 			echo '});';
 
 			echo "\n\n";

@@ -980,7 +980,7 @@ class Edit extends \gp\Page{
 	 */
 	public static function NewSections($checkboxes = false){
 
-		$types_with_imgs = array('text','image','gallery');
+		$types_with_imgs = array('text','image','gallery','wrapper_section','include');
 
 		$section_types = \gp\tool\Output\Sections::GetTypes();
 		$links = array();
@@ -997,7 +997,7 @@ class Edit extends \gp\Page{
 			array('text.gpCol-6', 'image.gpCol-6'),
 			\gp\tool::GetDir('/include/imgs/section-combo-text-image.png'),
 			array(
-				// 'gp_label' => 'Text &amp; Image',
+				'gp_label' 		=> 'Text &amp; Image',
 				'gp_color'		=> '#555',
 				'attributes'	=> array(
 					'class'		=> 'gpRow',
@@ -1010,7 +1010,20 @@ class Edit extends \gp\Page{
 			array('text.gpCol-6', 'gallery.gpCol-6'),
 			\gp\tool::GetDir('/include/imgs/section-combo-text-gallery.png'),
 			array(
-				// 'gp_label' => 'Text &amp; Gallery',
+				'gp_label'		=> 'Text &amp; Gallery',
+				'gp_color'		=> '#555',
+				'attributes'	=> array(
+					'class'		=> 'gpRow',
+				),
+			),
+		);
+
+		//section combo: 3 text columns
+		$links[] = array(
+			array('text.gpCol-4', 'text.gpCol-4', 'text.gpCol-4'),
+			\gp\tool::GetDir('/include/imgs/section-combo-3-text-cols.png'),
+			array(
+				'gp_label' 		=> '3 Text Columns',
 				'gp_color'		=> '#555',
 				'attributes'	=> array(
 					'class'		=> 'gpRow',

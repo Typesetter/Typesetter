@@ -28,7 +28,7 @@ class Classes extends \gp\special\Base{
 	 * Get the current classes
 	 *
 	 */
-	static function GetClasses(){
+	public static function GetClasses(){
 
 		$classes		= \gp\tool\Files::Get('_config/classes');
 		if( $classes ){
@@ -44,7 +44,7 @@ class Classes extends \gp\special\Base{
 
 
 
-	static function Defaults(){
+	public static function Defaults(){
 		return array(
 			array(
 				'names'		=> 'gpRow',
@@ -59,7 +59,7 @@ class Classes extends \gp\special\Base{
 
 
 
-	static function Bootstrap3(){
+	public static function Bootstrap3(){
 		return array (
 			array (
 				'names'		=> 'jumbotron',
@@ -158,7 +158,7 @@ class Classes extends \gp\special\Base{
 
 
 
-	static function Bootstrap4(){
+	public static function Bootstrap4(){
 		return array (
 			array (
 				'names'		=>'text-left text-center text-right text-justify',
@@ -449,7 +449,7 @@ class Classes extends \gp\special\Base{
 	 * Display form for selecting classes
 	 *
 	 */
-	function ClassesForm(){
+	private function ClassesForm(){
 		global $dataDir, $langmessage;
 
 		echo '<h2 class="hmargin">' . $langmessage['Manage Classes'] . '</h2>';
@@ -459,11 +459,15 @@ class Classes extends \gp\special\Base{
 			case 'LoadDefault':
 				$classes = self::Defaults();
 			break;
+
 			case 'LoadBootstrap3':
 				$classes = self::Bootstrap3();
+			break;
+
 			case 'LoadBootstrap4':
 				$classes = self::Bootstrap4();
 			break;
+
 			default:
 				$classes = self::GetClasses();
 			break;
@@ -518,7 +522,7 @@ class Classes extends \gp\special\Base{
 	 * Save the posted data
 	 *
 	 */
-	function SaveClasses(){
+	public function SaveClasses(){
 		global $langmessage;
 
 		$classes = array();

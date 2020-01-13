@@ -326,17 +326,17 @@
 			if( extra_mode ){
 				$ckeditor_wrap.addClass('edit_mode_extra');
 				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" '
-					+ 'data-arg="manage_sections">' + gplang.Extra + '</a>');
+					+ 'data-arg="manage_sections" title="' + gplang.Extra + '">' + gplang.Extra + '</a>');
 			}else{
 				$ckeditor_wrap.removeClass('edit_mode_extra');
 				$tabs.append('<a href="?cmd=ManageSections" data-cmd="inline_edit_generic" '
-					+ 'data-arg="manage_sections">' + gplang.Sections + '</a>');
+					+ 'data-arg="manage_sections" title="' + gplang.Sections + '">' + gplang.Sections + '</a>');
 			}
 
 			var label = false;
 			if( $edit_area.length != 0 ){
 				label			= gp_editing.SectionLabel($edit_area);
-				$('<a>').text(label).appendTo( $tabs );
+				$('<a>').attr('title', label).text(label).appendTo( $tabs );
 			}
 
 			// Hide save buttons for extra content list

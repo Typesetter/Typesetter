@@ -146,13 +146,34 @@ class ExtraTest extends \gptest_bootstrap{
 		$response	= $this->GetRequest($page,$query);
 
 
-		// confirm the homepage page contains the extra content
+		// confirm the homepage contains the extra content
 		$this->UseAnon();
 		$response	= $this->GetRequest('');
 		$body		= $response->GetBody();
 
-		$this->assertStrpos($body,$content,'Header extra content not found in body');
+		$this->assertStrpos($body,$content,'Extra:Header content not found in body');
 
+
+		// change visibility
+		// /Admin/Extra?cmd=EditVisibility&file=Header
+		$this->UseAdmin();
+		$response	= $this->GetRequest('Admin/Extra','EditVisibility&file=Header');
+
+		$params = [
+			'cmd'				=> 'SaveVisibilityExtra',
+			'verified'			=> \gp\tool::new_nonce('post', true),
+			'file'				=> 'Header',
+			'visibility_type'	=> 1,
+		];
+		$this->PostRequest('Admin/Extra',$params);
+
+
+		// confirm the homepage does not contain the extra content
+		$this->UseAnon();
+		$response	= $this->GetRequest('');
+		$body		= $response->GetBody();
+
+		$this->assertNotStrpos($body,$content,'Extra:Header content was found in body');
 
 	}
 

@@ -422,7 +422,8 @@ class CKEditor extends \gp\special\Base{
 	 *
 	 */
 	function Example(){
-
+		global $page;
+		$page->head .= "\n".'<script type="text/javascript">$(function(){$(document).trigger(\'editor:loaded\', {section : false,	section_type : false, label : \'CKE_example\'});})</script>';
 		$content = '<h3>Lorem Ipsum</h3> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempor lectus id lectus laoreet scelerisque.</p><p>Vestibulum suscipit, lectus a feugiat facilisis, enim arcu fringilla nisi, et scelerisque nibh sapien in quam. Vivamus sit amet elementum nibh. Donec id ipsum nibh. Aliquam ligula nulla, condimentum sit amet consectetur eu, sagittis id ligula. In felis justo, feugiat et luctus sit amet, feugiat eget odio. Nullam suscipit mollis ipsum nec ultrices. Praesent ut lacus lorem. Fusce adipiscing arcu vitae dui ullamcorper a imperdiet felis dignissim. Maecenas eget tortor mi.</p>';
 		\gp\tool\Editing::UseCK($content);
 	}

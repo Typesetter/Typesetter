@@ -742,5 +742,11 @@ $langmessage = array (
 	'Takeover request accepted'       => 'Ihre Übernahmeanfrage wurde angenommen. Sie können jetzt mit der Bearbeitung beginnen.',
 	'User requests session takeover'  => '%s bittet darum, die Bearbeitungssitzung zu übernehmen.',
 	'Takeover request canceled'       => 'Die Übernahmeanfrage wurde abgebrochen.',
-	'Editing handed to'               => 'Sie haben gerade die Bearbeitungsmöglickeit an %s übergeben.',
+	'	'Show on this page'               => 'Show on this page',
+	'Hide on this page'               => 'Hide on this page',
+'               => 'Sie haben gerade die Bearbeitungsmöglickeit an %s übergeben.',
+	'Show on all pages'               => 'Auf allen Seiten anzeigen',
+	'Hide on all pages'               => 'Auf allen Seiten ausblenden',
+	'Show only on selected pages'     => 'Nur auf ausgewählten Seiten anzeigen',
+	'Hide on selected pages'          => 'Auf ausgewählten Seiten ausblenden',
 );

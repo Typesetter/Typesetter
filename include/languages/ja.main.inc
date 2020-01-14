@@ -743,4 +743,10 @@ $langmessage = array (
 	'User requests session takeover'  => '%s asks to take over the editing session.',
 	'Takeover request canceled'       => 'The takeover request was canceled.',
 	'Editing handed to'               => 'You have just handed over editing to %s.',
+	'Show on all pages'               => 'Show on all pages', // Note: for extra content visibility
+	'Hide on all pages'               => 'Hide on all pages',
+	'Show only on selected pages'     => 'Show only on selected pages',
+	'Hide on selected pages'          => 'Hide on selected pages',
+	'Show on this page'               => 'Show on this page',
+	'Hide on this page'               => 'Hide on this page',
 );

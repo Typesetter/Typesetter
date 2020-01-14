@@ -670,7 +670,12 @@ namespace gp\tool{
 				return $args;
 			}
 
-			$args = self::_ExecInfo($info,$args);
+
+			try{
+				$args = self::_ExecInfo($info,$args);
+			}catch(\Throwable $e){
+				\showError( E_ERROR ,'ExecInfo() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
+			}
 
 			if( $addon !== false ){
 				\gp\tool\Plugins::ClearDataFolder();

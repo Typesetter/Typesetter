@@ -26,27 +26,31 @@ class Extra extends \gp\Page\Edit{
 	}
 
 
-
 	public function RunScript(){
 
 		// area specific commands
-		if (!is_null($this->file)){
-			$this->cmds['DeleteArea']			= 'DefaultDisplay';
-			$this->cmds['EditExtra']			= '';
-			$this->cmds['PublishDraft']			= 'DefaultDisplay';
-			$this->cmds['PublishAjax']			= '';
-			$this->cmds['PreviewText']			= '';
-			$this->cmds['SaveText']				= 'EditExtra';
-			$this->cmds['EditVisibility']		= '';
-			$this->cmds['SaveVisibilityExtra'] 	= 'DefaultDisplay';
+		if( !is_null($this->file) ){
 
-			/* inline editing */
+			$this->cmds['PublishAjax']			= '';
+			$this->cmds['EditExtra']			= '';
+			$this->cmds['PreviewText']			= '';
+			$this->cmds['EditVisibility']		= '';
+
+
+			$this->cmds_post['SaveText']				= 'Redirect';
+			$this->cmds_post['PublishDraft']			= 'Redirect';
+			$this->cmds_post['SaveVisibilityExtra'] 	= 'Redirect';
+			$this->cmds_post['DeleteArea']				= 'DefaultDisplay';
+
+
+			// inline editing
 			$this->cmds['save']					= 'SectionEdit';
 			$this->cmds['save_inline']			= 'SectionEdit';
 			$this->cmds['preview']				= 'SectionEdit';
 			$this->cmds['include_dialog']		= 'SectionEdit';
 			$this->cmds['InlineEdit']			= 'SectionEdit';
 		}
+
 
 		$this->cmds['gallery_folder']			= 'GalleryImages';
 		$this->cmds['gallery_images']			= 'GalleryImages';
@@ -77,20 +81,23 @@ class Extra extends \gp\Page\Edit{
 		$area_info = $this->ExtraExists($_REQUEST['file']);
 
 		if (is_null($area_info)){
-			message($langmessage['OOPS'] . ' (Invalid File)');
+			msg($langmessage['OOPS'] . ' (Invalid File)');
 			return;
 		}
 
-		$this->area_info = $area_info;
-		$this->file = $area_info['file_path'];
-		$this->title = \gp\tool\Editing::CleanTitle($area_info['title']);
-		$this->draft_file = $area_info['draft_path'];
+		$this->area_info		= $area_info;
+		$this->file				= $area_info['file_path'];
+		$this->title			= \gp\tool\Editing::CleanTitle($area_info['title']);
+		$this->draft_file		= $area_info['draft_path'];
 
-		$this->file_sections = \gp\tool\Output::ExtraContent($this->title);
-		$this->meta_data = \gp\tool\Files::$last_meta;
-		$this->fileModTime = \gp\tool\Files::$last_modified;
-		$this->file_stats = \gp\tool\Files::$last_stats;
-		$this->vis = \gp\tool\Files::Get('_extra/' . $this->title . '/visibility', 'data');
+		$this->file_sections	= \gp\tool\Output\Extra::ExtraContent($this->title);
+		$this->meta_data		= \gp\tool\Files::$last_meta;
+		$this->fileModTime		= \gp\tool\Files::$last_modified;
+		$this->file_stats		= \gp\tool\Files::$last_stats;
+
+		$this->vis				= \gp\tool\Files::Get('_extra/' . $this->title . '/visibility', 'data');
+		$this->vis				+= ['visibility_type'=>'0','pages'=>[]];
+
 
 		if (\gp\tool\Files::Exists($this->draft_file)){
 			$this->draft_exists = true;
@@ -106,35 +113,27 @@ class Extra extends \gp\Page\Edit{
 	 */
 	public function GetAreas(){
 
-		$this->areas = array();
-		$files = scandir($this->folder);
+		$this->areas	= [];
+		$files			= scandir($this->folder);
 
-		foreach ($files as $file) {
-			$this->AddArea($file);
+		foreach( $files as $file ){
+
+			$title = self::AreaExists($file);
+
+			if( $title === false ){
+				continue;
+			}
+
+			$this->areas[$title] = [
+									'title'			=> $title,
+									'file_path'		=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/page.php'),
+									'draft_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/draft.php'),
+									'legacy_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '.php'),
+								];
+
 		}
 
 		uksort($this->areas, 'strnatcasecmp');
-	}
-
-
-	/**
-	 * Add $file to the list of areas
-	 *
-	 */
-	private function AddArea($title){
-
-		$title = self::AreaExists($title);
-
-		if( $title === false ){
-			return;
-		}
-
-		$this->areas[$title] = [
-								'title'			=> $title,
-								'file_path'		=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/page.php'),
-								'draft_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '/draft.php'),
-								'legacy_path'	=> \gp\tool\Files::FilePath($this->folder . '/' . $title . '.php'),
-							];
 	}
 
 
@@ -149,15 +148,15 @@ class Extra extends \gp\Page\Edit{
 			return false;
 		}
 
-		$legacy = $dataDir . '/data/_extra/' . $title;
-		$new = $dataDir . '/data/_extra/' . $title . '/page.php';
-		$php = (substr($title, -4) === '.php');
+		$legacy		= $dataDir . '/data/_extra/' . $title;
+		$new		= $dataDir . '/data/_extra/' . $title . '/page.php';
 
-		if (!$php && is_dir($legacy) && \gp\tool\Files::Exists($new)){ //is_dir() used to prevent open_basedir notice http://www.typesettercms.com/Forum?show=t2110
+
+		if( is_dir($legacy) && \gp\tool\Files::Exists($new) ){ //is_dir() used to prevent open_basedir notice http://www.typesettercms.com/Forum?show=t2110
 			return $title;
 		}
 
-		if ($php && \gp\tool\Files::Exists($legacy)){
+		if( substr($title, -4) === '.php' ){
 			return substr($title, 0, -4);
 		}
 
@@ -256,7 +255,7 @@ class Extra extends \gp\Page\Edit{
 	public function ExtraRow($info, $types){
 		global $langmessage;
 
-		$sections = \gp\tool\Output::ExtraContent($info['title']);
+		$sections = \gp\tool\Output\Extra::ExtraContent($info['title']);
 		$section = $sections[0];
 
 		echo '<tr><td style="white-space:nowrap">';
@@ -278,7 +277,7 @@ class Extra extends \gp\Page\Edit{
 
 		//publish
 		if (\gp\tool\Files::Exists($info['draft_path'])){
-			echo \gp\tool::Link('Admin/Extra', $langmessage['Publish Draft'], 'cmd=PublishDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'creq'));
+			echo \gp\tool::Link('Admin/Extra', $langmessage['Publish Draft'], 'cmd=PublishDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'post'));
 		} else {
 			echo '<span class="text-muted">' . $langmessage['Publish Draft'] . '</span>';
 		}
@@ -313,16 +312,19 @@ class Extra extends \gp\Page\Edit{
 	public function NewExtraForm(){
 		global $langmessage;
 
-		$types = \gp\tool\Output\Sections::GetTypes();
+		$types	= \gp\tool\Output\Sections::GetTypes();
+		$_types	= [];
+		foreach( $types as $type => $info ){
+			$_types[$type] = $info['label'];
+		}
+
 		echo '<p>';
 		echo '<form action="' . \gp\tool::GetUrl('Admin/Extra') . '" method="post">';
 		echo '<input type="hidden" name="cmd" value="NewSection" />';
 		echo '<input type="text" name="new_title" value="" size="15" class="gpinput" required/> ';
-		echo '<select name="type" class="gpselect">';
-		foreach ($types as $type => $info) {
-			echo '<option value="' . $type . '">' . $info['label'] . '</option>';
-		}
-		echo '</select> ';
+
+		echo \gp\tool\HTML::Select( $_types, key($_types), ' name="type" class="gpselect"');
+
 		echo '<input type="submit" name="" value="' . $langmessage['Add New Area'] . '" class="gpsubmit gpvalidate" data-cmd="gppost"/>';
 		echo '</form>';
 		echo '</p>';
@@ -332,43 +334,25 @@ class Extra extends \gp\Page\Edit{
 	public function EditExtra(){
 		global $langmessage, $page;
 
+
+		$action				= \gp\tool::GetUrl('Admin/Extra', 'cmd=EditExtra&file=' . $this->title);
+		$page->head_js[]	= '/include/js/admin/extra_edit.js';
+
 		echo '<h2>';
 		echo \gp\tool::Link('Admin/Extra', $langmessage['theme_content']);
 		echo ' &#187; ' . str_replace('_', ' ', $this->title) . '</h2>';
 
-		echo '<form action="' . \gp\tool::GetUrl('Admin/Extra', 'file=' . $this->title) . '" method="post">';
+		echo '<form action="' . $action . '" method="post">';
 		echo '<input type="hidden" name="cmd" value="SaveText" />';
 
 		\gp\tool\Editing::UseCK($this->file_sections[0]['content']);
 
-		$page->jQueryCode .= '
-			$(function(){
-				CKEDITOR.instances.gpcontent.on("change", function(){
-					if( CKEDITOR.instances.gpcontent.checkDirty() ){
-						$(".gp_publish_extra").hide();
-						$(".gp_save_extra").show();
-					}else{
-						$(".gp_publish_extra").show();
-						$(".gp_save_extra").hide();
-					}
-				});
-				$(".gp_save_extra").on("click", function(){
-					CKEDITOR.instances.gpcontent.resetDirty();
-				});
-			});
-			$(window).on("beforeunload", function(){
-				if( CKEDITOR.instances.gpcontent.checkDirty() ){
-					return "Content was changed! Proceed anyway?";
-				}
-			});
-		';
+		echo '<button type="submit" class="gpsubmit gp_save_extra">' . $langmessage['save'] .'</button>';
 
-		if ($this->draft_exists){
-			echo '<input style="display:none;" type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit gp_save_extra" />';
+		if( $this->draft_exists ){
 			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="PublishDraft">' . $langmessage['Publish Draft'] . '</button>';
-		} else {
-			echo '<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit gp_save_extra" />';
 		}
+
 		echo '<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '" class="gpcancel"/>';
 		echo '</form>';
 	}
@@ -377,8 +361,8 @@ class Extra extends \gp\Page\Edit{
 	public function SaveText(){
 		global $langmessage;
 		$_POST['cmd'] = 'save_inline';
-		if ($this->SectionEdit()){
-			message($langmessage['SAVED']);
+		if( $this->SectionEdit() ){
+			msg($langmessage['SAVED']);
 		}
 	}
 
@@ -408,13 +392,11 @@ class Extra extends \gp\Page\Edit{
 	public function NewSection(){
 		global $langmessage, $gpAdmin;
 
-		$title = str_replace(array(
-			'\\',
-			'/'), '', $_REQUEST['new_title']);
+		$title = str_replace(['\\','/'], '', $_REQUEST['new_title']);
 		$title = \gp\tool\Editing::CleanTitle($title);
 
 		if (empty($title)){
-			message($langmessage['OOPS'] . ' (Invalid Title)');
+			msg($langmessage['OOPS'] . ' (Invalid Title)');
 			return false;
 		}
 
@@ -422,7 +404,7 @@ class Extra extends \gp\Page\Edit{
 		$type = htmlspecialchars($_POST['type']);
 
 		if (!array_key_exists($type, $types)){
-			message($langmessage['OOPS'] . ' (Invalid Type)');
+			msg($langmessage['OOPS'] . ' (Invalid Type)');
 			return false;
 		}
 
@@ -436,14 +418,14 @@ class Extra extends \gp\Page\Edit{
 
 
 		if (!\gp\tool\Files::SaveData($file, 'file_sections', $sections)){
-			message($langmessage['OOPS'] . ' (Not Saved)');
+			msg($langmessage['OOPS'] . ' (Not Saved)');
 			return false;
 		}
 
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 
-		$this->AddArea($title);
+		$this->GetAreas();
 	}
 
 
@@ -457,11 +439,7 @@ class Extra extends \gp\Page\Edit{
 		$this->page->file_sections =& $this->file_sections; //hack so the SaveSection filter works
 		$_REQUEST['section'] = 0;
 
-		if (!parent::SectionEdit()){
-			return false;
-		}
-
-		return true;
+		return parent::SectionEdit();
 	}
 
 
@@ -475,6 +453,8 @@ class Extra extends \gp\Page\Edit{
 	}
 
 	public function EditVisibility(){
+		global $langmessage, $page, $gp_index, $gp_titles;
+
 		echo ' <style>
 				.tablesorter-header-inner{
 				width:90%;
@@ -497,15 +477,18 @@ class Extra extends \gp\Page\Edit{
 			}
 			</style>
 			';
-		global $langmessage, $page, $gp_index, $gp_titles;
-		$page->head_js[] = '/include/thirdparty/tablesorter/tablesorter.js';
+
+		$action				= \gp\tool::GetUrl('Admin/Extra', 'cmd=EditVisibility&file=' . $this->title);
+		$page->head_js[]	= '/include/thirdparty/tablesorter/tablesorter.js';
+		$page->head_js[]	= '/include/js/admin/extra_visibility.js';
+
 
 		echo '<h2>';
 		echo \gp\tool::Link('Admin/Extra', $langmessage['theme_content']);
 		echo ' &#187; ' . str_replace('_', ' ', $this->title);
 		echo ' &#187; ' . $langmessage['Visibility'] . '</h2>';
 
-		echo '<form action="' . \gp\tool::GetUrl('Admin/Extra', 'file=' . $this->title) . '" method="post">';
+		echo '<form action="' . $action . '" method="post">';
 		echo '<input type="hidden" name="cmd" value="SaveVisibilityExtra" />';
 
 		echo '<p>';
@@ -516,17 +499,8 @@ class Extra extends \gp\Page\Edit{
 			'1' => 'No pages',
 			'2' => 'Only on the pages selected',
 			'3' => 'On all pages except those selected');
-		if (is_array($this->vis) && array_key_exists('visibility_type', $this->vis)){
-			$vis_type = $this->vis['visibility_type'];
-		} else {
-			$vis_type = '';
-		}
-		echo '<select id="vis_type" name="visibility_type" class="gpselect">';
-		foreach ($sel_dat as $key => $val) {
-			$selected = ($vis_type == $key) ? 'selected' : '';
-			echo '<option value="' . $key . '" ' . $selected . ' >' . $val . '</option>';
-		}
-		echo '</select>';
+
+		echo \gp\tool\HTML::Select( $sel_dat, $this->vis['visibility_type'], ' name="visibility_type" id="vis_type" class="gpselect"');
 		echo '</p>';
 
 
@@ -538,84 +512,66 @@ class Extra extends \gp\Page\Edit{
 		echo '<th>' . $langmessage["Pages"] . '</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
-		foreach ($gp_index as $title => $index) {
-			echo ' <tr> ';
-			echo '<td>';
-			if (isset($this->vis['pages']) && in_array($index, array_keys($this->vis['pages']))){
+
+		foreach( $gp_index as $title => $index ){
+			echo '<tr><td>';
+
+			$check = '';
+			if( array_key_exists($index, $this->vis['pages']) ){
 				$check = 'checked';
-			} else {
-				$check = '';
 			}
+
 			echo '<input class="check_page" name="pages[' . $index . ']" type="checkbox" ' . $check . '>';
-			echo '</td>';
-			echo ' <td> ';
-			if (array_key_exists('label', $gp_titles[$index])){
-				echo '<a href="' . \gp\tool::AbsoluteUrl($title) . ' " target="_blank">' . $gp_titles[$index]['label'] . '</a><br />';
-			} else {
-				echo '<a href="' . \gp\tool::AbsoluteUrl($title) . ' " target="_blank">' . $title . '</a><br />';
-			}
+			echo '</td><td>';
+
+			$label = \gp\tool::GetLabelIndex($index);
+			echo '<a href="' . \gp\tool::AbsoluteUrl($title) . ' " target="_blank">' . $label . '</a>';
+			echo '</td></tr> ';
 		}
-		echo ' </td> ';
 
-		echo ' </tr> ';
-
-		echo '</tbody>
-			</table>';
-
+		echo '</tbody></table>';
 		echo '</div>';
-		echo '<div>';
+		echo '<br/>';
+		echo '<p>';
 		echo '<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit gp_save_extra" />';
-		echo '<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '" class="gpcancel"/>';
-		echo '</div>';
+		echo '<a href="?" class="gpcancel">' . $langmessage['cancel'] . '</a>';
+		echo '</p>';
 		echo '</form>';
-		$page->jQueryCode .= '
-		 $("#myTable").tablesorter({
-		       headers: {
-            0: {
 
-                sorter: false
-			   },}
-		 });
-		if ($("#vis_type").val()== 0 || $("#vis_type").val()==1){
-			$(".pages").hide();
-		}
-		$("#vis_type").change(function(){
-			if($(this).val()!=0 && $(this).val()!=1){
-				$(".pages").show();
-			} else {
-				$(".pages").hide();
-			};
-		})
-		$("#check_all").click(function(){
-
-			if($(this).prop("checked") == true) {
-				$(".check_page").prop("checked", true);
-			} else {
-				$(".check_page").prop("checked", false);
-			}
-
-		})
-
-		';
 	}
 
+
+	/**
+	 * Save extra area visibility
+	 *
+	 */
 	public function SaveVisibilityExtra(){
-		global $langmessage;
-		$data = array();
-		$data['visibility_type'] = $_REQUEST['visibility_type'];
-		if ($data['visibility_type'] > 1){
-			if (isset($_REQUEST['pages'])){
-				$data['pages'] = $_REQUEST['pages'];
-			} else {
-				$data['visibility_type'] == 2 ? $data['visibility_type'] = 1 : $data['visibility_type'] = 0;
-			}
+		global $langmessage, $gp_titles;
+
+		$file						= '_extra/' . $this->title . '/visibility';
+		$data						= [];
+		$data['visibility_type']	= $_REQUEST['visibility_type'];
+
+		if( isset($_REQUEST['pages']) && is_array($_REQUEST['pages']) ){
+			$data['pages']			= array_intersect_key($_REQUEST['pages'], $gp_titles);
 		}
-		$file = '_extra/' . $this->title . '/visibility';
-		if (!\gp\tool\Files::SaveData($file, 'data', $data)){
-			message($langmessage['OOPS']);
+
+		if( !\gp\tool\Files::SaveData($file, 'data', $data) ){
+			msg($langmessage['OOPS']);
 			return false;
 		}
-		message($langmessage['SAVED']);
+
+		msg($langmessage['SAVED']);
 		return true;
 	}
+
+
+	/**
+	 * Redirect the user request
+	 *
+	 */
+	public function Redirect(){
+		\gp\tool::Redirect(['Admin/Extra',$_GET]);
+	}
+
 }

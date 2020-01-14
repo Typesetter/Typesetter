@@ -773,9 +773,7 @@ class Session{
 						continue;
 					}
 				}
-				$replacement = '<span class="nodisplay">'
-					. '<input type="hidden" name="verified" value="' . $nonce . '"/>'
-					. '</span>';
+				$replacement = '<input type="hidden" name="verified" value="' . $nonce . '"/>';
 				$pos	= strpos($buffer,$match)+strlen($match);
 				$buffer	= substr_replace($buffer, $replacement, $pos, 0);
 			}

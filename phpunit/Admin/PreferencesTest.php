@@ -10,8 +10,6 @@ class PreferencesTest extends \gptest_bootstrap{
 	 */
 	public function testChangePassword(){
 
-		$this->Login();
-
 		// password_hash -> password_hash
 		$params = [
 			'oldpassword'	=> self::user_pass,

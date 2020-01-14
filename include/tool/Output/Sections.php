@@ -177,13 +177,14 @@ namespace gp\tool\Output{
 		 *
 		 */
 		public static function TextContent(&$content){
+			global $dirPrefix, $linkPrefix;
 
 			self::$meta += array('modified'=>'');
 
 			//variables
 			$vars = array(
-				'dirPrefix'		=> $GLOBALS['dirPrefix'],
-				'linkPrefix'	=> \gp\tool::HrefEncode($GLOBALS['linkPrefix']),
+				'dirPrefix'		=> $dirPrefix,
+				'linkPrefix'	=> \gp\tool::HrefEncode($linkPrefix),
 				'fileModTime'	=> self::$meta['modified'],
 				'title'			=> self::$title,
 				'label'			=> self::$label,
@@ -378,12 +379,9 @@ namespace gp\tool\Output{
 		 *
 		 */
 		public static function IncludeExtra($requested){
-			if( \gp\admin\Content\Extra::AreaExists($requested) === false && \gp\admin\Content\Extra::AreaExists($requested.'.php') === false ){
-				return '{{Extra Area Not Found: '.htmlspecialchars($requested).'}}';
-			}
 
 			ob_start();
-			\gp\tool\Output::GetExtra($requested);
+			\gp\tool\Output\Extra::GetExtra($requested);
 			return ob_get_clean();
 		}
 

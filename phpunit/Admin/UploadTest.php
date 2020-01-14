@@ -8,8 +8,6 @@ class UploadTest extends \gptest_bootstrap{
 	public function testUpload(){
 		global $dataDir;
 
-		$this->Login();
-
 		$file = $dataDir . '/include/imgs/stars.png';
 		$this->UploadRequest('Admin/Uploaded',$file);
 
@@ -36,8 +34,6 @@ class UploadTest extends \gptest_bootstrap{
 	public function testInvalidUpload(){
 		global $dataDir;
 
-		$this->Login();
-
 		$file			= $dataDir . '/include/main.php';
 		$upload		 	= $dataDir.'/data/_uploaded/image/main.php';
 		$this->UploadRequest('Admin/Uploaded',$file);
@@ -52,7 +48,7 @@ class UploadTest extends \gptest_bootstrap{
 	 */
 	public static function UploadRequest($slug, $file){
 
-		$url		= 'http://localhost:8081' . \gp\tool::GetUrl($slug);
+		$url		= \gp\tool::GetUrl($slug);
 
 		$options	= [
 					    'multipart' => [

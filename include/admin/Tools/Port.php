@@ -875,12 +875,7 @@ class Port{
 		echo '<p>';
 		echo '<input type="hidden" name="cmd" value="do_export" />';
 		echo $langmessage['Compression'].': ';
-		echo ' <select name="compression" class="gpselect">';
-		foreach($this->avail_compress as $ext => $disp){
-			echo '<option value="'.$ext.'">'.$disp.'</option>';
-		}
-		echo '</select>';
-
+		echo \gp\tool\HTML::Select( $this->avail_compress, key($this->avail_compress), ' name="compression" class="gpselect"');
 
 		echo ' &nbsp; <input type="submit" name="" value="'.$langmessage['Export'].'" class="gpsubmit" />';
 		echo '</p>';

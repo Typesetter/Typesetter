@@ -10,8 +10,6 @@ class phpunit_Export extends gptest_bootstrap{
 	public function testExport(){
 		global $wbMessageBuffer, $langmessage;
 
-		$this->Login();
-
 		// load
 		$this->GetRequest('Admin/Port');
 

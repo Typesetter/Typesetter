@@ -1446,17 +1446,31 @@ namespace gp{
 		/**
 		 * Redirect the request to $path with http $code
 		 *
-		 * @param string $path url to redirect to
+		 * @param string|array $path url to redirect to
 		 * @param string $code http redirect code: 301 or 302
 		 *
 		 */
 		public static function Redirect($path, $code=302){
 			global $wbMessageBuffer, $gpAdmin;
 
+
+			// if $path is an array, generate a url with \gp\tool::GetUrl($path);
+			// add gpreq and jsoncallback to maintain ajax requests
+			if( is_array($path) ){
+				$add_query	= ['gpreq'=>1,'jsoncallback'=>1];
+				$add_query	= array_intersect_key($_REQUEST,$add_query);
+				$path		+= [1=>[]];
+				$path[1]	+= $add_query;
+
+				$path		= \gp\tool::GetUrl($path[0],http_build_query($path[1],'','&'),false);
+		   }
+
+
 			//store any messages for display after the redirect
 			if( self::LoggedIn() && count($wbMessageBuffer) ){
 				$gpAdmin['message_buffer'] = $wbMessageBuffer;
 			}
+
 
 
 			//prevent a cache from creating an infinite redirect
@@ -1805,11 +1819,6 @@ namespace gp{
 				$args['provider'] = \service_provider_id;
 			}
 
-			//testing
-			if( defined('gp_unit_testing') ){
-				$args['gp_unit_testing'] = 1;
-			}
-
 			//plugins
 			$addon_ids = array();
 			if( isset($config['addons']) && is_array($config['addons']) ){
@@ -1861,6 +1870,11 @@ namespace gp{
 		 */
 		public static function IdReq($img_path, $jquery=true){
 			global $page;
+
+			// don't send for unit testing
+			if( defined('gp_unit_testing') ){
+				return;
+			}
 
 			//using jquery asynchronously doesn't affect page loading
 			//error function defined to prevent the default error function in main.js from firing

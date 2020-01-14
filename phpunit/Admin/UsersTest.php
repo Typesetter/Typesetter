@@ -10,8 +10,6 @@ class UsersTest extends \gptest_bootstrap{
 	 */
 	public function testNewUser(){
 
-		$this->Login();
-
 		$this->GetRequest('Admin/Users');
 
 		$this->GetRequest('/Admin/Users','cmd=newuserform');

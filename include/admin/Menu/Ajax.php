@@ -516,19 +516,10 @@ class Ajax extends \gp\admin\Menu{
 		$files			= scandir($folder);
 		foreach($files as $file){
 			$title	= \gp\admin\Content\Extra::AreaExists($file);
-			// msg("file = " . $file . " -> title = " . pre($title));
-			if( $title == false ){
+			if( $title === false ){
 				continue;
 			}
 			$areas[$title] = str_replace('_', ' ', $title);
-			/*
-			array(
-				'title'			=> $title,
-				'file_path'		=> $folder . '/' . $title . '/page.php',
-				'draft_path'	=> $folder . '/' . $title . '/draft.php',
-				'legacy_path'	=> $folder . '/' . $title . '.php',
-			);
-			*/
 		}
 		uksort($areas,'strnatcasecmp');
 		return $areas;

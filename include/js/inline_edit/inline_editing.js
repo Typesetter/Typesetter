@@ -182,14 +182,14 @@
 		 */
 		PublishButton: function($area){
 
-			$('.ck_publish').hide();
+			$('.ck_publish').addClass('nodisplay');
 
 			if( !$area || $area.data('draft') == undefined ){
 				return;
 			}
 
 			if( $area.data('draft') == 1 ){
-				$('.ck_publish').show();
+				$('.ck_publish').removeClass('nodisplay');
 			}
 
 			$gp.IndicateDraft();
@@ -360,7 +360,7 @@
 				var section_type = editor_info.section.attr('class').match(/filetype-\w*/gi).toString();
 				editor_info.section_type = section_type.substring(section_type.indexOf('filetype-') + 9);
 			}
-			
+
 			$(document).trigger('editor:loaded', editor_info);
 
 			gp_editing.PublishButton( $edit_area );
@@ -551,8 +551,8 @@
 					return;
 				}
 				gp_editing.autosave_timer = window.setInterval(function(){
-					if( (typeof(gp_editor.CanAutoSave) == 'function' && 
-						!gp_editor.CanAutoSave()) || !gp_editing.can_autosave 
+					if( (typeof(gp_editor.CanAutoSave) == 'function' &&
+						!gp_editor.CanAutoSave()) || !gp_editing.can_autosave
 						){
 						return;
 					}
@@ -585,7 +585,7 @@
 
 	/**
 	 * init AutoSave
-	 * 
+	 *
 	 */
 	gp_editing.AutoSave.init();
 

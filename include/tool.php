@@ -1819,11 +1819,6 @@ namespace gp{
 				$args['provider'] = \service_provider_id;
 			}
 
-			//testing
-			if( defined('gp_unit_testing') ){
-				$args['gp_unit_testing'] = 1;
-			}
-
 			//plugins
 			$addon_ids = array();
 			if( isset($config['addons']) && is_array($config['addons']) ){
@@ -1875,6 +1870,11 @@ namespace gp{
 		 */
 		public static function IdReq($img_path, $jquery=true){
 			global $page;
+
+			// don't send for unit testing
+			if( defined('gp_unit_testing') ){
+				return;
+			}
 
 			//using jquery asynchronously doesn't affect page loading
 			//error function defined to prevent the default error function in main.js from firing

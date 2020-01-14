@@ -7,6 +7,8 @@
  *
  */
 
+defined('gp_unit_testing') or define('gp_unit_testing',true);
+
 xdebug_start_code_coverage();
 
 function SaveXdebugCoverage(){

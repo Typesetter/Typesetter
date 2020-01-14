@@ -35,10 +35,10 @@ class Extra extends \gp\Page\Edit{
 			$this->cmds['EditExtra']			= '';
 			$this->cmds['PreviewText']			= '';
 			$this->cmds['EditVisibility']		= '';
+			$this->cmds['PublishDraft']					= 'DefaultDisplay';
 
 
 			$this->cmds_post['SaveText']				= 'Redirect';
-			$this->cmds_post['PublishDraft']			= 'Redirect';
 			$this->cmds_post['SaveVisibilityExtra'] 	= 'Redirect';
 			$this->cmds_post['DeleteArea']				= 'DefaultDisplay';
 

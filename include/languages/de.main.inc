@@ -620,7 +620,8 @@ $langmessage = array (
 	'heavier'                         => 'schwerer',
 	'heaviest'                        => 'am schwersten',
 	'Increase'                        => 'Steigern',
-	'Decrease'                        => 'Verringern',
+	'Increase by'                     => 'Um %s steigern',
+	'Increase to'                     => 'Zu %s steigern',
 	'Save All'                        => 'Alle speichern',
 	'Save X'                          => '%s speichern',
 	'Reset'                           => 'Zurücksetzen',
@@ -741,4 +742,5 @@ $langmessage = array (
 	'Takeover request accepted'       => 'Ihre Übernahmeanfrage wurde angenommen. Sie können jetzt mit der Bearbeitung beginnen.',
 	'User requests session takeover'  => '%s bittet darum, die Bearbeitungssitzung zu übernehmen.',
 	'Takeover request canceled'       => 'Die Übernahmeanfrage wurde abgebrochen.',
+	'Editing handed to'               => 'Sie haben gerade die Bearbeitungsmöglickeit an %s übergeben.',
 );

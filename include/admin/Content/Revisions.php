@@ -266,11 +266,8 @@ class Revisions extends \gp\Page\Edit{
 		$file_sections		= $this->GetRevision($revision);
 
 		if( $file_sections === false ){
-			debug('section not found');
 			return false;
 		}
-
-		debug('savethis');
 
 		$this->file_sections = $file_sections;
 		$this->SaveThis();

@@ -26,7 +26,7 @@ class Example_Ajax{
 		echo '<form method="post" action="'.$page->title.'">';
 		echo 'Text: <input type="text" name="string" value="'.htmlspecialchars($string).'" size="30" />';
 		echo ' <input type="submit" class="gpajax" value="Post Form Asynchronosly" /> ';
-		echo common::Link($page->title,'Get Random String','cmd=randomstring','name="gpajax"');
+		echo common::Link($page->title,'Get Random String','cmd=randomstring','data-cmd="gpajax"');
 		echo '</form>';
 
 
@@ -40,5 +40,3 @@ class Example_Ajax{
 		PluginExampleNavigation();
 	}
 }
-
-

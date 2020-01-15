@@ -8,6 +8,7 @@
  */
 
 defined('gp_unit_testing') or define('gp_unit_testing',true);
+defined('gpdebug') or define('gpdebug',true); // sets error_reporting(ALL)
 
 xdebug_start_code_coverage();
 

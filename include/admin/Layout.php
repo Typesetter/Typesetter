@@ -366,14 +366,16 @@ class Layout extends \gp\admin\Addon\Install{
 	public function SaveCustom($layout, $css){
 		global $langmessage;
 
-		//delete css file if empty
-		if( empty($css) ){
-			return $this->RemoveCSS($layout);
-		}
 
-		//save if not empt
 		$custom_file		= $this->LayoutCSSFile($layout);
 
+		//delete css file if empty
+		if( empty($css) ){
+			return $this->RemoveCSS($layout, $custom_file);
+		}
+
+
+		//save if not empt
 		if( !\gp\tool\Files::Save($custom_file,$css) ){
 			message($langmessage['OOPS'].' (CSS not saved)');
 			return false;
@@ -385,7 +387,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 	/**
 	 * Get the path of the custom css file
-	 *
+	 * @return string
 	 */
 	public function LayoutCSSFile($layout){
 
@@ -401,15 +403,14 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Remove the custom css file for a layout
 	 *
 	 */
-	public function RemoveCSS($layout){
+	public function RemoveCSS($layout, $custom_file){
 		global $gpLayouts;
 
-		$path = $this->LayoutCSSFile($layout);
-		if( file_exists($path) ){
-			unlink($path);
+		if( file_exists($custom_file) ){
+			unlink($custom_file);
 		}
 
-		$dir	= dirname($path);
+		$dir	= dirname($custom_file);
 		$path	= $dir.'/index.html';
 
 		if( file_exists($path) ){
@@ -1768,7 +1769,8 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		//determine if code in /data/_theme should be removed
-		$rm_addon = $this->RemoveAddonCode($layout);
+		$rm_addon			= $this->RemoveAddonCode($layout);
+		$custom_file		= $this->LayoutCSSFile($layout); // get custom_file path before deleting from $gpLayouts
 
 		unset($gpLayouts[$layout]);
 
@@ -1787,7 +1789,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		//remove custom css
-		$this->RemoveCSS($layout);
+		$this->RemoveCSS($layout, $custom_file);
 	}
 
 

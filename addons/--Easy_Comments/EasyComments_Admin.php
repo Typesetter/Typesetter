@@ -105,7 +105,7 @@ class EasyComments_Admin extends EasyComments{
 		echo $comment['abbr'];
 		echo '</td><td>';
 
-		echo \gp\tool::Link('Admin_Recent_Comments',$langmessage['delete'],'cmd=easy_comment_rm&pg='.$page_index.'&i='.$key,' name="gpajax"');
+		echo \gp\tool::Link('Admin_Recent_Comments',$langmessage['delete'],'cmd=easy_comment_rm&pg='.$page_index.'&i='.$key,' data-cmd="gpajax"');
 
 		echo '</td></tr>';
 

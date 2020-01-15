@@ -596,10 +596,10 @@ class SetupSite{
 		echo '<td>';
 		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['options'],'cmd=options&site='.urlencode($site));
 		echo ' &nbsp; ';
-		//echo \gp\tool::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' name="gpajax"');
+		//echo \gp\tool::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),' data-cmd="gpajax"');
 
 		$title = sprintf($langmessage['generic_delete_confirm'],' &quot;'.htmlspecialchars($site).'&quot; ');
-		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),array('name'=>'postlink','class'=>'gpconfirm','title'=>$title));
+		echo \gp\tool::Link('Admin_Site_Setup',$langmessage['uninstall'],'cmd=uninstall&site='.urlencode($site),array('data-cmd'=>'postlink','class'=>'gpconfirm','title'=>$title));
 
 		echo '</td>';
 		echo '</tr>';
@@ -1472,7 +1472,7 @@ class SetupSite{
 		do{
 			$previous = $parent;
 			$query_array = array('cmd'=>'expandfolder','folder'=>$parent);
-			$links[] = $this->InstallLink(basename($parent).'/',$query_array,' name="gpajax" ');
+			$links[] = $this->InstallLink(basename($parent).'/',$query_array,' data-cmd="gpajax" ');
 			$parent = dirname($parent);
 		}while( $previous != $parent );
 
@@ -1562,7 +1562,7 @@ class SetupSite{
 
 
 		$query_array = array('cmd'=>'expandfolder','folder'=>$full);
-		echo $this->InstallLink($base,$query_array,' name="gpajax" rel="'.htmlspecialchars($full).'" ');
+		echo $this->InstallLink($base,$query_array,' data-cmd="gpajax" rel="'.htmlspecialchars($full).'" ');
 		echo '</span>';
 	}
 
@@ -1597,7 +1597,7 @@ class SetupSite{
 		echo $this->InstallLink('Install Here',$query_array,' class="select" ');
 
 		$query_array = array('cmd'=>'rmdir','dir'=>$dir);
-		echo $this->InstallLink('Delete',$query_array,' class="rm" name="gpajax" ');
+		echo $this->InstallLink('Delete',$query_array,' class="rm" data-cmd="gpajax" ');
 	}
 
 

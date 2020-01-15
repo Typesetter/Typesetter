@@ -182,14 +182,14 @@
 		 */
 		PublishButton: function($area){
 
-			$('.ck_publish').hide();
+			$('.ck_publish').addClass('nodisplay');
 
 			if( !$area || $area.data('draft') == undefined ){
 				return;
 			}
 
 			if( $area.data('draft') == 1 ){
-				$('.ck_publish').show();
+				$('.ck_publish').removeClass('nodisplay');
 			}
 
 			$gp.IndicateDraft();
@@ -554,8 +554,8 @@
 					return;
 				}
 				gp_editing.autosave_timer = window.setInterval(function(){
-					if( (typeof(gp_editor.CanAutoSave) == 'function' && 
-						!gp_editor.CanAutoSave()) || !gp_editing.can_autosave 
+					if( (typeof(gp_editor.CanAutoSave) == 'function' &&
+						!gp_editor.CanAutoSave()) || !gp_editing.can_autosave
 						){
 						return;
 					}
@@ -588,7 +588,7 @@
 
 	/**
 	 * init AutoSave
-	 * 
+	 *
 	 */
 	gp_editing.AutoSave.init();
 

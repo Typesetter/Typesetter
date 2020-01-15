@@ -202,7 +202,7 @@
 		 */
 		DraftStatus: function($area, status){
 
-			if( !$area || $area.data('draft') == undefined ){
+			if( !$area ){
 				return;
 			}
 
@@ -792,8 +792,9 @@
 	 *
 	 */
 	$gp.response.DraftPublished = function(){
-		var $this		= $(this).remove();
+		var $this		= $(this).addClass('nodisplay');
 		var id_number	= $gp.AreaId( $this );
+
 		var $area		= $('#ExtraEditArea' + id_number);
 
 		gp_editing.DraftStatus($area, 0);

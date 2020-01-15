@@ -14,16 +14,13 @@ namespace gp{
 		 * @return string
 		 */
 		public static function RequestType(){
-			if( isset($_REQUEST['gpreq']) ){
-				switch($_REQUEST['gpreq']){
-					case 'body':
-					case 'flush':
-					case 'json':
-					case 'content':
-					case 'admin';
-					return $_REQUEST['gpreq'];
-				}
+
+			$types = ['body','flush','json','content','admin'];
+
+			if( isset($_REQUEST['gpreq']) && in_array($_REQUEST['gpreq'], $types) ){
+				return $_REQUEST['gpreq'];
 			}
+
 			return 'template';
 		}
 

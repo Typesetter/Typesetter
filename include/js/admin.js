@@ -727,7 +727,7 @@ $gp.links.post = function(evt){
 
 	var query			= strip_to(this.search,'?');
 	var params			= ParseQuery(query);
-	params.verified		= post_nonce;
+	params.verified		= this.dataset.nonce;
 
 	var form			= document.createElement('form');
 

@@ -559,28 +559,27 @@ namespace gp{
 		 * @param string $label
 		 */
 		public static function LinkAttr($attr='', $label=''){
-			$string = '';
-			$has_title = false;
+
+			$string		= '';
+			$has_title	= false;
+
 			if( is_array($attr) ){
+
+				// update old <a name="cmd"> links to <a data-cmd="cmd">
+				// @deprecated
 				$attr = array_change_key_case($attr);
 				$has_title = isset($attr['title']);
 				if( isset($attr['name']) && !isset($attr['data-cmd']) ){
+					trigger_error('deprecated use of name attribute (use data-cmd attribute instead)');
 					$attr['data-cmd'] = $attr['name'];
 					unset($attr['name']);
 				}
 
-				if( isset($attr['data-cmd']) ){
-					switch( $attr['data-cmd'] ){
-						case 'creq':
-						case 'cnreq':
-						case 'postlink':
-							$attr['data-nonce'] = self::new_nonce('post',true);
-						break;
-					}
+				$nonce_cmds = ['creq','cnreq','postlink','post'];
+				if( isset($attr['data-cmd']) && in_array($attr['data-cmd'], $nonce_cmds) ){
+					$attr['data-nonce'] = self::new_nonce('post',true);
 				}
-				foreach($attr as $attr_name => $attr_value){
-					$string .= ' ' . $attr_name . '="' . htmlspecialchars($attr_value, ENT_COMPAT, 'UTF-8', false) . '"';
-				}
+				$string = \gp\tool\HTML::Attributes($attr);
 			}else{
 				$string = $attr;
 				if( strpos($attr,'title="') !== false){
@@ -590,10 +589,12 @@ namespace gp{
 				// backwards compatibility hack to be removed in future releases
 				// @since 3.6
 				if( strpos($string, 'name="postlink"') !== false ){
+					trigger_error('deprecated use of name attribute (use data-cmd attribute instead)');
 					$string .= ' data-nonce="' . self::new_nonce('post', true) . '"';
 
 				// @since 4.1
 				}elseif( strpos($string, 'name="cnreq"') !== false || strpos($string, 'name="creq"') !== false ){
+					trigger_error('deprecated use of name attribute (use data-cmd attribute instead)');
 					$string .= ' data-nonce="' . self::new_nonce('post', true) . '"';
 				}
 

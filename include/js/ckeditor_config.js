@@ -143,5 +143,20 @@ CKEDITOR.on( 'dialogDefinition', function( ev ){
 
 			}
 		});
+
+		dialogDefinition.height = 280;
 	}
+	
+	if ( dialogName == 'find' ) {
+		dialogDefinition.height = 200;
+	}
+
+	if( dialogName == 'image' ){
+		dialogDefinition.height = 430;
+	}
+
+	if( dialogName == 'table' ){
+		dialogDefinition.height = 370;
+	}  		
+	
 });

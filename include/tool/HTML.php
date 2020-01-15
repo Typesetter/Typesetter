@@ -49,7 +49,7 @@ class HTML{
 				$selected = ' selected ';
 			}
 
-			$html .= '<option value="'.htmlspecialchars($key).'" '.$selected.'>'.$value.'</option>';
+			$html .= '<option value="' . self::Chars($key) . '" ' . $selected . '>' . $value . '</option>';
 
 		}
 
@@ -69,10 +69,14 @@ class HTML{
 
 		$attr_string = '';
 		foreach($attributes as $attr => $value){
-			$attr_string .= ' '.htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
+			$attr_string .= ' ' . self::Chars($attr) . '="' . self::Chars($value) . '"';
 		}
 
 		return $attr_string;
+	}
+
+	public static function Chars($str){
+		return htmlspecialchars($str, ENT_COMPAT, 'UTF-8', false);
 	}
 
 

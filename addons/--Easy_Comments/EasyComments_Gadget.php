@@ -145,7 +145,7 @@ class EasyComments_Gadget extends EasyComments{
 
 			if( \gp\tool::LoggedIn() ){
 				echo ' &nbsp; ';
-				echo \gp\tool::Link('Admin_Recent_Comments',$langmessage['delete'],'cmd=easy_comment_rm&i='.$key.'&pg='.$this->current_index,' name="gpajax"');
+				echo \gp\tool::Link('Admin_Recent_Comments',$langmessage['delete'],'cmd=easy_comment_rm&i='.$key.'&pg='.$this->current_index,' data-cmd="gpajax"');
 			}
 
 

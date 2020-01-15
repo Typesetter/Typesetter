@@ -132,7 +132,7 @@ namespace gp{
 		 * Return an array of information about the layout
 		 * @param string $layout The layout key
 		 * @param bool $check_existence Whether or not to check for the existence of the template.php file
-		 *
+		 * @return false|array
 		 */
 		public static function LayoutInfo($layout, $check_existence=true){
 			global $gpLayouts, $dataDir;

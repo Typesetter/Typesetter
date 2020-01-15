@@ -1,5 +1,5 @@
 ﻿/**
- * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/license
  */
 
@@ -13,10 +13,10 @@
  * (1) https://ckeditor.com/cke4/builder
  *     Visit online builder to build CKEditor from scratch.
  *
- * (2) https://ckeditor.com/cke4/builder/c19c9ea9c32013a3e06540e9ce70db9a
+ * (2) https://ckeditor.com/cke4/builder/85e2cfe7d2261e150e06ec1a20267d6e
  *     Visit online builder to build CKEditor, starting with the same setup as before.
  *
- * (3) https://ckeditor.com/cke4/builder/download/c19c9ea9c32013a3e06540e9ce70db9a
+ * (3) https://ckeditor.com/cke4/builder/download/85e2cfe7d2261e150e06ec1a20267d6e
  *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
  *
  * NOTE:
@@ -59,7 +59,6 @@ var CKBUILDER_CONFIG = {
 		'bidi' : 1,
 		'blockquote' : 1,
 		'button' : 1,
-		'clipboard' : 1,
 		'codemirror' : 1,
 		'colorbutton' : 1,
 		'colordialog' : 1,
@@ -140,6 +139,7 @@ var CKBUILDER_CONFIG = {
 		'gl' : 1,
 		'hr' : 1,
 		'hu' : 1,
+		'is' : 1,
 		'it' : 1,
 		'ja' : 1,
 		'lt' : 1,
@@ -148,6 +148,7 @@ var CKBUILDER_CONFIG = {
 		'pl' : 1,
 		'pt' : 1,
 		'pt-br' : 1,
+		'ro' : 1,
 		'ru' : 1,
 		'sk' : 1,
 		'sl' : 1,

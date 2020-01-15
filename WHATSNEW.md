@@ -3,7 +3,7 @@
 ## Thirdparty Components and Libraries ##
 
 * Bootstrap 4: Typesetter now adds support for Bootstrap 4.4.1 and ships the 'Bootswatch 4 Scss' theme. There is also a new Bootstrap 4 preset loadable for 'Available Classes'. But no worries, Bootstrap 3 and all its Bootswatch themes are still there.
-* elFinder 2.1.50: Our file manager was updated to the most recent version and comes with a fresh new look and some interesting new features.
+* elFinder 2.1.50: Our file manager was updated to the most recent version and comes with a fresh new look and some interesting new features. E.g. see [here](https://www.typesettercms.com/Blog/elFinder_2.1.50_in_Upcoming_Release)
 * CK Editor 4.13: We now use the most recent version from the CK Editor 4 branch.
 * jQuery 2.2.4: We would have even chosen jQuery 3, but Bootstrap 3 doesn't play along.
 * Less.php 1.8.1: With the newest version of our LESS CSS compiler we gain some performance boost and support for less 2.5.3

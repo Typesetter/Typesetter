@@ -34,8 +34,11 @@ class Install extends \gp\admin\Addon\Tools{
 		parent::__construct($args);
 
 		// css and js
-		$this->page->css_admin[]	= '/include/css/addons.css';
-		$this->page->head_js[]	= '/include/js/rate.js';
+		if( $this->page ){
+			$this->page->css_admin[]	= '/include/css/addons.css';
+			$this->page->head_js[]		= '/include/js/rate.js';
+			$this->page->head_js[]		= '/include/js/auto_width.js';
+		}
 	}
 
 	/**

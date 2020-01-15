@@ -37,7 +37,6 @@ class Addons extends \gp\admin\Addon\Install{
 		$this->InitRating();
 		$this->GetData();
 
-		$this->page->head_js[]		= '/include/js/auto_width.js';
 		$this->avail_addons			= $this->GetAvailAddons();
 
 	}

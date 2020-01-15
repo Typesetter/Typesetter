@@ -353,7 +353,8 @@ class Extra extends \gp\Page\Edit{
 			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="PublishDraft">' . $langmessage['Publish Draft'] . '</button>';
 		}
 
-		echo '<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '" class="gpcancel"/>';
+		echo \gp\tool::Link('Admin/Extra', $langmessage['Close'], '', array('class' => 'gpcancel'));
+
 		echo '</form>';
 	}
 

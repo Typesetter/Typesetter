@@ -11,10 +11,16 @@ class Edit extends \gp\admin\Layout{
 
 
 	public function RunScript(){
-		global $gpLayouts, $config;
+		global $gpLayouts, $config, $gpAdmin;
 
 		//layout request
 		$parts		= explode('/',$this->page->requested);
+
+		if (isset($gpAdmin['locked']) && $gpAdmin['locked']){
+			$url = \gp\tool::GetUrl(isset($_REQUEST['redir']) ? $_REQUEST['redir'] : 'Admin');
+			\gp\tool::Redirect($url);
+		}
+
 		if( !empty($parts[2]) ){
 
 			if( $this->SetCurrLayout($parts[2]) ){

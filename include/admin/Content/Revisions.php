@@ -13,7 +13,7 @@ class Revisions extends \gp\Page\Edit{
 
 
 	public function __construct($args){
-		global $gp_index;
+		global $gp_index, $gpAdmin;
 
 		//parent::__construct($args);
 
@@ -27,6 +27,11 @@ class Revisions extends \gp\Page\Edit{
 
 		if( $title === false ){
 			$url = \gp\tool::GetUrl('Admin');
+			\gp\tool::Redirect($url);
+		}
+
+		if ( isset($gpAdmin['locked']) && $gpAdmin['locked'] ){
+			$url = \gp\tool::GetUrl($title);
 			\gp\tool::Redirect($url);
 		}
 

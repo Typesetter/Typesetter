@@ -495,10 +495,11 @@ class Extra extends \gp\Page\Edit{
 		echo $langmessage['Visibility'] . ':&nbsp;&nbsp;&nbsp;';
 
 		$sel_dat = array(
-			'0' => 'On all pages',
-			'1' => 'No pages',
-			'2' => 'Only on the pages selected',
-			'3' => 'On all pages except those selected');
+			'0' => $langmessage['Show on all pages'],
+			'1' => $langmessage['Hide on all pages'],
+			'2' => $langmessage['Show only on selected pages'],
+			'3' => $langmessage['Hide on selected pages'],
+		);
 
 		echo \gp\tool\HTML::Select( $sel_dat, $this->vis['visibility_type'], ' name="visibility_type" id="vis_type" class="gpselect"');
 		echo '</p>';

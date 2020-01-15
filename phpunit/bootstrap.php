@@ -257,6 +257,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 				self::assertNotStrpos($body,'gp_admin_html');
 			}
 
+			self::ServerErrors($type,$url);
 
 		}catch( \Exception $e ){
 			self::ServerErrors($type,$url);

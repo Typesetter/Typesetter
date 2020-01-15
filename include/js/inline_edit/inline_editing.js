@@ -182,14 +182,14 @@
 		 */
 		PublishButton: function($area){
 
-			$('.ck_publish').addClass('nodisplay');
+			document.querySelector('.ck_publish').style.setProperty('display','none','important');
 
-			if( !$area || $area.data('draft') == undefined ){
+			if( !$area || $area.data('draft') == undefined ){ // draft attr only used for extra content
 				return;
 			}
 
 			if( $area.data('draft') == 1 ){
-				$('.ck_publish').removeClass('nodisplay');
+				document.querySelector('.ck_publish').style.removeProperty('display');
 			}
 
 			$gp.IndicateDraft();
@@ -202,7 +202,7 @@
 		 */
 		DraftStatus: function($area, status){
 
-			if( !$area ){
+			if( !$area || $area.data('draft') == undefined ){ // draft attr only used for extra content
 				return;
 			}
 
@@ -792,7 +792,10 @@
 	 *
 	 */
 	$gp.response.DraftPublished = function(){
-		var $this		= $(this).addClass('nodisplay');
+
+		this.style.setProperty('display','none','important');
+
+		var $this		= $(this); //.css('display','none !important');
 		var id_number	= $gp.AreaId( $this );
 
 		var $area		= $('#ExtraEditArea' + id_number);

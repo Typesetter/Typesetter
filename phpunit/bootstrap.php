@@ -10,7 +10,7 @@ defined('gpdebug') or define('gpdebug',true);
 defined('is_running') or define('is_running',true);
 defined('gp_unit_testing') or define('gp_unit_testing',true);
 defined('gp_nonce_algo') or define('gp_nonce_algo','sha512');
-
+error_reporting(E_ALL); // 32767
 
 if (!class_exists('\PHPUnit_Framework_TestCase') && class_exists('\PHPUnit\Framework\TestCase'))
     class_alias('\PHPUnit\Framework\TestCase', '\PHPUnit_Framework_TestCase');
@@ -65,15 +65,27 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		self::PrepInstall();
 		self::StartServer();
 
+
+		// create client for user requests
+		self::$client_user			= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
+
+		// create client for admin requests
+		self::$client_admin			= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
+		self::UseAdmin();
+
+
+		self::Install();
+		\gp\tool::GetLangFile();
+
+		self::LogIn();
+
 		$url				= '/phpinfo.php';
 		$response			= self::GuzzleRequest('GET',$url);
 		$body				= $response->getBody();
 		self::$phpinfo		= (string)$body;
 
-
-		self::Install();
-		\gp\tool::GetLangFile();
     }
+
 
 	public static function StartServer(){
 		global $dataDir;
@@ -120,17 +132,6 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
         usleep(100000); //wait for server to get going
 
 
-
-		// create client for user requests
-		self::$client_user			= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
-
-
-		// create client for admin requests
-		self::$client_admin			= new \GuzzleHttp\Client(['http_errors' => false,'cookies' => true]);
-		self::UseAdmin();
-		self::LogIn();
-
-
 		register_shutdown_function(function(){
 			self::Console('Stopping server process');
 			gptest_bootstrap::$process->stop();
@@ -151,6 +152,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 
 		});
 	}
+
 
 	/**
 	 * Switch current guzzle client to $client_admin

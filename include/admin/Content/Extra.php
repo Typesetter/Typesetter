@@ -35,7 +35,7 @@ class Extra extends \gp\Page\Edit{
 			$this->cmds['EditExtra']			= '';
 			$this->cmds['PreviewText']			= '';
 			$this->cmds['EditVisibility']		= '';
-			$this->cmds['PublishDraft']					= 'DefaultDisplay';
+			$this->cmds['PublishDraft']					= 'Redirect';
 
 
 			$this->cmds_post['SaveText']				= 'Redirect';
@@ -572,7 +572,12 @@ class Extra extends \gp\Page\Edit{
 	 *
 	 */
 	public function Redirect(){
-		\gp\tool::Redirect(['Admin/Extra',$_GET]);
+
+		$req_type = \gp\tool::RequestType();
+
+		if( $req_type != 'json' ){
+			\gp\tool::Redirect(['Admin/Extra',$_GET]);
+		}
 	}
 
 }

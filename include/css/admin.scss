@@ -2293,6 +2293,24 @@ body #addon_about {
 }
 
 /**
+ * Manage Classes
+ */
+ #gp_admin_html table.manage_classes_table {
+	td.manage_class_name {
+		width: 50%;
+		input {
+			width: calc(100% - 30px);
+		}
+	}
+	td.manage_class_desc {
+		input {
+			width: calc(100% - 45px);
+		}
+	}
+}
+
+
+/**
  * Extra Visibility
  */
 table.tp-tablesorter {

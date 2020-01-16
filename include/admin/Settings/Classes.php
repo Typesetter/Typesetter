@@ -457,21 +457,53 @@ class Classes extends \gp\special\Base{
 		$cmd = \gp\tool::GetCommand();
 		switch($cmd){
 			case 'LoadDefault':
-				$classes = self::Defaults();
+				$loaded_classes = self::Defaults();
 			break;
 
 			case 'LoadBootstrap3':
-				$classes = self::Bootstrap3();
+				$loaded_classes = self::Bootstrap3();
 			break;
 
 			case 'LoadBootstrap4':
-				$classes = self::Bootstrap4();
+				$loaded_classes = self::Bootstrap4();
 			break;
 
 			default:
-				$classes = self::GetClasses();
+				$loaded_classes = self::GetClasses();
 			break;
 		}
+
+		$classes = self::GetClasses();
+
+		$processing = !empty($_REQUEST['process']) ? $_REQUEST['process'] : 'replace';
+
+		switch($processing){
+			case 'prepend':
+				$classes = array_merge($loaded_classes, $classes);
+			break;
+
+			case 'append':
+				$classes = array_merge($classes, $loaded_classes);
+			break;
+
+			case 'remove':
+				$classes = array_udiff($classes, $loaded_classes, function($a, $b){
+					return strcmp($a['names'], $b['names']);
+				});
+			break;
+
+			case 'replace':
+				$classes = $loaded_classes;
+			break;
+		}
+
+		// the following is not beautiful ;)
+		if( $cmd && $cmd != 'SaveClasses'){
+			msg('OK. <a style="cursor:pointer;" '
+				. 'onclick="$(\'button[value=SaveClasses]\').trigger(\'click\')">'
+				. $langmessage['save'] . '</a> (?)');
+		}
+
 		$classes[] = array('names'=>'','desc'=>'');
 
 
@@ -484,10 +516,10 @@ class Classes extends \gp\special\Base{
 		echo '<tbody>';
 
 		foreach( $classes as $key => $classArray ){
-			echo '<tr><td>';
+			echo '<tr><td class="manage_class_name">';
 			echo '<img alt="" src="'.\gp\tool::GetDir('/include/imgs/drag_handle.gif').'" /> &nbsp; ';
 			echo '<input size="32" class="gpinput" type="text" name="class_names[]" value="' . htmlspecialchars($classArray['names'],ENT_COMPAT,'UTF-8') . '"/>';
-			echo '</td><td>';
+			echo '</td><td class="manage_class_desc">';
 			echo '<input size="64" class="gpinput" type="text" name="class_desc[]" value="' . htmlspecialchars($classArray['desc'],ENT_COMPAT,'UTF-8') . '"/> ';
 			echo '<a class="gpbutton rm_table_row" title="Remove Item" data-cmd="rm_table_row"><i class="fa fa-trash"></i></a>';
 			echo '</td></tr>';
@@ -509,14 +541,25 @@ class Classes extends \gp\special\Base{
 		echo '<div class="classes-load-presets well">';
 		echo $langmessage['Manage Classes Description'];
 		echo '<form action="' . $this->admin_link . '" method="get">';
-		echo '<button class="gpbutton" name="cmd" value="LoadBootstrap3">'	. sprintf($langmessage['Load the Bootstrap Preset'], '3') . '</button> ';
-		echo '<button class="gpbutton" name="cmd" value="LoadBootstrap4">'	. sprintf($langmessage['Load the Bootstrap Preset'], '4') . '</button> ';
-		echo '<button class="gpbutton" name="cmd" value="LoadDefault">'		. $langmessage['Load the Default Preset']		. '</button>';
+
+		echo	'<h4>' . $langmessage['Load'] . ', ' . $langmessage['Merge'] . ', ' . $langmessage['remove'] . '</h4>';
+
+		echo	'<select class="gpselect" name="cmd">';
+		echo		'<option value="LoadBootstrap3">'	. sprintf($langmessage['Load the Bootstrap Preset'], '3') . '</option> ';
+		echo		'<option value="LoadBootstrap4">'	. sprintf($langmessage['Load the Bootstrap Preset'], '4') . '</option> ';
+		echo		'<option value="LoadDefault">'		. $langmessage['Load the Default Preset'] . '</option> ';
+		echo	'</select>';
+
+		echo	'<button type="submit" name="process" value="replace" class="gpsubmit">' . $langmessage['Replace'] . '</button>';
+		echo	'<button type="submit" name="process" value="prepend" class="gpsubmit">' . $langmessage['Prepend'] . '</button>';
+		echo	'<button type="submit" name="process" value="append" class="gpsubmit">'  . $langmessage['Append'] . '</button>';
+		echo	'<button type="submit" name="process" value="remove" class="gpsubmit">'  . $langmessage['remove'] . '</button>';
+
 		echo '</form>';
 		echo '</div>';
 
-
 	}
+
 
 	/**
 	 * Save the posted data

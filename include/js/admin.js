@@ -1210,11 +1210,13 @@ $(function(){
 
 	function UIEffects(){
 
-		SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a', '#simplepanel', 'fixed', function(newpos){
-			gpui.tx = newpos.left;
-			gpui.ty = newpos.top;
-			$gp.SaveGPUI();
-		},true);
+		if( !$('html').hasClass('admin_body') ){
+			SimpleDrag('#simplepanel .toolbar, #simplepanel .toolbar a', '#simplepanel', 'fixed', function(newpos){
+				gpui.tx = newpos.left;
+				gpui.ty = newpos.top;
+				$gp.SaveGPUI();
+			},true);
+		}
 
 
 		//keep expanding areas within the viewable window

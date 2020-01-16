@@ -1028,6 +1028,11 @@ table.tablesorter th.gp_header_desc:before {
 	cursor: move;
 	line-height: 0;
 }
+
+html.admin_body #simplepanel .toolbar {
+	cursor: default;
+}
+
 #simplepanel .toolbar > a {
 	display: inline-block;
 	height: 32px;

@@ -2287,6 +2287,31 @@ body #addon_about {
 	font-size: 11px !important;
 }
 
+/**
+ * Extra Visibility
+ */
+table.tp-tablesorter {
+	.tablesorter-header-inner {
+		width: 90%;
+	}
+
+	th.tablesorter-header:before {
+		float: right;
+		font-family: FontAwesome;
+		color: #aaa;
+		content: '\f0dc';
+	}
+
+	th.tablesorter-headerDesc:before {
+		content: '\f0de';
+		color: #333;
+	}
+
+	th.tablesorter-headerAsc:before {
+		content: '\f0dd';
+		color: #333;
+	}
+}
 
 /**
  * Fontawesome

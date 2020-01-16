@@ -456,33 +456,9 @@ class Extra extends \gp\Page\Edit{
 	public function EditVisibility(){
 		global $langmessage, $page, $gp_index, $gp_titles;
 
-		echo ' <style>
-				.tablesorter-header-inner{
-				width:90%;
-				}
-				 table.tp-tablesorter th.tablesorter-header:before {
-				 float: right;
-				font-family:"FontAwesome";
-				color:#aaa;
-				content:"\f0dc";
-			}
-
-			table.tp-tablesorter th.tablesorter-headerDesc:before {
-				content:"\f0de";
-				color:#333;
-			}
-
-			table.tp-tablesorter th.tablesorter-headerAsc:before {
-				content:"\f0dd";
-				color:#333;
-			}
-			</style>
-			';
-
 		$action				= \gp\tool::GetUrl('Admin/Extra', 'cmd=EditVisibility&file=' . $this->title);
 		$page->head_js[]	= '/include/thirdparty/tablesorter/tablesorter.js';
 		$page->head_js[]	= '/include/js/admin/extra_visibility.js';
-
 
 		echo '<h2>';
 		echo \gp\tool::Link('Admin/Extra', $langmessage['theme_content']);
@@ -504,7 +480,6 @@ class Extra extends \gp\Page\Edit{
 
 		echo \gp\tool\HTML::Select( $sel_dat, $this->vis['visibility_type'], ' name="visibility_type" id="vis_type" class="gpselect"');
 		echo '</p>';
-
 
 		echo '<div class="pages">';
 		echo '<table id="myTable" class="bordered full_width striped tablesorter tp-tablesorter">';
@@ -536,7 +511,7 @@ class Extra extends \gp\Page\Edit{
 		echo '<br/>';
 		echo '<p>';
 		echo '<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit gp_save_extra" />';
-		echo '<a href="?" class="gpcancel">' . $langmessage['cancel'] . '</a>';
+		echo \gp\tool::Link('Admin/Extra', $langmessage['Close'], '', array('class' => 'gpcancel'));
 		echo '</p>';
 		echo '</form>';
 

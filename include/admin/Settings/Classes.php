@@ -479,11 +479,11 @@ class Classes extends \gp\special\Base{
 
 		switch($processing){
 			case 'prepend':
-				$classes = array_merge($loaded_classes, $classes);
+				$classes = array_unique(array_merge($loaded_classes, $classes), SORT_REGULAR);
 			break;
 
 			case 'append':
-				$classes = array_merge($classes, $loaded_classes);
+				$classes = array_unique(array_merge($classes, $loaded_classes), SORT_REGULAR);
 			break;
 
 			case 'remove':
@@ -545,9 +545,9 @@ class Classes extends \gp\special\Base{
 		echo	'<h4>' . $langmessage['Load'] . ', ' . $langmessage['Merge'] . ', ' . $langmessage['remove'] . '</h4>';
 
 		echo	'<select class="gpselect" name="cmd">';
+		echo		'<option value="LoadDefault">'		. $langmessage['The Default Preset'] . '</option> ';
 		echo		'<option value="LoadBootstrap3">'	. sprintf($langmessage['The Bootstrap Preset'], '3') . '</option> ';
 		echo		'<option value="LoadBootstrap4">'	. sprintf($langmessage['The Bootstrap Preset'], '4') . '</option> ';
-		echo		'<option value="LoadDefault">'		. $langmessage['The Default Preset'] . '</option> ';
 		echo	'</select>';
 
 		echo	'<button type="submit" name="process" value="replace" class="gpsubmit">' . $langmessage['Replace'] . '</button>';

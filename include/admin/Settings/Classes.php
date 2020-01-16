@@ -545,9 +545,9 @@ class Classes extends \gp\special\Base{
 		echo	'<h4>' . $langmessage['Load'] . ', ' . $langmessage['Merge'] . ', ' . $langmessage['remove'] . '</h4>';
 
 		echo	'<select class="gpselect" name="cmd">';
-		echo		'<option value="LoadBootstrap3">'	. sprintf($langmessage['Load the Bootstrap Preset'], '3') . '</option> ';
-		echo		'<option value="LoadBootstrap4">'	. sprintf($langmessage['Load the Bootstrap Preset'], '4') . '</option> ';
-		echo		'<option value="LoadDefault">'		. $langmessage['Load the Default Preset'] . '</option> ';
+		echo		'<option value="LoadBootstrap3">'	. sprintf($langmessage['The Bootstrap Preset'], '3') . '</option> ';
+		echo		'<option value="LoadBootstrap4">'	. sprintf($langmessage['The Bootstrap Preset'], '4') . '</option> ';
+		echo		'<option value="LoadDefault">'		. $langmessage['The Default Preset'] . '</option> ';
 		echo	'</select>';
 
 		echo	'<button type="submit" name="process" value="replace" class="gpsubmit">' . $langmessage['Replace'] . '</button>';

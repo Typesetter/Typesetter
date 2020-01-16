@@ -1111,7 +1111,7 @@ namespace gp\tool{
 				echo '<label>';
 				echo '<input type="radio" name="include" value="' . $hash . '" ' . $checked . '  data-cmd="IncludePreview" /> ';
 				echo '<span>';
-				echo '<i class="fa ' . $option['icon'] . '"></i> ' . $option['label'];
+				echo '<i class="fa ' . $option['icon'] . '"></i> ' . str_replace('_', ' ', $option['label']);
 				echo '<span class="slug">' . $option['slug'] . '</span>';
 				echo '</span>';
 				echo '<span style="display:none;"> '. $option['filter_aide'] . '</span>'; // for autocomplete filtering

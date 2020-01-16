@@ -32,7 +32,7 @@ class Extra{
 			$langmessage['edit'],
 			'cmd=edit&file=' . $name,
 			array(
-				'title'		=>	$name,
+				'title'		=>	str_replace('_', ' ', $name),
 				'data-cmd'	=> 'inline_edit_generic'
 			)
 		);

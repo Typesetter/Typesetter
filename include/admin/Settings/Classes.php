@@ -475,7 +475,7 @@ class Classes extends \gp\special\Base{
 
 		$classes = self::GetClasses();
 
-		$processing = !empty($_REQUEST['process']) ? $_REQUEST['process'] : 'replace';
+		$processing = !empty($_REQUEST['process']) ? $_REQUEST['process'] : 'load';
 
 		switch($processing){
 			case 'prepend':
@@ -492,7 +492,7 @@ class Classes extends \gp\special\Base{
 				});
 			break;
 
-			case 'replace':
+			case 'load':
 				$classes = $loaded_classes;
 			break;
 		}
@@ -550,7 +550,7 @@ class Classes extends \gp\special\Base{
 		echo		'<option value="LoadDefault">'		. $langmessage['The Default Preset'] . '</option> ';
 		echo	'</select>';
 
-		echo	'<button type="submit" name="process" value="replace" class="gpsubmit">' . $langmessage['Replace'] . '</button>';
+		echo	'<button type="submit" name="process" value="load" class="gpsubmit">' . $langmessage['Load'] . '</button>';
 		echo	'<button type="submit" name="process" value="prepend" class="gpsubmit">' . $langmessage['Prepend'] . '</button>';
 		echo	'<button type="submit" name="process" value="append" class="gpsubmit">'  . $langmessage['Append'] . '</button>';
 		echo	'<button type="submit" name="process" value="remove" class="gpsubmit">'  . $langmessage['remove'] . '</button>';

@@ -1589,6 +1589,15 @@ class Edit extends \gp\Page{
 		}
 
 		if( $section_data['include_type'] == 'extra' ){
+
+			// get the real section type of the included extra area
+			$extra_sections		= \gp\tool\Output\Extra::ExtraContent($section_data['content']);
+			$extra_section_type	= $extra_sections[0]['type'];
+			if($extra_section_type != 'text' ){
+				// we can only edit text sections on Admin/Extra
+				return '';
+			}
+
 			return \gp\tool::Link(
 				'Admin/Extra',
 				$langmessage['edit'] . ' &raquo; ' . str_replace('_', ' ', htmlspecialchars($section_data['content'])), // $langmessage['theme_content']

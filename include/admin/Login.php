@@ -109,7 +109,7 @@ class Login extends \gp\Page{
 			echo '<div>';
 			echo '<input type="hidden" name="cmd" value="login" />';
 			echo '<input type="hidden" name="verified" value="'.htmlspecialchars(\gp\tool\Nonce::Create('post',true)).'" />';
-			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(\gp\tool::new_nonce('login_nonce',true,300)).'" />';
+			echo '<input type="hidden" name="login_nonce" value="'.htmlspecialchars(\gp\tool\Nonce::Create('login_nonce',true,300)).'" />';
 			echo '</div>';
 
 			echo '<p class="login_text">';

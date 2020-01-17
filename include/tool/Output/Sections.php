@@ -35,7 +35,7 @@ namespace gp\tool\Output{
 			return $content;
 		}
 
-		private static function GetSection($sections, &$section_num ){
+		public static function GetSection($sections, &$section_num ){
 
 			$content			= '';
 			$curr_section_num	= $section_num;
@@ -418,7 +418,8 @@ namespace gp\tool\Output{
 
 			switch($type){
 				case 'image':
-					$attrs['src'] = \gp\tool::GetDir($attrs['src']);
+					$attrs			+= ['src'=>'/include/imgs/default_image.jpg'];
+					$attrs['src']	= \gp\tool::GetDir($attrs['src']);
 				break;
 			}
 
@@ -426,12 +427,7 @@ namespace gp\tool\Output{
 			$attrs				+= array('class' => '' );
 			$attrs['class']		= trim('GPAREA filetype-'.$type.' '.$attrs['class']);
 
-			$attr_string = '';
-			foreach($attrs as $attr => $value){
-				$attr_string .= ' '.htmlspecialchars($attr).'="'.htmlspecialchars($value).'"';
-			}
-
-			return $attr_string;
+			return \gp\tool\HTML::Attributes($attrs);
 		}
 
 	}

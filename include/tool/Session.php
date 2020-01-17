@@ -84,7 +84,7 @@ class Session{
 		// check nonce
 		// expire the nonce after 10 minutes
 		$nonce = $_POST['login_nonce'];
-		if( !\gp\tool::verify_nonce('login_nonce', $nonce, true, 300) ){
+		if( !\gp\tool\Nonce::Verify('login_nonce', $nonce, true, 300) ){
 			msg($langmessage['OOPS'] . ' (Expired Nonce)');
 			return;
 		}
@@ -835,7 +835,7 @@ class Session{
 			return;
 		}
 
-		if( !\gp\tool::verify_nonce('post', $_POST['verified'], true) ){
+		if( !\gp\tool\Nonce::Verify('post', $_POST['verified'], true) ){
 			self::StripPost('XSS Verification Parameter Mismatch');
 			return;
 		}

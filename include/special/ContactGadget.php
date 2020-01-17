@@ -162,7 +162,7 @@ class ContactGadget extends \gp\special\Base{
 
 		//nonce fields
 		echo '<div style="display:none !important">';
-		echo '<input type="hidden" name="contact_nonce" value="'.htmlspecialchars(\gp\tool::new_nonce('contact_post',true)).'" />';
+		echo '<input type="hidden" name="contact_nonce" value="'.htmlspecialchars(\gp\tool\Nonce::Create('contact_post',true)).'" />';
 		echo '<input type="text" name="contact_void" value="" />';
 		echo '</div>';
 

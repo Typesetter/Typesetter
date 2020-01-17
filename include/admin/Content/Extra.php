@@ -277,7 +277,7 @@ class Extra extends \gp\Page\Edit{
 
 		//publish
 		if (\gp\tool\Files::Exists($info['draft_path'])){
-			echo \gp\tool::Link('Admin/Extra', $langmessage['Publish Draft'], 'cmd=PublishDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'post'));
+			echo \gp\tool::Link('Admin/Extra', $langmessage['Publish Draft'], 'cmd=PublishDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'post', 'style' => 'background: #329880; color: white; padding: 0 2px;'));
 		} else {
 			echo '<span class="text-muted">' . $langmessage['Publish Draft'] . '</span>';
 		}

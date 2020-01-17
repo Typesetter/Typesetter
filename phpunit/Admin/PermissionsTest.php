@@ -17,7 +17,7 @@ class PermissionsTest extends \gptest_bootstrap{
 
 		// adding index=a shouldn't change the permissions
 		$params = [
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'users'			=> [static::user_name => static::user_name],
 			'cmd'			=> 'SaveFilePermissions',
 			'index'			=> 'a',
@@ -28,7 +28,7 @@ class PermissionsTest extends \gptest_bootstrap{
 
 		// removing index=a
 		$params = [
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'users'			=> [],
 			'cmd'			=> 'SaveFilePermissions',
 			'index'			=> 'a',
@@ -42,7 +42,7 @@ class PermissionsTest extends \gptest_bootstrap{
 
 		// re-add index=a
 		$params = [
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'users'			=> [static::user_name => static::user_name],
 			'cmd'			=> 'SaveFilePermissions',
 			'index'			=> 'a',

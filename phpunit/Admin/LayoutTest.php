@@ -49,7 +49,7 @@ class LayoutTest extends \gptest_bootstrap{
 			'theme'			=> $theme_str,
 			'label'			=> $theme[0].'/'.$theme[1],
 			'cmd'			=> 'addlayout',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 		];
 
 		$this->PostRequest('Admin_Theme_Content/Available',$params);
@@ -67,7 +67,7 @@ class LayoutTest extends \gptest_bootstrap{
 		$params = [
 			'layout'		=> $layout_key,
 			'cmd'			=> 'deletelayout',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 		];
 
 		$this->PostRequest('Admin_Theme_Content',$params);

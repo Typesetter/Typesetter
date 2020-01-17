@@ -22,7 +22,7 @@ class UploadTest extends \gptest_bootstrap{
 			'file_cmd'		=> 'delete',
 			'show'			=> 'inline',
 			'file'			=> 'stars.png',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 		];
 
 		$this->PostRequest('Admin/Uploaded/image',$params);
@@ -71,7 +71,7 @@ class UploadTest extends \gptest_bootstrap{
 							],
 							[
 								'name'		=> 'verified',
-								'contents'	=> \gp\tool::new_nonce('post', true),
+								'contents'	=> \gp\tool\Nonce::Create('post', true),
 							],
 							[
 								'name'		=> 'output',

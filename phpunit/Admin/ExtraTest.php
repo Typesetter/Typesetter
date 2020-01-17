@@ -33,7 +33,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 		$params = [
 			'cmd'			=> 'SaveText',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'gpcontent'		=> $text,
 			'file'			=> 'Footer',
 		];
@@ -55,7 +55,7 @@ class ExtraTest extends \gptest_bootstrap{
 		$params = [
 			'cmd'		=> 'PublishDraft',
 			'file'		=> 'Footer',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 		];
 		$this->PostRequest('Admin/Extra',$params);
 		$this->assertFileNotExists($area_info['draft_path']);
@@ -79,7 +79,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 		$params = [
 			'cmd'			=> 'NewSection',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'new_title'		=> $name,
 			'type'			=> $type,
 		];
@@ -96,7 +96,7 @@ class ExtraTest extends \gptest_bootstrap{
 		// delete
 		$params = [
 			'cmd'			=> 'DeleteArea',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'file'			=> $name,
 		];
 		$this->PostRequest('Admin/Extra',$params);
@@ -161,7 +161,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 		$params = [
 			'cmd'				=> 'SaveVisibilityExtra',
-			'verified'			=> \gp\tool::new_nonce('post', true),
+			'verified'			=> \gp\tool\Nonce::Create('post', true),
 			'file'				=> 'Header',
 			'visibility_type'	=> 1,
 		];

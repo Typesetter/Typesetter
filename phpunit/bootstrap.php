@@ -318,7 +318,7 @@ class gptest_bootstrap extends \PHPUnit_Framework_TestCase{
 		$params['cmd']				= 'login';
 		$params['username']			= self::user_name;
 		$params['password']			= self::user_pass;
-		$params['login_nonce']		= \gp\tool::new_nonce('login_nonce',true,300);
+		$params['login_nonce']		= \gp\tool\Nonce::Create('login_nonce',true,300);
 		$response					= self::PostRequest('Admin',$params);
 	}
 

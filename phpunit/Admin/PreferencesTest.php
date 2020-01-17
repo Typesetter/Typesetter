@@ -68,7 +68,7 @@ class PreferencesTest extends \gptest_bootstrap{
 	public function ChangePreferences( $params ){
 
 		$params += [
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'email'			=> self::user_email,
 			'oldpassword'	=> self::user_pass,
 			'password'		=> self::user_pass,

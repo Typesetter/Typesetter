@@ -27,7 +27,7 @@ class AddonsTest extends \gptest_bootstrap{
 		// install Example
 		$params = [
 			'cmd'			=> 'LocalInstall',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'source'		=> 'Example',
 		];
 		$this->PostRequest('Admin/Addons',$params);
@@ -42,7 +42,7 @@ class AddonsTest extends \gptest_bootstrap{
 		// uninstall
 		$params = [
 			'cmd'			=> 'confirm_uninstall',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'addon'			=> 'Example',
 		];
 		$this->PostRequest('Admin/Addons',$params);

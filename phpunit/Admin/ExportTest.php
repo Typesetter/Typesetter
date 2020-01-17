@@ -21,7 +21,7 @@ class phpunit_Export extends gptest_bootstrap{
 			'themes'		=> 'on',
 			'trash'			=> 'on',
 			'compression'	=> 'zip',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'cmd'			=> 'do_export',
 		];
 
@@ -57,7 +57,7 @@ class phpunit_Export extends gptest_bootstrap{
 		// revert
 		$params = [
 			'archive'		=> basename($archive_path),
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'cmd'			=> 'revert_confirmed',
 		];
 

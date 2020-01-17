@@ -19,7 +19,7 @@ class UsersTest extends \gptest_bootstrap{
 
 		// create the new user
 		$params = [
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'username'		=> 'newuser',
 			'password'		=> 'newpass',
 			'password1'		=> 'newpass',
@@ -43,7 +43,7 @@ class UsersTest extends \gptest_bootstrap{
 
 		// edit user details
 		$params = [
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'username'		=> 'newuser',
 			'email'			=> 'test3@typesettercms.com',
 			'grant_all'		=> '',
@@ -63,7 +63,7 @@ class UsersTest extends \gptest_bootstrap{
 
 		// change password
 		$params = [
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'username'		=> 'newuser',
 			'password'		=> 'resetpass',
 			'password1'		=> 'resetpass',
@@ -84,7 +84,7 @@ class UsersTest extends \gptest_bootstrap{
 		$params = [
 			'cmd'			=> 'RemoveUser',
 			'username'		=> 'newuser',
-			'verified'		=> \gp\tool::new_nonce('post', true),
+			'verified'		=> \gp\tool\Nonce::Create('post', true),
 		];
 
 		$this->PostRequest('/Admin/Users',$params);

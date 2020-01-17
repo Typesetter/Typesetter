@@ -56,7 +56,7 @@ class ContactGadget extends \gp\special\Base{
 		}
 
 		//check nonce
-		if( !\gp\tool::verify_nonce('contact_post',$_POST['contact_nonce'],true) ){
+		if( !\gp\tool\Nonce::Verify('contact_post',$_POST['contact_nonce'],true) ){
 			msg($langmessage['OOPS'].'(Invalid Nonce)');
 			return;
 		}

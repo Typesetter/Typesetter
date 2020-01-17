@@ -449,6 +449,15 @@ class Addons extends \gp\admin\Addon\Install{
 		$show = $this->GetDisplayInfo();
 
 		echo '<div id="adminlinks2">';
+
+		// sort installed addons by name
+		$names = [];
+		foreach($show as $key => $row){
+			$names[$key] = $row['name'];
+		}
+		// PHP 5.5+: $names = array_column($show, 'name');
+		array_multisort($names, SORT_ASC, $show);
+
 		foreach($show as $addon_key => $info){
 			$this->PluginPanelGroup($addon_key,$info);
 		}

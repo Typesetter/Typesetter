@@ -577,7 +577,7 @@ namespace gp{
 
 				$nonce_cmds = ['creq','cnreq','postlink','post'];
 				if( isset($attr['data-cmd']) && in_array($attr['data-cmd'], $nonce_cmds) ){
-					$attr['data-nonce'] = self::new_nonce('post',true);
+					$attr['data-nonce'] = \gp\tool\Nonce::Create('post',true);
 				}
 				$string = \gp\tool\HTML::Attributes($attr);
 			}else{
@@ -590,12 +590,12 @@ namespace gp{
 				// @since 3.6
 				if( strpos($string, 'name="postlink"') !== false ){
 					trigger_error('deprecated use of name attribute (use data-cmd attribute instead)');
-					$string .= ' data-nonce="' . self::new_nonce('post', true) . '"';
+					$string .= ' data-nonce="' . \gp\tool\Nonce::Create('post', true) . '"';
 
 				// @since 4.1
 				}elseif( strpos($string, 'name="cnreq"') !== false || strpos($string, 'name="creq"') !== false ){
 					trigger_error('deprecated use of name attribute (use data-cmd attribute instead)');
-					$string .= ' data-nonce="' . self::new_nonce('post', true) . '"';
+					$string .= ' data-nonce="' . \gp\tool\Nonce::Create('post', true) . '"';
 				}
 
 			}
@@ -653,7 +653,7 @@ namespace gp{
 			$query = self::QueryEncode($query,$ampersands);
 
 			if( $nonce_action ){
-				$nonce = self::new_nonce($nonce_action);
+				$nonce = \gp\tool\Nonce::Create($nonce_action);
 				if( !empty($query) ){
 					$query .= '&'; //in the cases where $ampersands is false, nonces are not used
 				}
@@ -1573,15 +1573,24 @@ namespace gp{
 		}
 
 
-
+		/**
+		 * @deprecated
+		 * Create a new nonce
+		 * Deprecated as of Typesetter 5.2
+		 * Use \gp\tool\Nonce::Create() instead
+		 */
 		public static function new_nonce($action='none', $anon=false, $factor=43200){
+			trigger_error('Deprecated: \gp\tool::new_nonce(), use \gp\tool\Nonce::Create() instead', E_USER_WARNING);
 			return \gp\tool\Nonce::Create($action, $anon, $factor);
 		}
 
 
 
 		/**
+		 * @deprecated
 		 * Verify a nonce ($check_nonce)
+		 * Deprecated as of Typesetter 5.2
+		 * Use \gp\tool\Nonce::Verify() instead
 		 *
 		 * @param string $action Should be the same $action that is passed to new_nonce()
 		 * @param mixed $check_nonce The user submitted nonce or false if $_REQUEST['_gpnonce'] can be used
@@ -1591,13 +1600,17 @@ namespace gp{
 		 *
 		 */
 		public static function verify_nonce($action='none', $check_nonce=false, $anon=false, $factor=43200 ){
+			trigger_error('Deprecated: \gp\tool::verify_nonce(), use \gp\tool\Nonce::Verify() instead', E_USER_WARNING);
 			return \gp\tool\Nonce::Verify($action, $check_nonce, $anon, $factor );
 		}
 
 
 
 		/**
+		 * @deprecated
 		 * Generate a nonce hash
+		 * Deprecated as of Typesetter 5.2
+		 * Use \gp\tool\Nonce::Hash() instead
 		 *
 		 * @param string $nonce
 		 * @param int $tick_offset
@@ -1605,6 +1618,7 @@ namespace gp{
 		 *
 		 */
 		public static function nonce_hash($nonce, $tick_offset=0, $factor=43200){
+			trigger_error('Deprecated: \gp\tool::nonce_hash(), use \gp\tool\Nonce::Hash() instead', E_USER_WARNING);
 			return \gp\tool\Nonce::Hash($nonce, $tick_offset, $factor );
 		}
 
@@ -1728,7 +1742,7 @@ namespace gp{
 				\gp\tool\Output::$inline_vars['isadmin']		= true;
 				\gp\tool\Output::$inline_vars['req_time']		= time();
 				\gp\tool\Output::$inline_vars['gpBLink']		= self::HrefEncode($linkPrefix, false);
-				\gp\tool\Output::$inline_vars['post_nonce']		= self::new_nonce('post', true);
+				\gp\tool\Output::$inline_vars['post_nonce']		= \gp\tool\Nonce::Create('post', true);
 				\gp\tool\Output::$inline_vars['gpFinderUrl']	= \gp\tool::GetUrl('Admin/Browser');
 
 				\gp\tool\Session::GPUIVars();

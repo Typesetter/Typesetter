@@ -315,6 +315,7 @@ class Extra extends \gp\Page\Edit{
 		$types	= \gp\tool\Output\Sections::GetTypes();
 		$_types	= [];
 		foreach( $types as $type => $info ){
+			if ( $type != 'image')
 			$_types[$type] = $info['label'];
 		}
 

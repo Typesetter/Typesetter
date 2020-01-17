@@ -67,7 +67,7 @@ class Layout{
 		}
 		$this->title = $title;
 
-		if( !\gp\tool::verify_nonce('restore') ){
+		if( !\gp\tool\Nonce::Verify('restore') ){
 			msg($langmessage['OOPS']);
 			return;
 		}
@@ -100,7 +100,7 @@ class Layout{
 			return;
 		}
 
-		if( !\gp\tool::verify_nonce('use_'.$layout) ){
+		if( !\gp\tool\Nonce::Verify('use_'.$layout) ){
 			msg($langmessage['OOPS']);
 			return;
 		}

@@ -1580,7 +1580,7 @@ namespace gp{
 		 * Use \gp\tool\Nonce::Create() instead
 		 */
 		public static function new_nonce($action='none', $anon=false, $factor=43200){
-			trigger_error('Deprecated: \gp\tool::new_nonce(), use \gp\tool\Nonce::Create() instead', E_USER_WARNING);
+			// trigger_error('Deprecated: \gp\tool::new_nonce(), use \gp\tool\Nonce::Create() instead', E_USER_WARNING);
 			return \gp\tool\Nonce::Create($action, $anon, $factor);
 		}
 
@@ -1600,7 +1600,7 @@ namespace gp{
 		 *
 		 */
 		public static function verify_nonce($action='none', $check_nonce=false, $anon=false, $factor=43200 ){
-			trigger_error('Deprecated: \gp\tool::verify_nonce(), use \gp\tool\Nonce::Verify() instead', E_USER_WARNING);
+			// trigger_error('Deprecated: \gp\tool::verify_nonce(), use \gp\tool\Nonce::Verify() instead', E_USER_WARNING);
 			return \gp\tool\Nonce::Verify($action, $check_nonce, $anon, $factor );
 		}
 
@@ -1618,7 +1618,7 @@ namespace gp{
 		 *
 		 */
 		public static function nonce_hash($nonce, $tick_offset=0, $factor=43200){
-			trigger_error('Deprecated: \gp\tool::nonce_hash(), use \gp\tool\Nonce::Hash() instead', E_USER_WARNING);
+			// trigger_error('Deprecated: \gp\tool::nonce_hash(), use \gp\tool\Nonce::Hash() instead', E_USER_WARNING);
 			return \gp\tool\Nonce::Hash($nonce, $tick_offset, $factor );
 		}
 

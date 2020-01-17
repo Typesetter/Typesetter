@@ -107,10 +107,8 @@ class ExtraTest extends \gptest_bootstrap{
 	}
 
 	public function testVisibility(){
-
-		ob_start();
-		\gp\tool\Output\Extra::GetExtra('Header');
-		$content	= ob_get_clean();
+		
+		$content	= \gp\tool\Output\Extra::GetExtra('Header');
 
 		// assert the homepage does not contain extra content
 		$response	= $this->GetRequest('');

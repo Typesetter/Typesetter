@@ -379,10 +379,7 @@ namespace gp\tool\Output{
 		 *
 		 */
 		public static function IncludeExtra($requested){
-
-			ob_start();
-			\gp\tool\Output\Extra::GetExtra($requested);
-			return ob_get_clean();
+			return \gp\tool\Output\Extra::GetExtra($requested);
 		}
 
 

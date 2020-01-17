@@ -4,7 +4,12 @@ namespace gp\tool\Output;
 
 class Extra{
 
-
+	/**
+	 * Return extra content area
+	 * @param string $name
+	 * @return string
+	 *
+	 */
 	public static function GetExtra($name='Side_Menu'){
 		global $dataDir,$langmessage;
 
@@ -21,8 +26,7 @@ class Extra{
 		}
 
 		if( !$wrap ){
-			echo \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
-			return;
+			return \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
 		}
 
 		$edit_link = \gp\tool\Output::EditAreaLink(
@@ -58,7 +62,7 @@ class Extra{
 		$extra_content[0]					+= ['attributes'=>[]];
 		$extra_content[0]['attributes']		+= $attrs;
 
-		echo \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
+		return \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
 	}
 
 

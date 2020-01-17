@@ -294,7 +294,7 @@ class Errors extends \gp\special\Base{
 		global $dataDir;
 
 
-		if( !\gp\tool::verify_nonce( 'ClearErrors' ) ){
+		if( !\gp\tool\Nonce::Verify( 'ClearErrors' ) ){
 			return;
 		}
 

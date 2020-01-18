@@ -209,7 +209,7 @@ class Layout{
 		echo '<tr><th>'.$langmessage['affected_files'].'</th></tr></table>';
 
 		echo '<p class="sm">'.$langmessage['about_layout_change'].'</p>';
-		echo '<p class="admin_note" style="width:35em">';
+		echo '<p class="admin_note">';
 
 		$label = \gp\tool::GetLabelIndex($index,false);
 		echo \gp\tool::LabelSpecialChars($label);

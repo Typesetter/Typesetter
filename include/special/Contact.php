@@ -7,7 +7,7 @@ namespace gp\special{
 	class Contact extends ContactGadget{
 
 		public function ShowForm(){
-			\gp\tool\Output\Extra::GetExtra('Contact');
+			echo \gp\tool\Output\Extra::GetExtra('Contact');
 			parent::ShowForm();
 		}
 

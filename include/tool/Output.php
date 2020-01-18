@@ -1058,7 +1058,7 @@ namespace gp\tool{
 
 
 		public static function GetExtra($name='Side_Menu',$info=[]){
-			return \gp\tool\Output\Extra::GetExtra($name);
+			echo \gp\tool\Output\Extra::GetExtra($name);
 		}
 
 

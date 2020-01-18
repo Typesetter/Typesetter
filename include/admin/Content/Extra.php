@@ -55,6 +55,7 @@ class Extra extends \gp\Page\Edit{
 		$this->cmds['gallery_folder']			= 'GalleryImages';
 		$this->cmds['gallery_images']			= 'GalleryImages';
 		$this->cmds['new_dir']					= '\\gp\\tool\\Editing::NewDirForm';
+		$this->cmds['Image_Editor']				= '\\gp\\tool\\Editing::ImageEditor';
 
 		$this->cmds['NewSection'] 				= 'DefaultDisplay';
 

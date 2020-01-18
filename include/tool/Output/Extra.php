@@ -4,7 +4,12 @@ namespace gp\tool\Output;
 
 class Extra{
 
-
+	/**
+	 * Return extra content area
+	 * @param string $name
+	 * @return string
+	 *
+	 */
 	public static function GetExtra($name='Side_Menu'){
 		global $dataDir,$langmessage;
 
@@ -14,16 +19,14 @@ class Extra{
 		$extra_content	= self::ExtraContent( $name, $is_draft );
 		$file_stats		= \gp\tool\Files::$last_stats;
 		$wrap			= \gp\tool\Output::ShowEditLink('Admin_Extra');
+		$section_num	= 0;
 
 		if( !self::ExtraIsVisible($name) ){
 			return '';
 		}
 
 		if( !$wrap ){
-			echo '<div' . \gp\tool\Output\Sections::SectionAttributes($attrs, $extra_content[0]['type']) . '>';
-			echo \gp\tool\Output\Sections::RenderSection($extra_content[0], 0, '', $file_stats);
-			echo '</div>';
-			return;
+			return \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
 		}
 
 		$edit_link = \gp\tool\Output::EditAreaLink(
@@ -56,9 +59,10 @@ class Extra{
 		$attrs['id']				= 'ExtraEditArea' . $edit_index;
 		$attrs['data-draft']		= (int)$is_draft;
 
-		echo '<div' . \gp\tool\Output\Sections::SectionAttributes($attrs, $extra_content[0]['type']) . '>';
-		echo \gp\tool\Output\Sections::RenderSection($extra_content[0], 0, '', $file_stats);
-		echo '</div>';
+		$extra_content[0]					+= ['attributes'=>[]];
+		$extra_content[0]['attributes']		+= $attrs;
+
+		return \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
 	}
 
 

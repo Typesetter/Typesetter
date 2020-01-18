@@ -358,7 +358,8 @@ $gp.AdminBoxC = function(data, options){
 
 	options = $.extend({
 			context : '',
-			width : 640
+			width : 660,
+			zIndex: 11000
 		},
 		options);
 
@@ -367,13 +368,10 @@ $gp.AdminBoxC = function(data, options){
 	var box_width = Math.max(660, Math.round(win_width*0.70));
 	*/
 	var box_width = options.width;
-	var left = Math.round( ($gp.$win.width() - box_width - 40) / 2 );
-	var height = Math.max( $gp.$doc.height(), $('body').outerHeight(true) );
 
 	$gp.div('gp_admin_box1')
 		.css({
-			'zIndex' : 11000,
-			'min-height' : height
+			'zIndex' : options.zIndex
 		})
 		.stop(true,true)
 		.fadeTo(0,0) //fade in from transparent
@@ -381,15 +379,14 @@ $gp.AdminBoxC = function(data, options){
 
 	$gp.div('gp_admin_box')
 		.css({
-			'zIndex' : '11001',
-			'left' : left,
-			'top' : $gp.$win.scrollTop()
+			'zIndex' : options.zIndex,
 		})
 		.stop(true,true)
 		.fadeIn((options.replaceBox ? 0 : 400))
 		.html('<a class="gp_admin_box_close" data-cmd="admin_box_close"></a>'
-			+ '<div id="gp_admin_boxc" class="' + (options.context || '')
-			+ '" style="width:' + box_width + 'px"></div>')
+			+ '<div id="gp_admin_boxc" class="' + (options.context || '') + '" '
+			+ 'style="width:' + box_width + 'px">'
+			+ '</div>')
 		.find('#gp_admin_boxc')
 		.html(data)
 		.find('input:visible').first()

@@ -121,7 +121,7 @@ namespace gp\admin{
 			}
 
 			echo '<p>';
-			echo '<button style="float:right;margin-right:0;" class="admin_box_close gpcancel">';
+			echo '<button class="admin_box_close gpcancel">';
 			echo $langmessage['Close'];
 			echo '</button>';
 			echo '</p>';

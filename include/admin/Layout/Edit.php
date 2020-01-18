@@ -825,7 +825,7 @@ class Edit extends \gp\admin\Layout{
 
 
 
-		echo '<div class="inline_box" style="width:30em">';
+		echo '<div class="inline_box">';
 
 		echo '<div class="layout_links">';
 		if( $showCustom ){

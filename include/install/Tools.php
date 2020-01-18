@@ -478,7 +478,7 @@ class Tools{
 		//Dropdown Divider
 		$file		= $destination.'/data/_extra/Bootstrap_Dropdown_Divider/page.php';
 		$content	= '';
-		self::NewExtra($file,$content);
+		self::NewNonTextExtra($file,$content);
 
 		//Another example area
 		$file		= $destination.'/data/_extra/Lorem/page.php';
@@ -576,6 +576,10 @@ class Tools{
 		return \gp\tool\Files::SaveData($file,'file_sections',$extra_content);
 	}
 
+	public static function NewNonTextExtra($file, $content){
+		$extra_content = array(array('type'=>'other','content'=>$content));
+		return \gp\tool\Files::SaveData($file,'file_sections',$extra_content);
+	}
 
 	/**
 	 * attempt to create an htaccess file

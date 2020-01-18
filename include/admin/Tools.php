@@ -632,7 +632,7 @@ namespace gp\admin{
 				)
 			);
 
-			echo '<ul class="panel_tabs" style="float:right">';
+			echo '<ul class="panel_tabs">';
 
 			self::FormatAdminLinks($links);
 

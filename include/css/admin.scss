@@ -673,27 +673,42 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 }
 #gp_admin_box {
 	position: fixed;
+	border-radius: 6px;
+	background: #fff;
 	top: 40px;
 	left: 50vw;
+	padding-top: 20px; // spare space for close button when there is an y-scrollbar
 	transform: translateX(-50%);
-	// max-height: calc(100vh - 80px);
+	@include box-shadow( 0 0 6px rgba(0, 0, 0, 0.4) );
 }
 #gp_admin_boxc {
-	background: #fff !important;
-	width: auto;
-	padding: 20px;
+	position: relative;
+	padding: 0 20px 20px 20px; // top 0 for close button see above
 	overflow: auto;
-	max-height: calc(100vh - 100px);
+	max-height: calc(100vh - 80px);
 	max-width: calc(100vw - 60px);
 }
+#gp_admin_boxc.iframe {}
 
-#gp_admin_boxc.iframe {
-	padding: 25px 1px 20px 0 !important;
-}
 #gp_admin_boxc iframe {
 	width: 100%;
 	border: 0;
+	max-height: calc(100vh - 100px);
+	min-width: 750px;
 }
+@media (max-width:768px) {
+	#gp_admin_box {
+		top: 15px;
+	}
+	#gp_admin_boxc {
+		max-height: calc(100vh - 60px);
+		max-width: calc(100vw - 40px);
+	}
+	#gp_admin_boxc iframe {
+		max-height: calc(100vh - 60px);
+	}
+}
+
 
 #gp_admin_box h2,
 #gp_admin_box h3 {
@@ -1831,7 +1846,6 @@ body #addon_about {
 /**
  * floating areas
  */
-#gp_admin_box,
 .gp_floating_area {
 	border: 1px solid #fff;
 	border-radius: 6px;

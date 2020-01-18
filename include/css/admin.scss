@@ -517,6 +517,10 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	font-weight: normal;
 }
 
+#admincontent_panel #admin_menu_wrap > ul > li:hover > ul {
+	display: block;
+}
+
 
 /**
  * Search

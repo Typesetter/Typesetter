@@ -194,7 +194,7 @@ class Page extends \gp\Page{
 
 		echo '<div id="admincontent_panel" class="toolbar cf">';
 		echo '<div id="admin_menu_wrap">';
-		\gp\tool\Output::GetMenu();
+		\gp\tool\Output::GetTopTwoMenu();
 		echo '</div>';
 
 

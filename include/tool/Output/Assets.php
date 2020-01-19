@@ -191,13 +191,15 @@ class Assets{
 			$files[] = $var_file;
 		}
 
-		$files			= self::AddCustomStyleFiles($files, $style_type);
 
 		if( $style_type == 'scss' ){
 
+			$files			= self::AddCustomStyleFiles($files, 'scss');
 			$files[]		= $dir . '/style.scss';
 			return array( \gp\tool\Output\Css::Cache($files) );
 		}
+
+		$files			= self::AddCustomStyleFiles($files, 'css');
 
 		array_unshift($files, $dir . '/style.less');
 
@@ -209,24 +211,22 @@ class Assets{
 	 * Add paths for custom css/scss/less files
 	 *
 	 */
-	public static function AddCustomStyleFiles($files, $style_type){
+	public static function AddCustomStyleFiles($files, $file_ext = 'css'){
 		global $dataDir, $page;
 
 		if( $page->gpLayout === false ){
 			return $files;
 		}
 
-		$file_ext = $style_type == 'scss' ? 'scss' : 'css';
-
-		$customizer_style_file 		= $dataDir . '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
-		$layout_editor_style_file 	= $dataDir . '/data/_layouts/' . $page->gpLayout . '/custom.' . $file_ext;
+		$customizer_style_file 		= '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
+		$layout_editor_style_file 	= '/data/_layouts/' . $page->gpLayout . '/custom.' . $file_ext;
 
 
-		if( file_exists($customizer_style_file) ){
+		if( file_exists($dataDir . $customizer_style_file) ){
 			$files[] = $customizer_style_file;
 		}
 
-		if( file_exists($layout_editor_style_file) ){
+		if( file_exists($dataDir . $layout_editor_style_file) ){
 			$files[] = $layout_editor_style_file;
 		}
 

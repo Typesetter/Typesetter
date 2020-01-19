@@ -36,6 +36,7 @@ class Extra extends \gp\Page\Edit{
 			$this->cmds['PreviewText']			= '';
 			$this->cmds['EditVisibility']		= '';
 			$this->cmds['PublishDraft']					= 'Redirect';
+			$this->cmds['Restore']					= 'DefaultDisplay';
 
 
 			$this->cmds_post['SaveText']				= 'Redirect';
@@ -284,6 +285,14 @@ class Extra extends \gp\Page\Edit{
 		}
 		echo ' &nbsp; ';
 
+		//restore
+		if (\gp\tool\Files::Exists($info['draft_path'])){
+			echo \gp\tool::Link('Admin/Extra', $langmessage['restore'], 'cmd=Restore&file=' . rawurlencode($info['title']), array('data-cmd' => 'post'));
+		} else {
+			echo '<span class="text-muted">' . $langmessage['restore'] . '</span>';
+		}
+		echo ' &nbsp; ';
+
 		//edit
 		if ($section['type'] == 'text'){
 			echo \gp\tool::Link('Admin/Extra', $langmessage['edit'], 'cmd=EditExtra&file=' . rawurlencode($info['title']));
@@ -452,6 +461,13 @@ class Extra extends \gp\Page\Edit{
 	}
 
 	public function ResetFileTypes(){
+	}
+
+	public function Restore(){
+		if( \gp\tool\Files::Exists($this->draft_file) && unlink($this->draft_file) ){
+			$this->draft_exists = false;
+		}
+		return !$this->draft_exists;
 	}
 
 	public function EditVisibility(){

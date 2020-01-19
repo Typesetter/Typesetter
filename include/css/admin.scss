@@ -519,6 +519,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 
 #admincontent_panel #admin_menu_wrap > ul > li:hover > ul {
 	display: block;
+	z-index: 100;
 }
 
 

@@ -156,16 +156,19 @@ class Layout extends \gp\admin\Addon\Install{
 	public function DefaultDisplay(){
 		global $config, $langmessage, $gpLayouts;
 
-		$this->page->head_js[] = '/include/js/auto_width.js';
+		$this->page->head_js[] = '/include/js/auto_width.js'; // TODO: use flex
 
 		$this->ShowHeader();
 
 		echo '<div id="adminlinks2">';
 
 		//all other layouts
+		$inheritance_info = \gp\admin\Menu\Tools::Inheritance_Info();
+
 		foreach($gpLayouts as $layout => $info){
-			$this->LayoutDiv($layout,$info);
+			$this->LayoutDiv($layout,$info,$inheritance_info);
 		}
+
 		echo '</div>';
 
 		echo '<hr/>';
@@ -216,6 +219,42 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 	}
+
+
+
+	/**
+	 * Get the titles of all pages using the given layout
+	 * @param string $layout the layout id
+	 * @param array $inheritance_info acquired from \gp\admin\Menu\Tools::Inheritance_Info()
+	 * @return array $titles
+	 *
+	 */
+	public function GetTitlesFromLayout($layout,$inheritance_info){
+		global $gp_index, $gp_titles, $gp_menu, $config;
+
+		$titles = [];
+
+		$is_default_layout = ($layout == $config['gpLayout']);
+
+		$inheriting_indexes = [];
+		foreach($inheritance_info as $index => $info){
+			if( isset($info['parent_layout']) && $info['parent_layout'] == $layout ){
+				$inheriting_indexes[] = $index;
+			}
+		}
+
+		foreach($gp_index as $title => $index){
+			if( (!empty($gp_titles[$index]['gpLayout']) && $gp_titles[$index]['gpLayout'] == $layout) // page uses this layout
+				|| (in_array($index, $inheriting_indexes)) // page inherits layout from the main menu parent
+				|| (empty($gp_titles[$index]['gpLayout']) && $is_default_layout) // page uses default layout
+				){
+				$titles[$index] = $title;
+			}
+		}
+
+		return $titles;
+	}
+
 
 
 	/**
@@ -1326,7 +1365,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Display layout label and options
 	 *
 	 */
-	public function LayoutDiv($layout,$info){
+	public function LayoutDiv($layout,$info,$inheritance_info){
 		global $langmessage;
 
 		$layout_info = \gp\tool::LayoutInfo($layout,false);
@@ -1340,9 +1379,13 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '<ul class="submenu">';
 
 		echo '<li>';
-		echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['edit_this_layout'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
+		echo \gp\tool::Link(
+				'Admin_Theme_Content/Edit/'.rawurlencode($layout),
+				$langmessage['edit_this_layout'],
+				'',
+				' title="'.htmlspecialchars($langmessage['Arrange Content']).'" '
+			);
 		echo '</li>';
-
 
 
 		//layout options
@@ -1353,6 +1396,24 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '</ul>';
 
 
+		//used on which pages
+		$titles			= $this->GetTitlesFromLayout($layout,$inheritance_info);
+		$titles_count	= count($titles);
+		echo '<li class="expand_child_click">';
+		echo '<a' . ($titles_count == 0 ? ' style="font-weight:bold;"' : '') . '>';
+		echo $langmessage['affected_files'] . ' (' . $titles_count . ')';
+		echo '</a>';
+		if( $titles_count > 0 ){
+			echo '<ul>';
+			foreach($titles as $title){
+				echo '<li>';
+				echo \gp\tool::Link($title, \gp\tool::GetLabel($title));
+				echo '</li>';
+			}
+			echo '</ul>';
+		}
+		echo '</li>';
+
 
 		//css options
 		echo '<li class="expand_child_click">';
@@ -1361,6 +1422,7 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '</li>';
 
 		$this->LayoutDivAddon($layout_info);
+
 
 		//new versions
 		if( isset($layout_info['addon_id']) ){

@@ -571,8 +571,8 @@ class Tools{
 		return \gp\tool\Files::SaveData($file,'file_sections',$file_sections,$meta_data);
 	}
 
-	public static function NewExtra($file, $content){
-		$extra_content = array(array('type'=>'text','content'=>$content));
+	public static function NewExtra($file, $content, $type="text"){
+		$extra_content = array(array('type'=>$type,'content'=>$content));
 		return \gp\tool\Files::SaveData($file,'file_sections',$extra_content);
 	}
 

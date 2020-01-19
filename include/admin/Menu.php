@@ -479,7 +479,7 @@ class Menu extends \gp\special\Base{
 		$this->page->ajaxReplace[] = array('inner', '.homepage_setting', $content);
 
 		ob_start();
-		\gp\tool\Output::GetMenu();
+		\gp\tool\Output::GetTopTwoMenu();
 		$content = ob_get_clean();
 		$this->page->ajaxReplace[] = array('inner', '#admin_menu_wrap', $content);
 	}

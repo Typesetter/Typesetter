@@ -684,6 +684,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	position: fixed;
 	border-radius: 6px;
 	background: #fff;
+	padding: 20px;
 	top: 40px;
 	left: 50vw;
 	padding-top: 20px; // spare space for close button when there is an y-scrollbar
@@ -692,17 +693,16 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 }
 #gp_admin_boxc {
 	position: relative;
-	padding: 0 20px 20px 20px; // top 0 for close button see above
 	overflow: auto;
-	max-height: calc(100vh - 80px);
-	max-width: calc(100vw - 60px);
+	max-height: calc(100vh - 120px);
+	max-width: calc(100vw - 100px);
 }
 #gp_admin_boxc.iframe {}
 
 #gp_admin_boxc iframe {
 	width: 100%;
 	border: 0;
-	max-height: calc(100vh - 100px);
+	max-height: calc(100vh - 120px);
 	min-width: 750px;
 }
 @media (max-width:768px) {
@@ -710,11 +710,11 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 		top: 15px;
 	}
 	#gp_admin_boxc {
-		max-height: calc(100vh - 60px);
-		max-width: calc(100vw - 40px);
+		max-height: calc(100vh - 80px);
+		max-width: calc(100vw - 80px);
 	}
 	#gp_admin_boxc iframe {
-		max-height: calc(100vh - 60px);
+		max-height: calc(100vh - 100px);
 	}
 }
 
@@ -729,6 +729,7 @@ a.gp_admin_box_close {
 	position: absolute;
 	top: 7px;
 	right: 7px;
+	z-index: 100;
 	text-decoration: none;
 	height: 16px;
 	width: 16px;

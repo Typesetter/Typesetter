@@ -130,7 +130,7 @@ namespace gp{
 
 		/**
 		 * Return an array of information about the layout
-		 * @param string $layout The layout key
+		 * @param string $layout the layout key
 		 * @param bool $check_existence Whether or not to check for the existence of the template.php file
 		 * @return false|array
 		 */
@@ -176,6 +176,13 @@ namespace gp{
 			if( isset($page->TitleInfo['gpLayout']) ){
 				// page uses a custom layout
 				return $page->TitleInfo['gpLayout'];
+			}
+
+			$inheritance = \gp\admin\Menu\Tools::Inheritance_Info();
+
+			if( isset($inheritance[$page->gp_index]['parent_layout']) ){
+				// page inherits the layout from main menu parent
+				return $inheritance[$page->gp_index]['parent_layout'];
 			}
 
 			// page uses the default layout

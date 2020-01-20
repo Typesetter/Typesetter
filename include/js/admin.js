@@ -734,6 +734,7 @@ $gp.links.post = function(evt){
 
 	for( const [name, value] of Object.entries(params) ){
 		var element		= document.createElement('input');
+		element.type	= 'hidden';
 		element.name	= name;
 		element.value	= value;
 	    form.appendChild(element);

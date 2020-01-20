@@ -465,11 +465,17 @@ class Extra extends \gp\Page\Edit{
 	}
 
 	public function DismissDraft(){
+		global $page;
 		if( \gp\tool\Files::Exists($this->draft_file) && unlink($this->draft_file) ){
 			$this->draft_exists = false;
 		}
+
+		$page->ajaxReplace		= array();
+		$page->ajaxReplace[]	= array('DraftDismissed');
+
 		return !$this->draft_exists;
 	}
+
 
 	public function EditVisibility(){
 		global $langmessage, $page, $gp_index, $gp_titles;

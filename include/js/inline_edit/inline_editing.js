@@ -177,20 +177,24 @@
 
 
 		/**
-		 * Display the publish button if the edit extra area is a draft
+		 * Display the publish and dismiss buttons if the edit extra area is a draft
 		 *
 		 */
 		PublishButton: function($area){
-
-			document.querySelector('.ck_publish').style.setProperty('display','none','important');
-
 			if( !$area || $area.data('draft') == undefined ){ // draft attr only used for extra content
 				return;
 			}
 
 			if( $area.data('draft') == 1 ){
-				document.querySelector('.ck_publish').style.removeProperty('display');
-			}
+				document.querySelectorAll('.ck_publish').forEach(function(el) {
+					el.style.removeProperty('display');
+				});
+				
+			} else {
+				document.querySelectorAll('.ck_publish').forEach(function(el) {
+					el.style.setProperty('display','none','important');
+				});
+			}	
 
 			$gp.IndicateDraft();
 		},
@@ -251,9 +255,10 @@
 
 				html += '<div id="ckeditor_save">';
 				html += '<a data-cmd="ck_save" class="ckeditor_control ck_save">' + gplang.Save + '</a>';
-				html += '<span class="ck_saved">' + gplang.Saved + '</span>';
-				html += '<a data-cmd="Publish" class="ckeditor_control ck_publish">' + gplang.Publish + '</>';
 				html += '<span class="ck_saving">' + gplang.Saving + '</span>';
+				html += '<span class="ck_saved">' + gplang.Saved + '</span>';
+				html += '<a data-cmd="Dismiss" class="ckeditor_control ck_publish">' + gplang.Dismiss + '</>';
+				html += '<a data-cmd="Publish" class="ckeditor_control ck_publish">' + gplang.Publish + '</>';
 				html += '<a data-cmd="ck_close" class="ckeditor_control">' + gplang.Close + '</a>';
 				html += '</div>';
 
@@ -788,20 +793,41 @@
 
 
 	/**
+	 * Dismiss the current draft
+	 *
+	 */
+	$gp.links.Dismiss = function(){
+
+		var $edit_area		= $gp.CurrentDiv();
+		var id_num			= $gp.AreaId( $edit_area );
+		var href			= gp_editing.get_path( id_num );
+		href				= $gp.jPrep(href, 'cmd=DismissDraft');
+
+		$(this).data('gp-area-id', id_num);
+
+		$gp.jGoTo(href,this);
+	};
+
+
+	/**
 	 * Response when an area
 	 *
 	 */
 	$gp.response.DraftPublished = function(){
-
-		this.style.setProperty('display','none','important');
-
 		var $this		= $(this); //.css('display','none !important');
 		var id_number	= $gp.AreaId( $this );
 
 		var $area		= $('#ExtraEditArea' + id_number);
 
 		gp_editing.DraftStatus($area, 0);
+		gp_editing.PublishButton($area);
 	};
+
+
+	$gp.response.DraftDismissed = function(){
+		$gp.Reload();
+	};
+
 
 
 	$('.editable_area').off('.gp');

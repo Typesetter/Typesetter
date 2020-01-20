@@ -1215,8 +1215,6 @@
 					return;
 				}
 
-				$popup.fadeIn(150);
-
 				var popup = new Popper(this, $popup.get(0), {
 					placement : 'auto',
 					onCreate : function(){
@@ -1238,10 +1236,13 @@
 				 	}
 				});
 				// console.log('popper created');
+
+				$popup.show();
+
 			})
 			.on('mouseleave', function(){
 				var $popup = $(this).next('.avail_classes_desc:not(:empty)')
-					.fadeOut(150);
+					.hide();
 			});
 
 

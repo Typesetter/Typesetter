@@ -182,14 +182,16 @@
 		 */
 		PublishButton: function($area){
 			if( !$area || $area.data('draft') == undefined ){ // draft attr only used for extra content
+				document.querySelectorAll('.ckeditor_control.ck_publish').forEach(function(el) {
+					el.style.setProperty('display','none','important');
+				});
 				return;
 			}
 
 			if( $area.data('draft') == 1 ){
 				document.querySelectorAll('.ck_publish').forEach(function(el) {
 					el.style.removeProperty('display');
-				});
-				
+				});				
 			} else {
 				document.querySelectorAll('.ck_publish').forEach(function(el) {
 					el.style.setProperty('display','none','important');

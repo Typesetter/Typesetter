@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Darbiniai juodraščiai',
 	'Working Draft'                   => 'Darbinis juodraštis',
 	'Publish Draft'                   => 'Skelbti juodraštį',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Skelbti',
 	'Slug/URL'                        => 'Interlinija/URL',
 	'sync_with_label'                 => 'Sinchronizuoti su etikete',

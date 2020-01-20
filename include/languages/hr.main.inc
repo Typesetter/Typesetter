@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Radne skice',
 	'Working Draft'                   => 'Radni nacrt',
 	'Publish Draft'                   => 'Objavi skicu',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Objaviti',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Sinkronizacija s oznakom',

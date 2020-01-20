@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Delovni osnutki',
 	'Working Draft'                   => 'Delovni osnutek',
 	'Publish Draft'                   => 'Objavi osnutek',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Objavi',
 	'Slug/URL'                        => 'Povezava',
 	'sync_with_label'                 => 'Sinhroniziraj z oznako',

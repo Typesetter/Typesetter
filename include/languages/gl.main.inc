@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Borradores',
 	'Working Draft'                   => 'Borrador',
 	'Publish Draft'                   => 'Publicar borrador',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Publicar',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Sincronizar coa etiqueta',

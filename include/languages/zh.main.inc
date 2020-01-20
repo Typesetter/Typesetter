@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => '工作草案',
 	'Working Draft'                   => '工作草案',
 	'Publish Draft'                   => '發布草稿',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => '發布',
 	'Slug/URL'                        => '短標題/網址',
 	'sync_with_label'                 => '透過標籤進行同步',

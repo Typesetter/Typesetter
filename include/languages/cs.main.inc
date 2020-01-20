@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Pracovní koncepty',
 	'Working Draft'                   => 'Pracovní koncept',
 	'Publish Draft'                   => 'Publikovat koncept',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Publikovat',
 	'Slug/URL'                        => 'Popiska/URL',
 	'sync_with_label'                 => 'Synchronizovat s nadpisem',

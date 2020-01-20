@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Arbeiðs Kladda',
 	'Working Draft'                   => 'Arbeiðs Kladda',
 	'Publish Draft'                   => 'Útgev Kladdu',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Publish',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Synkronisera við Spjaldur',

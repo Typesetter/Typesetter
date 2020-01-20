@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Proiecte de lucru',
 	'Working Draft'                   => 'Proiect în lucru',
 	'Publish Draft'                   => 'Proiect pentru publicat',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Publicare',
 	'Slug/URL'                        => 'Reducţie/URL',
 	'sync_with_label'                 => 'Sincronizare cu eticheta',

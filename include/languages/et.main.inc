@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Tööversioonid',
 	'Working Draft'                   => 'Tööversioon',
 	'Publish Draft'                   => 'Avaldamise kavand',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Avalda',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Sünkroniseeri sildiga',

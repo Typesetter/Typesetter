@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Munkavázlatok',
 	'Working Draft'                   => 'Munkavázlat',
 	'Publish Draft'                   => 'Vázlat közzététele',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Közzétesz',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Szinkronizálás a címkével',

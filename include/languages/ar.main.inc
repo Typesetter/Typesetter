@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'مسودات العمل',
 	'Working Draft'                   => 'مشروع العمل',
 	'Publish Draft'                   => 'نشر المسودة',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'نشر',
 	'Slug/URL'                        => 'الرابط',
 	'sync_with_label'                 => 'تزامن مع التسمية',

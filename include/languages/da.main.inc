@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Arbejdsudkast',
 	'Working Draft'                   => 'Arbejdsudkast',
 	'Publish Draft'                   => 'Udgiv udkast',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Offentliggøre',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Synkronisere med Etiket',

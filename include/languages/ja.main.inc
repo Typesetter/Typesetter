@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => '下書き中',
 	'Working Draft'                   => '下書き中',
 	'Publish Draft'                   => '下書きを公開',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => '公開',
 	'Slug/URL'                        => '短縮名(半角英数)/URL',
 	'sync_with_label'                 => 'ラベルに合わせる',

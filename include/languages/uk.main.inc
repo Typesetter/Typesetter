@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Робочі чернетки',
 	'Working Draft'                   => 'Робоча чернетка',
 	'Publish Draft'                   => 'Опублікувати чернетку',
+	'Dismiss Draft'                   => 'Відхилити чернетку',
 	'Publish'                         => 'Опублікувати',
 	'Slug/URL'                        => 'Зручне коротке посилання / URL',
 	'sync_with_label'                 => 'Синхронізувати з назвою',

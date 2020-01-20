@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Drög í vinnslu',
 	'Working Draft'                   => 'Drög í vinnslu',
 	'Publish Draft'                   => 'Gefa út drög',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Gefa út',
 	'Slug/URL'                        => 'Vefslóðarormur/URL-slóð',
 	'sync_with_label'                 => 'Samstilla við skýringu',

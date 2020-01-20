@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Работни чернови',
 	'Working Draft'                   => 'Работен вариант',
 	'Publish Draft'                   => 'Публикуване на чернова',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Публикувам',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Синхронизирайте с етикета',

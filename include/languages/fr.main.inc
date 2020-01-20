@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Brouillons',
 	'Working Draft'                   => 'Brouillon',
 	'Publish Draft'                   => 'Publier le brouillon',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Publier',
 	'Slug/URL'                        => 'adresse (URL)',
 	'sync_with_label'                 => 'Synchroniser avec le label',

@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Werkbaar Concepten',
 	'Working Draft'                   => 'Werkbaar Concept',
 	'Publish Draft'                   => 'Publiceer Concept',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Publish',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Synchroniseer met label',

@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Σχέδια εργασίας',
 	'Working Draft'                   => 'Σχέδιο εργασίας',
 	'Publish Draft'                   => 'Δημοσίευση σχεδίου',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Δημοσιεύω',
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Συγχρονισμός με την Ετικέτα',

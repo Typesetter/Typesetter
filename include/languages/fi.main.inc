@@ -215,6 +215,7 @@ $langmessage = array (
 	'Working Drafts'                  => 'Työluonnokset',
 	'Working Draft'                   => 'Työluonnos',
 	'Publish Draft'                   => 'Julkaise luonnos',
+	'Dismiss Draft'                   => 'Dismiss Draft',
 	'Publish'                         => 'Julkaista',
 	'Slug/URL'                        => 'Selväkielinen osoite',
 	'sync_with_label'                 => 'Synkronoi nimikkeen kanssa',

@@ -697,14 +697,16 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	max-height: calc(100vh - 120px);
 	max-width: calc(100vw - 100px);
 }
-#gp_admin_boxc.iframe {}
+#gp_admin_boxc.iframe {
+	width: 100%;
+}
 
 #gp_admin_boxc iframe {
 	width: 100%;
 	border: 0;
-	max-height: calc(100vh - 130px);
-	min-width: 750px;
+	height: calc(100vh - 130px);
 }
+
 @media (max-width:768px) {
 	#gp_admin_box {
 		top: 15px;
@@ -714,7 +716,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 		max-width: calc(100vw - 105px);
 	}
 	#gp_admin_boxc iframe {
-		max-height: calc(100vh - 100px);
+		height: calc(100vh - 110px);
 	}
 }
 

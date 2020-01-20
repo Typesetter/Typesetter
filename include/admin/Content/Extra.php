@@ -36,7 +36,7 @@ class Extra extends \gp\Page\Edit{
 			$this->cmds['PreviewText']			= '';
 			$this->cmds['EditVisibility']		= '';
 			$this->cmds['PublishDraft']			= 'Redirect';
-			$this->cmds['Restore']				= 'Redirect';
+			$this->cmds['DismissDraft']			= 'Redirect';
 
 
 			$this->cmds_post['SaveText']				= 'Redirect';
@@ -285,11 +285,11 @@ class Extra extends \gp\Page\Edit{
 		}
 		echo ' &nbsp; ';
 
-		//restore
+		//dismiss
 		if (\gp\tool\Files::Exists($info['draft_path'])){
-			echo \gp\tool::Link('Admin/Extra', $langmessage['restore'], 'cmd=Restore&file=' . rawurlencode($info['title']), array('data-cmd' => 'post'));
+			echo \gp\tool::Link('Admin/Extra', $langmessage['Dismiss Draft'], 'cmd=DismissDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'post'));
 		} else {
-			echo '<span class="text-muted">' . $langmessage['restore'] . '</span>';
+			echo '<span class="text-muted">' . $langmessage['Dismiss Draft'] . '</span>';
 		}
 		echo ' &nbsp; ';
 
@@ -360,7 +360,7 @@ class Extra extends \gp\Page\Edit{
 		echo '<button type="submit" class="gpsubmit gp_save_extra">' . $langmessage['save'] .'</button>';
 
 		if( $this->draft_exists ){
-			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="Restore">' . $langmessage['restore'] . '</button>';
+			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="DismissDraft">' . $langmessage['Dismiss Draft'] . '</button>';
 			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="PublishDraft">' . $langmessage['Publish Draft'] . '</button>';
 		}
 
@@ -464,7 +464,7 @@ class Extra extends \gp\Page\Edit{
 	public function ResetFileTypes(){
 	}
 
-	public function Restore(){
+	public function DismissDraft(){
 		if( \gp\tool\Files::Exists($this->draft_file) && unlink($this->draft_file) ){
 			$this->draft_exists = false;
 		}

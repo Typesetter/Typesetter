@@ -1237,12 +1237,11 @@
 				});
 				// console.log('popper created');
 
-				$popup.fadeTo(600, 0, function(){ $popup.fadeTo(0, 1); });
+				$popup.show();
 
 			})
 			.on('mouseleave', function(){
 				var $popup = $(this).next('.avail_classes_desc:not(:empty)')
-					.stop()
 					.hide();
 			});
 

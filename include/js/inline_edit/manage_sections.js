@@ -1640,8 +1640,19 @@
 				if( $area.data('draft') ){
 					var href = $gp.jPrep(this.href, 'cmd=PublishDraft');
 
-					$('<a class="draft" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
+					$('<a class="draft ck_publish" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
 						 + gplang.Draft
+						 + '</a>')
+							.attr('href', href)
+							.appendTo($li);
+				}
+				
+				//dismiss draft link
+				if( $area.data('draft') ){
+					var href = $gp.jPrep(this.href, 'cmd=DismissDraft');
+
+					$('<a class="draft ck_publish" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
+						 + gplang.Dismiss
 						 + '</a>')
 							.attr('href', href)
 							.appendTo($li);

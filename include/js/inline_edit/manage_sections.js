@@ -1216,7 +1216,7 @@
 				}
 
 				var popup = new Popper(this, $popup.get(0), {
-					placement : 'auto',
+					placement : 'top', // auto
 					onCreate : function(){
 						// console.log('Popper.onCreate() called with arguments: ', arguments);
 					},

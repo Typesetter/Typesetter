@@ -690,10 +690,10 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	padding-top: 20px; // spare space for close button when there is an y-scrollbar
 	transform: translateX(-50%);
 	@include box-shadow( 0 0 6px rgba(0, 0, 0, 0.4) );
+	overflow: auto;
 }
 #gp_admin_boxc {
 	position: relative;
-	overflow: auto;
 	max-height: calc(100vh - 120px);
 	max-width: calc(100vw - 100px);
 }
@@ -726,14 +726,14 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	line-height: 100%;
 }
 a.gp_admin_box_close {
-	position: absolute;
-	top: 7px;
-	right: 7px;
+	position: sticky;
+	margin-left:auto;
 	z-index: 100;
 	text-decoration: none;
 	height: 16px;
 	width: 16px;
 	@include gpimg( 'cancel.png', 50%, 50% );
+	display:block;
 }
 #gp_admin_box h2 a,
 #gp_admin_box h3 a,

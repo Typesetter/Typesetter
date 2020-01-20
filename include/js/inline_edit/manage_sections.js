@@ -1215,25 +1215,11 @@
 					return;
 				}
 
-				var popup = new Popper(this, $popup.get(0), {
-					placement : 'top', // auto
+				var popup = new Popper($('#gp_avail_classes th'), $popup.get(0), {
+					placement : 'top',
 					onCreate : function(){
 						// console.log('Popper.onCreate() called with arguments: ', arguments);
-					},
-					modifiers : {
-						arrow : {
-							enabled : true
-						},
-						preventOverflow: {
-							escapeWithReference : true
-						}
-						/*
-						, offset : {
-							enabled: true,
-							offset: '24px,24px'
-						}
-						*/
-				 	}
+					}
 				});
 				// console.log('popper created');
 

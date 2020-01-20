@@ -35,8 +35,8 @@ class Extra extends \gp\Page\Edit{
 			$this->cmds['EditExtra']			= '';
 			$this->cmds['PreviewText']			= '';
 			$this->cmds['EditVisibility']		= '';
-			$this->cmds['PublishDraft']					= 'Redirect';
-			$this->cmds['Restore']					= 'DefaultDisplay';
+			$this->cmds['PublishDraft']			= 'Redirect';
+			$this->cmds['Restore']				= 'Redirect';
 
 
 			$this->cmds_post['SaveText']				= 'Redirect';
@@ -360,6 +360,7 @@ class Extra extends \gp\Page\Edit{
 		echo '<button type="submit" class="gpsubmit gp_save_extra">' . $langmessage['save'] .'</button>';
 
 		if( $this->draft_exists ){
+			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="Restore">' . $langmessage['restore'] . '</button>';
 			echo '<button type="submit" name="cmd" class="gpsubmit gp_publish_extra" value="PublishDraft">' . $langmessage['Publish Draft'] . '</button>';
 		}
 

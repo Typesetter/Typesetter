@@ -46,6 +46,7 @@
 
 ## Extra Content ##
 * Extra Content Areas visibility can now be set, globally or per page.
+* Working Drafts can now be dismissed before being published.
 
 
 ## Bug Fixes ##

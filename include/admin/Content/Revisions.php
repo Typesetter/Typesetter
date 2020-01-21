@@ -177,7 +177,7 @@ class Revisions extends \gp\Page\Edit{
 		if( !empty($username) ){
 			echo $username;
 		}
-		echo '</td><td>';
+		echo '</td><td class="revision_history_links">';
 
 
 		switch($which){
@@ -198,7 +198,7 @@ class Revisions extends \gp\Page\Edit{
 					['target' => 'gp_layout_iframe']
 				);
 
-				echo ' &nbsp; ' . \gp\tool::Link(
+				echo \gp\tool::Link(
 					$this->title,
 					$langmessage['edit']
 				);
@@ -214,7 +214,6 @@ class Revisions extends \gp\Page\Edit{
 					)
 				);
 
-				echo ' &nbsp; ';
 				echo \gp\tool::Link(
 					'Admin/Revisions/' . $this->gp_index,
 					$langmessage['restore'],
@@ -225,7 +224,6 @@ class Revisions extends \gp\Page\Edit{
 					)
 				);
 
-				echo ' &nbsp; ';
 				echo \gp\tool::Link(
 					'/Admin/Revisions/'.$this->gp_index,
 					'<i class="fa fa-trash fa-fw"></i>',

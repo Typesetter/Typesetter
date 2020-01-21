@@ -1644,7 +1644,7 @@
 					var href = $gp.jPrep(this.href, 'cmd=PublishDraft');
 
 					$('<a class="draft ck_publish" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
-						 + gplang.Draft
+						 + gplang.Publish
 						 + '</a>')
 							.attr('href', href)
 							.appendTo($li);

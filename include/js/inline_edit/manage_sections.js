@@ -1215,10 +1215,12 @@
 					return;
 				}
 
+				$popup.fadeTo(0, 0.001);
+
 				var popup = new Popper(this, $popup.get(0), {
-					placement : 'top', // auto
-					onCreate : function(){
-						// console.log('Popper.onCreate() called with arguments: ', arguments);
+					placement	: 'top', // auto
+					onCreate	: function(){
+						$popup.fadeTo(0, 0.002).delay(750).fadeTo(150, 1); // $popup.show();
 					},
 					modifiers : {
 						arrow : {
@@ -1237,11 +1239,10 @@
 				});
 				// console.log('popper created');
 
-				$popup.show();
-
 			})
 			.on('mouseleave', function(){
 				var $popup = $(this).next('.avail_classes_desc:not(:empty)')
+					.stop()
 					.hide();
 			});
 

@@ -46,15 +46,7 @@
 
 ## Extra Content ##
 * Extra Content Areas visibility can now be set, globally or per page.
-* Working Drafts can now be dismissed before being published.
-
-
-## Bug Fixes ##
-* Section Clipboaard now also works with nested content structures of any depht.
-* Forgotten password: New password sent via e-mail now also works with 'password_hash' algorithm. 
-* Change password: Now also works with 'password_hash' algorithm. 
-* Fix page corruption with too many sections: With lots of sections, posting discrete values came to its limits (depending on server config) and saving a page failed. We now post all in a single JSON value, which is safe.
-* Multiple section operations in quick succession: It now shouldn't be possible anymore to cause 'Not a Draft' and 'Invalid Section Number" errors (fingers crossed ;).
+* Working Drafts of Extra Content Areas can now be dismissed before being published.
 
 
 ## Development ##
@@ -77,5 +69,13 @@
 * 'AdminLinkLabel' filter hook allows better plugin internationalization.
 
 
+## Bug Fixes ##
+* Section Clipboaard now also works with nested content structures of any depht.
+* Forgotten password: New password sent via e-mail now also works with 'password_hash' algorithm. 
+* Change password: Now also works with 'password_hash' algorithm. 
+* Fix page corruption with too many sections: With lots of sections, posting discrete values came to its limits (depending on server config) and saving a page failed. We now post all in a single JSON value, which is safe.
+* Multiple section operations in quick succession: It now shouldn't be possible anymore to cause 'Not a Draft' and 'Invalid Section Number" errors (fingers crossed ;).
+
+
 ## New Bugs ##
-* Although we worked hard to fix them all, there may be new bugs. Please feel free to report them on https://github.com/Typesetter/Typesetter/issues or in the forum on TypesetterCMS.com
+* Although we worked hard to fix them all, there may still be new bugs. Please feel free to report them on https://github.com/Typesetter/Typesetter/issues or in the forum on TypesetterCMS.com

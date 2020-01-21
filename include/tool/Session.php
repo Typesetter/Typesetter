@@ -691,6 +691,7 @@ class Session{
 			'theme_content'				=>	'Extra',
 			'Publish Draft'				=>	'Draft',
 			'Publish'					=>	'Publish',
+			'Dismiss'					=>	'Dismiss',
 			'Select Image'				=>	'SelectImage',
 			'edit'						=>	'edit',
 			'options'					=>	'options',

@@ -515,3 +515,7 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 	float: right;
 	margin: 2px 0 2px 4px;
 }
+
+#ck_editable_areas a.draft.dismiss-draft {
+	background: #888;
+}

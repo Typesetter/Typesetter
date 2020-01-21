@@ -259,8 +259,8 @@
 				html += '<a data-cmd="ck_save" class="ckeditor_control ck_save">' + gplang.Save + '</a>';
 				html += '<span class="ck_saving">' + gplang.Saving + '</span>';
 				html += '<span class="ck_saved">' + gplang.Saved + '</span>';
-				html += '<a data-cmd="Dismiss" class="ckeditor_control ck_publish">' + gplang.Dismiss + '</>';
 				html += '<a data-cmd="Publish" class="ckeditor_control ck_publish">' + gplang.Publish + '</>';
+				html += '<a data-cmd="Dismiss" class="ckeditor_control ck_publish">' + gplang.Dismiss + '</>';
 				html += '<a data-cmd="ck_close" class="ckeditor_control">' + gplang.Close + '</a>';
 				html += '</div>';
 

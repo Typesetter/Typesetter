@@ -354,7 +354,7 @@ ul#section-clipboard-items li.clipboard-empty-msg {
  * Available classes
  *
  */
- #gp_avail_classes tbody {
+#gp_avail_classes tbody {
 	background: #f8f8f8;
 }
 #gp_avail_classes td {
@@ -519,4 +519,8 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 	color: #fff;
 	padding: 2px 5px;
 	float: right;
+}
+
+#ck_editable_areas a.draft.dismiss-draft {
+	background: #888;
 }

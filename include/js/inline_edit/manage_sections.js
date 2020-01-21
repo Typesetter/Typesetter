@@ -1639,27 +1639,28 @@
 							.data('top', loc.top)
 							.appendTo(list);
 
-				//publish draft link
-				if( $area.data('draft') ){
-					var href = $gp.jPrep(this.href, 'cmd=PublishDraft');
-
-					$('<a class="draft ck_publish" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
-						 + gplang.Publish
-						 + '</a>')
-							.attr('href', href)
-							.appendTo($li);
-				}
-				
 				//dismiss draft link
 				if( $area.data('draft') ){
 					var href = $gp.jPrep(this.href, 'cmd=DismissDraft');
 
-					$('<a class="draft ck_publish" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
+					$('<a class="draft dismiss-draft ck_publish" title="' + gplang.DismissDraft + '" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
 						 + gplang.Dismiss
 						 + '</a>')
 							.attr('href', href)
 							.appendTo($li);
 				}
+
+				//publish draft link
+				if( $area.data('draft') ){
+					var href = $gp.jPrep(this.href, 'cmd=PublishDraft');
+
+					$('<a class="draft ck_publish" title="' + gplang.PublishDraft + '" data-cmd="gpajax" data-gp-area-id="' + id_number + '">'
+						 + gplang.Publish
+						 + '</a>')
+							.attr('href', href)
+							.appendTo($li);
+				}
+
 		});
 
 		// sort by position on page

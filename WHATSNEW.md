@@ -13,7 +13,7 @@
 
 
 ## Security ##
-* SVG upload warning: SVG file upload is now prevented by default but can be activated during setup or via configuration.
+* SVG upload: SVG file upload is now prevented by default but can be activated during setup or via configuration. Admin 'accepts' a security warning about possible malicious scripting in SVGs from untrusted sources.
 
 
 ## CSS Compilation ##

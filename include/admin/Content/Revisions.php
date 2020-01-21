@@ -173,7 +173,7 @@ class Revisions extends \gp\Page\Edit{
 		if( $size && is_numeric($size) ){
 			echo \gp\admin\Tools::FormatBytes($size);
 		}
-		echo '</td><td>';
+		echo '</td><td class="revision_history_username">';
 		if( !empty($username) ){
 			echo $username;
 		}

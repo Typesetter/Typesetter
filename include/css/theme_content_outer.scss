@@ -60,6 +60,12 @@ body {
 		border: 0 none;
 		height: 100%;
 		width: 100%;
+		td {
+			padding: 0;
+			height: 0;
+			background: 0 none;
+			width: 100%;
+		}
 		tbody#revision_rows td {
 			cursor: pointer;
 		}
@@ -72,13 +78,13 @@ body {
 				}
 			}
 		}
+		td.revision_history_username {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
 	}
-	td {
-		padding: 0;
-		height: 0;
-		background: 0 none;
-		width: 100%;
-	}
+
 
 	form > div,
 	td > div {

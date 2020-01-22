@@ -41,11 +41,11 @@
 	<div id="image"><div>
 	<?php
 	if( is_callable(array('gpOutput','GetImage')) ){
-		gpOutput::GetImage('images/shore.jpg', array('width'=>1000,'height'=>230) );
+		gpOutput::GetImage('images/shore.jpg', array('width'=>1000,'height'=>230, 'class'=>"GPAREA filetype-image  editable_area") );
 	}else{
 		global $page;
 		$img_src = dirname($page->theme_path).'/images/shore.jpg';
-		echo '<img src="'.$img_src.'" width="1000" height="230"/>';
+		echo '<img src="'.$img_src.'" width="1000" height="230" class="GPAREA filetype-image  editable_area"/>';
 	}
 	?>
 	</div></div>

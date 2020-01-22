@@ -1180,10 +1180,7 @@
 		*/
 
 		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th>';
-		html += gplang.AvailableClasses
-		html += ' <input type="button" value="' + gplang.up + '" data-cmd="UpdateClasses" />';
-		html += '</th></tr></thead>';
+		html += '<thead><tr><th>' + gplang.AvailableClasses + '</th></tr></thead>';
 
 		html += '<tbody><tr><td>';
 
@@ -1268,52 +1265,6 @@
 		var $area = gp_editor.GetArea($li);
 		$area.trigger("section_options:loaded");
 	};
-
-
-
-	/**
-	 * Handle update of class checkboxes
-	 *
-	 */
-	$gp.inputs.UpdateClasses = function(){
-
-		ProcessAttrs();
-	
-		var $form		= $('#section_attributes_form');
-		var $area		= gp_editor.GetArea( $form );
-		var attrs				= $area.data('gp-attrs');
-		var current_classes		= '';
-
-		$.each(attrs,function(name){
-			name = name.toLowerCase();
-			if( name == 'id' ){
-				return;
-			}
-
-			if( name.substr(0,7) == 'data-gp' ){
-				return;
-			}
-
-			var value = $.trim(this);
-			if( value == '' && name != 'class' ){
-				return;
-			}
-
-			if( name == 'class' ){
-				current_classes = value.split(' ');
-			}
-		
-			html = '';
-			for( var i=0; i < gp_avail_classes.length; i++ ){
-				html += '<div class="avail_classes_col">';
-				html += ClassSelect(gp_avail_classes[i].names, current_classes);
-				html += '</div>';
-				html += '<div class="avail_classes_desc">' + gp_avail_classes[i].desc + '<span x-arrow="true" class="popover_arrow"></span></div>';
-			}
-			$('.avail_classes_container').html( html );
-		});	
-	}
-
 
 
 
@@ -1431,10 +1382,10 @@
 
 
 	/**
-	 * Process the attributes
+	 * Update the attributes
 	 *
 	 */
-	ProcessAttrs = function(){
+	$gp.inputs.UpdateAttrs = function(){
 		var $form		= $('#section_attributes_form');
 		var $area		= gp_editor.GetArea( $form );
 		var old_attrs	= $area.data('gp-attrs');
@@ -1493,26 +1444,12 @@
 		$li.attr('title', classes);
 
 		$area.data('gp-attrs', new_attrs);
-	};
-
-
-
-	/**
-	 * Update the attributes
-	 *
-	 */
-	$gp.inputs.UpdateAttrs = function(){
-		var $form		= $('#section_attributes_form');
-		var $area		= gp_editor.GetArea( $form );
-
-		ProcessAttrs();
-
 		$gp.CloseAdminBox();
 		$area.trigger('section_options:closed');
 
 		// trigger immediate save
 		// console.log('immediate save');
-		gp_editing.SaveChanges();		
+		gp_editing.SaveChanges();
 	};
 
 

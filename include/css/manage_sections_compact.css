@@ -373,10 +373,10 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 
 #gp_avail_classes label.gpcheckbox select {
 	margin-right: 0px !important;
-	padding: 0 16px 0 0 !important;
+	padding: 0 20px 0 0 !important;
 	position: relative;
 	margin-left: -4px;
-	width: 134px;
+	width: calc(100% - 38px);;
 	border: none !important;
 	border-radius: 0 !important;
 	-webkit-appearance: none;

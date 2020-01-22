@@ -478,7 +478,7 @@
 	background: lighten($gp_panel_bg, 10%);
 }
 
-#admincontent_panel ul.admin_links > li:hover .admin-link-dropdown-options + ul {
+#admincontent_panel ul.admin_links > li:hover a + ul {
 	display: block;
 }
 

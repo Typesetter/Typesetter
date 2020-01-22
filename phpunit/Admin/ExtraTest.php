@@ -35,9 +35,8 @@ class ExtraTest extends \gptest_bootstrap{
 			'cmd'			=> 'SaveText',
 			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'gpcontent'		=> $text,
-			'file'			=> 'Footer',
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/Footer',$params);
 
 		// make sure the new text shows in the preview
 		$response	= $this->GetRequest('Admin/Extra/Footer','cmd=PreviewText');
@@ -54,10 +53,9 @@ class ExtraTest extends \gptest_bootstrap{
 		// publish draft ... make sure the draft file no longer exists
 		$params = [
 			'cmd'		=> 'PublishDraft',
-			'file'		=> 'Footer',
 			'verified'		=> \gp\tool\Nonce::Create('post', true),
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/Footer',$params);
 		$this->assertFileNotExists($area_info['draft_path']);
 
 		// make sure the new text still shows
@@ -97,9 +95,8 @@ class ExtraTest extends \gptest_bootstrap{
 		$params = [
 			'cmd'			=> 'DeleteArea',
 			'verified'		=> \gp\tool\Nonce::Create('post', true),
-			'file'			=> $name,
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/' . rawurlencode($name),$params);
 
 		$this->admin_extra->GetAreas();
 		$this->assertEquals( count($this->admin_extra->areas), $area_count , 'Extra area not deleted');
@@ -160,10 +157,9 @@ class ExtraTest extends \gptest_bootstrap{
 		$params = [
 			'cmd'				=> 'SaveVisibilityExtra',
 			'verified'			=> \gp\tool\Nonce::Create('post', true),
-			'file'				=> 'Header',
 			'visibility_type'	=> 1,
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/Header',$params);
 
 
 		// confirm the homepage does not contain the extra content

@@ -172,7 +172,7 @@
 # W #
 
 * [WhichPage](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27WhichPage%27%22)								(filter)  
-			The WhichPage filter hook is one of the first hooks called hance it can be used for quite a lot of 'early stuff'.
+			The WhichPage filter hook is one of the first hooks called hence it can be used for quite a lot of 'early stuff'.
 
 
 # X #

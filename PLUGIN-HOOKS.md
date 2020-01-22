@@ -5,13 +5,17 @@
 # A #
 
 * [AdminLinkLabel](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AdminLinkLabel%27%22)  						(filter) (new as of ver. 5.2)  
-			Replace an Admin Link Label (of a plugin or theme) e.g. for internationalization, based on `$config('language')`  
+			Replace an Admin Link Label (of a plugin or theme) e.g. for internationalization, based on `$config('language')`
+
 * [AllowedTypes](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AllowedTypes%27%22)							(filter)  
 			Change the file type extensions allowed to upload via finder
+
 * [AntiSpam_Form](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AntiSpam_Form%27%22)						(filter)  
 			Append form elements to the contact form, e.g. for anti-spam measures
+
 * [AntiSpam_Check](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AntiSpam_Check%27%22)						(filter)  
 			Check the submitted input values of the contact form, e.g. to verify anti-spam measures added via AntiSpam_Form
+
 * [AvailableClasses](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AvailableClasses%27%22)					(filter) (new as of ver. 5.2)  
 			Dynamically filters the Available Classes array before loaded into the Manage Sections editor. Does not affect the saved classes via configuration.
 
@@ -23,12 +27,16 @@
 
 * [CKEditorConfig](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27CKEditorConfig%27%22)						(filter)  
 			Allows to change the CKEditor configuration in order to add&nbsp;/&nbsp;remove toolbar elements and others
+
 * [CKEditorPlugins](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27CKEditorPlugins%27%22)					(filter)  
 			Allows to add CKEditor plugins
+
 * [CleanText](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27CleanText%27%22)								(filter)  
-			Allows to modify strings after being filtered by the CleanText method			
+			Allows to modify strings after being filtered by the CleanText method
+
 * [contact_form_check](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27contact_form_check%27%22)				(filter)  
 			May be used to prevent sending an e-mail by returning `false`
+
 * [contact_form_pre_captcha](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27contact_form_pre_captcha%27%22)	(action)  
 			May be used to echo html / text before the output of a CAPTCHA in the contact form
 
@@ -40,16 +48,20 @@
 
 * [edit_layout_cmd](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27edit_layout_cmd%27%22)					(action)  
 			No description
+
 * [ExecArea](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27ExecArea%27%22)									(filter)  
 			May be used to modify parameters before they are passed to the `\gp\tool\Output::ExecInfo` function
+
 
 
 # F #
 
 * [FileDeleted](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27FileDeleted%27%22)							(action)  
 			Allows to take actions after a file was deleted (via finder or gallery editor)
+
 * [FileUploaded](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27FileUploaded%27%22)							(action)  
 			Allows to take actions after a file was uloaded (via finder or gallery editor)
+
 * [FinderOptionsClient](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27FinderOptionsClient%27%22)			(filter)  
 			May be used to modify the client options of finder
 
@@ -57,15 +69,20 @@
 # G #
 
 * [GenerateContent_Admin](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27GenerateContent_Admin%27%22)		(action)  
-				Add to all pages in case a user adds a gallery				
+				Add to all pages in case a user adds a gallery
+
 * [GetAdminLink](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27GetAdminLink%27%22)							(action)  
-			May be used to add output to the admin link (login / logout link)			
+			May be used to add output to the admin link (login / logout link)
+
 * [GetContent_After](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27GetContent_After%27%22)					(action)  
-			Gets called after the content has been send, so you can add your own stuff			
+			Gets called after the content has been send, so you can add your own stuff
+
 * [GetDefaultContent](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27GetDefaultContent%27%22)				(filter)  
 			Get the default content for the specified content type (section type)
+
 * [GetHead](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27GetHead%27%22)									(action)  
-			May be used to add output to the `<head>` section. Last chance to modify the page object before template.php is executed.
+			May be used to add output to the `<head>` section. Last chance to modify the page object before template.php is executed
+
 * [GetMenuArray](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27GetMenuArray%27%22)							(filter)  
 			Allows to modify a menu before rendering
 			
@@ -77,6 +94,7 @@
 
 * [HeadContent](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27HeadContent%27%22)							(action)  
 			Gets called before ob_start() so plugins can get buffer content
+
 * [Html_Output](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27Html_Output%27%22)							(filter)  
 			Allows to filter the DOM array of the html output before saving it, e.g. to remove elements that shouldn't be saved
 
@@ -104,10 +122,13 @@
 
 * [MenuCommand](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27MenuCommand%27%22)							(filter)  
 			Allows to modify the `$cmd` value used by menu editing operations
+
 * [MenuPageOptions](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27MenuPageOptions%27%22)					(action)  
 			Allows to add options (e.g. controls) to the menu editing callout in Page Manager
+
 * [MenuPageTrashed](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27MenuPageTrashed%27%22)					(action)  
 			May be used to take custom actions after a menu item (page) was moved to the trash
+
 * [MetaTitle](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27MetaTitle%27%22)								(filter)  
 			Allows to modify the content of the `<title>` tag in the `<head>` section
 
@@ -116,6 +137,7 @@
 
 * [NewSections](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27NewSections%27%22)							(filter)  
 			Used to define new section types that can be added to a page via 'Sections' (formerly 'Page') mode of the content editor
+
 * [Notifications](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27Notifications%27%22)						(action) (new as of ver. 5.2)  
 			Allows to use the methods of the `$notifications` object e.g. to add custom ones before output
 
@@ -127,10 +149,13 @@
 
 * [PageCreated](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27PageCreated%27%22)							(action)  
 			Allows to take additional actions when a new page was created
+
 * [PageRunScript](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27PageRunScript%27%22)						(filter)  
 			A mighty hook, called relatively early, that allows to execute own functions based on the passed cmd parameter in a request. It has complete control the type and content of the response / output
+
 * [PageSetVars](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27PageSetVars%27%22)							(action)  
 			A hook called relatively early to modify variables of the `$page` object
+
 * [PostedSlug](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27PostedSlug%27%22)								(filter)  
 			May be used to modify a slug posted by the user. Called after cleaning / filtering a slug by the `\gp\admin\Tools::PostedSlug` function
 
@@ -142,6 +167,7 @@
 
 * [RenameFileDone](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27RenameFileDone%27%22)						(action)  
 			May be used to take custom actions once a file was deleted (via finder)
+
 * [ReplaceContentVars](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27ReplaceContentVars%27%22)				(filter) (new as of ver. 5.2)  
 			Allows to change existing or implement additional processing / replacement of variables used in content
 
@@ -150,12 +176,16 @@
 
 * [SaveSection](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SaveSection%27%22)							(filter)  
 			Used to process posted data of certain / cutom section types before saving them
+
 * [Search](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27Search%27%22)										(action)  
 			Used to add custom content to be queried by Typesetter's built-in search 'engine'
+
 * [SectionIsHidden](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SectionIsHidden%27%22)					(filter)  
 			Allows to change a content section's hidden state programmatically
+
 * [SectionToContent](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SectionToContent%27%22)					(filter)  
 			This filter is used to return formatted content built from the $section_data array
+
 * [SectionTypes](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SectionTypes%27%22)							(filter)  
 			Used with plugins to introduce / register new section types to the CMS
 

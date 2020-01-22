@@ -365,6 +365,7 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 #gp_avail_classes label.gpcheckbox {
 	display: block !important;
 	min-height: 30px;
+	padding-right: 0;
 }
 
 #gp_avail_classes label.gpcheckbox input[type='checkbox'] {

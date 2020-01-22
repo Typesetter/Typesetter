@@ -27,7 +27,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 	public function testEditFooter(){
 
-		$this->GetRequest('Admin/Extra','cmd=EditExtra&file=Footer');
+		$this->GetRequest('Admin/Extra/Footer','cmd=EditExtra');
 
 		$text = '<p>New Text</p>';
 
@@ -40,7 +40,7 @@ class ExtraTest extends \gptest_bootstrap{
 		$this->PostRequest('Admin/Extra',$params);
 
 		// make sure the new text shows in the preview
-		$response	= $this->GetRequest('Admin/Extra','cmd=PreviewText&file=Footer');
+		$response	= $this->GetRequest('Admin/Extra/Footer','cmd=PreviewText');
 		$body		= $response->getBody();
 		$this->assertStrpos( $body, $text );
 
@@ -61,7 +61,7 @@ class ExtraTest extends \gptest_bootstrap{
 		$this->assertFileNotExists($area_info['draft_path']);
 
 		// make sure the new text still shows
-		$response	= $this->GetRequest('Admin/Extra','cmd=PreviewText&file=Footer');
+		$response	= $this->GetRequest('Admin/Extra/Footer','cmd=PreviewText');
 		$body		= $response->getBody();
 		$this->assertStrpos( $body, $text );
 
@@ -90,7 +90,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 
 		// preview
-		$this->GetRequest('Admin/Extra','cmd=PreviewText&file='.$name);
+		$this->GetRequest('Admin/Extra/' .  $name,'cmd=PreviewText');
 
 
 		// delete
@@ -107,7 +107,7 @@ class ExtraTest extends \gptest_bootstrap{
 	}
 
 	public function testVisibility(){
-		
+
 		$content	= \gp\tool\Output\Extra::GetExtra('Header');
 
 		// assert the homepage does not contain extra content
@@ -153,9 +153,9 @@ class ExtraTest extends \gptest_bootstrap{
 
 
 		// change visibility
-		// /Admin/Extra?cmd=EditVisibility&file=Header
+		// /Admin/Extra/Header?cmd=EditVisibility
 		$this->UseAdmin();
-		$response	= $this->GetRequest('Admin/Extra','EditVisibility&file=Header');
+		$response	= $this->GetRequest('Admin/Extra/Header','EditVisibility');
 
 		$params = [
 			'cmd'				=> 'SaveVisibilityExtra',

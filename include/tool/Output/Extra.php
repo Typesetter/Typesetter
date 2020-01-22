@@ -31,9 +31,9 @@ class Extra{
 
 		$edit_link = \gp\tool\Output::EditAreaLink(
 			$edit_index,
-			'Admin/Extra',
+			'Admin/Extra/' . rawurlencode($name),
 			$langmessage['edit'],
-			'cmd=edit&file=' . $name,
+			'cmd=edit',
 			array(
 				'title'		=>	str_replace('_', ' ', $name),
 				'data-cmd'	=> 'inline_edit_generic'

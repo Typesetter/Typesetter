@@ -1599,9 +1599,9 @@ class Edit extends \gp\Page{
 			}
 
 			return \gp\tool::Link(
-				'Admin/Extra',
+				'Admin/Extra/' . rawurlencode($section_data['content']),
 				$langmessage['edit'] . ' &raquo; ' . str_replace('_', ' ', htmlspecialchars($section_data['content'])), // $langmessage['theme_content']
-				'cmd=EditExtra&file=' . rawurlencode($section_data['content'])
+				'cmd=EditExtra'
 			);
 		}
 

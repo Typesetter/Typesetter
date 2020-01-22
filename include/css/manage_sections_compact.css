@@ -207,6 +207,7 @@
 #section_sorting .wrapper_collapsed > ul > li * {
 	display: none !important;
 }
+
 #section_sorting .wrapper_collapsed > ul > li div,
 #section_sorting .wrapper_collapsed > ul > li .color_handle {
 	display: block !important;
@@ -216,7 +217,6 @@
  * Helper (the li that follows the cursor)
  *
  */
-
 #section_sorting .ui-sortable-helper * {
 	display: none !important;
 }
@@ -371,14 +371,13 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 }
 
 #gp_avail_classes label.gpcheckbox select {
-	margin-right: 0 !important;
+	margin-right: -10px !important;
 	padding: 0 16px 0 0 !important;
 	position: relative;
 	margin-left: -4px;
-	width: 134px;
+	width: 144px;
 	border: none !important;
 	border-radius: 0 !important;
-	appearance: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -471,7 +470,6 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 }
 
 
-
 /**
  * Layout Content
  *
@@ -519,6 +517,7 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 	color: #fff;
 	padding: 2px 5px;
 	float: right;
+	margin: 2px 0 2px 4px;
 }
 
 #ck_editable_areas a.draft.dismiss-draft {

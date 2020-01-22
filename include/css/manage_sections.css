@@ -55,6 +55,7 @@
 #section_sorting.warn-instant-section-removal div > .options a.RemoveSection {
 	color: #C44830;
 }
+
 #section_sorting.warn-instant-section-removal div > .options a.RemoveSection:after {
 	content: '!';
 }
@@ -86,6 +87,7 @@
 	float: right;
 	height: 18px;
 }
+
 #section_sorting div > .options a {
 	height: 16px;
 	width: 16px;
@@ -179,6 +181,7 @@
 	font-size: 10px !important;
 }
 
+
 #section_sorting .wrapper_collapsed .secsort_wrapper_toggle:before {
 	content: '\25b6';
 }
@@ -199,6 +202,7 @@
 	margin: 0 5px 5px 0;
 	cursor: pointer;
 }
+
 
 #section_sorting .wrapper_collapsed > ul > li * {
 	display: none !important;
@@ -296,6 +300,7 @@ ul#section-clipboard-items li a.relabel-clipboard-item {
 	color: #222!important;
 }
 
+
 ul#section-clipboard-items li.clipboard-empty-msg {
 	padding: 0;
 	text-align: center;
@@ -373,9 +378,9 @@ ul#section-clipboard-items li.clipboard-empty-msg {
 	width: 144px;
 	border: none !important;
 	border-radius: 0 !important;
-	appearance: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
+	appearance: none;
 	background: none;
 	outline: none;
 	cursor: pointer;

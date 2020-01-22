@@ -1,18 +1,20 @@
+### Typesetter CMS ###
+
 ## All Current Plugin Hooks ##
 
-#A#
+# A #
 
-* [AdminLinkLabel](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AdminLinkLabel%27%22)						(filter) (new)
+* [AdminLinkLabel](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AdminLinkLabel%27%22)						(filter) (new as of ver. 5.2)
 * [AllowedTypes](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AllowedTypes%27%22)							(filter)
 * [AntiSpam_Form](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AntiSpam_Form%27%22)						(filter)
 * [AntiSpam_Check](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AntiSpam_Check%27%22)						(filter)
-* [AvailableClasses](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AvailableClasses%27%22)					(filter) (new)
+* [AvailableClasses](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27AvailableClasses%27%22)					(filter) (new as of ver. 5.2)
 
 
-#B#
+# B #
 
 
-#C#
+# C #
 
 * [CKEditorConfig](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27CKEditorConfig%27%22)						(filter)
 * [CKEditorPlugins](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27CKEditorPlugins%27%22)					(filter)
@@ -21,23 +23,23 @@
 * [contact_form_pre_captcha](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27contact_form_pre_captcha%27%22)	(action)
 
 
-#D#
+# D #
 
 
-#E#
+# E #
 
 * [edit_layout_cmd](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27edit_layout_cmd%27%22)					(action)
 * [ExecArea](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27ExecArea%27%22)									(filter)
 
 
-#F#
+# F #
 
 * [FileDeleted](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27FileDeleted%27%22)							(action)
 * [FileUploaded](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27FileUploaded%27%22)							(action)
 * [FinderOptionsClient](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27FinderOptionsClient%27%22)			(filter)
 
 
-#G#
+# G #
 
 * [GenerateContent_Admin](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27GenerateContent_Admin%27%22)		(action)
 * [GetAdminLink](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27GetAdminLink%27%22)							(action)
@@ -48,29 +50,29 @@
 * [GetUrl](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27GetUrl%27%22)										(filter)
 
 
-#H#
+# H #
 
 * [HeadContent](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27HeadContent%27%22)							(action)
 * [Html_Output](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27Html_Output%27%22)							(filter)
 
 
-#I#
+# I #
 
 * [InlineEdit_Scripts](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27InlineEdit_Scripts%27%22)				(filter)
 
 
-#J#
+# J #
 
 
-#K#
+# K #
 
 
-#L#
+# L #
 
 * [LoggedIn](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27LoggedIn%27%22)									(filter)
 
 
-#M#
+# M #
 
 * [MenuCommand](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27MenuCommand%27%22)							(filter)
 * [MenuPageOptions](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27MenuPageOptions%27%22)					(action)
@@ -78,16 +80,16 @@
 * [MetaTitle](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27MetaTitle%27%22)								(filter)
 
 
-#N#
+# N #
 
 * [NewSections](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27NewSections%27%22)							(filter)
-* [Notifications](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27Notifications%27%22)						(action) (new)
+* [Notifications](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27Notifications%27%22)						(action) (new as of ver. 5.2)
 
 
-#O#
+# O #
 
 
-#P#
+# P #
 
 * [PageCreated](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27PageCreated%27%22)							(action)
 * [PageRunScript](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27PageRunScript%27%22)						(filter)
@@ -95,16 +97,16 @@
 * [PostedSlug](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27PostedSlug%27%22)								(filter)
 
 
-#Q#
+# Q #
 
 
-#R#
+# R #
 
 * [RenameFileDone](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27RenameFileDone%27%22)						(action)
-* [ReplaceContentVars](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27ReplaceContentVars%27%22)				(filter)
+* [ReplaceContentVars](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27ReplaceContentVars%27%22)				(filter) (new as of ver. 5.2)
 
 
-#S#
+# S #
 
 * [SaveSection](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SaveSection%27%22)							(filter)
 * [Search](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27Search%27%22)										(action)
@@ -113,24 +115,24 @@
 * [SectionTypes](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SectionTypes%27%22)							(filter)
 
 
-#T#
+# T #
 
 
-#U#
+# U #
 
 
-#V#
+# V #
 
 
-#W#
+# W #
 
 * [WhichPage](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27WhichPage%27%22)								(filter)
 
 
-#X#
+# X #
 
 
-#Y#
+# Y #
 
 
-#Z#
+# Z #

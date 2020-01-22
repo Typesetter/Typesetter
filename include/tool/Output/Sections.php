@@ -422,7 +422,7 @@ namespace gp\tool\Output{
 
 
 			$attrs				+= array('class' => '' );
-			$attrs['class']		= trim('GPAREA filetype-'.$type.' '.$attrs['class']);
+			$attrs['class']		= trim('GPAREA filetype-'.$type.' '.$attrs['class'].' editable_area');
 
 			return \gp\tool\HTML::Attributes($attrs);
 		}

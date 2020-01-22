@@ -392,7 +392,9 @@ class Extra extends \gp\Page\Edit{
 		echo '</h2>';
 		echo '<hr/>';
 
-		echo \gp\tool\Output\Sections::RenderSection($this->file_sections[0], 0, '', $this->file_stats);
+		$section_num = 0;
+		\gp\tool\Output\Sections::SetVars('',$this->file_stats);
+		echo \gp\tool\Output\Sections::GetSection($this->file_sections, $section_num);
 		echo '<hr/>';
 	}
 

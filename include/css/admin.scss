@@ -478,6 +478,10 @@
 	background: lighten($gp_panel_bg, 10%);
 }
 
+#admincontent_panel ul.admin_links > li:hover .admin-link-dropdown-options + ul {
+	display: block;
+}
+
 #admincontent_panel .admin-link-visibility-private,
 html.isPrivate #admincontent_panel .admin-link-dropdown-options {
 	background: $gp_panel_warning_color;

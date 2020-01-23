@@ -174,7 +174,8 @@ p{
 	box-sizing:content-box;
 	-moz-box-sizing:content-box;
 	-webkit-box-sizing:content-box;
-	}
+	vertical-align: top;
+}
 #search input.query{
 	color: #fff;
 	width: 220px;

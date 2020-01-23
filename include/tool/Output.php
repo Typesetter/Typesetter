@@ -1068,6 +1068,7 @@ namespace gp\tool{
 			//$width,$height,$attributes = ''
 			$attributes = (array)$attributes;
 			$attributes += array('class' => '');
+			$attributes['class'] .= 'GPAREA filetype-image';
 			unset($attributes['id']);
 
 			//default image information
@@ -1119,11 +1120,11 @@ namespace gp\tool{
 				$attributes['id']		= 'ExtraEditArea' . $edit_index;
 			}
 
-			//remove class if empty
-			$attributes['class'] = trim($attributes['class']);
-			if( empty($attributes['class']) ){
-				unset($attributes['class']);
-			}
+			//remove class if empty, commented because class will never be empty anymore because of filetype-image
+			// $attributes['class'] = trim($attributes['class']);
+			// if( empty($attributes['class']) ){
+			//	unset($attributes['class']);
+			//}
 
 			//convert attributes to string
 			$str = '';

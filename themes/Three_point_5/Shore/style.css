@@ -164,6 +164,9 @@ p{
 	background: rgba(62,59,57,0.5);
 	padding:0;
 }
+#search div{
+	display: flex;
+}
 #search input{
 	height:14px;
 	padding: 8px;

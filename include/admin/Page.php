@@ -235,6 +235,7 @@ class Page extends \gp\Page{
 		$parts				= explode('/',$request_string);
 		$extra_parts		= [];
 
+
 		do{
 
 			$request_string		= implode('/',$parts);
@@ -244,6 +245,14 @@ class Page extends \gp\Page{
 				if( \gp\admin\Tools::HasPermission($request_string) ){
 
 					$this->OrganizeFrequentScripts($request_string);
+
+					// get extra parts without underscores replaced with slashes
+					$len			= strlen($request_string);
+					$extra			= substr($this->requested,$len);
+					$extra_parts	= explode('/',$extra);
+					$extra_parts	= array_filter($extra_parts);
+					$extra_parts	= array_values($extra_parts);
+
 					\gp\tool\Output::ExecInfo($scriptinfo, array('page'=>$this,'path_parts'=>$extra_parts) );
 
 					return;
@@ -265,7 +274,8 @@ class Page extends \gp\Page{
 				break;
 
 			}
-			$extra_parts[] = array_pop($parts);
+
+			array_pop($parts);
 
 		}while( count($parts) );
 

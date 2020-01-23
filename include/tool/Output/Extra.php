@@ -31,9 +31,9 @@ class Extra{
 
 		$edit_link = \gp\tool\Output::EditAreaLink(
 			$edit_index,
-			'Admin/Extra',
+			'Admin/Extra/' . rawurlencode($name),
 			$langmessage['edit'],
-			'cmd=edit&file=' . $name,
+			'cmd=edit',
 			array(
 				'title'		=>	str_replace('_', ' ', $name),
 				'data-cmd'	=> 'inline_edit_generic'
@@ -55,12 +55,15 @@ class Extra{
 		\gp\tool\Output::$editlinks .= ob_get_clean();
 
 		$attrs['data-gp_label']		= str_replace('_', ' ', $name);
-		$attrs['class']				= 'editable_area';
+		$attrs['class']				= ' editable_area';
 		$attrs['id']				= 'ExtraEditArea' . $edit_index;
 		$attrs['data-draft']		= (int)$is_draft;
 
 		$extra_content[0]					+= ['attributes'=>[]];
 		$extra_content[0]['attributes']		+= $attrs;
+
+		// image type comes with an empty string for $attrs['class'] so it will not get replaced using +=
+		$extra_content[0]['attributes']['class'] .= $attrs['class'];
 
 		return \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
 	}

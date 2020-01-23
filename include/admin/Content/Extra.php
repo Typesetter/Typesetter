@@ -11,6 +11,7 @@ class Extra extends \gp\Page\Edit{
 	protected $page;
 	protected $area_info;
 	protected $vis;
+	protected $extra_part;
 
 
 	public function __construct($args){
@@ -21,8 +22,12 @@ class Extra extends \gp\Page\Edit{
 		}
 
 		$this->folder = $dataDir . '/data/_extra';
-		$this->SetVars();
 
+		if( !empty($args['path_parts']) ){
+			$this->extra_part = $args['path_parts'][0];
+		}
+
+		$this->SetVars();
 	}
 
 
@@ -75,14 +80,15 @@ class Extra extends \gp\Page\Edit{
 
 		$this->GetAreas();
 
-		// is there a specific file being requested
-		if (!isset($_REQUEST['file'])){
+		if( !$this->extra_part ){
 			return;
 		}
 
-		$area_info = $this->ExtraExists($_REQUEST['file']);
 
-		if (is_null($area_info)){
+		// is there a specific file being requested
+		$area_info = $this->ExtraExists($this->extra_part);
+
+		if( is_null($area_info) ){
 			msg($langmessage['OOPS'] . ' (Invalid File)');
 			return;
 		}
@@ -100,10 +106,7 @@ class Extra extends \gp\Page\Edit{
 		$this->vis				= \gp\tool\Files::Get('_extra/' . $this->title . '/visibility', 'data');
 		$this->vis				+= ['visibility_type'=>'0','pages'=>[]];
 
-
-		if (\gp\tool\Files::Exists($this->draft_file)){
-			$this->draft_exists = true;
-		}
+		$this->draft_exists		= \gp\tool\Files::Exists($this->draft_file);
 
 	}
 
@@ -174,28 +177,20 @@ class Extra extends \gp\Page\Edit{
 	public function DeleteArea(){
 		global $langmessage;
 
-		if ($this->_DeleteArea()){
-			unset($this->areas[$this->title]);
-		} else {
-			msg($langmessage['OOPS']);
-		}
-
-	}
-
-
-
-	private function _DeleteArea(){
-
 		//legacy path
 		if( \gp\tool\Files::Exists($this->area_info['legacy_path']) && !unlink($this->area_info['legacy_path']) ){
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
 		//remove directory
 		$dir = dirname($this->area_info['draft_path']);
 		if( file_exists($dir) && !\gp\tool\Files::RmAll($dir) ){
+			msg($langmessage['OOPS']);
 			return false;
 		}
+
+		unset($this->areas[$this->title]);
 
 		return true;
 	}
@@ -207,7 +202,6 @@ class Extra extends \gp\Page\Edit{
 	 *
 	 */
 	public function ExtraExists($file){
-		global $dataDir;
 
 		if( !isset($this->areas[$file]) ){
 			return;
@@ -274,39 +268,36 @@ class Extra extends \gp\Page\Edit{
 		echo '</span>..."</td><td style="white-space:nowrap">';
 
 		//preview
-		echo \gp\tool::Link('Admin/Extra', $langmessage['preview'], 'cmd=PreviewText&file=' . rawurlencode($info['title']));
+		echo \gp\tool::Link('Admin/Extra/'.rawurlencode($info['title']), $langmessage['preview'], 'cmd=PreviewText');
 		echo ' &nbsp; ';
 
-		//publish
+		//publish & dismiss
 		if (\gp\tool\Files::Exists($info['draft_path'])){
-			echo \gp\tool::Link('Admin/Extra', $langmessage['Publish Draft'], 'cmd=PublishDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'post'));
+			echo \gp\tool::Link('Admin/Extra/' . rawurlencode($info['title']), $langmessage['Publish Draft'], 'cmd=PublishDraft', array('data-cmd' => 'post'));
+			echo ' &nbsp; ';
+			echo \gp\tool::Link('Admin/Extra/' . rawurlencode($info['title']), $langmessage['Dismiss Draft'], 'cmd=DismissDraft', array('data-cmd' => 'post'));
 		} else {
 			echo '<span class="text-muted">' . $langmessage['Publish Draft'] . '</span>';
-		}
-		echo ' &nbsp; ';
-
-		//dismiss
-		if (\gp\tool\Files::Exists($info['draft_path'])){
-			echo \gp\tool::Link('Admin/Extra', $langmessage['Dismiss Draft'], 'cmd=DismissDraft&file=' . rawurlencode($info['title']), array('data-cmd' => 'post'));
-		} else {
+			echo ' &nbsp; ';
 			echo '<span class="text-muted">' . $langmessage['Dismiss Draft'] . '</span>';
 		}
+
 		echo ' &nbsp; ';
 
 		//edit
 		if ($section['type'] == 'text'){
-			echo \gp\tool::Link('Admin/Extra', $langmessage['edit'], 'cmd=EditExtra&file=' . rawurlencode($info['title']));
+			echo \gp\tool::Link('Admin/Extra/' . rawurlencode($info['title']), $langmessage['edit'], 'cmd=EditExtra');
 		} else {
 			echo '<span class="text-muted">' . $langmessage['edit'] . '</span>';
 		}
 		echo ' &nbsp; ';
 
 		//visibility
-		echo \gp\tool::Link('Admin/Extra', $langmessage['Visibility'], 'cmd=EditVisibility&file=' . rawurlencode($info['title']));
+		echo \gp\tool::Link('Admin/Extra/' . rawurlencode($info['title']), $langmessage['Visibility'], 'cmd=EditVisibility');
 		echo ' &nbsp; ';
 
 		$title = sprintf($langmessage['generic_delete_confirm'], htmlspecialchars($info['title']));
-		echo \gp\tool::Link('Admin/Extra', $langmessage['delete'], 'cmd=DeleteArea&file=' . rawurlencode($info['title']), array(
+		echo \gp\tool::Link('Admin/Extra/' .  rawurlencode($info['title']), $langmessage['delete'], 'cmd=DeleteArea', array(
 			'data-cmd' => 'postlink',
 			'title' => $title,
 			'class' => 'gpconfirm'));
@@ -345,7 +336,7 @@ class Extra extends \gp\Page\Edit{
 		global $langmessage, $page;
 
 
-		$action				= \gp\tool::GetUrl('Admin/Extra', 'cmd=EditExtra&file=' . $this->title);
+		$action				= \gp\tool::GetUrl('Admin/Extra/' . rawurlencode($this->title), 'cmd=EditExtra');
 		$page->head_js[]	= '/include/js/admin/extra_edit.js';
 
 		echo '<h2>';
@@ -392,7 +383,9 @@ class Extra extends \gp\Page\Edit{
 		echo '</h2>';
 		echo '<hr/>';
 
-		echo \gp\tool\Output\Sections::RenderSection($this->file_sections[0], 0, '', $this->file_stats);
+		$section_num = 0;
+		\gp\tool\Output\Sections::SetVars('',$this->file_stats);
+		echo \gp\tool\Output\Sections::GetSection($this->file_sections, $section_num);
 		echo '<hr/>';
 	}
 
@@ -480,7 +473,7 @@ class Extra extends \gp\Page\Edit{
 	public function EditVisibility(){
 		global $langmessage, $page, $gp_index, $gp_titles;
 
-		$action				= \gp\tool::GetUrl('Admin/Extra', 'cmd=EditVisibility&file=' . $this->title);
+		$action				= \gp\tool::GetUrl('Admin/Extra/' . rawurlencode($this->title), 'cmd=EditVisibility');
 		$page->head_js[]	= '/include/thirdparty/tablesorter/tablesorter.js';
 		$page->head_js[]	= '/include/js/admin/extra_visibility.js';
 

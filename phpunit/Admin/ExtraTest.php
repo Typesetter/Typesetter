@@ -27,7 +27,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 	public function testEditFooter(){
 
-		$this->GetRequest('Admin/Extra','cmd=EditExtra&file=Footer');
+		$this->GetRequest('Admin/Extra/Footer','cmd=EditExtra');
 
 		$text = '<p>New Text</p>';
 
@@ -35,12 +35,11 @@ class ExtraTest extends \gptest_bootstrap{
 			'cmd'			=> 'SaveText',
 			'verified'		=> \gp\tool\Nonce::Create('post', true),
 			'gpcontent'		=> $text,
-			'file'			=> 'Footer',
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/Footer',$params);
 
 		// make sure the new text shows in the preview
-		$response	= $this->GetRequest('Admin/Extra','cmd=PreviewText&file=Footer');
+		$response	= $this->GetRequest('Admin/Extra/Footer','cmd=PreviewText');
 		$body		= $response->getBody();
 		$this->assertStrpos( $body, $text );
 
@@ -54,14 +53,13 @@ class ExtraTest extends \gptest_bootstrap{
 		// publish draft ... make sure the draft file no longer exists
 		$params = [
 			'cmd'		=> 'PublishDraft',
-			'file'		=> 'Footer',
 			'verified'		=> \gp\tool\Nonce::Create('post', true),
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/Footer',$params);
 		$this->assertFileNotExists($area_info['draft_path']);
 
 		// make sure the new text still shows
-		$response	= $this->GetRequest('Admin/Extra','cmd=PreviewText&file=Footer');
+		$response	= $this->GetRequest('Admin/Extra/Footer','cmd=PreviewText');
 		$body		= $response->getBody();
 		$this->assertStrpos( $body, $text );
 
@@ -90,16 +88,15 @@ class ExtraTest extends \gptest_bootstrap{
 
 
 		// preview
-		$this->GetRequest('Admin/Extra','cmd=PreviewText&file='.$name);
+		$this->GetRequest('Admin/Extra/' .  $name,'cmd=PreviewText');
 
 
 		// delete
 		$params = [
 			'cmd'			=> 'DeleteArea',
 			'verified'		=> \gp\tool\Nonce::Create('post', true),
-			'file'			=> $name,
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/' . rawurlencode($name),$params);
 
 		$this->admin_extra->GetAreas();
 		$this->assertEquals( count($this->admin_extra->areas), $area_count , 'Extra area not deleted');
@@ -107,7 +104,7 @@ class ExtraTest extends \gptest_bootstrap{
 	}
 
 	public function testVisibility(){
-		
+
 		$content	= \gp\tool\Output\Extra::GetExtra('Header');
 
 		// assert the homepage does not contain extra content
@@ -153,17 +150,16 @@ class ExtraTest extends \gptest_bootstrap{
 
 
 		// change visibility
-		// /Admin/Extra?cmd=EditVisibility&file=Header
+		// /Admin/Extra/Header?cmd=EditVisibility
 		$this->UseAdmin();
-		$response	= $this->GetRequest('Admin/Extra','EditVisibility&file=Header');
+		$response	= $this->GetRequest('Admin/Extra/Header','EditVisibility');
 
 		$params = [
 			'cmd'				=> 'SaveVisibilityExtra',
 			'verified'			=> \gp\tool\Nonce::Create('post', true),
-			'file'				=> 'Header',
 			'visibility_type'	=> 1,
 		];
-		$this->PostRequest('Admin/Extra',$params);
+		$this->PostRequest('Admin/Extra/Header',$params);
 
 
 		// confirm the homepage does not contain the extra content

@@ -1137,8 +1137,7 @@
 			html += '<tr><td>';
 			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" size="8" />';
 			html += '</td><td style="white-space:nowrap">';
-			// html += '<input class="gpinput attr_value" value="' + $gp.htmlchars(value) + '" size="40" />';
-			html += '<textarea rows="1" class="gptextarea attr_value">' + $gp.htmlchars(value) + '</textarea>';
+			html += '<textarea rows="1" class="gptextarea attr_value' + (name == 'class' ? ' attr_value_class' : '') + '">' + $gp.htmlchars(value) + '</textarea>';
 			if( name == 'class' ){
 				html += '<div class="class_only admin_note">Default: GPAREA filetype-*</div>';
 			}
@@ -1154,36 +1153,9 @@
 
 		//available classes
 		html += '<div id="gp_avail_classes">';
-		/*
-			html += '<table class="bordered full_width">';
-			html += '<thead><tr><th colspan="2">' + gplang.AvailableClasses + '</th></tr></thead>';
-			html += '<tbody>';
-			for( var i=0; i < gp_avail_classes.length; i++ ){
-				html += '<tr><td>';
-				html += ClassSelect(gp_avail_classes[i].names, current_classes);
-				html += '</td><td class="sm text-muted">';
-				html += gp_avail_classes[i].desc;
-				html += '</td></tr>';
-			}
-
-			html += '</table>';
-			html += '</tbody>';
-			html += '</div>';
-
-			html += '<p>';
-			html += '<input type="button" name="" value="' + gplang.up + '" class="gpsubmit" data-cmd="UpdateAttrs" /> ';
-			html += '<input type="button" name="" value="' + gplang.ca + '" class="gpcancel" data-cmd="admin_box_close" />';
-			html += '</p>';
-
-			html += '</form></div>';
-			var $html = $(html);
-		*/
-
 		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th>';
-		html += gplang.AvailableClasses
-		html += ' <input type="button" value="' + gplang.up + '" data-cmd="UpdateClasses" />';
-		html += '</th></tr></thead>';
+
+		html += '<thead><tr><th>' + gplang.AvailableClasses + '</th></tr></thead>';
 
 		html += '<tbody><tr><td>';
 
@@ -1209,6 +1181,8 @@
 		html += '</form></div>';
 		var $html = $(html);
 
+		var $classes_input = $html.find('.attr_value_class')
+			.on('input', UpdateAvailClasses);
 
 		var $cols = $html.find('.avail_classes_col')
 			.on('mouseenter', function(){
@@ -1224,7 +1198,7 @@
 				this.popup = new Popper(this, $popup.get(0), {
 					placement	: 'top', // auto
 					onCreate	: function(){
-						$popup.fadeTo(0, 0.002).delay(750).fadeTo(150, 1); // $popup.show();
+						$popup.fadeTo(0, 0.002).delay(750).fadeTo(150, 1);
 					},
 					modifiers : {
 						arrow : {
@@ -1233,16 +1207,8 @@
 						preventOverflow: {
 							escapeWithReference : true
 						}
-						/*
-						, offset : {
-							enabled: true,
-							offset: '24px,24px'
-						}
-						*/
 				 	}
 				});
-				// console.log('popper created');
-
 			})
 			.on('mouseleave', function(){
 				this.popup.destroy();
@@ -1263,58 +1229,46 @@
 
 		$gp.AdminBoxC( $html );
 
-		//$('#section_attributes_form input').on('input',function(){UpdateAttrs()});
-
 		var $area = gp_editor.GetArea($li);
 		$area.trigger("section_options:loaded");
 	};
 
 
-
 	/**
-	 * Handle update of class checkboxes
+	 * Update Available Classes selects/checkboxes
+	 * based on manually set/changed classes
 	 *
 	 */
-	$gp.inputs.UpdateClasses = function(){
+	function UpdateAvailClasses(){
+		var $tmp_div = $('<div/>').addClass($(this).val());
+		// var start_time = new Date().getTime();
 
-		ProcessAttrs();
-	
-		var $form		= $('#section_attributes_form');
-		var $area		= gp_editor.GetArea( $form );
-		var attrs				= $area.data('gp-attrs');
-		var current_classes		= '';
-
-		$.each(attrs,function(name){
-			name = name.toLowerCase();
-			if( name == 'id' ){
-				return;
+		$('.avail_classes_container .avail_classes_col').each(function(){
+			var $select = $(this).find('select');
+			if( !$select.length ){
+				var $checkbox = $(this).find('input.gpcheck');
+				var checked = $tmp_div.hasClass($checkbox.next().text());
+				$checkbox.prop('checked', checked);
+			}else{
+				var checked = false;
+				var option_val = '';
+				$select.find('option').each(function(){
+					option_val = $(this).attr('value') || '';
+					if( $tmp_div.hasClass(option_val) ){
+						checked = true;
+						return false;
+					}
+				});
+				if( checked ){
+					$select.val(option_val);
+				}
+				$select.prev('input.gpcheck').prop('checked', checked);
 			}
-
-			if( name.substr(0,7) == 'data-gp' ){
-				return;
-			}
-
-			var value = $.trim(this);
-			if( value == '' && name != 'class' ){
-				return;
-			}
-
-			if( name == 'class' ){
-				current_classes = value.split(' ');
-			}
-		
-			html = '';
-			for( var i=0; i < gp_avail_classes.length; i++ ){
-				html += '<div class="avail_classes_col">';
-				html += ClassSelect(gp_avail_classes[i].names, current_classes);
-				html += '</div>';
-				html += '<div class="avail_classes_desc">' + gp_avail_classes[i].desc + '<span x-arrow="true" class="popover_arrow"></span></div>';
-			}
-			$('.avail_classes_container').html( html );
-		});	
+			$tmp_div.remove();
+		});
+		// var end_time = new Date().getTime();
+		// console.log('UpdateAvailClasses executed in ' + (end_time - start_time) + 'ms');
 	}
-
-
 
 
 	/**
@@ -1431,10 +1385,10 @@
 
 
 	/**
-	 * Process the attributes
+	 * Update the attributes
 	 *
 	 */
-	ProcessAttrs = function(){
+	$gp.inputs.UpdateAttrs = function(){
 		var $form		= $('#section_attributes_form');
 		var $area		= gp_editor.GetArea( $form );
 		var old_attrs	= $area.data('gp-attrs');
@@ -1493,26 +1447,12 @@
 		$li.attr('title', classes);
 
 		$area.data('gp-attrs', new_attrs);
-	};
-
-
-
-	/**
-	 * Update the attributes
-	 *
-	 */
-	$gp.inputs.UpdateAttrs = function(){
-		var $form		= $('#section_attributes_form');
-		var $area		= gp_editor.GetArea( $form );
-
-		ProcessAttrs();
-
 		$gp.CloseAdminBox();
 		$area.trigger('section_options:closed');
 
 		// trigger immediate save
 		// console.log('immediate save');
-		gp_editing.SaveChanges();		
+		gp_editing.SaveChanges();
 	};
 
 

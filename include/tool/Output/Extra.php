@@ -62,6 +62,9 @@ class Extra{
 		$extra_content[0]					+= ['attributes'=>[]];
 		$extra_content[0]['attributes']		+= $attrs;
 
+		// image type comes with an empty string for $attrs['class'] so it will not get replaced using +=
+		$extra_content[0]['attributes']['class'] .= $attrs['class'];
+
 		return \gp\tool\Output\Sections::GetSection($extra_content, $section_num);
 	}
 

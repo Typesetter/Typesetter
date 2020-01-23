@@ -55,7 +55,7 @@ class Extra{
 		\gp\tool\Output::$editlinks .= ob_get_clean();
 
 		$attrs['data-gp_label']		= str_replace('_', ' ', $name);
-		$attrs['class']				= 'editable_area';
+		$attrs['class']				= ' editable_area';
 		$attrs['id']				= 'ExtraEditArea' . $edit_index;
 		$attrs['data-draft']		= (int)$is_draft;
 

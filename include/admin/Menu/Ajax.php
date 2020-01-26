@@ -176,7 +176,7 @@ class Ajax extends \gp\admin\Menu{
 			}
 		}
 		\gp\admin\Menu\Tools::ScrollList($gp_index_no_special);
-		echo sprintf($format_bottom, 'CopyPage', $langmessage['create_new_file']);
+		echo sprintf($format_bottom, 'CopyPage', $langmessage['Copy']);
 
 
 		//content type

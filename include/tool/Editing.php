@@ -1121,7 +1121,7 @@ namespace gp\tool{
 
 			echo '</div></div>';
 			echo '</form>';
-			echo '<script>$(document).ready(function(){$(\'input[value="'.$scrollto.'"]\').get(0).scrollIntoView(true);});</script>';
+			echo '<script> $(\'input[value="'.$scrollto.'"]\').get(0).scrollIntoView(true); </script>';
 
 
 			$content = ob_get_clean();

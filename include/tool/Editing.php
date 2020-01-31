@@ -1105,8 +1105,8 @@ namespace gp\tool{
 				$checked = '';
 				if( $option['value']['include_type'] === $section['include_type'] && $option['value']['content'] === $section['content'] ){
 					$checked = 'checked';
+					$scrollto = $hash;
 				}
-
 
 				echo '<label>';
 				echo '<input type="radio" name="include" value="' . $hash . '" ' . $checked . '  data-cmd="IncludePreview" /> ';
@@ -1121,6 +1121,7 @@ namespace gp\tool{
 
 			echo '</div></div>';
 			echo '</form>';
+			echo '<script> $(\'input[value="'.$scrollto.'"]\').get(0).scrollIntoView(true); </script>';
 
 
 			$content = ob_get_clean();

@@ -2,12 +2,10 @@
  * Bootswatch 4 Scss 
  * common styles used in all layouts
  *
- * as of commit https://github.com/Typesetter/Typesetter/commit/eac99656819f330f69d786927ad0dce75251d004
  * we use vendor-prefix mixins, see /include/thirdparty/Bootstrap4/scss/bootstrap/vp-mixins
  *
  */
 
-@import 'common_variables.scss';
 @import 'contactform.scss';
 @import 'compensate_fixed_navbar.scss'; // default, use only with 'fixed-top' class on navbar in template.php line 44
 

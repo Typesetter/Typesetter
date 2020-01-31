@@ -1087,6 +1087,7 @@ namespace gp\tool{
 
 			$page->ajaxReplace		= [];
 			$include_options		= self::IncludeOptions();
+			$scrollto				= false;
 
 			if( !array_key_exists('include_type',$section) || isset($section['index']) ){
 				$section['include_type'] = 'file';
@@ -1121,7 +1122,9 @@ namespace gp\tool{
 
 			echo '</div></div>';
 			echo '</form>';
-			echo '<script> $(\'input[value="'.$scrollto.'"]\').get(0).scrollIntoView(true); </script>';
+			if( $scrollto ){
+				echo '<script> $(\'input[value="'.$scrollto.'"]\').get(0).scrollIntoView(true); </script>';
+			}
 
 
 			$content = ob_get_clean();

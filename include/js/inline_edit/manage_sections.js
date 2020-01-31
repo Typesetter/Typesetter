@@ -1211,7 +1211,7 @@
 				});
 			})
 			.on('mouseleave', function(){
-				this.popup.destroy();
+				this.popup && this.popup.destroy();
 
 				var $popup = $(this).next('.avail_classes_desc:not(:empty)')
 					.stop()

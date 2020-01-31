@@ -1,6 +1,7 @@
 <?php
 
-/* Bootswatch 4 Scss 
+/**
+ * Bootswatch 4 Scss 4.4.1
  * Typesetter Theme Template
  * based on https://bootswatch.com
  *
@@ -12,10 +13,12 @@ include_once($path);
 
 $lang = isset($page->lang) ? $page->lang : $config['language'];
 
-/* If you are using Multi-Language Manager 1.2.3+
- * and want to use localized $langmessage values in the template, 
- * uncomment the following line */
-// common::GetLangFile('main.inc', $lang);
+/**
+ * If you are using Multi-Language Manager 1.2.3+
+ * and want to use localized $langmessage values in the template,
+ * uncomment the following line
+ */
+ // common::GetLangFile('main.inc', $lang);
 
 ?><!DOCTYPE html>
 <html lang="<?php echo $lang; ?>" class="bootstrap-4">
@@ -62,7 +65,7 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
                 'selected'          => 'active',
                 'selected_li'       => '',
                 'childselected'     => 'active',
-                'childselected_li'  => 'active',  // use '' if you don't want 1st-level nav items to indicate that a dropdown item is active 
+                'childselected_li'  => 'active', // use '' if you don't want 1st-level nav items to indicate that a dropdown item is active
                 'li_'               => 'nav-item nav-item-',
                 'li_title'          => '',
                 'haschildren'       => 'dropdown-toggle',

@@ -1742,6 +1742,8 @@ namespace gp{
 				}else{
 					\gp\tool\Output::$inline_vars['debugjs']	= true;
 				}
+			}else{
+				\gp\tool\Output::$inline_vars['debugjs']		= false;
 			}
 
 			if( self::LoggedIn() ){

@@ -15,6 +15,12 @@
 
 		allowAutoSave: true,
 
+		debug:function(msg){
+			if( debugjs ){
+				console.log(msg);
+			}
+		},
+
 		CanAutoSave: function(){ 
 			return gp_editor.allowAutoSave || true; 
 		},
@@ -83,22 +89,9 @@
 
 			});
 
-			/*
+			/**
 			 * FIX for too many sections issue
-			 *
-			 * with large amounts of sections, we may exceed max_post_values
-			 * which causes an error and prevents further editing of the page.
-			 *
-			 * sending all the section data in a single JSON string 
-			 * instead of parametrizing all values will address this issue.
-			 *
-			 * the current implementation should be considered as a hot fix.
-			 * it should eventually be done more elegant.
-			 *
-			 * See its server side counterpart in /include/Page/Edit.php line 490-519
 			 */
-
-			// console.log('manage_sections -> SaveData -> args = ', args);
 			var json_encoded = JSON.stringify(args, function(key, value){
 				// make sure every value is a string
 				switch( value ){
@@ -123,14 +116,8 @@
 				}
 				return value;
 			});
-			// console.log('manage_sections -> SaveData -> json_encoded = ' + json_encoded);
 			return 'cmd=SaveSections&sections_json=' + encodeURIComponent(json_encoded);
 
-			/*
-			 * FIX for too many sections issue
-			 * 
-			 */
-			 // return $.param(args);
 		},
 
 
@@ -175,7 +162,6 @@
 					}
 				}
 				if( v.destroy ){
-					// console.log('gp_editor.AfterSave.' + i + ' deleted');
 					delete( gp_editor.AfterSave[i] );
 				}
 			});
@@ -212,11 +198,9 @@
 		 */
 		SaveToClipboard: function(area_id){
 
-			// console.log("arguments = " , arguments);
-			// console.log("SaveToClipboard called with area_id = ", area_id);
 			var $li = $('#section_sorting li[data-gp-area-id="' + area_id + '"]');
 			if( !$li.length ){
-				console.log('SaveToClipboard Error: section_sorting li[data-gp-area-id="' + area_id + '"] does not exist!');
+				gp_editor.debug('SaveToClipboard Error: section_sorting li[data-gp-area-id="' + area_id + '"] does not exist!');
 				return;
 			}
 			var $area			= gp_editor.GetArea( $li );
@@ -226,7 +210,7 @@
 				cmd				: 'SaveToClipboard',
 				section_number	: section_number
 			};
-			// console.log("SectionToClipboard", data);
+
 			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
@@ -239,19 +223,13 @@
 		 */
 		SectionFromClipboard: function(item_index){
 
-			// console.log("SectionFromClipboard: item_index = " + item_index);
-
 			var $link = $('#section-clipboard-items '
 				+ 'li[data-item_index="' + item_index + '"] '
 				+ 'a.preview_section');
 
-			// console.log("SectionFromClipboard: $link = " , $link);
-
 			//remove preview
 			$link.removeClass('previewing');
 			$('.temporary-section').remove();
-
-			// console.log("$section = " , $link.data('response'));
 
 			// append section(s) content client side
 			var $section = $($link.data('response'))
@@ -272,7 +250,6 @@
 				item_number	: item_index
 			};
 
-			// console.log("AddFromClipboard", data);
 			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
@@ -530,7 +507,6 @@
 				$area.insertAfter($prev_area).trigger('SectionSorted');
 
 				// trigger immediate save
-				// console.log('immediate save');
 				gp_editing.SaveChanges();
 				return;
 			}
@@ -541,7 +517,6 @@
 				$area.prependTo('#gpx_content').trigger('SectionSorted');
 
 				// trigger immediate save
-				// console.log('immediate save');
 				gp_editing.SaveChanges();
 				return;
 			}
@@ -551,7 +526,6 @@
 			$area.trigger('SectionSorted');
 
 			// trigger immediate save
-			// console.log('immediate save');
 			gp_editing.SaveChanges();
 		},
 
@@ -704,7 +678,6 @@
 		$this.removeClass('previewing').trigger('mousemove');
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -760,7 +733,6 @@
 				.data('gp_hidden', false)
 				.hide().slideDown(150, function(){
 					// trigger immediate save
-					// console.log('immediate save');
 					gp_editing.SaveChanges();
 				});
 
@@ -777,7 +749,6 @@
 					.data('gp_hidden', true);
 
 				// trigger immediate save
-				// console.log('immediate save');
 				gp_editing.SaveChanges();
 			});
 		}
@@ -832,7 +803,6 @@
 		$gp.CloseAdminBox();
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -852,7 +822,6 @@
 			$li.remove();
 
 			// trigger immediate save
-			// console.log('immediate save');
 			gp_editing.SaveChanges();
 		}
 	};
@@ -873,7 +842,6 @@
 		gp_editor.InitSorting();
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -885,7 +853,6 @@
 	 */
 	$gp.links.SectionToClipboard = function(evt){
 		var area_id		= $(this).closest('li').data('gp-area-id');
-		// console.log("SectionToClipboard: area_id = " + area_id);
 		var is_dirty	= gp_editor.checkDirty();
 		if( is_dirty ){
 			// inhibit auto-save while doing instant saving to prevent timing conflicts
@@ -917,7 +884,7 @@
 
 		var item_index = $(this).closest('li').attr("data-item_index");
 		if( !item_index ){
-			console.log('RemoveSectionClipboardItem Error: Atribute data_item_index missing');
+			gp_editor.debug('RemoveSectionClipboardItem Error: Atribute data_item_index missing');
 			return;
 		}
 
@@ -939,7 +906,7 @@
 
 		var item_index = $(this).closest('li').attr("data-item_index");
 		if( !item_index ){
-			console.log('RelabelClipboardItem Error: Atribute data_item_index missing');
+			gp_editor.debug('RelabelClipboardItem Error: Atribute data_item_index missing');
 			return;
 		}
 
@@ -1035,7 +1002,6 @@
 		$li.children().show();
 
 		// trigger immediate save
-		// console.log('immediate save without creating a draft');
 		var callback = function(){};
 		gp_editing.SaveChanges(callback, false); // passing false as 2nd argument will prevent creating a new draft
 	};
@@ -1061,7 +1027,6 @@
 		$area.attr('data-gp_collapse', clss).data('gp_collapse', clss);
 
 		// trigger immediate save
-		// console.log('immediate save without creating a draft');
 		var callback = function(){};
 		gp_editing.SaveChanges(callback, false); // passing false as 2nd argument will prevent creating a new draft
 	};
@@ -1451,7 +1416,6 @@
 		$area.trigger('section_options:closed');
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -1461,7 +1425,6 @@
 	 * which will bypass the delete section confirmation dialog
 	 */
 	$(document).on('keydown keyup', function(evt){
-		// console.log('keyboard event =', evt);
 		var ctrlKeyDowm = (evt.type == 'keydown' && evt.ctrlKey);
 		$('#section_sorting').toggleClass('warn-instant-section-removal', ctrlKeyDowm);
 	});
@@ -1529,7 +1492,6 @@
 					.data('gp_label', label);
 
 				// trigger immediate save
-				// console.log('immediate save without creating a draft');
 				var callback = function(){};
 				gp_editing.SaveChanges(callback, false); // passing false as 2nd argument will prevent creating a new draft
 			});

@@ -10,10 +10,17 @@
 		is_dirty:			false,	// true if we know gp_editor has been edited
 
 
+		debug:function(msg){
+			if( debugjs ){
+				console.log(msg);
+			}
+		},
+
+
 		get_path:function(id_num){
 			var lnk = $('a#ExtraEditLink' + id_num);
 			if( lnk.length == 0 ){
-				console.log('get_path() link not found', id_num, lnk.length);
+				gp_editing.debug('get_path() link not found', id_num, lnk.length);
 				return false;
 			}
 			return lnk.attr('href');
@@ -24,7 +31,7 @@
 
 			var content = $('#ExtraEditArea' + id_num);
 			if( content.length == 0 ){
-				console.log('no content found for get_edit_area()', id_num);
+				gp_editing.debug('no content found for get_edit_area()', id_num);
 				return false;
 			}
 
@@ -83,7 +90,7 @@
 				return;
 			}
 
-			loading(); // console.log('loading');
+			loading();
 
 			$wrap.addClass('ck_saving');
 			gp_editing.AutoSave.destroy(); // kill the autosave timer while saving to avoid timing conflicts
@@ -154,7 +161,7 @@
 					$("a.msg_publish_draft_disabled").hide();
 					$("a.msg_saving_draft").hide();
 					gp_editing.AutoSave.init(); // re-init autosave when saving completed
-					loaded(); // console.log('loaded');
+					loaded();
 				},
 			});
 
@@ -369,8 +376,6 @@
 				editor_info.section_type 	= section_type.substring(section_type.indexOf('filetype-') + 9);
 			}
 
-			// console.log('editor_info = ', editor_info);
-
 			$(document).trigger('editor:loaded', editor_info);
 
 			gp_editing.PublishButton( $edit_area );
@@ -547,7 +552,7 @@
 		 * Deprecated methods
 		 */
 		save_changes: function(callback){
-			console.log('Please use gp_editing.SaveChanges() instead of gp_editing.save_changes()');
+			gp_editing.debug('Please use gp_editing.SaveChanges() instead of gp_editing.save_changes()');
 			gp_editing.SaveChanges(callback);
 		},
 

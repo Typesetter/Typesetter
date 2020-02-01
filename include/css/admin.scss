@@ -461,7 +461,7 @@
 }
 
 #admincontent_panel ul a {
-	display:block;
+	display: block;
 }
 
 
@@ -2193,6 +2193,7 @@ body #addon_about {
 /**
  * New section options
  */
+
 #new_section_links > div {
 	max-width: 100px;
 	width: 50%;
@@ -2258,6 +2259,27 @@ body #addon_about {
 }
 
 
+
+/**
+ * New Page / Copy Page
+ */
+#gp_admin_html .new_page_table .gp_scrolllist > div {
+	height: 164px;
+}
+
+#gp_admin_html .new_page_table #new_section_links {
+	max-height: 164px;
+	overflow-y:	auto;
+}
+
+#gp_admin_html .new_page_table .selectable_row.selected_row {
+	td {
+		background-color: #f2f2f2;
+	}
+}
+
+
+
 /**
  * Scroll list
  */
@@ -2276,7 +2298,6 @@ body #addon_about {
 	overflow-x: hidden;
 	margin-top: 24px;
 }
-
 
 .gp_scrolllist > div > input.gpsearch {
 	box-sizing: border-box !important;

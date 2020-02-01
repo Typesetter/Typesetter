@@ -306,11 +306,11 @@ $gp.links.remote = function(evt){
 	}
 
 	//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
-	var height = $gp.$win.height() - 130;
+	// var height = $gp.$win.height() - 130;
 
 	var opts = {context:'iframe',width:780};
 
-	var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
+	var iframe = '<iframe src="'+src+'" frameborder="0" />';
 	$gp.AdminBoxC(iframe,opts);
 };
 
@@ -358,7 +358,7 @@ $gp.AdminBoxC = function(data, options){
 
 	options = $.extend({
 			context : '',
-			width : 660,
+			width : 680,
 			zIndex: 11000
 		},
 		options);

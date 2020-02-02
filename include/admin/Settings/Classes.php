@@ -194,7 +194,7 @@ class Classes extends \gp\special\Base{
 			),
 			array (
 				'names'		=>'no-gutters',
-				'desc'		=> 'Bootstrap 4 Grid: use this class together with the row class to remove the negative margins from the roew and the horizontal padding from all immediate children columns',
+				'desc'		=> 'Bootstrap 4 Grid: use this class together with the row class to remove the negative margins from the row and the horizontal padding from all immediate children columns',
 			),
 			array (
 				'names'		=>'col col-1 col-2 col-3 col-4 col-5 col-6 col-7 col-8 col-9 col-10 col-11 col-12 col-auto',

@@ -196,11 +196,11 @@
 			}
 
 			if( $area.data('draft') == 1 ){
-				document.querySelectorAll('.ck_publish[data-gp-area-id="' + $gp.AreaId($area) + '"]').forEach(function(el) {
+				document.querySelectorAll('.ckeditor_control.ck_publish, .ck_publish[data-gp-area-id="' + $gp.AreaId($area) + '"]').forEach(function(el) {
 					el.style.removeProperty('display');
 				});				
 			} else {
-				document.querySelectorAll('.ck_publish[data-gp-area-id="' + $gp.AreaId($area) + '"]').forEach(function(el) {
+				document.querySelectorAll('.ckeditor_control.ck_publish, .ck_publish[data-gp-area-id="' + $gp.AreaId($area) + '"]').forEach(function(el) {
 					el.style.setProperty('display','none','important');
 				});
 			}	

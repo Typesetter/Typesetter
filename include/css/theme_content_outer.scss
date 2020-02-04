@@ -78,6 +78,10 @@ body {
 				}
 			}
 		}
+		tr:not(.active) td.revision_history_links a{
+			color:#ccc;
+			pointer-events: none;
+		}
 		td.revision_history_username {
 			overflow: hidden;
 			white-space: nowrap;

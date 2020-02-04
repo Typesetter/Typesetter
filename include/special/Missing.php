@@ -252,7 +252,7 @@ class Missing extends \gp\special\Base{
 			//skip private pages
 			if( !$admin ){
 
-				if( isset($gp_titles[$index]['vis']) ){
+				if( isset($gp_titles[$index]['vis']) || \gp\tool::SpecialOrAdmin($title) == 'special' ){
 					continue;
 				}
 			}

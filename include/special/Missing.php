@@ -229,7 +229,9 @@ class Missing extends \gp\special\Base{
 		$result		= '';
 
 		foreach($similar as $title => $percent_similar){
-			$result .= \gp\tool::Link_Page($title).', ';
+			if ( $title === key($similar) || $percent_similar > 10 ) {
+				$result .= \gp\tool::Link_Page($title).', ';
+			}
 		}
 
 		return rtrim($result,', ');

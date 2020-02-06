@@ -231,6 +231,7 @@ class Missing extends \gp\special\Base{
 		foreach($similar as $title => $percent_similar){
 			$result .= \gp\tool::Link_Page($title).', ';
 		}
+		if( !$admin ){ $result .= \gp\tool::Link_Page('Site_Map'); }
 
 		return rtrim($result,', ');
 	}

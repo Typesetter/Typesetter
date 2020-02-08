@@ -223,6 +223,7 @@ class Missing extends \gp\special\Base{
 	 *
 	 */
 	public function SimilarTitles(){
+		global $config;
 
 		$similar	= $this->SimilarTitleArray($this->requested);
 		$similar	= array_slice($similar,0,7,true);
@@ -231,7 +232,8 @@ class Missing extends \gp\special\Base{
 		foreach($similar as $title => $percent_similar){
 			$result .= \gp\tool::Link_Page($title).', ';
 		}
-		if( !$admin ){ $result .= \gp\tool::Link_Page('Site_Map'); }
+		if( !$admin && (!isset($config['showsitemap']) || $config['showsitemap'] ) )
+		{ $result .= \gp\tool::Link_Page('Site_Map'); }
 
 		return rtrim($result,', ');
 	}

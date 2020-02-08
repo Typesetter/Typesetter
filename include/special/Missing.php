@@ -232,8 +232,9 @@ class Missing extends \gp\special\Base{
 		foreach($similar as $title => $percent_similar){
 			$result .= \gp\tool::Link_Page($title).', ';
 		}
-		if( !$admin && (!isset($config['showsitemap']) || $config['showsitemap'] ) )
-		{ $result .= \gp\tool::Link_Page('Site_Map'); }
+		if( !$admin && (!isset($config['showsitemap']) || $config['showsitemap'] ) ){ 
+			$result .= \gp\tool::Link_Page('Site_Map');
+		}
 
 		return rtrim($result,', ');
 	}

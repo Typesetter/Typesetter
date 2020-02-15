@@ -29,6 +29,7 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
 
     <?php
       common::LoadComponents( 'bootstrap4-js' );
+      common::LoadComponents( 'fontawesome' );
       gpOutput::GetHead();
     ?>
 

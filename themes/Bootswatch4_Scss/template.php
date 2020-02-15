@@ -28,8 +28,7 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <?php
-      common::LoadComponents( 'bootstrap4-js' );
-      common::LoadComponents( 'fontawesome' );
+      common::LoadComponents( 'bootstrap4-js,fontawesome' );
       gpOutput::GetHead();
     ?>
 

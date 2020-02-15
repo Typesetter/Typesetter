@@ -259,7 +259,7 @@ class Missing extends \gp\special\Base{
 				}
 			}
 
-			similar_text($lower,strtolower($title),$percent);
+			similar_text($lower,mb_strtolower($title),$percent);
 			$similar[$title] = $percent;
 		}
 

@@ -1340,7 +1340,7 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '<ul class="submenu">';
 
 		echo '<li>';
-		echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['edit_this_layout'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
+		echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),'<i class="fa fa-pencil"></i> '.$langmessage['edit_this_layout'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
 		echo '</li>';
 
 

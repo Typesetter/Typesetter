@@ -206,6 +206,11 @@ class Revisions extends \gp\Page\Edit{
 							'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft'
 						]
 					);
+				}else{
+					echo \gp\tool::Link(
+						$this->title,
+						$langmessage['edit']
+					);
 				}
 				break;
 

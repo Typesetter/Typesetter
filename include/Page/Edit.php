@@ -168,27 +168,6 @@ class Edit extends \gp\Page{
 		$admin_links		= array();
 
 
-
-		/*
-		if( $this->permission_menu ){
-			//visibility
-			$q				= 'cmd=ToggleVisibility&index=' . urlencode($this->gp_index);
-			$label			= '<i class="fa fa-eye-slash"></i> ' . $langmessage['Visibility'] . ': ' . $langmessage['Private'];
-			$attrs			= array(
-				'class'		=> 'admin-link admin-link-toggle-visibility',
-				'data-cmd'	=> 'postlink',
-			);
-			if( !$this->visibility ){
-				$q			.= '&visibility=private';
-				$label		= '<i class="fa fa-eye"></i> ' . $langmessage['Visibility'] . ': ' . $langmessage['Public'];
-			}else{
-				$attrs['class'] .= ' admin-link-visibility-private';
-			}
-			$admin_links[]	= \gp\tool::Link('Admin/Menu/Ajax', $label, $q, $attrs);
-		}
-		*/
-
-
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
 		if( $this->permission_menu ){

@@ -188,6 +188,15 @@ class Revisions extends \gp\Page\Edit{
 					'cmd=ViewCurrent',
 					['target' => 'gp_layout_iframe']
 				);
+				echo \gp\tool::Link(
+					'Admin/Revisions/' . $this->gp_index,
+					$langmessage['restore'],
+					'cmd=UseRevision&revision=current',
+					array(
+						'data-cmd'	=> 'post',
+						'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft'
+					)
+				);
 				break;
 
 			case 'draft':
@@ -261,7 +270,12 @@ class Revisions extends \gp\Page\Edit{
 	protected function UseRevision(){
 
 		$revision			=& $_REQUEST['revision'];
-		$file_sections		= $this->GetRevision($revision);
+
+		if ($revision == 'current') {
+			$file_sections		= \gp\tool\Files::Get($this->file, 'file_sections');
+		} else {
+			$file_sections		= $this->GetRevision($revision);
+		}
 
 		if( $file_sections === false ){
 			return false;

@@ -87,7 +87,7 @@ class Page extends \gp\Page{
 
 		$menu_permissions		= \gp\admin\Tools::HasPermission('Admin_Menu');
 
-
+		/*
 		if( $menu_permissions ){
 			//visibility
 			$q							= 'cmd=ToggleVisibility';
@@ -99,7 +99,7 @@ class Page extends \gp\Page{
 			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
 			$admin_links[]				= \gp\tool::Link($this->title,$label,$q,$attrs);
 		}
-
+		*/
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
@@ -110,6 +110,10 @@ class Page extends \gp\Page{
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
 			$option_links[] = \gp\tool::Link('Admin/Permissions',$langmessage['permissions'],'index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+		}
+
+		if( $menu_permissions ){
+			$option_links[]	= \gp\Page\Edit::ToggleVisibilityLink($this->gp_index, $this->visibility != 'private');
 		}
 
 		if( !empty($option_links) ){

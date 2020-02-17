@@ -245,6 +245,11 @@ class Missing extends \gp\special\Base{
 	public function SimilarTitleArray($title){
 		global $gp_index, $gp_titles;
 
+		$similar_blacklist = \gp\admin\Menu\Tools::GetAvailable();
+		unset($similar_blacklist['special_site_map']);
+		unset($similar_blacklist['special_blog']);
+
+
 		$similar			= array();
 		$lower				= str_replace(' ','_',strtolower($title));
 		$admin				= \gp\tool::LoggedIn();
@@ -253,8 +258,8 @@ class Missing extends \gp\special\Base{
 
 			//skip private pages
 			if( !$admin ){
-
-				if( isset($gp_titles[$index]['vis']) ){
+				
+				if( isset($gp_titles[$index]['vis']) || in_array($title, $similar_blacklist) ){
 					continue;
 				}
 			}

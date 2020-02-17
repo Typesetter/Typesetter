@@ -26,75 +26,75 @@ class Configuration extends \gp\special\Base{
 
 		$this->variables = array(
 
-						// these values aren't used
-						//'timeoffset'=>'',
-						//'dateformat'=>'',
+			// these values aren't used
+			//'timeoffset'=>'',
+			//'dateformat'=>'',
 
-						/* General Settings */
-						'general_settings'			=> false,
-						'title'						=> '',
-						'keywords'					=> '',
-						'desc'						=> 'textarea',
+			/* General Settings */
+			'general_settings'			=> false,
+			'title'						=> '',
+			'keywords'					=> '',
+			'desc'						=> 'textarea',
 
-						'Interface'					=> false,
-						'colorbox_style'			=> array(
-															'minimalistic'	=> 'Minimalistic',
-															'example1'		=> 'Example 1',
-															'example2'		=> 'Example 2',
-															'example3'		=> 'Example 3',
-															'example4'		=> 'Example 4',
-															'example5'		=> 'Example 5',
-														),
-						'gallery_legacy_style'		=> 'boolean',
-						'language'					=> '',
-						'langeditor'				=> '',
-						'showsitemap'				=> 'boolean',
-						'showlogin'					=> 'boolean',
-						'showgplink'				=> 'boolean',
+			'Interface'					=> false,
+			'colorbox_style'			=> array(
+				'minimalistic'	=> 'Minimalistic',
+				'example1'		=> 'Example 1',
+				'example2'		=> 'Example 2',
+				'example3'		=> 'Example 3',
+				'example4'		=> 'Example 4',
+				'example5'		=> 'Example 5',
+			),
+			'gallery_legacy_style'		=> 'boolean',
+			'language'					=> '',
+			'langeditor'				=> '',
+			'showsitemap'				=> 'boolean',
+			'showlogin'					=> 'boolean',
+			'showgplink'				=> 'boolean',
 
-						'Images'					=> false,
-						'allow_svg_upload'			=> 'boolean',
-						'maximgarea'				=> 'integer',
-						'resize_images'				=> 'boolean',
-						'preserve_icc_profiles' 	=> 'boolean',
-						'preserve_image_metadata' 	=> 'boolean',
-						'maxthumbsize'				=> 'integer',
-						'maxthumbheight'			=> 'integer',
-						'thumbskeepaspect'			=> 'boolean',
+			'Images'					=> false,
+			'allow_svg_upload'			=> 'boolean',
+			'maximgarea'				=> 'integer',
+			'resize_images'				=> 'boolean',
+			'preserve_icc_profiles'		=> 'boolean',
+			'preserve_image_metadata'	=> 'boolean',
+			'maxthumbsize'				=> 'integer',
+			'maxthumbheight'			=> 'integer',
+			'thumbskeepaspect'			=> 'boolean',
 
-						'Performance'				=> false,
-						'auto_redir'				=> 'integer',
-						'history_limit'				=> 'integer',
-						'HTML_Tidy'					=> '',
-						'Report_Errors'				=> 'boolean',
-						'combinejs'					=> 'boolean',
-						'minifyjs'					=> 'boolean',
-						'combinecss'				=> 'boolean',
-						'etag_headers'				=> 'boolean',
-						'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
+			'Performance'				=> false,
+			'auto_redir'				=> 'integer',
+			'history_limit'				=> 'integer',
+			'HTML_Tidy'					=> '',
+			'Report_Errors'				=> 'boolean',
+			'combinejs'					=> 'boolean',
+			'minifyjs'					=> 'boolean',
+			'combinecss'				=> 'boolean',
+			'etag_headers'				=> 'boolean',
+			'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
 
 
-						/* Contact Configuration */
-						'contact_config'		=> false,
-						'toemail'				=> '',
-						'toname'				=> '',
-						'from_address'			=> '',
-						'from_name'				=> '',
-						'from_use_user'			=> 'boolean',
-						'require_email'			=> '',
-						'contact_advanced'		=> false,
-						'mail_method'			=> '',
-						'sendmail_path'			=> '',
-						'smtp_hosts'			=> '',
-						'smtp_user'				=> '',
-						'smtp_pass'				=> 'password',
-						//'fromemail'			=> '',
+			/* Contact Configuration */
+			'contact_config'		=> false,
+			'toemail'				=> '',
+			'toname'				=> '',
+			'from_address'			=> '',
+			'from_name'				=> '',
+			'from_use_user'			=> 'boolean',
+			'require_email'			=> '',
+			'contact_advanced'		=> false,
+			'mail_method'			=> '',
+			'sendmail_path'			=> '',
+			'smtp_hosts'			=> '',
+			'smtp_user'				=> '',
+			'smtp_pass'				=> 'password',
+			//'fromemail'			=> '',
 
-						'reCaptcha'				=> false,
-						'recaptcha_public'		=> '',
-						'recaptcha_private'		=> '',
-						'recaptcha_language'	=> '',
-						);
+			'reCaptcha'				=> false,
+			'recaptcha_public'		=> '',
+			'recaptcha_private'		=> '',
+			'recaptcha_language'	=> '',
+		);
 
 	}
 
@@ -233,11 +233,32 @@ class Configuration extends \gp\special\Base{
 		//recaptcha language
 		$possible['recaptcha_language'] = array();
 		$possible['recaptcha_language']['inherit'] = $langmessage['default'];
-		$reCaptchaLangList=array('ar','af','am','hy','az','eu','bn','bg','ca','zh-HK','zh-CN','zh-TW','hr','cs','da',
-		'nl','en-GB','en','et','fil','fi','fr','fr-CA','gl','ka','de','de-AT','de-CH','el','gu','iw','hi','hu','is',
-		'id','it','ja','kn','ko','lo','lv','lt','ms','ml','mr','mn','no','fa','pl','pt','pt-BR','pt-PT','ro','ru',
-		'sr','si','sk','sl','es','es-419','sw','sv','ta','te','th','tr','uk','ur','vi','zu');
-		foreach($reCaptchaLangList as $lang){
+
+		// According to https://developers.google.com/recaptcha/docs/language
+		$recaptcha_languages = array(
+			'af', 'am', 'ar', 'az',
+			'bn', 'bg',
+			'ca', 'cs',
+			'da', 'de', 'de-AT', 'de-CH',
+			'el', 'en', 'en-GB', 'es', 'es-419', 'et', 'eu',
+			'fa', 'fi', 'fil', 'fr', 'fr-CA',
+			'gl', 'gu',
+			'hi', 'hr', 'hu', 'hy',
+			'id', 'is', 'it', 'iw',
+			'ja',
+			'ka', 'kn', 'ko',
+			'lo', 'lt', 'lv',
+			'ml', 'mn', 'mr', 'ms',
+			'nl', 'no',
+			'pl', 'pt', 'pt-BR', 'pt-PT',
+			'ro', 'ru',
+			'si', 'sk', 'sl', 'sr', 'sv', 'sw',
+			'ta', 'te', 'th', 'tr',
+			'uk', 'ur',
+			'vi',
+			'zh-HK', 'zh-CN', 'zh-TW', 'zu',
+		);
+		foreach($recaptcha_languages as $lang){
 			$possible['recaptcha_language'][$lang] = $lang;
 		}
 

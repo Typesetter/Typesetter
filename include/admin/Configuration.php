@@ -233,14 +233,13 @@ class Configuration extends \gp\special\Base{
 		//recaptcha language
 		$possible['recaptcha_language'] = array();
 		$possible['recaptcha_language']['inherit'] = $langmessage['default'];
-		$possible['recaptcha_language']['en'] = 'en';
-		$possible['recaptcha_language']['nl'] = 'nl';
-		$possible['recaptcha_language']['fr'] = 'fr';
-		$possible['recaptcha_language']['de'] = 'de';
-		$possible['recaptcha_language']['pt'] = 'pt';
-		$possible['recaptcha_language']['ru'] = 'ru';
-		$possible['recaptcha_language']['es'] = 'es';
-		$possible['recaptcha_language']['tr'] = 'tr';
+		$reCaptchaLangList=array('ar','af','am','hy','az','eu','bn','bg','ca','zh-HK','zh-CN','zh-TW','hr','cs','da',
+		'nl','en-GB','en','et','fil','fi','fr','fr-CA','gl','ka','de','de-AT','de-CH','el','gu','iw','hi','hu','is',
+		'id','it','ja','kn','ko','lo','lv','lt','ms','ml','mr','mn','no','fa','pl','pt','pt-BR','pt-PT','ro','ru',
+		'sr','si','sk','sl','es','es-419','sw','sv','ta','te','th','tr','uk','ur','vi','zu');
+		foreach($reCaptchaLangList as $lang){
+			$possible['recaptcha_language'][$lang] = $lang;
+		}
 
 
 

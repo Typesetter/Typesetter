@@ -1,5 +1,16 @@
 ### Typesetter CMS ###
 
+**About Typesetter CMS hooks**
+
+Addon hooks are defined in the Addon.ini file of a plugin or theme and registered during its installation. During addon development, to add or remove hooks, the addon must be updated (or uninstalled / reinstalled) via Typesetter's admin menu.
+
+**Filters**: Filter hooks are designed to manipulate certain values that are used in the execution of Typesetter. Depending on the hook, the output, the response to a certain request or the behavior of the system can be changed. Usually one or more parameters are passed to the hook function / method as an array or as an array of arrays. The called filter method will normally return the first passed parameter &ndash; in a modified form.
+
+**Actions**: Contrary to filters, action hook calls do not expect a return value and they do not necessairly pass any parameters. The may, for example, be used to simply output content at the point in the CMS execution stack where the hook is called, such as the &lt;head&gt; section of a page. Action hook calls may also trigger the execution of custom actions (hence the name) such as modifying a file that was just uploaded.
+
+Both filter and action hooks are commonly used to process global variables (e.g. $config), global objects (e.g. $page) or superglobals (e.g. $_REQUEST). It largely depends on the point where the hook is called if a global variable, object or object property is already available. For optimal performance, it is recommended to implement early exit conditions in hook methods to avoid unnecessary code execution. If a hook is used by several addons, its calls will be executed in the order of addon installation. This fact usually has no noticable effect but may play a role in plugin design under rather special circumstances, e.g. when addons themselves call other addon hooks.
+
+
 ## All Current Plugin Hooks ##
 
 # A #

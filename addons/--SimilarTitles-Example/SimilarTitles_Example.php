@@ -20,8 +20,8 @@ class SimilarTitles_Example{
 
 		// Blacklist Example 1: remove all pages not in the Main Menu
 		/*/ <-- remove the * to uncomment this code block
-		foreach( \gp\admin\Menu\Tools::GetAvailable() as $title => $index ){
-			$blacklist[] = $title;
+		foreach( \gp\admin\Menu\Tools::GetAvailable() as $index => $title ){
+			$blacklist[] = $index;
 		}
 		//*/
 

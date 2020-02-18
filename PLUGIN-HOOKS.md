@@ -189,7 +189,7 @@
 * [SectionTypes](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SectionTypes%27%22)							(filter)  
 			Used with plugins to introduce / register new section types to the CMS
 
-* [SimilarTitles](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SimilarTitles%27%22)						(filter)  
+* [SimilarTitles](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SimilarTitles%27%22)						(filter) (new as of ver. 5.2)  
 			Hook to filter/remove similar page links suggested on the 'Missing' (Error 404) page and used for auto-redirection
 
 

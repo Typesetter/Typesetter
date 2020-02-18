@@ -63,10 +63,11 @@
 
 
 ## New Plugin Hooks ###
+* 'AdminLinkLabel' filter hook allows better plugin internationalization.
 * 'AvailableClasses' filter hook can be used to dynamically manipulate the Available Classes array.
 * 'Notifications' filter hook can be used to manipulate Notifications before they are displayed.
 * 'ReplaceContentVars' is a new filter hook to manage content variables to be replaced in output, such as $myName (in content) => John Doe (in output).
-* 'AdminLinkLabel' filter hook allows better plugin internationalization.
+* 'SimilarTitles' filter hook to manipulate similar page links shown on the 'Missing' (Error 404) page and used for automatic redirection
 
 
 ## Bug Fixes ##

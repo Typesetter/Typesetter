@@ -1,5 +1,9 @@
+// Theme Bootswatch 4 Scss
+// 'Bootstrapify' Typesetter's built-in contact form
+
 form.contactform {
   width: 100%;
+
   label:not([for="contact_message"]) {
     width: auto;
     float: none;
@@ -9,25 +13,29 @@ form.contactform {
     > span {
       margin: 0;
     }
-    > input, 
-    > select, 
+    > input,
+    > select,
     > textarea {
       @extend .form-control;
     }
   }
+
   > label[for="contact_message"] {
     width: auto;
     float: none;
     clear: both;
     margin: 0;
   }
+
   > textarea#contact_message {
     @extend .form-control;
     margin-bottom: 0.6em;
   }
+
   > input.submit {
     @extend .btn, .btn-success, .col-sm-6, .offset-sm-3;
   }
+
   > span.message_sent {
     display: block;
     text-align: center;
@@ -36,15 +44,11 @@ form.contactform {
   }
 }
 
-/*
-@include media-breakpoint-up(md) {
-  .filetype-special_contactform {
-    @extend .row;
-    form.contactform {
-      @extend .offset-md-2, .col-md-8;
-    }
-  }
-}
-*/
-
-
+// @include media-breakpoint-up(md) {
+//   .filetype-special_contactform {
+//     @extend .row;
+//     form.contactform {
+//       @extend .offset-md-2, .col-md-8;
+//     }
+//   }
+// }

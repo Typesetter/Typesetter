@@ -1,0 +1,100 @@
+// footer variables
+// these are no Bootstrap standard variables
+// therefore we need to define default values
+
+$footer-bg:                     $gray-300 !default;
+$footer-border-top:             none !default;
+$footer-color:                  $body-color !default;
+$footer-headings-color:         $headings-color !default;
+$footer-link-color:             $link-color !default;
+$footer-link-hover-color:       $link-hover-color !default;
+
+$footer-nav-bg:                 transparent !default;
+$footer-nav-item-border:        none !default;
+$footer-nav-link-color:         $footer-link-color !default;
+$footer-nav-link-bg:            transparent !default;
+$footer-nav-link-hover-color:   $footer-link-hover-color !default;
+$footer-nav-link-hover-bg:      transparent !default;
+$footer-nav-link-active-color:  $footer-link-hover-color !default;
+$footer-nav-link-active-bg:     transparent !default;
+
+
+footer.main-footer {
+  background: $footer-bg;
+  border-top: $footer-border-top;
+  color: $footer-color;
+  h1, .h1,
+  h2, .h2,
+  h3, .h3,
+  h4, .h4,
+  h5, .h5,
+  h6, .h6 {
+    color: $footer-headings-color;
+  }
+  a {
+    color: $footer-link-color;
+    &:hover {
+      color: $footer-link-hover-color;
+    }
+  }
+}
+
+.footer-nav,
+.footer-nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-nav {
+  margin: 0.6rem 0;
+  background: $footer-nav-bg;
+  border-bottom: $footer-nav-item-border;
+
+  li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border-top: $footer-nav-item-border;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  a, a:hover, a:visited, a:active, a:focus {
+    text-decoration: none;
+    color: $footer-nav-link-color;
+    background: $footer-nav-link-bg;
+  }
+
+  a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.4rem 0;
+
+    &.active {
+      color: $footer-nav-link-active-color;
+      background: $footer-nav-link-active-bg;
+    }
+    &:hover, &:focus {
+      color: $footer-nav-link-hover-color;
+      background: $footer-nav-link-hover-bg;
+    }
+  }
+
+  ul {
+    margin: 0;
+  }
+
+  // 2nd level links
+  > li > ul > li > a {
+    text-indent: 1em;
+  }
+
+  // 3rd level links
+  > li > ul > li > ul > li > a {
+    text-indent: 2em;
+  }
+
+}

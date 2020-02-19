@@ -1,12 +1,13 @@
+// Theme Bootswatch 4 Scss
+// Layout Lumen 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Lumen 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-// Variables ===================================================================
-
-$web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic" !default;
-@import url($web-font-path);
+// Variables and Mixins =========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 @mixin shadow($width: 4px){
   border-style: solid;
@@ -14,37 +15,28 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400
 }
 
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
 // Navbar =======================================================================
-
 .navbar {
   @include shadow();
-}
 
-.bg-primary {
-  border-color: darken($primary, 5%);
-}
+  &.bg-primary {
+    border-color: darken($primary, 5%);
+  }
 
-.bg-dark {
-  background-color: $gray-200 !important;
-  border-color: darken($gray-200, 5%);
-}
+  &.bg-dark {
+    background-color: $gray-200 !important;
+    border-color: darken($gray-200, 5%);
+  }
 
-.bg-light {
-  background-color: #fff !important;
-  border-color: darken(#fff, 5%);
-}
-
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-300;
+  &.bg-light {
+    background-color: #fff !important;
+    border-color: darken(#fff, 5%);
+  }
 }
 
 // Buttons =====================================================================
-
 .btn {
   @include shadow();
   font-size: 12px;
@@ -118,15 +110,12 @@ footer.main-footer {
 }
 
 // Typography ==================================================================
-
 .blockquote-footer {
   color: $gray-600;
 }
 
 // Tables ======================================================================
-
 .table {
-
   &-success,
   &-info,
   &-warning,
@@ -164,7 +153,6 @@ footer.main-footer {
   }
 
   &-hover {
-
     .table-success:hover {
       &, > th, > td {
         background-color: darken($success, 5%);
@@ -193,13 +181,11 @@ footer.main-footer {
 }
 
 // Forms =======================================================================
-
 .form-control {
   box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.075);
 }
 
 // Navs ========================================================================
-
 .nav {
   .open > a,
   .open > a:hover,
@@ -209,7 +195,6 @@ footer.main-footer {
 }
 
 .nav-tabs {
-
   .nav-link {
     color: $body-color;
 
@@ -247,7 +232,6 @@ footer.main-footer {
 }
 
 .pagination {
-
   > li > a,
   > li > span {
     position: relative;
@@ -273,7 +257,6 @@ footer.main-footer {
 
   > .disabled > a,
   > .disabled > span {
-
     &:hover {
       top: 0;
       @include shadow();
@@ -287,7 +270,6 @@ footer.main-footer {
 }
 
 .pager {
-
   > li > a,
   > li > span,
   > .disabled > a,
@@ -303,7 +285,6 @@ footer.main-footer {
 }
 
 // Indicators ==================================================================
-
 .close {
   text-decoration: none;
   opacity: 0.4;
@@ -355,9 +336,7 @@ footer.main-footer {
 // Progress bars ===============================================================
 
 // Containers ==================================================================
-
 a.list-group-item {
-
   &-success {
     &.active {
       background-color: $success;
@@ -373,7 +352,7 @@ a.list-group-item {
     &.active {
       background-color: $warning;
     }
-    
+
     &.active:hover,
     &.active:focus {
       background-color: darken($warning, 5%);
@@ -384,7 +363,7 @@ a.list-group-item {
     &.active {
       background-color: $danger;
     }
-    
+
     &.active:hover,
     &.active:focus {
       background-color: darken($danger, 5%);
@@ -393,7 +372,6 @@ a.list-group-item {
 }
 
 .card {
-
   &.bg-dark {
     background-color: $gray-700 !important;
   }
@@ -405,7 +383,6 @@ a.list-group-item {
 }
 
 .modal {
-
   .close {
     color: $black;
   }

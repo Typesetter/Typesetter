@@ -1,49 +1,39 @@
+// Theme Bootswatch 4 Scss
+// Layout Litera 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Litera 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-// Variables ===================================================================
-
-$web-font-path: "https://fonts.googleapis.com/css?family=Raleway:400,700" !default;
-@import url($web-font-path);
-$font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif !default;
+// Variables and Mixins =========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
 // Navbar =======================================================================
-
 .navbar {
   font-size: 0.875em;
-}
+  &.bg-dark {
+    background-color: $success !important;
+  }
 
-.bg-dark {
-  background-color: $success !important;
-}
+  &.bg-light {
+    background-color: #fff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
 
-.bg-light {
-  background-color: #fff !important;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-
-  &.navbar-fixed-top {
+  &.fixed-top {
     border-width: 0 0 1px 0;
   }
 
-  &.navbar-fixed-bottom {
+  &.fixed-bottom {
     border-width: 1px 0 0 0;
   }
 }
 
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-400;
-}
-
 // Buttons =====================================================================
-
 .btn {
   border-radius: 1.078em;
   font-family: $font-family-sans-serif;
@@ -67,7 +57,6 @@ footer.main-footer {
 }
 
 // Typography ==================================================================
-
 p {
   font-family: $font-family-serif;
 }
@@ -86,7 +75,6 @@ footer {
 }
 
 // Tables ======================================================================
-
 table,
 .table {
   font-size: 0.875em;
@@ -100,7 +88,6 @@ table,
 }
 
 .table {
-
   &-success {
     &, > th, > td {
       background-color: $success;
@@ -126,7 +113,6 @@ table,
   }
 
   &-hover {
-
     .table-success:hover {
       &, > th, > td {
         background-color: darken($success, 5%);
@@ -157,7 +143,6 @@ table,
 // Forms =======================================================================
 
 // Navs ========================================================================
-
 .nav,
 .breadcrumb,
 .pagination {
@@ -169,7 +154,6 @@ table,
 }
 
 // Indicators ==================================================================
-
 .alert {
   border: none;
   color: $white;
@@ -208,7 +192,6 @@ table,
 // Progress bars ===============================================================
 
 // Containers ==================================================================
-
 .list-group {
   font-size: 0.875em;
 }

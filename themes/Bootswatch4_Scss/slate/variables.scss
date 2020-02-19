@@ -1,158 +1,128 @@
-// Slate 4.0.0
-// Bootswatch
-
-@import '../_common/common_variables.scss';
-
+// Theme Bootswatch 4 Scss
+// Layout Slate 4.0.0
 //
+// For all Bootstrap 4 variables see /include/thirdparty/Bootstrap4/scss/bootstrap/_variables.scss
+
 // Color system
-//
+$white:     #fff;
+$gray-100:  #f8f9fa;
+$gray-200:  #e9ecef;
+$gray-300:  #dee2e6;
+$gray-400:  #ced4da;
+$gray-500:  #999;
+$gray-600:  #7A8288;
+$gray-700:  #52575C;
+$gray-800:  #3A3F44;
+$gray-900:  #272B30;
+$black:     #000;
 
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #999 !default;
-$gray-600: #7A8288 !default;
-$gray-700: #52575C !default;
-$gray-800: #3A3F44 !default;
-$gray-900: #272B30 !default;
-$black:    #000 !default;
+$blue:      #007bff;
+$indigo:    #6610f2;
+$purple:    #6f42c1;
+$pink:      #e83e8c;
+$red:       #ee5f5b;
+$orange:    #fd7e14;
+$yellow:    #f89406;
+$green:     #62c462;
+$teal:      #20c997;
+$cyan:      #5bc0de;
 
-$blue:    #007bff !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #ee5f5b !default;
-$orange:  #fd7e14 !default;
-$yellow:  #f89406 !default;
-$green:   #62c462 !default;
-$teal:    #20c997 !default;
-$cyan:    #5bc0de !default;
-
-$primary:       $gray-800 !default;
-$secondary:     $gray-600 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-200 !default;
-$dark:          $gray-900 !default;
+$primary:   $gray-800;
+$secondary: $gray-600;
+$success:   $green;
+$info:      $cyan;
+$warning:   $yellow;
+$danger:    $red;
+$light:     $gray-200;
+$dark:      $gray-900;
 
 // Body
-
-$body-bg:                   $gray-900 !default;
-$body-color:                #aaa !default;
+$body-bg: $gray-900;
+$body-color: #aaa;
 
 // Links
-
-$link-color:                $white !default;
+$link-color: $white;
 
 // Fonts
-
-$font-size-base:              0.9375rem !default;
+$font-size-base: 0.9375rem;
 
 // Tables
-
-$table-accent-bg:             rgba($white,.05) !default;
-$table-hover-bg:              rgba($white,.075) !default;
-
-$table-border-color:          rgba($black,.6) !default;
-
-$table-dark-border-color:     $table-border-color !default;
-$table-dark-color:            $white !default;
+$table-accent-bg: rgba($white, 0.05);
+$table-hover-bg: rgba($white, 0.075);
+$table-border-color: rgba($black, 0.6);
+$table-dark-border-color: $table-border-color;
+$table-dark-color: $white;
 
 // Buttons
-
-$input-btn-padding-y:         .75rem !default;
-$input-btn-padding-x:         1rem !default;
+$input-btn-padding-y: 0.75rem;
+$input-btn-padding-x: 1rem;
 
 // Forms
-
-$input-disabled-bg:                     #ccc !default;
+$input-disabled-bg: #ccc;
 
 // Dropdowns
-
-$dropdown-bg:                       $gray-800 !default;
-$dropdown-divider-bg:               rgba($black,.15) !default;
-
-$dropdown-link-color:               $body-color !default;
-$dropdown-link-hover-color:         $white !default;
-$dropdown-link-hover-bg:            $body-bg !default;
+$dropdown-bg: $gray-800;
+$dropdown-divider-bg: rgba($black, 0.15);
+$dropdown-link-color: $body-color;
+$dropdown-link-hover-color: $white;
+$dropdown-link-hover-bg: $body-bg;
 
 // Navs
-
-$nav-tabs-border-color:             rgba($black, 0.6) !default;
-$nav-tabs-link-hover-border-color:  $nav-tabs-border-color !default;
-$nav-tabs-link-active-color:        $white !default;
-$nav-tabs-link-active-border-color: $nav-tabs-border-color !default;
+$nav-tabs-border-color: rgba($black, 0.6);
+$nav-tabs-link-hover-border-color: $nav-tabs-border-color;
+$nav-tabs-link-active-color: $white;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color;
 
 // Navbar
-
-$navbar-padding-y:                  0 !default;
-
-$navbar-dark-hover-color:           $white !default;
-
-$navbar-light-hover-color:          $gray-800 !default;
-$navbar-light-active-color:         $gray-800 !default;
-
+$navbar-padding-y: 0;
+$navbar-dark-hover-color: $white;
+$navbar-light-hover-color: $gray-800;
+$navbar-light-active-color: $gray-800;
 
 // Pagination
-
-$pagination-color:                  $white !default;
-$pagination-bg:                     transparent !default;
-$pagination-border-color:           rgba($black, 0.6) !default;
-
-$pagination-hover-color:            $white !default;
-$pagination-hover-bg:               transparent !default;
-$pagination-hover-border-color:     rgba($black, 0.6) !default;
-
-$pagination-active-bg:              transparent !default;
-$pagination-active-border-color:    rgba($black, 0.6) !default;
-
-$pagination-disabled-bg:            transparent !default;
-$pagination-disabled-border-color:  rgba($black, 0.6) !default;
-
+$pagination-color: $white;
+$pagination-bg: transparent;
+$pagination-border-color: rgba($black, 0.6);
+$pagination-hover-color: $white;
+$pagination-hover-bg: transparent;
+$pagination-hover-border-color: rgba($black, 0.6);
+$pagination-active-bg: transparent;
+$pagination-active-border-color: rgba($black, 0.6);
+$pagination-disabled-bg: transparent;
+$pagination-disabled-border-color: rgba($black, 0.6);
 
 // Jumbotron
-
-$jumbotron-bg:                      darken($gray-900, 5%) !default;
+$jumbotron-bg: darken($gray-900, 5%);
 
 // Cards
-
-$card-border-color:                 rgba($black, 0.6) !default;
-$card-cap-bg:                       lighten($gray-800, 10%) !default;
-$card-bg:                           lighten($body-bg, 5%) !default;
+$card-border-color: rgba($black, 0.6);
+$card-cap-bg: lighten($gray-800, 10%);
+$card-bg: lighten($body-bg, 5%);
 
 // Popovers
-
-$popover-bg:                        lighten($body-bg, 5%) !default;
+$popover-bg: lighten($body-bg, 5%);
 
 // Modals
-
-$modal-content-bg:                  lighten($body-bg, 5%) !default;
-
-$modal-header-border-color:         rgba(0,0,0,.2) !default;
+$modal-content-bg: lighten($body-bg, 5%);
+$modal-header-border-color: rgba(0, 0, 0, 0.2);
 
 // Progress bars
-
-$progress-bg:                       darken($gray-900, 5%) !default;
-$progress-bar-color:                $gray-600 !default;
+$progress-bg: darken($gray-900, 5%);
+$progress-bar-color: $gray-600;
 
 // List group
-
-$list-group-bg:                     lighten($body-bg, 5%) !default;
-$list-group-border-color:           rgba($black, 0.6) !default;
-
-$list-group-hover-bg:               lighten($body-bg, 10%) !default;
-$list-group-active-color:           $white !default;
-$list-group-active-bg:              $list-group-hover-bg !default;
-$list-group-active-border-color:    $list-group-border-color !default;
-
-$list-group-disabled-color:         $gray-700 !default;
-
-$list-group-action-color:           $white !default;
+$list-group-bg: lighten($body-bg, 5%);
+$list-group-border-color: rgba($black, 0.6);
+$list-group-hover-bg: lighten($body-bg, 10%);
+$list-group-active-color: $white;
+$list-group-active-bg: $list-group-hover-bg;
+$list-group-active-border-color: $list-group-border-color;
+$list-group-disabled-color: $gray-700;
+$list-group-action-color: $white;
 
 // Breadcrumbs
+$breadcrumb-active-color: $gray-500;
 
-$breadcrumb-active-color:           $gray-500 !default;
+// Footer
+$footer-bg: $black;
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss

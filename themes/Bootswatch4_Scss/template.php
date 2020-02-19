@@ -1,8 +1,7 @@
 <?php
-
 /**
- * Bootswatch 4 Scss 4.4.1
- * Typesetter Theme Template
+ * Theme Bootswatch 4 Scss 4.4.1
+ * Typesetter CMS theme template
  * based on https://bootswatch.com
  *
  */
@@ -10,7 +9,7 @@
 global $page, $config;
 $path = $page->theme_dir . '/drop_down_menu.php';
 include_once($path);
-
+common::LoadComponents( 'bootstrap4-js,fontawesome' );
 $lang = isset($page->lang) ? $page->lang : $config['language'];
 
 /**
@@ -28,12 +27,8 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <?php
-      common::LoadComponents( 'bootstrap4-js,fontawesome' );
       gpOutput::GetHead();
     ?>
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!-- <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet"> -->
 
   </head>
   <body>
@@ -48,8 +43,7 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
         <div class="container">
 
           <?php
-            global $config;
-            echo common::Link('',$config['title'],'','class="navbar-brand"');
+            echo common::Link('', $config['title'], '', 'class="navbar-brand"');
           ?>
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,12 +54,13 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
           <div class="collapse navbar-collapse navbar-right" id="navbarResponsive">
             <?php
               $GP_ARRANGE = false;
+              // main nav classes
               $GP_MENU_CLASSES = array(
                 'menu_top'          => 'nav navbar-nav',
                 'selected'          => 'active',
                 'selected_li'       => '',
                 'childselected'     => 'active',
-                'childselected_li'  => 'active', // use '' if you don't want 1st-level nav items to indicate that a dropdown item is active
+                'childselected_li'  => 'active', // use '' if you do not want 1st-level nav items to indicate that a child item is active
                 'li_'               => 'nav-item nav-item-',
                 'li_title'          => '',
                 'haschildren'       => 'dropdown-toggle',
@@ -86,29 +81,49 @@ $lang = isset($page->lang) ? $page->lang : $config['language'];
       </div><!-- /.container-->
     </div><!-- /.main-content -->
 
-    <footer class="main-footer pt-5 pb-5 mt-3">
+    <footer class="main-footer pt-5 pb-5 mt-5">
       <div class="container">
+
+        <?php
+          // possible footer nav classes
+          $GP_MENU_CLASSES = array(
+            'menu_top'          => 'footer-nav',
+            'selected'          => 'active',
+            'selected_li'       => '',
+            'childselected'     => 'active',
+            'childselected_li'  => 'active',
+            'li_'               => 'li-',
+            'li_title'          => '',
+            'haschildren'       => 'subitem-link',
+            'haschildren_li'    => 'subitem',
+            'child_ul'          => 'subitem-menu',
+          );
+        ?>
+
         <div class="row">
           <div class="col-sm-6 col-lg-3 footer-column footer-column-1">
-              <?php gpOutput::Get('Extra', 'Footer_Column_1'); ?>
+            <?php gpOutput::Get('Extra', 'Footer_Column_1'); ?>
           </div>
+
           <div class="col-sm-6 col-lg-3 footer-column footer-column-2">
-              <?php gpOutput::Get('Extra', 'Footer_Column_2'); ?>
+            <?php gpOutput::Get('Extra', 'Footer_Column_2'); ?>
           </div>
+
           <div class="col-sm-6 col-lg-3 footer-column footer-column-3">
-              <?php gpOutput::Get('Extra', 'Footer_Column_3'); ?>
+            <?php gpOutput::Get('Extra', 'Footer_Column_3'); ?>
           </div>
+
           <div class="col-sm-6 col-lg-3 footer-column footer-column-4">
-              <?php gpOutput::Get('Extra', 'Footer_Column_4'); ?>
+            <?php gpOutput::Get('Extra', 'Footer_Column_4'); ?>
           </div>
         </div><!-- /.row -->
-
 
         <div class="row">
-          <div class="col footer-admin-links">
-              <?php gpOutput::GetAdminLink(); ?>
+          <div class="col-12 footer-bottom">
+            <?php gpOutput::GetAdminLink(); ?>
           </div>
         </div><!-- /.row -->
+
       </div><!-- /.container -->
     </footer><!-- /.main-footer -->
   </body>

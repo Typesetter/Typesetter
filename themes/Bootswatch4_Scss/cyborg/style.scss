@@ -1,23 +1,19 @@
+// Theme Bootswatch 4 Scss
+// Layout Cyborg 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Cyborg 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-// Variables ===================================================================
-
-$web-font-path: "https://fonts.googleapis.com/css?family=Roboto:400,700" !default;
-@import url($web-font-path);
-
+// Variables and Mixins =========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
 // Navbar =======================================================================
-
 .navbar {
-
   &.bg-primary {
     border: 1px solid $gray-700;
   }
@@ -38,18 +34,10 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Roboto:400,700" !defaul
   &.fixed-bottom {
     border-width: 1px 0 0 0;
   }
-
-}
-
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-900;
 }
 
 // Buttons =====================================================================
-
 .btn {
-
   &-warning,
   &-warning:hover {
     color: $white;
@@ -59,12 +47,8 @@ footer.main-footer {
 // Typography ==================================================================
 
 // Tables ======================================================================
-
 table {
   color: #fff;
-}
-
-.table {
 
   .thead-dark th {
     color: $white;
@@ -95,7 +79,6 @@ table {
   }
 
   &-hover {
-
     .table-success:hover {
       &, > th, > td {
         background-color: darken($success, 5%);
@@ -123,15 +106,13 @@ table {
   }
 }
 
-// Forms =======================================================================
-
+// Forms =====================================================================
 legend,
 .input-group-addon {
   color: #fff;
 }
 
-// Navs ========================================================================
-
+// Navs ======================================================================
 .nav-tabs,
 .nav-pills {
   .nav-link {
@@ -165,8 +146,7 @@ legend,
   }
 }
 
-// Indicators ==================================================================
-
+// Indicators ================================================================
 .alert {
   border: none;
   color: $white;
@@ -201,7 +181,6 @@ legend,
 // Progress bars ===============================================================
 
 // Containers ==================================================================
-
 .list-group-item {
   &:hover {
     background-color: $gray-700;

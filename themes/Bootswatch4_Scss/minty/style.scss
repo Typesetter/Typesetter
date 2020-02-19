@@ -1,41 +1,31 @@
+// Theme Bootswatch 4 Scss
+// Layout Minty 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Minty 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-
-// Variables ===================================================================
-
-$web-font-path: "https://fonts.googleapis.com/css?family=Montserrat" !default;
-@import url($web-font-path);
-
+// Variables and Mixins =========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
 // Navbar =======================================================================
-
 .navbar {
   font-family: $headings-font-family;
-}
 
-.bg-dark {
-  background-color: $secondary !important;
-}
+  &.bg-dark {
+    background-color: $secondary !important;
+  }
 
-.border-dark {
-  border-color: $secondary !important;
-}
-
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-400;
+  &.border-dark {
+    border-color: $secondary !important;
+  }
 }
 
 // Buttons =====================================================================
-
 .btn {
   font-family: $headings-font-family;
 
@@ -89,9 +79,7 @@ footer.main-footer {
 // Typography ==================================================================
 
 // Tables ======================================================================
-
 .table {
-
   &-success,
   &-info,
   &-warning,
@@ -124,7 +112,6 @@ footer.main-footer {
   }
 
   &-hover {
-
     .table-success:hover {
       &, > th, > td {
         background-color: darken($success, 5%);
@@ -158,13 +145,11 @@ footer.main-footer {
 }
 
 // Forms =======================================================================
-
 legend {
   font-family: $headings-font-family;
 }
 
 // Navs ========================================================================
-
 .dropdown-menu {
   font-family: $font-family-sans-serif;
 }
@@ -181,7 +166,6 @@ legend {
 }
 
 // Indicators ==================================================================
-
 .alert {
   color: $white;
 
@@ -230,7 +214,6 @@ legend {
 // Progress bars ===============================================================
 
 // Containers ==================================================================
-
 .card,
 .list-group-item {
   h1, h2, h3, h4, h5, h6 {

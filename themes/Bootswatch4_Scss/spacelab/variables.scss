@@ -1,63 +1,61 @@
-// Spacelab 4.0.0
-// Bootswatch
-
-@import '../_common/common_variables.scss';
-
+// Theme Bootswatch 4 Scss
+// Layout Spacelab 4.0.0
 //
+// For all Bootstrap 4 variables see /include/thirdparty/Bootstrap4/scss/bootstrap/_variables.scss
+
+
 // Color system
-//
+$white:     #fff;
+$gray-100:  #f8f9fa;
+$gray-200:  #eee;
+$gray-300:  #dee2e6;
+$gray-400:  #ced4da;
+$gray-500:  #999;
+$gray-600:  #777;
+$gray-700:  #495057;
+$gray-800:  #333;
+$gray-900:  #2d2d2d;
+$black:     #000;
 
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #eee !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #999 !default;
-$gray-600: #777 !default;
-$gray-700: #495057 !default;
-$gray-800: #333 !default;
-$gray-900: #2d2d2d !default;
-$black:    #000 !default;
+$blue:      #446E9B;
+$indigo:    #6610f2;
+$purple:    #6f42c1;
+$pink:      #e83e8c;
+$red:       #CD0200;
+$orange:    #fd7e14;
+$yellow:    #D47500;
+$green:     #3CB521;
+$teal:      #20c997;
+$cyan:      #3399F3;
 
-$blue:    #446E9B !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #CD0200 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #D47500 !default;
-$green:   #3CB521 !default;
-$teal:    #20c997 !default;
-$cyan:    #3399F3 !default;
-
-$primary:       $blue !default;
-$secondary:     $gray-500 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-100 !default;
-$dark:          $gray-800 !default;
+$primary:   $blue;
+$secondary: $gray-500;
+$success:   $green;
+$info:      $cyan;
+$warning:   $yellow;
+$danger:    $red;
+$light:     $gray-100;
+$dark:      $gray-800;
 
 // Body
-
-$body-color:                $gray-600 !default;
+$body-color: $gray-600;
 
 // Links
-
-$link-color:                $info !default;
+$link-color: $info;
 
 // Fonts
-
-$font-family-sans-serif:      "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-
-$headings-color:              $gray-900 !default;
+$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700";
+$font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$headings-color: $gray-900;
 
 // Navbar
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
+$navbar-light-color: rgba($black, 0.4);
+$navbar-light-hover-color: $info;
+$navbar-light-active-color: $info;
 
-$navbar-dark-color:                 rgba($white,.75) !default;
-$navbar-dark-hover-color:           $white !default;
+// Footer
+$footer-bg: $gray-300;
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss
 
-$navbar-light-color:                rgba($black,.4) !default;
-$navbar-light-hover-color:          $info !default;
-$navbar-light-active-color:         $info !default;

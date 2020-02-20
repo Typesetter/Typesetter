@@ -111,7 +111,7 @@ class Text extends \gp\admin\Layout{
 		echo '<div class="inline_box">';
 		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Text').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="savetext" />';
-		echo '<input type="hidden" name="key" value="'.$value.'" />';
+		echo '<input type="hidden" name="key" value="'.$key.'" />';
 
 		echo '<table class="bordered">';
 		echo '<tr><th>';

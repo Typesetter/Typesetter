@@ -695,6 +695,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	padding-top: 20px; // spare space for close button when there is an y-scrollbar
 	transform: translateX(-50%);
 	@include box-shadow( 0 0 6px rgba(0, 0, 0, 0.4) );
+	max-height: calc(100vh - 100px);
 	overflow: auto;
 }
 #gp_admin_boxc {
@@ -715,6 +716,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 @media (max-width:768px) {
 	#gp_admin_box {
 		top: 15px;
+		max-height: calc(100vh - 70px);
 	}
 	#gp_admin_boxc {
 		max-height: calc(100vh - 95px);

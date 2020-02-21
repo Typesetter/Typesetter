@@ -187,7 +187,8 @@ class Edit extends \gp\admin\Layout{
 		//CSS Editing
 		ob_start();
 		echo '<div id="theme_editor">';
-		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" method="post" class="gp_scroll_area full_height" target="gp_layout_iframe">';
+		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$this->curr_layout,'cmd=in_iframe').'" ';
+		echo 'method="post" class="gp_scroll_area full_height" target="gp_layout_iframe">';
 		echo '<table border="0">';
 		echo '<tr><td>';
 
@@ -874,7 +875,7 @@ class Edit extends \gp\admin\Layout{
 			$this->CustomMenuForm($menu_args);
 
 			echo '<tr><td class="add" colspan="2">';
-			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpsubmit">'.$langmessage['save'].'</button>';
+			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpajax gpsubmit">'.$langmessage['save'].'</button>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 			echo '</td></tr>';
 			echo '</table>';

@@ -112,22 +112,23 @@ class Text extends \gp\admin\Layout{
 		echo '<input type="hidden" name="cmd" value="savetext" />';
 		echo '<input type="hidden" name="key" value="'.$key.'" />';
 
-		echo '<table class="bordered">';
+		echo '<table class="bordered" style="width: 100%;">';
 		echo '<tr><th>';
 		echo $langmessage['default'];
 		echo '</th><th>';
+		echo $langmessage['edit'];
 		echo '</th></tr>';
 		echo '<tr><td>';
 		echo $default;
 		echo '</td><td>';
 		//$value is already escaped using htmlspecialchars()
-		echo '<input type="text" name="value" value="'.$value.'" class="gpinput"/>';
+		echo '<input type="text" name="value" value="'.$value.'" class="gpinput" style="width: 100%;"/>';
+		echo '</td></tr>';
+		echo '</table>';
 		echo '<p>';
 		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" data-cmd="gpajax" class="gpsubmit"/>';
 		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 		echo '</p>';
-		echo '</td></tr>';
-		echo '</table>';
 
 		echo '</form>';
 		echo '</div>';

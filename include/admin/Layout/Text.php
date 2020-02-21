@@ -15,7 +15,6 @@ class Text extends \gp\admin\Layout{
 		$this->cmds['AddonTextForm']			= '';
 		$this->cmds['SaveAddonText']			= 'ReturnHeader';
 
-
 		$cmd = \gp\tool::GetCommand();
 		$this->RunCommands($cmd);
 	}
@@ -124,7 +123,7 @@ class Text extends \gp\admin\Layout{
 		//$value is already escaped using htmlspecialchars()
 		echo '<input type="text" name="value" value="'.$value.'" class="gpinput"/>';
 		echo '<p>';
-		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
+		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" data-cmd="gpajax" class="gpsubmit"/>';
 		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 		echo '</p>';
 		echo '</td></tr>';

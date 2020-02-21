@@ -676,9 +676,15 @@
 			return;
 		}
 
+		var $lnk = $('#ExtraEditLink' + area_id);
+
+		if( $lnk.attr('data-cmd') == 'gpabox' ){
+			// legacy gpArea
+			return;
+		}
+
 		evt.stopImmediatePropagation(); //don't check if we need to swith back to the section manager
 
-		var $lnk = $('#ExtraEditLink' + area_id);
 		var arg = $lnk.data('arg');
 		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
 

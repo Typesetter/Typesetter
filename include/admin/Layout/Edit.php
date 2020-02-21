@@ -855,7 +855,7 @@ class Edit extends \gp\admin\Layout{
 			$this->PresetMenuForm($menu_args);
 
 			echo '<tr><td class="add" colspan="2">';
-			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpajax gpsubmit">'.$langmessage['save'].'</button>';
+			echo '<button type="submit" name="cmd" value="LayoutMenuSave" data-cmd="gpajax" class="gpsubmit">'.$langmessage['save'].'</button>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 			echo '</td></tr>';
 			echo '</table>';
@@ -875,7 +875,7 @@ class Edit extends \gp\admin\Layout{
 			$this->CustomMenuForm($menu_args);
 
 			echo '<tr><td class="add" colspan="2">';
-			echo '<button type="submit" name="cmd" value="LayoutMenuSave" class="gpajax gpsubmit">'.$langmessage['save'].'</button>';
+			echo '<button type="submit" name="cmd" value="LayoutMenuSave" data-cmd="gpajax" class="gpsubmit">'.$langmessage['save'].'</button>';
 			echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
 			echo '</td></tr>';
 			echo '</table>';

@@ -274,6 +274,8 @@ namespace gp\Page{
 				if( empty($title_info[$key]) ){
 					unset($title_info[$key]);
 				}
+			} else {
+				unset($title_info[$key]);
 			}
 		}
 

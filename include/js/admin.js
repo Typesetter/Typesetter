@@ -1471,10 +1471,10 @@ $gp.response.renameprep = function(){
 
 		if( vis.length ){
 			if( vis.hasClass('slug_edit') ){
-				td.find('input').addClass('sync_label').prop('disabled',true).fadeTo(400,0.6);
+				td.find('input').addClass('sync_label').prop('readonly',true).fadeTo(400,0.6);
 				SyncSlug();
 			}else{
-				td.find('input').removeClass('sync_label').prop('disabled',false).fadeTo(400,1);
+				td.find('input').removeClass('sync_label').prop('readonly',false).fadeTo(400,1);
 			}
 		}
 	}

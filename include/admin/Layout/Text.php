@@ -112,7 +112,7 @@ class Text extends \gp\admin\Layout{
 		echo '<input type="hidden" name="cmd" value="savetext" />';
 		echo '<input type="hidden" name="key" value="'.$key.'" />';
 
-		echo '<table class="bordered" style="width: 100%;">';
+		echo '<table class="bordered full_width">';
 		echo '<tr><th>';
 		echo $langmessage['default'];
 		echo '</th><th>';
@@ -122,7 +122,7 @@ class Text extends \gp\admin\Layout{
 		echo $default;
 		echo '</td><td>';
 		//$value is already escaped using htmlspecialchars()
-		echo '<input type="text" name="value" value="'.$value.'" class="gpinput" style="width: 100%;"/>';
+		echo '<input type="text" name="value" value="'.$value.'" class="gpinput full_width"/>';
 		echo '</td></tr>';
 		echo '</table>';
 		echo '<p>';

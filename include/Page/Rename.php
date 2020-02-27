@@ -89,7 +89,7 @@ namespace gp\Page{
 
 			if( empty($title_info['browser_title']) ){
 				$browser_title = htmlspecialchars($label);
-				$attr = 'disabled="disabled" ';
+				$attr = 'readonly="readonly" ';
 				$class .= ' sync_label';
 			}
 

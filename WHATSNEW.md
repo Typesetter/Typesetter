@@ -1,5 +1,10 @@
 ### New in Typesetter CMS 5.2 (release pending) ###
 
+## New System Requirements ##
+
+**PHP 5.6 - 7.4:** Typesetter 5.2 officially requires at least PHP 5.6 and has been tested up to PHP 7.4. PHP 5.4 might still work but we decided to stop testing it during development. PHP 5.3 is definitely no longer supported.
+
+
 ## Thirdparty Components and Libraries ##
 
 * Bootstrap 4: Typesetter now adds support for Bootstrap 4.4.1 and ships the 'Bootswatch 4 Scss' theme. There is also a new Bootstrap 4 preset loadable for 'Available Classes'. But no worries, Bootstrap 3 and all its Bootswatch themes are still there.

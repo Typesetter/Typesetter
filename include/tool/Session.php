@@ -695,6 +695,8 @@ class Session{
 			'Dismiss Draft'				=>	'DismissDraft',
 			'Select Image'				=>	'SelectImage',
 			'edit'						=>	'edit',
+			'Expand Editor'				=>	'ExpandEditor',
+			'Shrink Editor'				=>	'ShrinkEditor',
 			'options'					=>	'options',
 			'Copy'						=>	'Copy',
 			'Copy to Clipboard'			=>	'CopyToClipboard',
@@ -814,6 +816,7 @@ class Session{
 			'gpui_ty'		=> 39,
 			'gpui_ckx'		=> 20,
 			'gpui_cky'		=> 240,
+			'gpui_exp'		=> 1,
 			'gpui_vis'		=> 'cur',
 			'gpui_thw'		=> 250,
 		);

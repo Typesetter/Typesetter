@@ -196,26 +196,26 @@ namespace gp\admin\Settings{
 
 			$possible = array();
 
-			$possible['gpui_cmpct']	= 'integer';
-			$possible['gpui_vis']	= array(
-				'con'=>'con',
-				'cur'=>'cur',
-				'app'=>'app',
-				'add'=>'add',
-				'set'=>'set',
-				'use'=>'use',
-				'cms'=>'cms',
-				'res'=>'res',
-				'tool'=>'tool',
-				'notifications'=>'notifications',
-				'false'=>false
-			);
-
-			$possible['gpui_tx']	= 'integer';
-			$possible['gpui_ty']	= 'integer';
-			$possible['gpui_ckx']	= 'integer';
-			$possible['gpui_cky']	= 'integer';
-			$possible['gpui_thw']	= 'integer';
+			$possible['gpui_cmpct']			= 'integer';
+			$possible['gpui_vis']	= [
+				'con'			=> 'con',
+				'cur'			=> 'cur',
+				'app'			=> 'app',
+				'add'			=> 'add',
+				'set'			=> 'set',
+				'use'			=> 'use',
+				'cms'			=> 'cms',
+				'res'			=> 'res',
+				'tool'			=> 'tool',
+				'notifications'	=> 'notifications', // since 5.2
+				'false'			=> false,
+			];
+			$possible['gpui_tx']			= 'integer';
+			$possible['gpui_ty']			= 'integer';
+			$possible['gpui_ckx']			= 'integer';
+			$possible['gpui_cky']			= 'integer';
+			$possible['gpui_exp']			= 'integer';	// editor expanded, since 5.2
+			$possible['gpui_thw']			= 'integer';
 
 			foreach($possible as $key => $key_possible){
 
@@ -242,17 +242,19 @@ namespace gp\admin\Settings{
 			}
 
 			//remove gpui_ settings no longer in $possible
-			unset($gpAdmin['gpui_pdock']);
-			unset($gpAdmin['gpui_con']);
-			unset($gpAdmin['gpui_cur']);
-			unset($gpAdmin['gpui_app']);
-			unset($gpAdmin['gpui_add']);
-			unset($gpAdmin['gpui_set']);
-			unset($gpAdmin['gpui_upd']);
-			unset($gpAdmin['gpui_use']);
-			unset($gpAdmin['gpui_edb']);
-			unset($gpAdmin['gpui_brdis']);	//3.5
-			unset($gpAdmin['gpui_ctx']);	//5.0
+			unset(
+				$gpAdmin['gpui_pdock'],
+				$gpAdmin['gpui_con'],
+				$gpAdmin['gpui_cur'],
+				$gpAdmin['gpui_app'],
+				$gpAdmin['gpui_add'],
+				$gpAdmin['gpui_set'],
+				$gpAdmin['gpui_upd'],
+				$gpAdmin['gpui_use'],
+				$gpAdmin['gpui_edb'],
+				$gpAdmin['gpui_brdis'],	// 3.5
+				$gpAdmin['gpui_ctx']	// 5.0
+			);
 
 			//send response so an error is not thrown
 			echo \gp\tool\Output\Ajax::Callback().'([]);';

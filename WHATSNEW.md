@@ -64,7 +64,7 @@
 * LoadComponents: \gp\tool::LoadComponents() is now more robust and also accepts CSV strings with spaces and arrays.
 * Error management: Catching and reporting of fatal errors was improved for better debugging and stability.
 * CSS source mapping for LESS and Scss: We added the configuration constant 'create_css_sourcemaps' to gpconfig.php for better CSS debugging during theme (or plugin) development. Note: When set to true, CSS combination is prevented, regardless of whether it is activated via configuration.
-* JavaScript events: Besides 'SectionAdded', 'SectionRemoved' and 'SectionSorted' there is now a 'SectionCopied' JS event. Typesetter now also fires a 'section_options:closed' event (we already had 'section_options:loaded' before).
+* JavaScript events: Besides 'SectionAdded', 'SectionRemoved' and 'SectionSorted' there is now a 'SectionCopied' JS event. Typesetter now also fires a 'section_options:closed' event (we already had 'section_options:loaded' before). Furthermore, there is now 'editor:loaded' which is triggered everytime a section editor is loaded or re-activated. This event contains additional data of the loaded editor and corresponding section.
 
 
 ## New Plugin Hooks ###

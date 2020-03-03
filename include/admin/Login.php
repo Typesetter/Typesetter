@@ -175,7 +175,7 @@ class Login extends \gp\Page{
 	public function JavascriptWarning(){
 		global $langmessage;
 
-		echo '<div class="without_script" id="javascript_warning">';
+		echo '<div class="without_script" id="javascript_warning" style="opacity:0">';
 		echo '<p><b>'.$langmessage['JAVASCRIPT_REQ'].'</b></p>';
 		echo '<p>';
 		echo $langmessage['INCOMPAT_BROWSER'];

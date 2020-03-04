@@ -1784,9 +1784,6 @@ namespace gp{
 				'hotkey_hint'		=> '',
 			];
 
-			if( !empty($config['admin_ui_hotkey']) ){
-				$cfg['hotkey_hint'] = htmlspecialchars($config['admin_ui_hotkey']);
-			}
 			if( !empty($config['admin_ui_autohide_below']) &&
 				is_numeric($config['admin_ui_autohide_below'])
 				){
@@ -1802,7 +1799,8 @@ namespace gp{
 				if( strpos($config['admin_ui_hotkey'], 'Alt') !== false ){
 					$cfg['hotkey_modifiers'][] = 'altKey';
 				}
-				$cfg['hotkey'] = substr(trim($config['admin_ui_hotkey']), -1);
+				$cfg['hotkey_hint']	= $config['admin_ui_hotkey'];
+				$cfg['hotkey']		= mb_substr(trim($config['admin_ui_hotkey']), -1);
 			}
 
 			return $cfg;

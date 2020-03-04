@@ -1239,7 +1239,6 @@ $(function(){
 			},1);
 		});
 
-
 	}
 
 
@@ -1259,6 +1258,7 @@ $(function(){
 		});
 	});
 
+
 	/**
 	 * Configuration -> Settings
 	 * Disable minifyjs when combinejs is unchecked
@@ -1273,7 +1273,112 @@ $(function(){
 	CheckCombineJs();
 
 
-});
+	/**
+	 * Hide Admin UI
+	 * Configuration -> Settings
+	 * input capture hotkey combination
+	 */
+	$('#admin_ui_hotkey').on('focus', function(){
+			$(this).select();
+		}).on('keydown', function(evt){
+			var key_stroke = $.inArray(evt.key, ['Control', 'Shift', 'Alt', 'AltGraph', 'Meta']) != -1 ? '' : evt.key;
+			// console.log('key_stroke = ' + key_stroke);
+			var key_combo =
+				(evt.ctrlKey  ? 'Ctrl + '  : '') +
+				(evt.shiftKey ? 'Shift + ' : '') +
+				(evt.altKey   ? 'Alt + '   : '') +
+				(evt.metaKey  ? 'Meta + '  : '') +
+				key_stroke;
+			if( evt.key == ' ' || evt.key == 'Delete' || evt.key == 'Backspace' ){
+				key_combo = '';
+			}
+			$(this).val(key_combo);
+			evt.stopPropagation();
+			evt.preventDefault();
+
+		}).on('keyup', function(evt){
+			var input_val = $(this).val();
+			var has_modifier_key = /Ctrl|Shift|Alt|Meta/g.test(input_val);
+			if( input_val != '' && !has_modifier_key ){
+				$(this).val('');
+			}
+		});
+
+}); /* end onLoad */
+
+
+
+/**
+ * Hide Admin UI
+ *
+ */
+$gp.HideAdminUI = {
+
+	init: function(){
+
+		var hotkey_hint = '';
+		if( hideAdminUIcfg.hotkey_hint != '' ){
+			hotkey_hint = ' (' + hideAdminUIcfg.hotkey_hint + ')';
+		}
+		$('<div class="show-admin-ui" '
+			+ 'title="'	+ gplang.ShowAdminUI + hotkey_hint + '"'
+			+ '><i class="fa fa-user-circle"></i></div>')
+		.on('click', function(){
+			$gp.HideAdminUI.toggle(false);
+		}).appendTo('body');
+
+
+		if( hideAdminUIcfg.autohide_below ){
+			$gp.HideAdminUI.ww = $gp.$win.width();
+			$gp.$win.on('load', function(evt){
+				var ww = $gp.$win.width();
+				if( ww < hideAdminUIcfg.autohide_below ){
+					$gp.HideAdminUI.toggle(true);
+					$gp.HideAdminUI.ww = ww;
+				}
+			}).on('resize', function(evt){
+				var ww = $gp.$win.width();
+				var threshold = hideAdminUIcfg.autohide_below;
+				if( ww < threshold && $gp.HideAdminUI.ww >= threshold ){
+					$gp.HideAdminUI.toggle(true);
+					$gp.HideAdminUI.ww = ww;
+				}else if( ww >= threshold && $gp.HideAdminUI.ww < threshold ){
+					$gp.HideAdminUI.toggle(false);
+					$gp.HideAdminUI.ww = ww;
+				}
+			});
+		}
+
+		if( hideAdminUIcfg.hotkey != '' ){
+			$gp.$doc.on('keydown.hideAdminUI', function(evt){
+				var hotkey_modifiers_pressed = true;
+				$.each(hideAdminUIcfg.hotkey_modifiers, function(i, key){
+					if( !evt[key] ){
+						hotkey_modifiers_pressed = false;
+						return false;
+					}
+				});
+				if( hotkey_modifiers_pressed && evt.key == hideAdminUIcfg.hotkey ){
+					evt.preventDefault();
+					$gp.HideAdminUI.toggle();
+				}
+				if( evt.which == 27 ){ /* 27 [Esc] key always exits hidden state */
+					$gp.HideAdminUI.toggle(false);
+				}
+			});
+		}
+	},
+
+	toggle: function(show_hide){
+		if( typeof(show_hide) == 'boolean' ){
+			$("html").toggleClass("override_admin_style", show_hide);
+		}else{
+			$("html").toggleClass("override_admin_style");
+		}
+	},
+
+};
+
 
 
 /**
@@ -1295,7 +1400,9 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 	//dragging
 	$gp.$doc.off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
 
-		if( e.which != 1 ) return;
+		if( e.which != 1 ){
+			return;
+		}
 
 		var box, click_offsetx, click_offsety;
 		e.preventDefault();

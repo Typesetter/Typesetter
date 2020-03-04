@@ -621,7 +621,7 @@ $(function(){
 			case 'inline_box':
 				$gp.CopyVals(arg,this);
 				$(this).colorbox(
-					$gp.cboxSettings({inline:true,href:arg, open:true})
+					$gp.cboxSettings({inline:true, href:arg, open:true})
 				);
 			break;
 
@@ -632,14 +632,21 @@ $(function(){
 			case 'gpajax':
 				$gp.jGoTo(this.href,this);
 			break;
+
 			case 'creq':
 				$gp.cGoTo(this,true);
 			break;
+
 			case 'cnreq':
 				$gp.cGoTo(this,false);
 			break;
+
 			case 'close_message':
 				$this.closest('div').slideUp();
+			break;
+
+			case 'hide_ui':
+				$gp.HideAdminUI.toggle(true);
 			break;
 
 			default:

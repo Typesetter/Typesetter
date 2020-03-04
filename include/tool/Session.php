@@ -697,6 +697,8 @@ class Session{
 			'edit'						=>	'edit',
 			'Expand Editor'				=>	'ExpandEditor',
 			'Shrink Editor'				=>	'ShrinkEditor',
+			'Hide Admin UI'				=>	'HideAdminUI',
+			'Show Admin UI'				=>	'ShowAdminUI',
 			'options'					=>	'options',
 			'Copy'						=>	'Copy',
 			'Copy to Clipboard'			=>	'CopyToClipboard',

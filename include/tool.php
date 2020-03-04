@@ -1046,7 +1046,7 @@ namespace gp{
 				'gallery_legacy_style'		=> true,
 				'combinecss'				=> true,
 				'combinejs'					=> true,
-				'minifyjs'					=> false,		//5.1.1
+				'minifyjs'					=> false,		//5.2
 				'etag_headers'				=> true,
 				'customlang'				=> array(),
 				'showgplink'				=> true,
@@ -1062,8 +1062,10 @@ namespace gp{
 				'hooks'						=> array(),
 				'space_char'				=> '-',			//4.6
 				'cdn'						=> '',
+				'admin_ui_autohide_below'	=> '992',		//5.2
+				'admin_ui_hotkey'			=> 'Ctrl + h',	//5.2
 				'thumbskeepaspect'			=> false,
-				'homepath_auto'				=> true,		//5.1.1
+				'homepath_auto'				=> true,		//5.2
 			);
 
 			//cdn settings
@@ -1748,11 +1750,12 @@ namespace gp{
 
 			if( self::LoggedIn() ){
 
-				\gp\tool\Output::$inline_vars['isadmin']		= true;
-				\gp\tool\Output::$inline_vars['req_time']		= time();
-				\gp\tool\Output::$inline_vars['gpBLink']		= self::HrefEncode($linkPrefix, false);
-				\gp\tool\Output::$inline_vars['post_nonce']		= \gp\tool\Nonce::Create('post', true);
-				\gp\tool\Output::$inline_vars['gpFinderUrl']	= \gp\tool::GetUrl('Admin/Browser');
+				\gp\tool\Output::$inline_vars['isadmin']			= true;
+				\gp\tool\Output::$inline_vars['req_time']			= time();
+				\gp\tool\Output::$inline_vars['gpBLink']			= self::HrefEncode($linkPrefix, false);
+				\gp\tool\Output::$inline_vars['post_nonce']			= \gp\tool\Nonce::Create('post', true);
+				\gp\tool\Output::$inline_vars['gpFinderUrl']		= \gp\tool::GetUrl('Admin/Browser');
+				\gp\tool\Output::$inline_vars['hideAdminUIcfg']		= self::HideAdminUIcfg();
 
 				\gp\tool\Session::GPUIVars();
 			}
@@ -1764,6 +1767,46 @@ namespace gp{
 			echo ';';
 		}
 
+
+		/**
+		 * Get config values for hiding the admin UI
+		 *
+		 * @return array $cfg configuration values
+		 *
+		 */
+		public static function HideAdminUIcfg(){
+			global $config, $langmessage;
+
+			$cfg = [
+				'autohide_below'	=> 0,
+				'hotkey_modifiers'	=> [],
+				'hotkey'			=> '',
+				'hotkey_hint'		=> '',
+			];
+
+			if( !empty($config['admin_ui_hotkey']) ){
+				$cfg['hotkey_hint'] = htmlspecialchars($config['admin_ui_hotkey']);
+			}
+			if( !empty($config['admin_ui_autohide_below']) &&
+				is_numeric($config['admin_ui_autohide_below'])
+				){
+				$cfg['autohide_below'] = (int)$config['admin_ui_autohide_below'];
+			}
+			if( !empty($config['admin_ui_hotkey']) ){
+				if( strpos($config['admin_ui_hotkey'], 'Ctrl') !== false ){
+					$cfg['hotkey_modifiers'][] = 'ctrlKey';
+				}
+				if( strpos($config['admin_ui_hotkey'], 'Shift') !== false ){
+					$cfg['hotkey_modifiers'][] = 'shiftKey';
+				}
+				if( strpos($config['admin_ui_hotkey'], 'Alt') !== false ){
+					$cfg['hotkey_modifiers'][] = 'altKey';
+				}
+				$cfg['hotkey'] = substr(trim($config['admin_ui_hotkey']), -1);
+			}
+
+			return $cfg;
+		}
 
 
 		/**

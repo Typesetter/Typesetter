@@ -162,11 +162,27 @@ class Edit extends \gp\Page{
 	 *
 	 */
 	public function AdminLinks(){
-		global $langmessage;
+		global $langmessage, $config;
 
 
-		$admin_links		= array();
+		$admin_links		= [];
 
+
+		// HideAdminUI
+		$hotkey_hint = '';
+		if( !empty($config['admin_ui_hotkey']) ){
+			$hotkey_hint = ' (' . $config['admin_ui_hotkey'] . ')';
+		};
+		$admin_links[] = \gp\tool::Link(
+			$this->title,
+			'<i class="fa fa-eye-slash"></i>',
+			'',
+			[
+				'title'		=> $langmessage['Hide Admin UI'] . $hotkey_hint,
+				'class'		=> 'admin-link admin-link-hide-ui',
+				'data-cmd'	=> 'hide_ui',
+			]
+		);
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();

@@ -37,14 +37,14 @@ class Configuration extends \gp\special\Base{
 			'desc'						=> 'textarea',
 
 			'Interface'					=> false,
-			'colorbox_style'			=> array(
+			'colorbox_style'			=> [
 				'minimalistic'	=> 'Minimalistic',
 				'example1'		=> 'Example 1',
 				'example2'		=> 'Example 2',
 				'example3'		=> 'Example 3',
 				'example4'		=> 'Example 4',
 				'example5'		=> 'Example 5',
-			),
+			],
 			'gallery_legacy_style'		=> 'boolean',
 			'language'					=> '',
 			'langeditor'				=> '',
@@ -71,29 +71,36 @@ class Configuration extends \gp\special\Base{
 			'minifyjs'					=> 'boolean',
 			'combinecss'				=> 'boolean',
 			'etag_headers'				=> 'boolean',
-			'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
+			'space_char'				=> [
+				'_'			=> 'Undersorce "_"',
+				'-'			=> 'Dash "-"'
+			],
 
+			/* Hide Admin UI Settings */
+			'Hide Admin UI'				=> false,
+			'admin_ui_autohide_below'	=> 'integer',
+			'admin_ui_hotkey'			=> '',
 
 			/* Contact Configuration */
-			'contact_config'		=> false,
-			'toemail'				=> '',
-			'toname'				=> '',
-			'from_address'			=> '',
-			'from_name'				=> '',
-			'from_use_user'			=> 'boolean',
-			'require_email'			=> '',
-			'contact_advanced'		=> false,
-			'mail_method'			=> '',
-			'sendmail_path'			=> '',
-			'smtp_hosts'			=> '',
-			'smtp_user'				=> '',
-			'smtp_pass'				=> 'password',
-			//'fromemail'			=> '',
+			'contact_config'			=> false,
+			'toemail'					=> '',
+			'toname'					=> '',
+			'from_address'				=> '',
+			'from_name'					=> '',
+			'from_use_user'				=> 'boolean',
+			'require_email'				=> '',
+			'contact_advanced'			=> false,
+			'mail_method'				=> '',
+			'sendmail_path'				=> '',
+			'smtp_hosts'				=> '',
+			'smtp_user'					=> '',
+			'smtp_pass'					=> 'password',
+			//'fromemail'				=> '',
 
-			'reCaptcha'				=> false,
-			'recaptcha_public'		=> '',
-			'recaptcha_private'		=> '',
-			'recaptcha_language'	=> '',
+			'reCaptcha'					=> false,
+			'recaptcha_public'			=> '',
+			'recaptcha_private'			=> '',
+			'recaptcha_language'		=> '',
 		);
 
 	}
@@ -169,10 +176,10 @@ class Configuration extends \gp\special\Base{
 				'Admin/Configuration',
 				$langmessage['recreate_all_thumbnails'],
 				'cmd=recreate_thumbs',
-				array(
+				[
 					'class'		=> '',
-					'data-cmd'	=>'creq',
-				)
+					'data-cmd'	=> 'creq',
+				]
 			));
 		}
 
@@ -231,11 +238,11 @@ class Configuration extends \gp\special\Base{
 
 
 		//recaptcha language
-		$possible['recaptcha_language'] = array();
+		$possible['recaptcha_language'] = [];
 		$possible['recaptcha_language']['inherit'] = $langmessage['default'];
 
 		// According to https://developers.google.com/recaptcha/docs/language
-		$recaptcha_languages = array(
+		$recaptcha_languages = [
 			'af', 'am', 'ar', 'az',
 			'bn', 'bg',
 			'ca', 'cs',
@@ -257,37 +264,39 @@ class Configuration extends \gp\special\Base{
 			'uk', 'ur',
 			'vi',
 			'zh-HK', 'zh-CN', 'zh-TW', 'zu',
-		);
+		];
 		foreach($recaptcha_languages as $lang){
 			$possible['recaptcha_language'][$lang] = $lang;
 		}
 
-
-
 		//website language
 		$possible['language'] = $this->GetPossibleLanguages();
 
-
 		//tidy
 		if( function_exists('tidy_parse_string') ){
-			$possible['HTML_Tidy'] = array('off'=>$langmessage['Off'],''=>$langmessage['On']);
+			$possible['HTML_Tidy'] = [
+				'off'	=> $langmessage['Off'],
+				''		=> $langmessage['On']
+			];
 		}else{
-			$possible['HTML_Tidy'] = array(''=>'Unavailable');
+			$possible['HTML_Tidy'] = [''=>'Unavailable'];
 		}
 
-
-
 		//required email fields
-		$possible['require_email'] = array(	'none'		=> 'None',
-											''			=> 'Subject &amp; Message',
-											'email'		=> 'Subject, Message &amp; Email' );
+		$possible['require_email'] = [
+			'none'	=> 'None',
+			''		=> 'Subject &amp; Message',
+			'email'	=> 'Subject, Message &amp; Email'
+		];
 
 
 		//see xoopsmultimailer.php
-		$possible['mail_method'] = array(	'mail'		=> 'PHP mail()',
-											'sendmail'	=> 'sendmail',
-											'smtp'		=> 'smtp',
-											'smtpauth'	=> 'SMTPAuth' );
+		$possible['mail_method'] = [
+			'mail'		=> 'PHP mail()',
+			'sendmail'	=> 'sendmail',
+			'smtp'		=> 'smtp',
+			'smtpauth'	=> 'SMTPAuth'
+		];
 
 		//CDN
 		foreach(\gp\tool\Output\Combine::$scripts as $key => $script_info){
@@ -306,9 +315,7 @@ class Configuration extends \gp\special\Base{
 			array_unshift($possible[$config_key],$langmessage['None']);
 		}
 
-
 		gpSettingsOverride('configuration',$possible);
-
 
 		return $possible;
 	}
@@ -335,6 +342,7 @@ class Configuration extends \gp\special\Base{
 
 		return array_combine($languages, $languages);
 	}
+
 
 	/**
 	 * Display configuration settings

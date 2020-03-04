@@ -1514,6 +1514,9 @@ namespace gp\tool{
 					){
 					echo "\n" . '$("html").addClass("isPrivate");' . "\n";
 				}
+				if( \gp\tool::LoggedIn() && $page->pagetype !== 'admin_display' ){
+					echo "\n" . '$gp.HideAdminUI.init();' . "\n";
+				}
 				echo $page->jQueryCode;
 				echo '});';
 			}

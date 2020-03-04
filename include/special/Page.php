@@ -81,9 +81,30 @@ class Page extends \gp\Page{
 	 *
 	 */
 	public function AdminLinks(){
-		global $langmessage;
+		global $langmessage, $config;
 
 		$admin_links			= $this->admin_links;
+
+
+		// HideAdminUI
+		$hotkey_hint = '';
+		if( !empty($config['admin_ui_hotkey']) ){
+			$hotkey_hint = ' (' . $config['admin_ui_hotkey'] . ')';
+		};
+		array_unshift(
+			$admin_links, 
+			\gp\tool::Link(
+				$this->title,
+				'<i class="fa fa-eye-slash"></i>',
+				'',
+				[
+					'title'		=> $langmessage['Hide Admin UI'] . $hotkey_hint,
+					'class'		=> 'admin-link admin-link-hide-ui',
+					'data-cmd'	=> 'hide_ui',
+				]
+			)
+		);
+
 
 		$menu_permissions		= \gp\admin\Tools::HasPermission('Admin_Menu');
 

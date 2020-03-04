@@ -2411,3 +2411,96 @@ table.tp-tablesorter {
 .CodeMirror {
 	font-family: $font_family_monospace !important;
 }
+
+
+/**
+ * Hide Admin UI overrides
+ * keep this part at the very end of the stylesheet
+ * for precedence
+ */
+html.override_admin_style {
+	// page offset when editor is open
+	margin-left: 0 !important;
+	margin-top: 0 !important;
+	width: auto !important;
+
+	// all Admin UI elements
+	#gp_admin_html,
+	.messages.gp-fixed-adjust {
+		display: none;
+	}
+
+	// fixed navbars - top bar compensation
+	.gp-fixed-adjust {
+		margin-top: 0 !important;
+	}
+
+	body.gpAdmin .navbar-fixed-top {
+	top: 0;
+	}
+
+	// Theme Cajon Navbar
+	.navbar-theme-cajon.navbar-fixed-side-left {
+		left: 0 !important;
+	}
+}
+
+// The Hide UI icon
+#admincontent_panel .admin-link-hide-ui {
+	padding: 8px 10px;
+	> .fa {
+		margin: 0;
+	}
+	> img {
+		display: inline-block;
+		height: 14px;
+		width: auto;
+	}
+}
+
+// The Show UI icon
+div.show-admin-ui {
+	display: none;
+}
+html.override_admin_style div.show-admin-ui {
+	display: block;
+	z-index: 12000;
+	cursor: pointer;
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding: 8px;
+	font-size: 13px;
+	line-height: 13px;
+	color: rgba(221, 221, 221, 0.8);
+	-webkit-animation: 2s infinite indicator-pulse;
+	animation: 2s infinite indicator-pulse;
+
+	&:hover {
+		background: rgba(60, 60, 60, 0.5);
+	}
+
+	> img {
+		display: inline-block;
+		height: 14px;
+		width: auto;
+	}
+}
+
+@media print {
+	html.override_admin_style div.show-admin-ui {
+		display: none;
+	}
+}
+
+// pulse animation
+@keyframes indicator-pulse {
+	0%		{ color: rgba(221, 221, 221, 0.85); }
+	50%		{ color: rgba(60,60,60,0.85); }
+	100%	{ color: rgba(221,221,221,0.85); }
+}
+@-webkit-keyframes indicator-pulse {
+	0%		{ color: rgba(221, 221, 221, 0.85); }
+	50%		{ color: rgba(60,60,60,0.85); }
+	100%	{ color: rgba(221,221,221,0.85); }
+}

@@ -706,6 +706,7 @@ $langmessage = array (
 	'Shrink'                          => 'Shrink',
 	'Hide Admin UI'                   => 'إخفاء واجهة مستخدم المشرف',
 	'Show Admin UI'                   => 'إظهار واجهة مستخدم المشرف',
+	'admin_ui_autohide_below'         => 'Hide Automatically Below',
 	'admin_ui_hotkey'                 => 'اختصار لوحة المفاتيح',
 	'Ctrl'                            => 'Ctrl',
 	'Alt'                             => 'Alt',

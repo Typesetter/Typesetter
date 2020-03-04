@@ -42,6 +42,7 @@
 * Manage sections: Admin actions in (now called) 'Sections' editor mode will be saved immediately. Internal data changes like wrapper collapse state and changes to color and text labels will not cause a new working draft of the page anyomre.
 * Manage sections: [Ctrl] + click bypasses the 'Are you sure you want to … ?' dialog and immediately removes sections.
 * Layout Editor now handles themes with vh units and flexbox on the html and body elements.
+* Hide the Admin UI: All administration user interface elements, such as the admin menu, the top bar, open messages, modal boxes, the editor area and all editing overlays will be hidden automatically as soon as the viewport width falls below a certain threshold (992px by default). This enables a better assessment of the page as it is shown to normal visitors, especially on mobile devices. Additionally the admin ui can always be hidden / shown by clicking the new icon in the top-left corner of the viewport, or by pressing the keyboard shortcut [Ctrl] + [H]. The auto-hide threshold as well as the keyboard shorcut can be customized via Configuration -> Settings -> Hide Admin UI.
 
 
 ## Supported Languages ##

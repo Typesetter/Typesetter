@@ -85,4 +85,4 @@
 
 
 ## New Bugs ##
-* Although we worked hard to fix them all, there may still be new bugs. Please feel free to report them on https://github.com/Typesetter/Typesetter/issues or in the forum on TypesetterCMS.com
+* Although we worked hard to fix them all, there may still be new bugs. Please feel free to report them on https://github.com/Typesetter/Typesetter/issues or in the [forum on TypesetterCMS.com](https://www.typesettercms.com/Forum)

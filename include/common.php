@@ -99,7 +99,7 @@ $languages = array(
 	'tr' => 'Türkçe',					# Turkish
 	'uk' => 'Українська',				# Ukrainian
 	'zh' => '中文',						# (Zhōng Wén) - Chinese
-	);
+);
 
 
 
@@ -108,7 +108,7 @@ $addonDataFolder = $addonCodeFolder = false;//deprecated
 $addonPathData = $addonPathCode = false;
 $wbErrorBuffer = $gp_not_writable = $wbMessageBuffer = array();
 
-
+require_once('deprecated.php');
 
 /* from wordpress
  * wp-settings.php

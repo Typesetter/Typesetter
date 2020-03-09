@@ -54,7 +54,7 @@ define('gp_default_theme','Bootswatch_Scss/Flatly');
  *
  * Defaults to undefined (commented out)
  */
-define('create_css_sourcemaps',true);
+// define('create_css_sourcemaps',true);
 
 
 /**
@@ -166,7 +166,7 @@ define('gp_chmod_dir',0755);
  * Set to true to display php errors in the browser window.
  * Defaults to false
  */
-defined('gpdebug') or define('gpdebug',true);
+defined('gpdebug') or define('gpdebug',false);
 
 
 /**
@@ -199,61 +199,11 @@ defined('gpdebug') or define('gpdebug',true);
  * Some addons should be uninstalled with the current version of Typesetter
  * e.g. due to incompatibilities or because their functionality has been added to the CMS core
  * Set to false if you still want to keep them installed and prevent notifications
+ * See also /include/deprecated.php
  * Defaults to true
  *
  */
 define('notify_deprecated',true);
-/**
- * Set notify to false to prevent notifications for particular addons
- *
- */
-$deprecated_addons = array(
-	'Hide Admin UI' => array(
-		'upto_version'		=> 'all',
-		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
-		'notify'			=> true,
-	),
-	'Expandable Editor' => array(
-		'upto_version'		=> 'all',
-		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
-		'notify'			=> true,
-	),
-	'Section Clipboard' => array(
-		'upto_version'		=> 'all',
-		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
-		'notify'			=> true,
-	),
-	'Highlight Sections' => array(
-		'upto_version'		=> 'all',
-		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
-		'notify'			=> true,
-	),
-	'Section Visibility' => array(
-		'upto_version'		=> 'all',
-		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
-		'notify'			=> true,
-	),
-	'Selectable Classes' => array(
-		'upto_version'		=> 'all',
-		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
-		'notify'			=> true,
-	),
-	'File-Include Source Link' => array(
-		'upto_version'		=> 'all',
-		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
-		'notify'			=> true,
-	),
-	'FullCalendar for gpEasy' => array(
-		'upto_version'		=> '1.1',
-		'reason'			=> 'The addon is not compatible with Typesetter CMS 5+ and will not work anymore',
-		'notify'			=> true,
-	),
-	'FlatAdmin 2015' => array(
-		'upto_version'		=> '1.2',
-		'reason'			=> 'The addon is not compatible with Typesetter CMS 5+ and will cause issues.',
-		'notify'			=> true,
-	),
-);
 
 
 /**

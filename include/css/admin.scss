@@ -765,6 +765,10 @@ input.admin_box_close {
 	opacity: 0.5;
 }
 
+#gp_admin_box .show-notifications-box td:first-child {
+	white-space:nowrap;
+}
+
 
 .layout_color_id {
 	display: inline-block;

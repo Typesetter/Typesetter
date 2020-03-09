@@ -35,9 +35,11 @@ gp_defined('gp_unique_addons',false);
 gp_defined('gp_data_type','.php');
 gp_defined('gp_default_theme','Bootswatch_Scss/Flatly');
 gp_defined('gp_allowed_fatal_errors', 10 );		// number of fatal errors to allow before disabling a component
-gp_defined('gp_prefix_urls',false);				// Since 5.1.1
-gp_defined('create_css_sourcemaps',false);
-gp_defined('load_css_in_body',false);
+gp_defined('gp_prefix_urls',false);				// not yet implemented
+gp_defined('create_css_sourcemaps',false);		// Since 5.2
+gp_defined('load_css_in_body',false);			// Since 5.1
+gp_defined('notify_deprecated',true);			// Since 5.2
+
 
 
 //gp_defined('CMS_DOMAIN',			'http://gpeasy.loc');

@@ -41,7 +41,7 @@ $upload_extensions_deny = array();
  * Also the theme/color that Typesetter will use should the user specified theme become unavailable
  *
  */
-define('gp_default_theme','Three_point_5/Shore');
+define('gp_default_theme','Bootswatch_Scss/Flatly');
 
 
 /**
@@ -54,7 +54,7 @@ define('gp_default_theme','Three_point_5/Shore');
  *
  * Defaults to undefined (commented out)
  */
-// define('create_css_sourcemaps',true);
+define('create_css_sourcemaps',true);
 
 
 /**
@@ -166,7 +166,7 @@ define('gp_chmod_dir',0755);
  * Set to true to display php errors in the browser window.
  * Defaults to false
  */
-defined('gpdebug') or define('gpdebug',false);
+defined('gpdebug') or define('gpdebug',true);
 
 
 /**
@@ -177,7 +177,6 @@ defined('gpdebug') or define('gpdebug',false);
 //define('gpdebugjs',false);
 
 
-
 /**
  * Prevent errors from being displayed to site visitors
  * Should be set to "0" for any production site
@@ -185,6 +184,7 @@ defined('gpdebug') or define('gpdebug',false);
  *
  */
 @ini_set('display_errors',0);
+
 
 /**
  * gp_safe_mode
@@ -195,11 +195,75 @@ defined('gpdebug') or define('gpdebug',false);
 
 
 /**
+ * Show notifications of deprecated addons
+ * Some addons should be uninstalled with the current version of Typesetter
+ * e.g. due to incompatibilities or because their functionality has been added to the CMS core
+ * Set to false if you still want to keep them installed and prevent notifications
+ * Defaults to true
+ *
+ */
+define('notify_deprecated',true);
+/**
+ * Set notify to false to prevent notifications for particular addons
+ *
+ */
+$deprecated_addons = array(
+	'Hide Admin UI' => array(
+		'upto_version'		=> 'all',
+		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
+		'notify'			=> true,
+	),
+	'Expandable Editor' => array(
+		'upto_version'		=> 'all',
+		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
+		'notify'			=> true,
+	),
+	'Section Clipboard' => array(
+		'upto_version'		=> 'all',
+		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
+		'notify'			=> true,
+	),
+	'Highlight Sections' => array(
+		'upto_version'		=> 'all',
+		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
+		'notify'			=> true,
+	),
+	'Section Visibility' => array(
+		'upto_version'		=> 'all',
+		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
+		'notify'			=> true,
+	),
+	'Selectable Classes' => array(
+		'upto_version'		=> 'all',
+		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
+		'notify'			=> true,
+	),
+	'File-Include Source Link' => array(
+		'upto_version'		=> 'all',
+		'reason'			=> 'The addon is no longer needed because it is now part of the system core and will cause issues.',
+		'notify'			=> true,
+	),
+	'FullCalendar for gpEasy' => array(
+		'upto_version'		=> '1.1',
+		'reason'			=> 'The addon is not compatible with Typesetter CMS 5+ and will not work anymore',
+		'notify'			=> true,
+	),
+	'FlatAdmin 2015' => array(
+		'upto_version'		=> '1.2',
+		'reason'			=> 'The addon is not compatible with Typesetter CMS 5+ and will cause issues.',
+		'notify'			=> true,
+	),
+);
+
+
+/**
  * gp_prefix_urls
  * Set to true will prefix internal content URLs (href, src, ..., starting with '/')
  * with $LinkPrefix or $dirPrefix variables when saving in order to make the
  * content portable across different directory levels and hosts
  * Defaults to false
+ *
+ * not yet implemented
  */
 define('gp_prefix_urls',false);
 

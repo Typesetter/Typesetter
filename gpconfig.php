@@ -1,5 +1,7 @@
 <?php
 
+define("local", !filter_var($_SERVER['SERVER_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE));
+
 /**
  * $upload_extensions_allow and $upload_extensions_deny
  * Allow or deny the upload of files based on their file extensions

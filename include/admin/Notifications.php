@@ -687,24 +687,24 @@ namespace gp\admin{
 			}
 
 			if( \gpdebug ){
-				$label = 'gpdebug is enabled';
+				$label = $langmessage['enabled'].': gpdebug';
 				$debug_note[] = array(
 					'type'		=> 'superuser',
 					'label'		=> $label,
 					'id'		=> $label . \gp\tool::ServerName(),
 					'priority'	=> 75,
-					'action'	=> 'edit gpconfig.php',
+					'action'	=> $langmessage['manual_method'].'. '.$langmessage['edit'].' gpconfig.php',
 				);
 			}
 
 			if( \create_css_sourcemaps ){
-				$label = 'create_css_sourcemaps is enabled';
+				$label = $langmessage['enabled'].': create_css_sourcemaps';
 				$debug_note[] = array(
 					'type'		=> 'superuser',
 					'label'		=> $label,
 					'id'		=> $label . \gp\tool::ServerName(),
 					'priority'	=> 75,
-					'action'	=> 'edit gpconfig.php',
+					'action'	=> $langmessage['manual_method'].'. '.$langmessage['edit'].' gpconfig.php',					
 				);
 			}
 

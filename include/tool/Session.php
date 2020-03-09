@@ -715,6 +715,9 @@ class Session{
 			'Move Behind'				=>	'MoveBehind',
 			'Section %s'				=>	'Section',
 			'generic_delete_confirm'	=>	'generic_delete_confirm',
+			'Ctrl Key'					=>	'ctrlKey',
+			'Shift Key'					=>	'shiftKey',
+			'Alt Key'					=>	'altKey',
 		);
 
 

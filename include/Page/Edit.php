@@ -169,16 +169,12 @@ class Edit extends \gp\Page{
 
 
 		// HideAdminUI
-		$hotkey_hint = '';
-		if( !empty($config['admin_ui_hotkey']) ){
-			$hotkey_hint = ' (' . $config['admin_ui_hotkey'] . ')';
-		};
 		$admin_links[] = \gp\tool::Link(
 			$this->title,
 			'<i class="fa fa-eye-slash"></i>',
 			'',
 			[
-				'title'		=> $langmessage['Hide Admin UI'] . $hotkey_hint,
+				'title'		=> $langmessage['Hide Admin UI'],
 				'class'		=> 'admin-link admin-link-hide-ui',
 				'data-cmd'	=> 'hide_ui',
 			]

@@ -2398,12 +2398,28 @@ table.tp-tablesorter {
 }
 
 /**
+ * Keyboard keys
+ */
+#gp_admin_html kbd.keyboard-key {
+	display: inline-block;
+	background: #f7f7f7;
+	background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(127, 127, 127, 0.2));
+	border-style: solid;
+	border-width: 1px 1px 2px 1px;
+	border-color: #bbb;
+	border-radius: 2px;
+	font-family: inherit;
+	padding: 3px 6px;
+	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+	white-space: nowrap;
+}
+
+/**
  * Fontawesome
  */
 #gp_admin_html .fa {
 	font-family: FontAwesome;
 }
-
 
 /**
  * Layout Editor/Codemirror

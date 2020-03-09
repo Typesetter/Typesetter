@@ -1041,6 +1041,7 @@ namespace gp{
 				'preserve_image_metadata'	=> true,		//5.1
 				'maxthumbsize'				=> '300',
 				'maxthumbheight'			=> '',			//5.1
+				'thumbskeepaspect'			=> false,
 				'check_uploads'				=> false,
 				'colorbox_style'			=> 'example1',
 				'gallery_legacy_style'		=> true,
@@ -1063,8 +1064,8 @@ namespace gp{
 				'space_char'				=> '-',			//4.6
 				'cdn'						=> '',
 				'admin_ui_autohide_below'	=> '992',		//5.2
-				'admin_ui_hotkey'			=> 'Ctrl + h',	//5.2
-				'thumbskeepaspect'			=> false,
+				'admin_ui_hotkey'			=> 'H',			//5.2
+				'admin_ui_hotkey_code'		=> 'ctrlKey+72',	//5.2
 				'homepath_auto'				=> true,		//5.2
 			);
 
@@ -1776,31 +1777,33 @@ namespace gp{
 		 */
 		public static function HideAdminUIcfg(){
 			global $config, $langmessage;
-
 			$cfg = [
 				'autohide_below'	=> 0,
-				'hotkey_modifiers'	=> [],
 				'hotkey'			=> '',
-				'hotkey_hint'		=> '',
+				'hotkey_modkeys'	=> [],
+				'hotkey_which'		=> '',
 			];
 
-			if( !empty($config['admin_ui_autohide_below']) &&
-				is_numeric($config['admin_ui_autohide_below'])
-				){
+			if( !empty($config['admin_ui_autohide_below']) && is_numeric($config['admin_ui_autohide_below']) ){
 				$cfg['autohide_below'] = (int)$config['admin_ui_autohide_below'];
 			}
-			if( !empty($config['admin_ui_hotkey']) ){
-				if( strpos($config['admin_ui_hotkey'], 'Ctrl') !== false ){
-					$cfg['hotkey_modifiers'][] = 'ctrlKey';
+
+			if( !empty($config['admin_ui_hotkey']) && !empty($config['admin_ui_hotkey_code']) ){
+				$cfg['hotkey'] = $config['admin_ui_hotkey'];
+				if( strpos($config['admin_ui_hotkey_code'], 'ctrlKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'ctrlKey';
 				}
-				if( strpos($config['admin_ui_hotkey'], 'Shift') !== false ){
-					$cfg['hotkey_modifiers'][] = 'shiftKey';
+				if( strpos($config['admin_ui_hotkey_code'], 'shiftKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'shiftKey';
 				}
-				if( strpos($config['admin_ui_hotkey'], 'Alt') !== false ){
-					$cfg['hotkey_modifiers'][] = 'altKey';
+				if( strpos($config['admin_ui_hotkey_code'], 'altKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'altKey';
 				}
-				$cfg['hotkey_hint']	= $config['admin_ui_hotkey'];
-				$cfg['hotkey']		= mb_substr(trim($config['admin_ui_hotkey']), -1);
+				if( strpos($config['admin_ui_hotkey_code'], 'metaKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'metaKey';
+				}
+				$parts 					= explode('+', $config['admin_ui_hotkey_code']);
+				$cfg['hotkey_which']	= array_pop($parts);
 			}
 
 			return $cfg;

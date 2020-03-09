@@ -87,10 +87,6 @@ class Page extends \gp\Page{
 
 
 		// HideAdminUI
-		$hotkey_hint = '';
-		if( !empty($config['admin_ui_hotkey']) ){
-			$hotkey_hint = ' (' . $config['admin_ui_hotkey'] . ')';
-		};
 		array_unshift(
 			$admin_links, 
 			\gp\tool::Link(
@@ -98,7 +94,7 @@ class Page extends \gp\Page{
 				'<i class="fa fa-eye-slash"></i>',
 				'',
 				[
-					'title'		=> $langmessage['Hide Admin UI'] . $hotkey_hint,
+					'title'		=> $langmessage['Hide Admin UI'],
 					'class'		=> 'admin-link admin-link-hide-ui',
 					'data-cmd'	=> 'hide_ui',
 				]

@@ -80,6 +80,7 @@ class Configuration extends \gp\special\Base{
 			'Hide Admin UI'				=> false,
 			'admin_ui_autohide_below'	=> 'integer',
 			'admin_ui_hotkey'			=> '',
+			'admin_ui_hotkey_code'		=> 'hidden',
 
 			/* Contact Configuration */
 			'contact_config'			=> false,

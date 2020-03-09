@@ -388,8 +388,11 @@ class Configuration extends \gp\special\Base{
 
 			echo "\n\n";
 
-
-			echo '<tr><td style="white-space:nowrap">';
+			$tr_class_attr = '';
+			if( !is_array($possible_value) && $possible_value == 'hidden' ){
+				$tr_class_attr = ' class="nodisplay"';
+			}
+			echo '<tr' . $tr_class_attr . '><td style="white-space:nowrap">';
 			if( isset($langmessage[$key]) ){
 				echo $langmessage[$key];
 			}else{
@@ -400,8 +403,6 @@ class Configuration extends \gp\special\Base{
 
 			if( is_array($possible_value) ){
 				self::formSelect($key,$possible_value,$value);
-
-
 			}else{
 				switch($possible_value){
 					case 'boolean':

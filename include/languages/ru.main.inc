@@ -333,6 +333,7 @@ $langmessage = array (
 	'themes'                          => 'Темы',
 	'plugins'                         => 'Плагины',
 	'Manage Plugins'                  => 'Управление плагинами',
+	'Deprecated Addons'               => 'Deprecated Addons',
 	'_downloads'                      => '%s скачиваний',
 	'editable_text'                   => 'Редактируемый текст',
 	'resources'                       => 'Ресурсы',

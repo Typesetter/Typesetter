@@ -71,7 +71,8 @@ namespace gp\Page{
 			$class		= 'new_title';
 
 			if( $title == \gp\admin\Tools::LabelToSlug($label) ){
-				$attr = 'disabled="disabled" ';
+				//$attr = 'disabled="disabled" ';
+				$attr = 'readonly="readonly"" ';
 				$class .= ' sync_label';
 			}
 			self::FormLabel('Slug/URL');

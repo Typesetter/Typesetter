@@ -51,6 +51,7 @@ class About{
 		$projects['elFinder']		= 'studio-42.github.io/elFinder';
 		$projects['ColorBox']		= 'www.jacklmoore.com/colorbox';
 		$projects['Bootstrap']		= 'getbootstrap.com';
+		$projects['Bootswatch']		= 'bootswatch.com';
 		$projects['jQuery']			= 'jquery.com';
 		$projects['jQuery UI']		= 'jqueryui.com';
 		$projects['ScssPhp']		= 'https://github.com/leafo/scssphp';

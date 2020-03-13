@@ -376,8 +376,8 @@ namespace gp\Page{
 			if( ($new_title !== false) && $new_title != $page->title ){
 				msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($new_title)));
 
-				$page->head				.= '<meta http-equiv="refresh" content="15;url='.\gp\tool::GetUrl($new_title).'">';
-				$page->ajaxReplace[]	= array('location',\gp\tool::GetUrl($new_title),15000);
+				$page->head				.= '<meta http-equiv="refresh" content="15;url='.\gp\tool::GetUrl($new_title,'',false,'').'">';
+				$page->ajaxReplace[]	= array('location',\gp\tool::GetUrl($new_title,'',false,''),15000);
 				return true;
 			}
 			return false;

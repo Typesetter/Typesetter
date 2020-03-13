@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Selväkielinen osoite',
 	'sync_with_label'                 => 'Synkronoi nimikkeen kanssa',
 	'more_options'                    => 'Lisävalinnat',
-	'will_redirect'                   => 'edelleen ohjaus %s 15 sekunnin kuluttua',
+	'will_redirect'                   => 'edelleen ohjaus %s <span id="redir-countdown">15</span> sekunnin kuluttua',
 	'Preferences'                     => 'Asetukset',
 	'Content Type'                    => 'Sisältötyyppi',
 	'Image Gallery'                   => 'Kuvagalleria',

@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'الرابط',
 	'sync_with_label'                 => 'تزامن مع التسمية',
 	'more_options'                    => 'خيارات إضافية',
-	'will_redirect'                   => 'سيتم تحويلك خلال 15 ثانية إلى %s',
+	'will_redirect'                   => 'سيتم تحويلك خلال <span id="redir-countdown">15</span> ثانية إلى %s',
 	'Preferences'                     => 'التفضيلات',
 	'Content Type'                    => 'نوع المحتوى',
 	'Image Gallery'                   => 'معرض الصور',

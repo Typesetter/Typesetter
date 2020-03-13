@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Synkronisera við Spjaldur',
 	'more_options'                    => 'Fleiri ValmøguleikarFlere valgmuligheder',
-	'will_redirect'                   => 'Um 15 sekund verður flutt til %s.',
+	'will_redirect'                   => 'Um <span id="redir-countdown">15</span> sekund verður flutt til %s.',
 	'Preferences'                     => 'Stillingar',
 	'Content Type'                    => 'Slag av Innihaldi',
 	'Image Gallery'                   => 'Myndasavn',

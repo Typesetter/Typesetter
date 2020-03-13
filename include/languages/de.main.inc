@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Mit der Bezeichnung synchronisieren',
 	'more_options'                    => 'Weitere Optionen',
-	'will_redirect'                   => 'Sie werden in 15 Sekunden auf %s weitergeleitet.',
+	'will_redirect'                   => 'Sie werden in <span id="redir-countdown">15</span> Sekunden auf %s weitergeleitet.',
 	'Preferences'                     => 'Einstellungen',
 	'Content Type'                    => 'Inhaltstyp',
 	'Image Gallery'                   => 'Bildergalerie',

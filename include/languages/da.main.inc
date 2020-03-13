@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Synkronisere med Etiket',
 	'more_options'                    => 'Flere valgmuligheder',
-	'will_redirect'                   => 'Du vil blive omdirigeret om 15 sekunder til %s.',
+	'will_redirect'                   => 'Du vil blive omdirigeret om <span id="redir-countdown">15</span> sekunder til %s.',
 	'Preferences'                     => 'Indstillinger',
 	'Content Type'                    => 'Indholdstype',
 	'Image Gallery'                   => 'Billedgalleri',

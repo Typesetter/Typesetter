@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Συγχρονισμός με την Ετικέτα',
 	'more_options'                    => 'Περισσότερες Επιλογές',
-	'will_redirect'                   => 'Θα μεταφερθείτε σε 15 δευτερόλεπτα στο %s.',
+	'will_redirect'                   => 'Θα μεταφερθείτε σε <span id="redir-countdown">15</span> δευτερόλεπτα στο %s.',
 	'Preferences'                     => 'Προτιμήσεις',
 	'Content Type'                    => 'Τύπος Περιεχομένου',
 	'Image Gallery'                   => 'Γκάλερι Εικόνων',

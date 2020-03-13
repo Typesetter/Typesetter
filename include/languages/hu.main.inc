@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Szinkronizálás a címkével',
 	'more_options'                    => 'További tulajdonságok',
-	'will_redirect'                   => '15 másodperc múlva át lesz irányítva a következő címre: %s.',
+	'will_redirect'                   => '<span id="redir-countdown">15</span> másodperc múlva át lesz irányítva a következő címre: %s.',
 	'Preferences'                     => 'Beállítások',
 	'Content Type'                    => 'Tartalom típus',
 	'Image Gallery'                   => 'Képgaléria',

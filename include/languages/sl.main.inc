@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Povezava',
 	'sync_with_label'                 => 'Sinhroniziraj z oznako',
 	'more_options'                    => 'Več možnosti',
-	'will_redirect'                   => 'Preusmerjen boš v 15 sekundah na %s.',
+	'will_redirect'                   => 'Preusmerjen boš v <span id="redir-countdown">15</span> sekundah na %s.',
 	'Preferences'                     => 'Nastavitve',
 	'Content Type'                    => 'Tip vsebine',
 	'Image Gallery'                   => 'Galerija slik',

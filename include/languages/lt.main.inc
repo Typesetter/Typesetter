@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Interlinija/URL',
 	'sync_with_label'                 => 'Sinchronizuoti su etikete',
 	'more_options'                    => 'Daugiau parinkčių',
-	'will_redirect'                   => 'Jūs būsite nukreiptas į %s po 15 sekundžių.',
+	'will_redirect'                   => 'Jūs būsite nukreiptas į %s po <span id="redir-countdown">15</span> sekundžių.',
 	'Preferences'                     => 'Nustatymai',
 	'Content Type'                    => 'Turinio tipas',
 	'Image Gallery'                   => 'Vaizdų galerija',

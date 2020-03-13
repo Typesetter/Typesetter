@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Vefslóðarormur/URL-slóð',
 	'sync_with_label'                 => 'Samstilla við skýringu',
 	'more_options'                    => 'Fleiri möguleikar',
-	'will_redirect'                   => 'Þér verður endurbeint eftir 15 sekúndur á %s.',
+	'will_redirect'                   => 'Þér verður endurbeint eftir <span id="redir-countdown">15</span> sekúndur á %s.',
 	'Preferences'                     => 'Kjörstillingar',
 	'Content Type'                    => 'Gerð efnis',
 	'Image Gallery'                   => 'Myndasafn',

@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => '短標題/網址',
 	'sync_with_label'                 => '透過標籤進行同步',
 	'more_options'                    => '更多選項',
-	'will_redirect'                   => '您將在 15 秒內被重新導向至 %s。',
+	'will_redirect'                   => '您將在 <span id="redir-countdown">15</span> 秒內被重新導向至 %s。',
 	'Preferences'                     => '參數選擇',
 	'Content Type'                    => '內容類型',
 	'Image Gallery'                   => '圖片畫廊',

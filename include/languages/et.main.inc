@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Slug/URL',
 	'sync_with_label'                 => 'Sünkroniseeri sildiga',
 	'more_options'                    => 'Veel valikuid',
-	'will_redirect'                   => 'Sind suunatakse 15 sekundi pärast %s-le.',
+	'will_redirect'                   => 'Sind suunatakse <span id="redir-countdown">15</span> sekundi pärast %s-le.',
 	'Preferences'                     => 'Eelistused',
 	'Content Type'                    => 'Sisu tüüp',
 	'Image Gallery'                   => 'Fotogalerii',

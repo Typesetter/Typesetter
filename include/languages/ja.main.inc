@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => '短縮名(半角英数)/URL',
 	'sync_with_label'                 => 'ラベルに合わせる',
 	'more_options'                    => '詳細オプション',
-	'will_redirect'                   => '15 秒後に %s に移動します。',
+	'will_redirect'                   => '<span id="redir-countdown">15</span> 秒後に %s に移動します。',
 	'Preferences'                     => 'ユーザー設定',
 	'Content Type'                    => 'コンテンツの種類',
 	'Image Gallery'                   => 'イメージギャラリー',

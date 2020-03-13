@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Slug / URL',
 	'sync_with_label'                 => 'Sinchroniseer met Etiket',
 	'more_options'                    => 'Meer Opsies',
-	'will_redirect'                   => 'Jy sal herlei word in 15 sekondes na %s.',
+	'will_redirect'                   => 'Jy sal herlei word in <span id="redir-countdown">15</span> sekondes na %s.',
 	'Preferences'                     => 'Voorkeure',
 	'Content Type'                    => 'Inhoud Tiepe',
 	'Image Gallery'                   => 'Beeld Gallery',

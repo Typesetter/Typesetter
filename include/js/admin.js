@@ -818,6 +818,9 @@ $gp.response.location = function(obj){
 	window.setTimeout(function(){
 		window.location = obj.SELECTOR;
 	},obj.CONTENT);
+	window.setInterval(function(){
+		$('#redir-countdown').text($('#redir-countdown').text() - 1);
+	}, 1000);
 };
 
 

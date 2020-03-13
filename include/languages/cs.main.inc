@@ -221,7 +221,7 @@ $langmessage = array (
 	'Slug/URL'                        => 'Popiska/URL',
 	'sync_with_label'                 => 'Synchronizovat s nadpisem',
 	'more_options'                    => 'Vice nastavení',
-	'will_redirect'                   => 'Za 15 sekund budete přesměrováni na %s.',
+	'will_redirect'                   => 'Za <span id="redir-countdown">15</span> sekund budete přesměrováni na %s.',
 	'Preferences'                     => 'Nastavení',
 	'Content Type'                    => 'Typ obsahu',
 	'Image Gallery'                   => 'Obrázková galerie',

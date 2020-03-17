@@ -444,7 +444,7 @@ namespace gp\admin{
 
 
 			$items = $this->GetDeprecatedAddons();
-			$this->Add('Deprecated Addons', $items, '#e20034');
+			$this->Add('Deprecated Addons', $items, '#d61b1b');
 
 
 			$items = $this->GetDebugNotifications();
@@ -809,8 +809,15 @@ namespace gp\admin{
 
 				foreach( $folders as $folder ){
 
+					// no draft
 					$draft_path = $dir . '/' . $folder . '/draft.php';
 					if( !\gp\tool\Files::Exists($draft_path) ){
+						continue;
+					}
+
+					// drafts of 'thrashed' pages will not count
+					$deleted_path = $dir . '/' . $folder . '/deleted.php';
+					if( \gp\tool\Files::Exists($deleted_path) ){
 						continue;
 					}
 

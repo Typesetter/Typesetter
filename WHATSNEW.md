@@ -28,10 +28,11 @@
 ## Configuration Options ##
 * minify JS: Combined JavaScript can now be minified.
 * allow SVG upload (as noted above)
+* Hide Admin UI: set viewport with threshold and keyboard shortcut (see below)
 
 
 ## Admin User Interface and Editing ##
-* Admin Panel (AKA top bar): we re-arranged some items here to save more space, e.g. for plugin-added links.
+* Admin Panel (AKA top bar): we re-arranged some items here to save more space, e.g. for links added by plugins.
 * Page Revision History: page revisions moved from the former modal box to a sidebar (similar to Layout Editor) which makes preview and restoration more convenient.
 * Notifications: Contrary to messages (the yellow bar) which rather show immediate feedback, the new notificaton system shows things that an administrator should pay attention to sooner or later, such as working drafts, pages set to 'visibility: private', available updates and debugging warnings. Notifications persist unless their issues are solved but can be muted.
 * Section Attributes: Attribute value fields now grow multi-line if required. Available Classes now use a more compact representation and tooltips for descriptions.

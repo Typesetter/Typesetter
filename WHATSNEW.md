@@ -2,7 +2,7 @@
 
 ## New System Requirements ##
 
-**PHP 5.6 - 7.4:** Typesetter 5.2 officially requires at least PHP 5.6 and has been tested up to PHP 7.4. PHP 5.4 might still work but we decided to stop testing it during development. PHP 5.3 is definitely no longer supported.
+**PHP 5.6 - 7.4:** Typesetter 5.2 officially requires at least PHP 5.6 and has been tested up to PHP 7.4. PHP 5.3 and 5.4 are no longer supported.
 
 
 ## Thirdparty Components and Libraries ##

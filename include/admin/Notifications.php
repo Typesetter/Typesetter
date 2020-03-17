@@ -815,7 +815,7 @@ namespace gp\admin{
 						continue;
 					}
 
-					// drafts of 'thrashed' pages will not count
+					// drafts of 'trashed' pages will not count
 					$deleted_path = $dir . '/' . $folder . '/deleted.php';
 					if( \gp\tool\Files::Exists($deleted_path) ){
 						continue;

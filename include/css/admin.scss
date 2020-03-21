@@ -89,7 +89,10 @@
 #gp_admin_html a:visited,
 #gp_admin_html a:hover {
 	color: $link-color;
+	font-style: normal;
 	text-decoration: none;
+	text-transform: none;
+	border: 0 none;
 }
 #gp_admin_html a:hover {
 	color: $link-hover-color;

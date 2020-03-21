@@ -101,7 +101,7 @@ namespace gp\tool{
 				$css_h = $attributes['height'];
 			}
 
-			if( !$css_w && !$css_h ){
+			if( !$css_w || !$css_h ){
 				return false;
 			}
 

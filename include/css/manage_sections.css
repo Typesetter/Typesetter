@@ -279,6 +279,9 @@ ul#section-clipboard-items li {
 	margin: 0 0 3px 0;
 	padding: 2px 2px 2px 14px;
 	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 }
 

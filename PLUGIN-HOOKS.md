@@ -162,7 +162,7 @@ Both filter and action hooks are commonly used to process global variables (e.g.
 			Allows to take additional actions when a new page was created
 
 * [PageRunScript](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27PageRunScript%27%22)						(filter)  
-			A mighty hook, called relatively early, that allows to execute own functions based on the passed cmd parameter in a request. It has complete control the type and content of the response / output
+			A mighty hook, called relatively early, that allows to execute own functions based on the passed cmd parameter in a request. It has complete control of the type and content of the response / output
 
 * [PageSetVars](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27PageSetVars%27%22)							(action)  
 			A hook called relatively early to modify variables of the `$page` object
@@ -186,7 +186,7 @@ Both filter and action hooks are commonly used to process global variables (e.g.
 # S #
 
 * [SaveSection](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AFilter%28%27SaveSection%27%22)							(filter)  
-			Used to process posted data of certain / cutom section types before saving them
+			Used to process posted data of certain / custom section types before saving them
 
 * [Search](https://github.com/Typesetter/Typesetter/search?q=%22Plugins%3A%3AAction%28%27Search%27%22)										(action)  
 			Used to add custom content to be queried by Typesetter's built-in search 'engine'

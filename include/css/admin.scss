@@ -2489,17 +2489,22 @@ html.override_admin_style div.show-admin-ui {
 	z-index: 12000;
 	cursor: pointer;
 	position: fixed;
-	top: 0;
 	left: 0;
+	top: 0;
 	padding: 8px;
 	font-size: 13px;
 	line-height: 13px;
-	color: rgba(221, 221, 221, 0.8);
-	-webkit-animation: 2s infinite indicator-pulse;
-	animation: 2s infinite indicator-pulse;
+	-webkit-animation: 2s ease 1 admin-ui-hide;
+	animation: 2s ease 1 admin-ui-hide;
 
 	&:hover {
 		background: rgba(60, 60, 60, 0.5);
+	}
+
+	> i.fa {
+		color: rgba(221, 221, 221, 0.8);
+		-webkit-animation: 2s infinite indicator-pulse;
+		animation: 2s infinite indicator-pulse;
 	}
 
 	> img {
@@ -2515,14 +2520,56 @@ html.override_admin_style div.show-admin-ui {
 	}
 }
 
-// pulse animation
+/**
+ * Animations
+ */
+
+// continously pulsate the show admin ui icon
+@-webkit-keyframes indicator-pulse {
+	0%		{ color: rgba(221, 221, 221, 0.85); }
+	50%		{ color: rgba(60,60,60,0.85); }
+	100%	{ color: rgba(221,221,221,0.85); }
+}
 @keyframes indicator-pulse {
 	0%		{ color: rgba(221, 221, 221, 0.85); }
 	50%		{ color: rgba(60,60,60,0.85); }
 	100%	{ color: rgba(221,221,221,0.85); }
 }
-@-webkit-keyframes indicator-pulse {
-	0%		{ color: rgba(221, 221, 221, 0.85); }
-	50%		{ color: rgba(60,60,60,0.85); }
-	100%	{ color: rgba(221,221,221,0.85); }
+
+// initial slide + scale animation for the show admin ui icon
+@-webkit-keyframes admin-ui-hide {
+	0%, 50% {
+		left: 50vw;
+		top: 50vh;
+		background: rgba(60, 60, 60, 0.5);
+		border-radius: 5px;
+		-webkit-transform: translate(-50%, -50%) scale(4);
+		transform: translate(-50%, -50%) scale(4);
+	}
+	100% {
+		left: 0;
+		top: 0;
+		background: rgba(60, 60, 60, 0);
+		border-radius: 0;
+		-webkit-transform: translate(0, 0) scale(1);
+		transform: translate(0, 0) scale(1);
+	}
+}
+@keyframes admin-ui-hide {
+	0%, 50% {
+		left: 50vw;
+		top: 50vh;
+		background: rgba(60, 60, 60, 0.5);
+		border-radius: 5px;
+		-webkit-transform: translate(-50%, -50%) scale(4);
+		transform: translate(-50%, -50%) scale(4);
+	}
+	100% {
+		left: 0;
+		top: 0;
+		background: rgba(60, 60, 60, 0);
+		border-radius: 0;
+		-webkit-transform: translate(0, 0) scale(1);
+		transform: translate(0, 0) scale(1);
+	}
 }

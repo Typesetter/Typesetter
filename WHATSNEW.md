@@ -44,6 +44,7 @@
 * Manage sections: [Ctrl] + click bypasses the 'Are you sure you want to … ?' dialog and immediately removes sections.
 * Layout Editor now handles themes with vh units and flexbox on the html and body elements.
 * Hide the Admin UI: All administration user interface elements, such as the admin menu, the top bar, open messages, modal boxes, the editor area and all editing overlays will be hidden automatically as soon as the viewport width falls below a certain threshold (992px by default). This enables a better assessment of the page as it is shown to normal visitors, especially on mobile devices. Additionally the admin ui can always be hidden / shown by clicking the new icon in the top-left corner of the viewport, or by pressing the keyboard shortcut [Ctrl] + [H]. The auto-hide threshold as well as the keyboard shortcut can be customized via Configuration -> Settings -> Hide Admin UI.
+* Messages: the yellow message bar is now responsive which means that it remains visible and closable in narrow viewports. If you are logged in, it can even be resized so that e.g. longer debug messages can be displayed better.
 
 
 ## Supported Languages ##

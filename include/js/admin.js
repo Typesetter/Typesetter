@@ -1424,7 +1424,19 @@ $(function(){
 		$gp.InsertModkeys('#admin_ui_hotkey', 'before');
 	}
 
-}); /* end onLoad */
+	// make messages resizable
+	$(document).on('messages:loaded', function(evt){
+		$('.messages > div').resizable({
+			handles	: 'se',
+			start	: function(evt, ui){
+						$(this).css({
+							'max-height' : 'calc(100vh - 40px)'
+						});
+					}
+			});
+	});
+
+}); /* end on DOM ready */
 
 
 

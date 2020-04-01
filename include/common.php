@@ -441,6 +441,7 @@ function GetMessages( $wrap = true ){
 		$result .= '<ul>';
 		$result .= implode('',$wbMessageBuffer);
 		$result .= '</ul></div></div>';
+		$result .= '<script>$(document).trigger("messages:loaded");</script>';
 	}
 
 	return $result .= \gp\tool::ErrorBuffer().$wrap_end;

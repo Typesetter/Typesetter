@@ -721,7 +721,7 @@ class Session{
 		);
 
 
-		\gp\tool::LoadComponents('sortable, autocomplete, gp-admin, gp-admin-css, fontawesome, popper');
+		\gp\tool::LoadComponents('sortable, resizable, autocomplete, gp-admin, gp-admin-css, fontawesome, popper');
 		\gp\admin\Tools::VersionsAndCheckTime();
 
 

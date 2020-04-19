@@ -72,7 +72,7 @@ class Configuration extends \gp\special\Base{
 			'combinecss'				=> 'boolean',
 			'etag_headers'				=> 'boolean',
 			'space_char'				=> [
-				'_'			=> 'Undersorce "_"',
+				'_'			=> 'Underscore "_"',
 				'-'			=> 'Dash "-"'
 			],
 

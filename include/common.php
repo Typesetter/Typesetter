@@ -441,7 +441,11 @@ function GetMessages( $wrap = true ){
 		$result .= '<ul>';
 		$result .= implode('',$wbMessageBuffer);
 		$result .= '</ul></div></div>';
-		$result .= '<script>$(document).trigger("messages:loaded");</script>';
+		$result .= '<script>(function(){';
+		$result .= 'var elem = document.querySelectorAll(".messages > div")[0];';
+		$result .= 'elem.style.height = elem.offsetHeight + "px";';
+		$result .= 'elem.style.maxHeight = "calc(100vh - 40px)";';
+		$result .= '})();</script>';
 	}
 
 	return $result .= \gp\tool::ErrorBuffer().$wrap_end;

@@ -27,7 +27,7 @@ body .messages > div {
 	width: 700px;
 	min-width: 220px;
 	max-width: calc(100% - 40px);
-	min-height: 32px;
+	min-height: 36px;
 	max-height: 250px;
 	margin: 0 auto;
 	display: block;

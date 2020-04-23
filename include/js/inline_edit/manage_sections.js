@@ -1157,35 +1157,18 @@
 		// console.log('available_classes = ', available_classes);
 
 		var $classes_input = $html.find('.attr_value_class')
-			.on('input', UpdateAvailClasses)
 			.on('keydown', function(evt){
 				// prevent tabbing to other controls when autocomplete list has focus
 				if( evt.keyCode === $.ui.keyCode.TAB && $(this).autocomplete('instance').menu.active ){
 					evt.preventDefault();
 				}
 			})
-			.autocomplete({
-				source : function(request, response){
-					var last_term = request.term.split(' ').pop();
-					var filtered_classes = $.ui.autocomplete.filter(available_classes, last_term);
-					response(filtered_classes);
-				},
-				focus : function(){
-					return false;
-				},
-				select : function(event, ui){
-					var terms = this.value
-						.split(/(\s+)/)
-						.filter(function(e){
-							return e.trim().length > 0;
-						});
-					terms.pop();
-					terms.push(ui.item.value);
-					this.value = terms.join(' ');
-					$(this).trigger('input');
-					return false;
-				}
-			});
+			.on('focus keyup mouseup touchend', function(){
+				TextareaSetAutocomplete(this, available_classes);
+			})
+			.on('input', UpdateAvailClasses);
+
+		$classes_input
 
 		var $cols = $html.find('.avail_classes_col')
 			.on('mouseenter', function(){
@@ -1235,6 +1218,124 @@
 		var $area = gp_editor.GetArea($li);
 		$area.trigger("section_options:loaded");
 	};
+
+
+	/**
+	 * Parse the value of the class textarea and initialize autocomplete based on the caret position
+	 * @param {object} elem DOM element of the textarea
+	 * @param {array} available_classes
+	 *
+	 */
+	function TextareaSetAutocomplete(elem, available_classes){
+		var value		= elem.value; // console.log('elem.value = ', value);
+		var caret_pos	= elem.selectionEnd;
+		var end_pos		= value.indexOf(' ', caret_pos);
+		if( end_pos === -1 ){
+			end_pos		= value.length;
+		}
+		var current_term = /\S+$/.exec(value.slice(0, end_pos));
+		current_term = current_term ? current_term[0] : false;
+		// console.log('current_term = ', current_term);
+
+		if( !current_term ){
+			if( $(elem).hasClass('ui-autocomplete-input') ){
+				// console.log('autocomplete destroy');
+				$(elem).autocomplete('destroy');
+			}
+			return;
+		}
+		console.log('$(elem).data("values") = ', $(elem).data('values'));
+		if( $(elem).data('values') &&
+			( $(elem).data('values').caretPos === caret_pos ||
+			$(elem).data('values').current === current_term )
+			){
+			return;
+		}
+
+		var terms = value
+			.split(/(\s+)/)
+			.filter(function(term){
+				return term.trim().length > 0;
+			});
+		// console.log('terms = ', terms);
+
+		var regex = new RegExp('(\\b' + current_term + ')(?![\\w-])', 'gm');
+		// console.log('regex = ', regex);
+		var matches = [];
+		while( (match = regex.exec(value)) != null ){
+			var start	= match.index;
+			var end		= match.index + current_term.length;
+			matches.push({
+				match		: match,
+				term		: current_term,
+				start		: start,
+				end			: end,
+				is_current	: (caret_pos >= start && caret_pos <= end)
+			});
+		}
+		// console.log('current_term = "' + current_term + '", matches = ', matches);
+
+		var values = {
+			before		: '',
+			current		: '',
+			after		: '',
+			index		: -1,
+			caretPos	: caret_pos
+		};
+
+		var matches_index = -1;
+
+		$.each(terms, function(i, term){
+			if( term == current_term ){
+				matches_index++;
+				if( matches[matches_index] && matches[matches_index].is_current ){
+					values.current = term;
+					values.index = i;
+					return;
+				}
+			}
+			if( values.index == -1 ){
+				values.before += (term + ' ');
+			}else{
+				values.after += (' ' + term);
+			}
+		});
+
+		if( $(elem).hasClass('ui-autocomplete-input') &&
+			$(elem).data('values').current != current_term
+			){
+			$(elem).autocomplete('destroy');
+		}
+
+		$(elem)
+			.data('values', values)
+			.autocomplete({
+				minLength : 0,
+				source : function(request, response){
+					// console.log('autocomplete -> source -> $(this.element.context).data() = ', $(this.element.context).data());
+					var values = $(this.element.context).data('values');
+					var filtered_classes = $.ui.autocomplete.filter(available_classes, values.current);
+					response(filtered_classes);
+				},
+				focus : function(){
+					return false;
+				},
+				select : function(event, ui){
+					// console.log('this.data = ', $(this).data());
+					var $this = $(this);
+					var new_val = $this.data('values').before + 
+						ui.item.value + 
+						$this.data('values').after;
+					var caret_pos = $this.data('values').caretPos;
+					$this.val(new_val)
+						.trigger('input')
+						.get(0).setSelectionRange(caret_pos, caret_pos);
+					return false;
+				}
+			})
+			.trigger('keydown');
+	}
+
 
 
 	/**

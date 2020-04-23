@@ -1072,6 +1072,7 @@
 		var id					= $li.data('gp-area-id')
 		var attrs				= gp_editor.GetArea( $li ).data('gp-attrs');
 		var current_classes		= '';
+		var available_classes	= '';
 
 		//popup
 		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
@@ -1101,7 +1102,7 @@
 
 			html += '<tr><td>';
 			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" size="8" />';
-			html += '</td><td style="white-space:nowrap">';
+			html += '</td><td class="ui-front" style="white-space:nowrap">';
 			html += '<textarea rows="1" class="gptextarea attr_value' + (name == 'class' ? ' attr_value_class' : '') + '">' + $gp.htmlchars(value) + '</textarea>';
 			if( name == 'class' ){
 				html += '<div class="class_only admin_note">Default: GPAREA filetype-*</div>';
@@ -1130,6 +1131,7 @@
 			html += ClassSelect(gp_avail_classes[i].names, current_classes);
 			html += '</div>';
 			html += '<div class="avail_classes_desc">' + gp_avail_classes[i].desc + '<span x-arrow="true" class="popover_arrow"></span></div>';
+			available_classes += ' ' + gp_avail_classes[i].names;
 		}
 		html += '</div>';
 
@@ -1146,8 +1148,44 @@
 		html += '</form></div>';
 		var $html = $(html);
 
+		available_classes = available_classes
+			.trim()
+			.split(/(\s+)/)
+			.filter(function(e){
+				return e.trim().length > 0;
+			});
+		// console.log('available_classes = ', available_classes);
+
 		var $classes_input = $html.find('.attr_value_class')
-			.on('input', UpdateAvailClasses);
+			.on('input', UpdateAvailClasses)
+			.on('keydown', function(evt){
+				// prevent tabbing to other controls when autocomplete list has focus
+				if( evt.keyCode === $.ui.keyCode.TAB && $(this).autocomplete('instance').menu.active ){
+					evt.preventDefault();
+				}
+			})
+			.autocomplete({
+				source : function(request, response){
+					var last_term = request.term.split(' ').pop();
+					var filtered_classes = $.ui.autocomplete.filter(available_classes, last_term);
+					response(filtered_classes);
+				},
+				focus : function(){
+					return false;
+				},
+				select : function(event, ui){
+					var terms = this.value
+						.split(/(\s+)/)
+						.filter(function(e){
+							return e.trim().length > 0;
+						});
+					terms.pop();
+					terms.push(ui.item.value);
+					this.value = terms.join(' ');
+					$(this).trigger('input');
+					return false;
+				}
+			});
 
 		var $cols = $html.find('.avail_classes_col')
 			.on('mouseenter', function(){

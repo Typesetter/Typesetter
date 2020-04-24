@@ -1078,7 +1078,7 @@
 		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
 		html += '<h2>' + gplang.SectionAttributes + '</h2>';
 		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th>' + gplang.Attribute + '</th><th>' + gplang.Value + '</th></tr></thead><tbody>';
+		html += '<thead><tr><th style="width:25%;">' + gplang.Attribute + '</th><th>' + gplang.Value + '</th></tr></thead><tbody>';
 
 		$.each(attrs,function(name){
 
@@ -1101,7 +1101,7 @@
 			}
 
 			html += '<tr><td>';
-			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" size="8" />';
+			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" style="width:100%;" />';
 			html += '</td><td class="ui-front" style="white-space:nowrap">';
 			html += '<textarea rows="1" class="gptextarea attr_value' + (name == 'class' ? ' attr_value_class' : '') + '">' + $gp.htmlchars(value) + '</textarea>';
 			if( name == 'class' ){
@@ -1316,7 +1316,9 @@
 					var values = $(this.element.context).data('values');
 					var filtered_classes = $.ui.autocomplete.filter(available_classes, values.current);
 					filtered_classes.sort(function(a, b){
-						return a.indexOf(values.current) > b.indexOf(values.current) ? 1 : 0;
+						var ai = a.indexOf(values.current);
+						var bi = b.indexOf(values.current);
+						return ai < bi ? -1 : ai > bi ? 1 : 0;
 					});
 					response(filtered_classes);
 				},

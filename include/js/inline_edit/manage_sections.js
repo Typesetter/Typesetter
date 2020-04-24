@@ -1244,7 +1244,7 @@
 			}
 			return;
 		}
-		console.log('$(elem).data("values") = ', $(elem).data('values'));
+		// console.log('$(elem).data("values") = ', $(elem).data('values'));
 		if( $(elem).data('values') &&
 			( $(elem).data('values').caretPos === caret_pos ||
 			$(elem).data('values').current === current_term )
@@ -1315,6 +1315,9 @@
 					// console.log('autocomplete -> source -> $(this.element.context).data() = ', $(this.element.context).data());
 					var values = $(this.element.context).data('values');
 					var filtered_classes = $.ui.autocomplete.filter(available_classes, values.current);
+					filtered_classes.sort(function(a, b){
+						return a.indexOf(values.current) > b.indexOf(values.current) ? 1 : 0;
+					});
 					response(filtered_classes);
 				},
 				focus : function(){

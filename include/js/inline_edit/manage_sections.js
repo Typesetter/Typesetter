@@ -1276,9 +1276,9 @@
 		// console.log('current_term = "' + current_term + '", matches = ', matches);
 
 		var values = {
-			before		: '',
+			leading		: '',
 			current		: '',
-			after		: '',
+			trailing	: '',
 			index		: -1,
 			caretPos	: caret_pos
 		};
@@ -1295,9 +1295,9 @@
 				}
 			}
 			if( values.index == -1 ){
-				values.before += (term + ' ');
+				values.leading += (term + ' ');
 			}else{
-				values.after += (' ' + term);
+				values.trailing += (' ' + term);
 			}
 		});
 
@@ -1326,15 +1326,16 @@
 					return false;
 				},
 				select : function(event, ui){
-					// console.log('this.data = ', $(this).data());
-					var $this = $(this);
-					var new_val = $this.data('values').before + 
-						ui.item.value + 
-						$this.data('values').after;
-					var caret_pos = $this.data('values').caretPos;
+					// console.log('$(this.data) = ', $(this).data());
+					var $this			= $(this);
+					var leading			= $this.data('values').leading;
+					var selected		= ui.item.value;
+					var trailing		= $this.data('values').trailing;
+					var new_val			= leading + selected + trailing;
+					var new_caret_pos 	= leading.length + selected.length;
 					$this.val(new_val)
 						.trigger('input')
-						.get(0).setSelectionRange(caret_pos, caret_pos);
+						.get(0).setSelectionRange(new_caret_pos, new_caret_pos);
 					return false;
 				}
 			})

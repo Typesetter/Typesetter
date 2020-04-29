@@ -14,7 +14,6 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Navbar =======================================================================
 .navbar {
-  font-size: 18px;
   font-family: $headings-font-family;
   font-weight: $headings-font-weight;
 
@@ -49,8 +48,7 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
   font-family: $headings-font-family;
   font-weight: $headings-font-weight;
 
-  &-secondary,
-  &-warning {
+  &-secondary {
     color: $white;
   }
 }

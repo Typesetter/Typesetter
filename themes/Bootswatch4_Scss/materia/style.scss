@@ -114,7 +114,11 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 @include btn(light, $light, $white);
 
 .btn {
+  font-size: 0.875rem;
   text-transform: uppercase;
+  padding: 0.6em 1.2em;
+  font-weight: 500;
+  letter-spacing: .0892857143em;
   border: none;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   transition: all 0.4s;
@@ -205,7 +209,6 @@ body,
 input,
 button {
   -webkit-font-smoothing: antialiased;
-  letter-spacing: .1px;
 }
 
 p {
@@ -214,6 +217,32 @@ p {
 
 a {
   transition: all 0.2s;
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+h5, .h5,
+h6, .h6 {
+  color: $gray-600;
+}
+
+h6, .h6 {
+  font-weight: 500;
+}
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: inherit;
+  line-height: 1.25;
+  color: $gray-600;
 }
 
 // Tables ======================================================================
@@ -572,7 +601,8 @@ input[type="checkbox"],
 .dropdown-menu {
   margin-top: 0;
   border: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  border-radius: 1px;
 }
 
 // Indicators ==================================================================

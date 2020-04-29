@@ -14,9 +14,9 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Sandstone (required for @extend) =============================================
 .sandstone {
-  font-size: 11px;
+  font-size: $navbar-font-size;
   line-height: 22px;
-  font-weight: 500;
+  font-weight: 400;
   text-transform: uppercase;
 }
 

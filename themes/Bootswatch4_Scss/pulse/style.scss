@@ -74,6 +74,10 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Typography ==================================================================
 
+.lead {
+  font-size: 1.3rem;
+}
+
 // Tables ======================================================================
 .table .thead-dark th {
   background-color: $secondary;

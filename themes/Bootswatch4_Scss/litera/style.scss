@@ -14,7 +14,6 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Navbar =======================================================================
 .navbar {
-  font-size: 0.875em;
   &.bg-dark {
     background-color: $success !important;
   }
@@ -143,7 +142,7 @@ table,
 // Forms =======================================================================
 
 // Navs ========================================================================
-.nav,
+.nav:not(.navbar-nav),
 .breadcrumb,
 .pagination {
   font-size: 0.875em;

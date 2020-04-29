@@ -104,8 +104,8 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 }
 
 // Typography ==================================================================
-body {
-  font-weight: 200;
+b, strong {
+  font-weight: 700;
 }
 
 // Tables ======================================================================

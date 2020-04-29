@@ -34,6 +34,22 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
     color: $white;
   }
 
+  &-default {
+    background-color: $gray-400;
+    color: $gray-600;
+    &:hover {
+      background-color: darken($gray-400, 5%);
+      color: $gray-700;
+    }
+  }
+
+  &-warning {
+    color: darken($warning, 40%);
+    &:hover {
+      color: darken($warning, 45%);
+    }
+  }
+
   &-link,
   &-link:hover {
     color: $primary;

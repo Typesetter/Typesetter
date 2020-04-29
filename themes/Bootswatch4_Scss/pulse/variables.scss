@@ -8,7 +8,7 @@ $white:     #fff;
 $gray-100:  #fafafa;
 $gray-200:  #F9F8FC;
 $gray-300:  #EDEDED;
-$gray-400:  #cbc8d0;
+$gray-400:  #d4d1d8;
 $gray-500:  #adb5bd;
 $gray-600:  #868e96;
 $gray-700:  #444;
@@ -48,7 +48,9 @@ $link-hover-color: $primary;
 
 // Fonts
 $headings-color: $body-color;
-$font-size-base: 0.875rem;
+$font-size-base: 1rem;
+$navbar-font-size: 1rem;
+$footer-font-size: 0.875rem;
 
 // Tables
 $table-border-color: rgba(0, 0, 0, 0.05);
@@ -67,6 +69,7 @@ $nav-tabs-link-hover-border-color: $primary;
 
 // Navbar
 $navbar-padding-y: 1.2rem;
+$navbar-dark-color: rgba($white, 0.7);
 $navbar-dark-hover-color: rgba($white, 0.9);
 $navbar-dark-active-color: rgba($white, 0.9);
 $navbar-light-color: rgba($black, 0.4);

@@ -32,6 +32,12 @@ html:not(.override_admin_style) body.gpAdmin {
   height: calc(100% - 29px);
 }
 
+// Navbar =======================================================================
+$navbar-font-size: 1rem !default; // non-standard variable, needs a default value. actual value see layout's variables.scss
+.navbar {
+  font-size: $navbar-font-size;
+}
+
 // Content Area
 .main-content {
   // vendor-prefix mixin
@@ -52,8 +58,8 @@ footer.main-footer {
 
 // Fix for bad container paddings in navbars (as of Bootstrap 4.1.1)
 @include media-breakpoint-up(sm) {
-  .navbar-expand-lg > .container, 
-  .navbar-expand-lg > .container-fluid {
+  .navbar > .container,
+  .navbar > .container-fluid {
     padding-right: ($grid-gutter-width / 2);
     padding-left: ($grid-gutter-width / 2);
   }

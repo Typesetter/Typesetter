@@ -41,11 +41,16 @@ $web-font-path: "https://fonts.googleapis.com/css?family=News+Cycle:400,700";
 $headings-font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
 $headings-font-weight: 700;
 $headings-line-height: 1.1;
+$font-size-base: 1rem;
+$navbar-font-size: 1.125rem;
+$footer-font-size: 0.875rem;
 
 // Buttons
 $input-btn-padding-x: 1rem;
 
 // Navbar
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
 $navbar-light-color: rgba($black, 0.7);
 $navbar-light-hover-color: $black;
 $navbar-light-active-color: $black;

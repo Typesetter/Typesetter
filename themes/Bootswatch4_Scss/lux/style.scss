@@ -45,8 +45,8 @@ $navbar-height: ($nav-link-height + $navbar-padding-y * 2);
     }
   }
 
-  .nav-item {
-    margin-right: 3rem;
+  .navbar-nav > .nav-item {
+    margin-right: 1.5rem;
   }
 }
 
@@ -125,7 +125,6 @@ th {
 
 // Navs ========================================================================
 .dropdown-menu {
-  font-size: $font-size-sm;
   text-transform: none;
 }
 

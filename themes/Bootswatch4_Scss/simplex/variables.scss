@@ -40,9 +40,11 @@ $dark:      $gray-800;
 $body-bg: #FCFCFC;
 
 // Fonts
-$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700";
+$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i";
 $font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-$font-size-base: 0.8125rem;
+$font-size-base: 0.875rem;
+$navbar-font-size: 0.875rem;
+$footer-font-size: 0.875rem;
 
 // Dropdowns
 $dropdown-link-hover-color: $white;

@@ -2,6 +2,7 @@
 // these are no Bootstrap standard variables
 // therefore we need to define default values
 
+$footer-font-size:              0.875rem !default;
 $footer-bg:                     $gray-300 !default;
 $footer-border-top:             none !default;
 $footer-color:                  $body-color !default;
@@ -20,6 +21,7 @@ $footer-nav-link-active-bg:     transparent !default;
 
 
 footer.main-footer {
+  font-size: $footer-font-size;
   background: $footer-bg;
   border-top: $footer-border-top;
   color: $footer-color;

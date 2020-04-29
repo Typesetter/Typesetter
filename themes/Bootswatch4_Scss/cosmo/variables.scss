@@ -46,10 +46,14 @@ $body-color: $gray-800;
 $web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700";
 $font-family-sans-serif: "Source Sans Pro", "Segoe UI", Calibri, Candara, Arial, sans-serif;
 $font-size-base: 0.9375rem;
+$navbar-font-size: 0.9375rem;
+$footer-font-size: 0.875rem;
 $headings-font-weight: 300;
 
 // Navbar
+$navbar-dark-color: rgba($white, 0.65);
 $navbar-dark-hover-color: rgba($white, 1);
+$navbar-light-color: rgba($black, 0.6);
 $navbar-light-hover-color: rgba($black, 0.9);
 
 // Alerts

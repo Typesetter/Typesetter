@@ -318,7 +318,6 @@ namespace gp\admin{
 
 			// Addon admin links
 			if( isset($config['admin_links']) && is_array($config['admin_links']) ){
-
 				foreach( $config['admin_links'] as $link_name => $addon_info ){
 					$link_label = $addon_info['label'];
 					$link_label	= \gp\tool\Plugins::Filter('AdminLinkLabel', array($link_label, $link_name));
@@ -328,7 +327,7 @@ namespace gp\admin{
 				//prefix admin link labels with plugin icon
 				$admin_links = $config['admin_links'];
 				foreach( $admin_links as $admin_link_key => $admin_link ){
-					$admin_links[$admin_link_key]['label'] = '<i class="fa fa-plug"></i> ' . $admin_link['label'];
+					$admin_links[$admin_link_key]['label'] = '<i class="fa fa-plug" title="' . $admin_link['addon'] . '"></i> ' . $admin_link['label'];
 				}
 				$scripts += $admin_links;
 			}
@@ -812,7 +811,7 @@ namespace gp\admin{
 
 		/**
 		 * Helper function for outputting link groups in AdminPanelLinks()
-		 * as of 5.1.1-b1 new params:
+		 * as of 5.2-rc new params:
 		 * @param string $class, CSS class(es) for panelgroup, TODO: better make it $attrs?
 		 * @param string $badge, HTML for optional badge, TODO: should be better an array of separated class and content
 		 *

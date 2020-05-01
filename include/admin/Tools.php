@@ -326,8 +326,9 @@ namespace gp\admin{
 
 				//prefix admin link labels with plugin icon
 				$admin_links = $config['admin_links'];
-				foreach( $admin_links as $admin_link_key => $admin_link ){
-					$admin_links[$admin_link_key]['label'] = '<i class="fa fa-plug" title="' . $admin_link['addon'] . '"></i> ' . $admin_link['label'];
+				foreach( $admin_links as $link_name => $addon_info ){
+					$addon_name = $config['addons'][$addon_info['addon']]['name'];
+					$admin_links[$link_name]['label'] = '<i class="fa fa-plug" title="' . $addon_name . '"></i> ' . $addon_info['label'];
 				}
 				$scripts += $admin_links;
 			}

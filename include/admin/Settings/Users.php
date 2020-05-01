@@ -601,7 +601,12 @@ class Users extends \gp\special\Base{
 
 			echo '<label class="all_checkbox">';
 			echo '<input type="checkbox" name="grant[]" value="'.$permission.'" '.$checked.'/>';
-			echo '<span title="'.trim(strip_tags($label)).'">'.$label.'</span>';
+			$title_attr = trim(strip_tags($label));
+			preg_match('/title="(.*?)".*?>/si', $label, $matches); 
+			if( isset($matches[1]) ){
+				$title_attr = $matches[1].': '.$title_attr;
+			}
+			echo '<span title="'.$title_attr.'">'.$label.'</span>';
 			echo '</label> ';
 		}
 
@@ -615,9 +620,12 @@ class Users extends \gp\special\Base{
 		$editing_values = $values['editing'];
 		$all = ($editing_values == 'all');
 		$checked = $all ? ' checked="checked" ' : '';
-		echo '<p><label class="select_all"><input type="checkbox" class="select_all" name="editing_all" value="all" '.$checked.'/> '.$langmessage['All'].'</label></p>';
+		echo '<p><label class="select_all">';
+		echo '<input type="checkbox" class="select_all" name="editing_all" value="all" '.$checked.'/> ';
+		echo $langmessage['All'];
+		echo '</label></p>';
 
-		echo '<div style="height:200px;overflow:auto;">';
+		echo '<div style="max-height:168px;overflow:auto;">';
 
 		$ordered = array();
 		foreach($gp_titles as $index => $info){

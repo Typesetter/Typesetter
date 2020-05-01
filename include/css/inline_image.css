@@ -353,6 +353,14 @@
 #gp_image_wrap {
 	text-align: center;
 	display: block;
+	background-color: #eee;
+	background-image:
+		linear-gradient(45deg, #ccc 25%, transparent 25%),
+		linear-gradient(135deg, #ccc 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #ccc 75%),
+		linear-gradient(135deg, transparent 75%, #ccc 75%);
+	background-size: 16px 16px;
+	background-position:0 0, 8px 0, 8px -8px, 0px 8px;
 }
 
 #gp_current_image img {
@@ -424,7 +432,7 @@ body #gp_current_image td {
  */
 
 #gp_select_wrap {
-    transition: max-height 1s ease 0s;
+	transition: max-height 1s ease 0s;
 	-webkit-transition: max-height 1s;
 	-moz-transition: max-height 1s;
 	-ms-transition: max-height 1s;

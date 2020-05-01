@@ -784,7 +784,7 @@ input.admin_box_close {
 }
 
 .layout_default {
-	@include opacity(.6);
+	@include opacity(0.6);
 }
 
 
@@ -799,19 +799,15 @@ body.gpAdmin .GPAREA[data-gp_hidden="true"] {
 	display: none!important;
 }
 
-body.gpAdmin div.editable_area {
-	min-height: 1em;
-}
-
 
 /**
  * general
  */
 
- .full_width,
- #gp_admin_html .full_width {
- 	width: 100%;
- }
+.full_width,
+#gp_admin_html .full_width {
+	width: 100%;
+}
 
 
 #gp_admin_html .bordered,
@@ -819,7 +815,6 @@ body.gpAdmin div.editable_area {
 	margin-top: 1em;
 	border-spacing: 0;
 	border-top: 1px solid #eee;
-
 
 	> tbody > tr > th,
 	> thead > tr > th,
@@ -857,7 +852,7 @@ body.gpAdmin div.editable_area {
 		background-color: #ddd;
 	}
 
- 	> tbody > tr.active > td {
+	> tbody > tr.active > td {
 		background-color: $gp_teal !important;
 		&,
 		> a {

@@ -68,14 +68,16 @@ class Map extends \gp\special\Base{
 
 
 		foreach($gp_menu as $key => $info){
-
 			$title = \gp\tool::IndexToTitle($key);
+			$gptitle = $gp_titles[$key];
 
-			if( isset($info['level']) && !isset( $gp_titles[$key]['vis']) ){
+			if( isset($info['level']) 
+				&& !isset( $gptitle['vis']) 
+				&& !( isset($gptitle['rel']) && strpos($gptitle['rel'], 'noindex') !== false ) ) {
 				echo "\n";
 				echo '<url>';
 				echo '<loc>';
-				echo isset($info['url']) ? $info['url'] : 'http://' . $_SERVER['SERVER_NAME'] . \gp\tool::GetUrl($title);
+				echo isset($info['url']) ? $info['url'] : \gp\tool::AbsoluteUrl($title,'','','',true);
 				echo '</loc>';
 				echo '</url>';
 			}

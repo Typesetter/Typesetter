@@ -60,7 +60,7 @@ class Map extends \gp\special\Base{
 	</url>
 	*/
 	function xml(){
-		global $gp_menu;
+		global $gp_menu, $gp_titles;
 
 		header('Content-Type: text/xml; charset=UTF-8');
 		echo '<?xml version="1.0" encoding="UTF-8"?>';
@@ -71,7 +71,7 @@ class Map extends \gp\special\Base{
 
 			$title = \gp\tool::IndexToTitle($key);
 
-			if( isset($info['level']) ){
+			if( isset($info['level']) && !isset( $gp_titles[$key]['vis']) ){
 				echo "\n";
 				echo '<url>';
 				echo '<loc>';

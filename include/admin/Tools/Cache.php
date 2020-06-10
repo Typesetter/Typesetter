@@ -90,13 +90,14 @@ class Cache extends \gp\special\Base{
 			echo \gp\admin\Tools::FormatBytes($size);
 			$total_size += $size;
 
-			echo '</td><td>';
+			echo '</td><td title="' . date('Y-m-d H:i:s', filemtime($full)) . '">';
+			echo '<span class="nodisplay">' . filemtime($full) . '</span>';
 			if( $config['language'] == 'en' ){
 				$elapsed = \gp\admin\Tools::Elapsed( time() - filemtime($full) );
 				echo sprintf($langmessage['_ago'],$elapsed);
-			 }else{
-			 	echo date('Y/m/d', filemtime($full));
-			 }
+			}else{
+				echo date('Y-m-d H:i:s', filemtime($full));
+			}
 			echo '</td><td>';
 
 			echo \gp\tool::Link('Admin/Cache',$langmessage['delete'],'cmd=DeleteFile&amp;file='.rawurlencode($file),array('data-cmd'=>'cnreq','class'=>'gpconfirm','title'=>$langmessage['delete_confirm']));

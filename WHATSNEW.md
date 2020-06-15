@@ -14,7 +14,8 @@
 * Less.php 1.8.1: With the newest version of our LESS CSS compiler we gain some performance boost and support for less 2.5.3
 * ScssPhp 1.0.5: Version 1.0.5 comes with better support for recent development of the the Scss language.
 * Colorbox 1.6.4: Merely an update to the latest version but we also added a modern Colorbox style called 'Minimalistic'
-* PHPmailer 5.2.27: fixes a security issue.
+* PHPmailer 5.2.27: Fixes a security issue.
+* reCaptcha 1.2.4: Fixes verification error / 'invalid JSON' issue.
 
 
 ## Security ##

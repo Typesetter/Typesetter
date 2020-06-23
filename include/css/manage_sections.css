@@ -41,6 +41,10 @@
 	outline-offset: -1px;
 }
 
+#section_sorting li.section-sorting-highlight.active {
+	box-shadow: 0 0 2px black;
+}
+
 #section_sorting .color_handle {
 	position: absolute;
 	top: 0;

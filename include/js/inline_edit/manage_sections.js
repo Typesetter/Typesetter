@@ -433,6 +433,11 @@
 
 				// highlight sections in editor
 				$this.on("mouseenter", function(){
+					$('li[data-gp-area-id].section-sorting-highlight')
+					.not($('li[data-gp-area-id="' + area_id + '"]').parents('li'))
+					.not($('li[data-gp-area-id="' + area_id + '"]').find('li'))
+					.removeClass('section-sorting-highlight');
+				
 					$('li[data-gp-area-id="' + area_id + '"]').addClass('section-sorting-highlight');
 				}).on("mouseleave", function(){
 					$('li[data-gp-area-id="' + area_id + '"]').removeClass('section-sorting-highlight');

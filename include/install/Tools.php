@@ -372,26 +372,26 @@ class Tools{
 		</div>
 		</div>
 		';
-		self::NewTitle( $destination, 'Home', $content, $config, $new_index);
+		self::NewTitle($destination, 'Home', $content, $config, $new_index);
 
 
 		// Heading Page
 		$content = '<h1>A Heading Page</h1>
 		<li>'.self::Install_Link_Content('Child_Page','Child Page').'</li>
 		</ul>';
-		self::NewTitle( $destination, 'Heading_Page',$content, $config, $new_index);
+		self::NewTitle($destination, 'Heading_Page', $content, $config, $new_index);
 
 
 		// Child Page
 		$content = '<h1>A Child Page</h1><p>You can easily change the arrangement of all your pages using the '.self::Install_Link_Content('Admin/Menu','Page Manager').'.</p>';
-		self::NewTitle( $destination, 'Child_Page',$content, $config, $new_index);
+		self::NewTitle($destination, 'Child_Page', $content, $config, $new_index);
 
 		// More
 		$content = '<h1>More</h1>
 		<ul><li>'.self::Install_Link_Content('About','About').'</li>
 		<li>'.self::Install_Link_Content('Contact','Contact').'</li>
 		</ul>';
-		self::NewTitle( $destination, 'More',$content, $config, $new_index);
+		self::NewTitle($destination, 'More', $content, $config, $new_index);
 
 
 		// About
@@ -419,7 +419,12 @@ class Tools{
 		<li>reCaptcha for Contact Form</li>
 		<li>HTML Tidy (when available)</li>
 		</ul>';
-		self::NewTitle( $destination, 'About',$content, $config, $new_index);
+		self::NewTitle($destination, 'About', $content, $config, $new_index);
+
+		//Copyright Notice
+		$file		= $destination.'/data/_extra/Copyright_Notice/page.php';
+		$content	= '<p>&copy; $currentYear My Company</p>';
+		self::NewExtra($file, $content);
 
 		//Side_Menu
 		$file		= $destination.'/data/_extra/Side_Menu/page.php';
@@ -439,7 +444,7 @@ class Tools{
 		$file		= $destination.'/data/_extra/Header/page.php';
 		$content	= '<h1>'.$config['title'].'</h1>
 		<h4>'.'The Fast and Easy CMS'.'</h4>';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
 		//Footer
 		$file		= $destination.'/data/_extra/Footer/page.php';
@@ -453,43 +458,43 @@ class Tools{
 		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using" rel="nofollow">WhatCMS.org</a> and
 		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for." rel="nofollow">WhichCMS.org</a>.
 		</p>';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
 		//Footer Column 1
 		$file		= $destination.'/data/_extra/Footer_Column_1/page.php';
 		$content	= '<p>Footer Column 1</p>';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
 		//Footer Column 2
 		$file		= $destination.'/data/_extra/Footer_Column_2/page.php';
 		$content	= '<p>Footer Column 2</p>';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
 		//Footer Column 3
 		$file		= $destination.'/data/_extra/Footer_Column_3/page.php';
 		$content	= '<p>Footer Column 3</p>';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
 		//Footer Column 4
 		$file		= $destination.'/data/_extra/Footer_Column_4/page.php';
 		$content	= '<p>Footer Column 4</p>';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
 		//Dropdown Divider
 		$file		= $destination.'/data/_extra/Bootstrap_Dropdown_Divider/page.php';
 		$content	= '';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
 		//Another example area
 		$file		= $destination.'/data/_extra/Lorem/page.php';
 		$content	= '<h3>Heading</h3>
 		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>';
-		self::NewExtra($file,$content);
+		self::NewExtra($file, $content);
 
-
-		//contact html
-		$file = $destination.'/data/_extra/Contact/page.php';
-		self::NewExtra($file,'<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>');
+		//Contact html
+		$file		= $destination.'/data/_extra/Contact/page.php';
+		$content	= '<h2>Contact Us</h2><p>Use the form below to contact us, and be sure to enter a valid email address if you want to hear back from us.</p>';
+		self::NewExtra($file, $content);
 
 
 		//users

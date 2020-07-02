@@ -90,7 +90,12 @@ class Search extends \gp\special\Base{
 		$this->RunQuery();
 
 		if( \gp\tool::LoggedIn() ){
-			echo \gp\tool::Link('special_gpsearch', $langmessage['configuration'], 'cmd=config', 'data-cmd="gpabox"');
+			echo \gp\tool::Link(
+				'special_gpsearch',
+				$langmessage['configuration'],
+				'cmd=config',
+				['data-cmd' => 'gpabox', 'class' => 'search-config-link']
+			);
 		}
 
 		echo '</div>';
@@ -139,9 +144,11 @@ class Search extends \gp\special\Base{
 		global $langmessage;
 
 		if( !count($this->results) ){
-			echo '<p>';
-			echo \gp\tool\Output::GetAddonText($langmessage['search_no_results']);
-			echo '</p>';
+			if( !empty($_REQUEST['q']) ){
+				echo '<p class="search_results">';
+				echo \gp\tool\Output::GetAddonText($langmessage['search_no_results']);
+				echo '</p>';
+			}
 			return;
 		}
 
@@ -366,11 +373,17 @@ class Search extends \gp\special\Base{
 
 
 	public function Admin(){
+		global $langmessage;
 
 		if( !\gp\tool::LoggedIn() ){
 			return false;
 		}
-		$this->page->admin_links[] = array('special_gpsearch', 'Configuration', 'cmd=config', 'data-cmd="gpabox"');
+		$this->page->admin_links[] = array(
+			'special_gpsearch',
+			$langmessage['configuration'],
+			'cmd=config',
+			[ 'data-cmd' => 'gpabox', 'class' => 'admin-link-search-config' ]
+		);
 		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){

@@ -430,25 +430,33 @@ class Search extends \gp\special\Base{
 		echo '<h2>' . $langmessage['Search'] . ' &raquo; ' . $langmessage['configuration'] . '</h2>';
 
 		echo '<form class="renameform" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="post">';
-		echo '<table style="width:100%" class="bordered">';
-		echo '<tr><th>' . $langmessage['options'] . '</th><th>' . $langmessage['Value'] . '</th>';
-		echo '<th>' . $langmessage['default'] . '</th></tr>';
 
-		echo '<tr><td>'.$langmessage['Search Hidden Files'].'</td><td>';
-			if( isset($array['search_hidden']) && $array['search_hidden'] ){
-				echo '<input type="checkbox" name="search_hidden" checked="checked" value="true" />';
-			}else{
-				echo '<input type="checkbox" name="search_hidden" value="true" />';
-			}
-			echo '</td><td>' . $langmessage['False'] . '</td></tr>';
+		echo '<table class="bordered full_width">';
 
-		echo '<tr><td></td><td>';
-			echo '<input type="hidden" name="cmd" value="save_config" />';
-			echo '<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit" /> ';
-			echo '<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '" class="admin_box_close gpcancel" /> ';
-			echo '</td><td></td></tr>';
+		echo '<tr>';
+		echo 	'<th>' . $langmessage['options'] . '</th>';
+		echo 	'<th>' . $langmessage['Value'] . '</th>';
+		echo 	'<th style="text-align:right;">' . $langmessage['default'] . '</th>';
+		echo '</tr>';
+
+		echo '<tr>';
+		echo 	'<td>' . $langmessage['Search Hidden Files'] . '</td>';
+		echo 	'<td>';
+		$checked = isset($array['search_hidden']) && $array['search_hidden'] ? ' checked="checked"' : '';
+		echo 		'<input type="checkbox" name="search_hidden" value="true"' . $checked . ' />';
+		echo 	'</td>';
+		echo 	'<td style="text-align:right;">' . $langmessage['False'] . '</td>';
+		echo '</tr>';
 
 		echo '</table>';
+
+		echo '<p>';
+		echo 	'<input type="hidden" name="cmd" value="save_config" />';
+		echo 	'<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit" /> ';
+		echo 	'<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '"';
+		echo		' class="admin_box_close gpcancel" /> ';
+		echo '</p>';
+
 		echo '</form>';
 	}
 

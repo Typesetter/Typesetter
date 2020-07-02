@@ -2,7 +2,7 @@
 
 Instead of plain CSS expressions you should use these vp-mixins which will add the vendor prefixes required by legacy web browsers
 
-## Flexbox ##
+### Flexbox ###
 
 | MODERN CSS					| VP-MIXIN								| POSSIBLE VALUES |
 | :---------						| :---------						| :--- |
@@ -28,7 +28,7 @@ Instead of plain CSS expressions you should use these vp-mixins which will add t
 | `flex-flow:` _value_					| `@include vp-flex-flow(`_value_`)`					| e.g. `row nowrap`, see the [Specs](http://w3.org/tr/css3-flexbox/#flex-flow-property) |
 
 
-## Backgrounds ##
+### Backgrounds ###
 
 | MODERN CSS										| VP-MIXIN										| POSSIBLE VALUES |
 | :---------										| :---------									| :--- |
@@ -38,14 +38,14 @@ Instead of plain CSS expressions you should use these vp-mixins which will add t
 | `background-image: linear-gradient(`_values_`)`	| `@include vp-linear-gradient-img(`_values_`)`	| _direction_ _color-stops_ |
 
 
-## Form Placeholder ##
+### Form Placeholder ###
 
 | MODERN CSS	| VP-MIXIN	 | POSSIBLE VALUES |
 | :--- | :--- | :--- |
 | _selector_`::placeholder {`<br/>&nbsp;&nbsp;`color:` _value1_ <br/>&nbsp;&nbsp;`opacity: `_value2_ <br/>`}` | _selector_ `{`<br/>&nbsp;&nbsp;`@include vp-placeholder(`_value1_`,` _value2_`)`<br/>`}`| _css color_<br/>_float(0-1)_ |
 
 
-## General ##
+### General ###
 
 | MODERN CSS						| VP-MIXIN										| POSSIBLE VALUES |
 | :---------						| :---------									| :--- |
@@ -66,7 +66,7 @@ Instead of plain CSS expressions you should use these vp-mixins which will add t
 | `perspective:` _value_			| `@include vp-perspective(`_value_`)`			| _any css length value_ |
 
 
-## Transitions ##
+### Transitions ###
 
 | MODERN CSS							| VP-MIXIN												| POSSIBLE VALUES |
 | :---------							| :---------											| :--- |
@@ -76,7 +76,7 @@ Instead of plain CSS expressions you should use these vp-mixins which will add t
 | `transition-property:` _value_		| `@include vp-transition-property(`_value_`)`			| e.g. `all`(default)<br/>see the [Specs](https://www.w3.org/TR/css-transitions-1/#transition-property-property) |
 
 
-## Animation ##
+### Animation ###
 
 | MODERN CSS				| VP-MIXIN									| POSSIBLE VALUES |
 | :---------				| :---------								| :--- |

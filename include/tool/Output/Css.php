@@ -73,6 +73,9 @@ class Css{
 
 		//rename the temp source map, append the comment/URL to the compiled css file
 		if( self::RenameSourceMap($temp_sourcemap_name, $sourcemap_name) ){
+			//remove possible existing sourceMapping comments
+			$compiled = preg_replace('%/\*#\ssourceMappingURL.*\*/%s', '', $compiled);
+			//append final comment
 			$compiled = $compiled . "\n" . '/*# sourceMappingURL=' . $sourcemap_name . ' */' . "\n";
 		};
 

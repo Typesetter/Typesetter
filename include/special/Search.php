@@ -232,17 +232,30 @@ class Search extends \gp\special\Base{
 		if( $total_pages < 1 ){
 			return;
 		}
-		
+
+		$prev_text		= $langmessage['Previous'];
+		$next_text		= $langmessage['Next'];
+		$current_text	= $langmessage['Current Page'];
+
 		echo '<nav aria-label="' . $langmessage['All Pages'] . '">';
 		echo '<ul class="search_nav search_nav_bottom pagination">';
 
 		//previous
 		if( $current_page > 0 ){
-			echo '<li class="page-item">';
-			self::PaginationLink($slug, '&laquo;', $query, $page_key, $attr, ($current_page - 1));
+			echo '<li class="page-item page-item-previous">';
+			self::PaginationLink(
+				$slug,
+				$prev_text,
+				$query,
+				$page_key,
+				$attr . ' aria-label="' . $prev_text . '"',
+				($current_page - 1)
+			);
 			echo '</li>';
 		}else{
-			echo '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
+			echo '<li class="page-item page-item-previous disabled">';
+			echo 	'<span class="page-link">' . $prev_text . '</span>';
+			echo '</li>';
 		}
 
 		// i
@@ -250,21 +263,39 @@ class Search extends \gp\special\Base{
 		$max_page	= min($min_page + 6, $total_pages);
 		for($i = $min_page; $i < $max_page; $i++){
 			if( $i == $current_page ){
-				echo '<li class="page-item active"><span class="page-link">' . ($i + 1) . '</span></li> ';
+				echo '<li class="page-item active">';
+				echo 	'<span class="page-link" aria-label="' . $current_text . '">' . ($i + 1) . '</span>';
+				echo '</li>';
 				continue;
 			}
 			echo '<li class="page-item">';
-			self::PaginationLink($slug, ($i + 1), $query, $page_key, $attr, $i);
+			self::PaginationLink(
+				$slug,
+				($i + 1),
+				$query,
+				$page_key,
+				$attr,
+				$i
+			);
 			echo '</li>';
 		}
 
 		// next
 		if( ($current_page+1) < $total_pages ){
-			echo '<li class="page-item">';
-			self::PaginationLink($slug, '&raquo;', $query, $page_key, $attr, ($current_page + 1));
+			echo '<li class="page-item page-item-next">';
+			self::PaginationLink(
+				$slug,
+				$next_text,
+				$query,
+				$page_key,
+				$attr . ' aria-label="' . $next_text . '"',
+				($current_page + 1)
+			);
 			echo '</li>';
 		}else{
-			echo '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
+			echo '<li class="page-item page-item-next disabled">';
+			echo 	'<span class="page-link">' . $next_text . '</span>';
+			echo '</li>';
 		}
 
 		echo '</ul>';

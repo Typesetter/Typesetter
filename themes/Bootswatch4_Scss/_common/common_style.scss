@@ -91,6 +91,7 @@ footer.main-footer {
 .gpCol-10 { @extend .col-md-10; }
 .gpCol-11 { @extend .col-md-11; }
 .gpCol-12 { @extend .col-12; }
+[class *= "gpCol-"] { margin-bottom: unset; }
 
 // fixes for flex grid
 .filetype-wrapper_section.row {

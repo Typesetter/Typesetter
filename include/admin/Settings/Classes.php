@@ -225,11 +225,11 @@ class Classes extends \gp\special\Base{
 		];
 		$bs4[] = [
 			'names'	=> 'lead',
-			'desc'	=> 'BS4 text utils: makes paragraphs <p> inside the section stand out. Does not influence headings and other elemetns with defined font sizes',
+			'desc'	=> 'BS4 text utils: makes paragraphs <p> inside the section stand out. Does not influence headings and other elements with defined font sizes',
 		];
 		$bs4[] = [
 			'names'	=> 'small',
-			'desc'	=> 'BS4 text utils: makes text inside the section smaller. Does not influence headings and other elemetns with defined font sizes',
+			'desc'	=> 'BS4 text utils: makes text inside the section smaller. Does not influence headings and other elements with defined font sizes',
 		];
 		$bs4[] = [
 			'names'	=> 'text-lowercase text-uppercase text-capitalize',
@@ -276,7 +276,7 @@ class Classes extends \gp\special\Base{
 		// no-gutters
 		$bs4[] = [
 			'names'	=> 'no-gutters',
-			'desc'	=> 'BS4 grid: use together with row to remove its negative margins ' .
+			'desc'	=> 'BS4 grid: use together with ‘row’ to remove its negative margins ' .
 						 'and the horizontal padding from all immediate child cols',
 		];
 
@@ -387,8 +387,8 @@ class Classes extends \gp\special\Base{
 		$bs4[] = [
 			'names'	=> 'card-columns card-deck card-group',
 			'desc'	=> 'BS4 card layout wrappers: use for wrapper sections that contain ‘card’ sections. ' .
-						'card-columns: a pinterest-like masonry.' .
-						'card-deck: grid of cards of equal height and width' .
+						'card-columns: a pinterest-like masonry, ' .
+						'card-deck: grid of cards of equal height and width, ' .
 						'card-group: similar to grid but without gutters',
 		];
 		$bs4[] = [
@@ -397,19 +397,19 @@ class Classes extends \gp\special\Base{
 		];
 		$bs4[] = [
 			'names'	=> 'card-header card-body card-footer',
-			'desc'	=> 'BS4 card content: use for child sections of wrapper sections with the ‘card’ class',
+			'desc'	=> 'BS4 card content: use for child sections inside wrapper sections with the ‘card’ class',
 		];
 		$bs4[] = [
 			'names'	=> 'card-image card-image-top card-image-bottom',
-			'desc'	=> 'BS4 card content: use for child image sections of wrapper sections with the ‘card’ class',
+			'desc'	=> 'BS4 card content: use for child image sections inside wrapper sections with the ‘card’ class',
 		];
 		$bs4[] = [
 			'names'	=> 'card-image-overlay',
-			'desc'	=> 'BS4 card content: use for child sections of wrapper sections with the ‘card’ class. The section must follow a card-image-* section and its content will overlay the image',
+			'desc'	=> 'BS4 card content: use for child sections inside wrapper sections with the ‘card’ class. The section must follow a ‘card-image’ section so its content can overlay the image',
 		];
 		$bs4[] = [
 			'names'	=> 'card-title card-text',
-			'desc'	=> 'BS4 card content: use for child sections of wrapper with the ‘card-header -body or -footer’ class',
+			'desc'	=> 'BS4 card content: use for child sections inside wrapper sections with the ‘card-header -body or -footer’ classes',
 		];
 
 
@@ -632,7 +632,7 @@ class Classes extends \gp\special\Base{
 		// visibility
 		$bs4[] = [
 			'names'	=> 'visible invisible',
-			'desc'	=> 'BS4 visibility: control the visibility without modifying the display. Invisible elements will still take up space in the page.',
+			'desc'	=> 'BS4 visibility: control the visibility without modifying the display. Invisible elements will still take up space in the page',
 		];
 
 		// screen readers only

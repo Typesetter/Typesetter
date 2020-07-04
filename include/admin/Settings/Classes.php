@@ -610,8 +610,12 @@ class Classes extends \gp\special\Base{
 
 		// jumbotron
 		$bs4[] = [
-			'names'	=> 'jumbotron jumbotron-fluid',
+			'names'	=> 'jumbotron',
 			'desc'	=> 'BS4: everything big for calling extra attention to some special content',
+		];
+		$bs4[] = [
+			'names'	=> 'jumbotron-fluid',
+			'desc'	=> 'BS4: combine with jumbotron for full-width sections without rounded corners',
 		];
 
 		// float

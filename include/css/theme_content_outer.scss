@@ -73,6 +73,10 @@ body {
 			a {
 				display: inline-block;
 				margin-right: 0.6em;
+				max-width: calc(100% + 0.6em);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 				&:last-child {
 					margin-right: 0;
 				}

@@ -2018,10 +2018,10 @@ namespace gp\tool{
 		 * as of 5.2-rc
 		 * @static
 		 */
-		public static function GetLoginLink(){
+		public static function GetLoginLink($force_show=false){
 			global $config, $langmessage, $page;
 
-			if( !isset($config['showlogin']) || $config['showlogin'] ){
+			if( $force_show || !isset($config['showlogin']) || $config['showlogin'] ){
 				echo '<span class="login_link">';
 					if( \gp\tool::LoggedIn() ){
 						echo \gp\tool::Link(
@@ -2050,7 +2050,7 @@ namespace gp\tool{
 		}
 
 		public static function LoginLinkGadget(){
-			self::GetLoginLink();
+			self::GetLoginLink(true);
 		}
 
 

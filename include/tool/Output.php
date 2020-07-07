@@ -1973,10 +1973,32 @@ namespace gp\tool{
 
 
 		/**
-		 * Outputs the sitemap link, admin login/logout link, powered by link, admin html and messages
+		 * Outputs the sitemap link, admin login/logout link, powered by link and messages
 		 * @static
 		 */
-		public static function GetAdminLink(){
+		public static function GetAdminLink($messages=true){
+			global $config, $langmessage, $page;
+
+			self::GetSitemapLink(); // as of 5.2-rc
+			echo ' ';
+			self::GetLoginLink(); // as of 5.2-rc
+			echo ' ';
+			self::GetPoweredByLink(); // as of 5.2-rc
+
+			\gp\tool\Plugins::Action('GetAdminLink');
+
+			if( $messages ){
+				echo GetMessages();
+			}
+		}
+
+
+		/**
+		 * Outputs only the sitemap link
+		 * as of 5.2-rc
+		 * @static
+		 */
+		public static function GetSitemapLink(){
 			global $config, $langmessage, $page;
 
 			if( !isset($config['showsitemap']) || $config['showsitemap'] ){
@@ -1985,11 +2007,22 @@ namespace gp\tool{
 					'Special_Site_Map',
 					$langmessage['site_map']
 				);
+				\gp\tool\Plugins::Action('GetSitemapLink');
 				echo '</span>';
 			}
+		}
+
+
+		/**
+		 * Outputs only the login/logout link
+		 * as of 5.2-rc
+		 * @static
+		 */
+		public static function GetLoginLink(){
+			global $config, $langmessage, $page;
 
 			if( !isset($config['showlogin']) || $config['showlogin'] ){
-				echo ' <span class="login_link">';
+				echo '<span class="login_link">';
 					if( \gp\tool::LoggedIn() ){
 						echo \gp\tool::Link(
 							$page->title,
@@ -2011,20 +2044,32 @@ namespace gp\tool{
 							)
 						);
 					}
+				\gp\tool\Plugins::Action('GetLoginLink');
 				echo '</span>';
 			}
+		}
+
+		public static function LoginLinkGadget(){
+			self::GetLoginLink();
+		}
+
+
+		/**
+		 * Outputs only the powered_by link
+		 * as of 5.2-rc
+		 * @static
+		 */
+		public static function GetPoweredByLink($always_show=false){
+			global $config;
 
 			if( !isset($config['showgplink']) || $config['showgplink'] ){
-				if( self::is_front_page() ){
-					echo ' <span id="powered_by_link">';
+				if( self::is_front_page() || $always_show ){
+					echo '<span id="powered_by_link">';
 					echo 'Powered by <a href="' . \CMS_DOMAIN . '" target="_blank">' . \CMS_NAME . '</a>';
+					\gp\tool\Plugins::Action('GetPoweredByLink');
 					echo '</span>';
 				}
 			}
-
-			\gp\tool\Plugins::Action('GetAdminLink');
-
-			echo GetMessages();
 		}
 
 

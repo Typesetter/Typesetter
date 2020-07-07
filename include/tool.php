@@ -1081,8 +1081,9 @@ namespace gp{
 			}
 
 			// default gadgets
-			$config['gadgets']['Contact'] =	array('class'	=> '\\gp\\special\\ContactGadget');
-			$config['gadgets']['Search'] =	array('method'	=> array('\\gp\\special\\Search','gadget'));
+			$config['gadgets']['Contact']		=	array('class'	=> '\\gp\\special\\ContactGadget');
+			$config['gadgets']['Search']		=	array('method'	=> array('\\gp\\special\\Search','gadget'));
+			$config['gadgets']['Login_Link']	=	array('method'	=> array('\\gp\\tool\\Output','LoginLinkGadget'));
 
 
 			foreach($config['hooks'] as $hook => $hook_info){

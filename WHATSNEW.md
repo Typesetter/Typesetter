@@ -58,9 +58,12 @@
 * Working Drafts of Extra Content Areas can now be dismissed before being published.
 
 
+## Default Gadgets ##
+* We added a new 'Login Link' Gadget that you can place anywhere in the layout, content or even menus (via File Include/Extra Content). This login link will appear regardless of the 'Show Login Link' configuration setting. Remove it via Layout Editor if your theme uses gpOutput::GetAllGadgets().
+
+
 ## Development ##
 * General note: We made quite a lot of changes, even architectural ones, but with backward compatibility in mind. If your custom code is broken using Typesetter 5.2, we will most likely be able to assist you via GitHub issues or the forum on TypesetterCMS.com
-* Theme development: Bootstrap based themes shipping with Typesetter now have a new Addon.ini section called 'FrontEndFramework' wich declares Bootstrap and version used by the theme. This makes server-side framework detection possible and allows plugins to adapt their output accordingly. Although it's not mandatory, please consider adding this information to all new themes, even if they use other frameworks like Foundation, Materialize, you name it.
 * Supported PHP versions: Typesetter dropped support for PHP 5.3 to 5.5 and added support for PHP up to version 7.4.
 * CSS helper classes: In addition to body.gpAdmin we now have html.gpEditing (when editor is open) html.isPrivate (on private pages) and html.gpAdmin (for consistency).
 * Popper.js, the JS positioning library behind Bootstrap tooltips is now also available outside of Bootstrap themes as loadable component. 
@@ -71,12 +74,18 @@
 * JavaScript events: Besides 'SectionAdded', 'SectionRemoved' and 'SectionSorted' there is now a 'SectionCopied' JS event. Typesetter now also fires a 'section_options:closed' event (we already had 'section_options:loaded' before). Furthermore, there is now 'editor:loaded' which is triggered everytime a section editor is loaded or re-activated. This event contains additional data of the loaded editor and corresponding section.
 
 
+## Theme development ## 
+* Bootstrap based themes shipping with Typesetter now have a new Addon.ini section called 'FrontEndFramework' wich declares Bootstrap and version used by the theme. This makes server-side framework detection possible and allows plugins to adapt their output accordingly. Although it's not mandatory, please consider adding this information to all new themes, even if they use other frameworks like Foundation, Materialize, you name it.
+* we may now call gpOutput::GetSitemapLink(), gpOutput::GetLoginLink() and gpOutput::GetPoweredByLink() separately. The latter accepts an optional ´true´ parameter that makes the 'powered by' link show on all pages. The output of gpOutput::GetAdminLink() remains the same as in earlier versions.
+
+
 ## New Plugin Hooks ###
 * 'AdminLinkLabel' filter hook allows better plugin internationalization.
 * 'AvailableClasses' filter hook can be used to dynamically manipulate the Available Classes array.
 * 'Notifications' filter hook can be used to manipulate Notifications before they are displayed.
 * 'ReplaceContentVars' is a new filter hook to manage content variables to be replaced in output, such as $myName (in content) => John Doe (in output).
 * 'SimilarTitles' filter hook to manipulate similar page links shown on the 'Missing' (Error 404) page and used for automatic redirection
+* In addition to the 'GetAdminLink' action hook there are now similar hooks 'GetSitemapLink', 'GetLoginLink' and 'GetPoweredByLink'
 
 
 ## Bug Fixes ##

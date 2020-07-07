@@ -485,7 +485,12 @@ namespace gp\tool{
 				$class = $info['gpOutCmd'];
 			}
 
-			$class			= 'gpArea_' . str_replace(array(':', ','), array('_', ''), trim($class, ':'));
+			//add gpMenu class to all menu areas for better styling
+			$add_menu_class = '';
+			if( isset($info['class']) && $info['class'] == '\gp\tool\Output\Menu' ){
+				$add_menu_class = 'gpMenu ';
+			}
+			$class			= $add_menu_class . 'gpArea_' . str_replace(array(':', ','), array('_', ''), trim($class, ':'));
 			$param			= $container_id . '|' . $info['gpOutCmd'];
 			$permission		= self::ShowEditLink('Admin_Theme_Content');
 

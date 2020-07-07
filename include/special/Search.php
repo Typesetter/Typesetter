@@ -74,10 +74,18 @@ class Search extends \gp\special\Base{
 	public function Search(){
 		global $langmessage;
 
+		$placeholder = $langmessage['Search'] . '&hellip;';
+		$custom_text = \gp\tool\Output::SelectText('Search');
+		if( $custom_text != '' ){
+			$placeholder = htmlspecialchars($custom_text) . '&hellip;';
+		}
+
 		echo '<div class="GPAREA filetype-special_search search_results">';
 		echo '<h2>' . \gp\tool\Output::GetAddonText('Search') . '</h2>';
 		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
-		echo '<input name="q" type="text" class="text" value="' . htmlspecialchars($_REQUEST['q']) . '"/> ';
+		echo '<input name="q" type="text" class="text" ';
+		echo	'placeholder="' . $placeholder . '" ';
+		echo	'value="' . htmlspecialchars($_REQUEST['q']) . '"/> ';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
 		echo \gp\tool\Output::GetAddonText('Search', $html);
 		echo '</form>';
@@ -104,10 +112,17 @@ class Search extends \gp\special\Base{
 
 
 	public static function Gadget(){
+		global $langmessage;
 
 		$query = '';
 		if( isset($_GET['q']) ){
 			$query = $_GET['q'];
+		}
+
+		$placeholder = $langmessage['Search'] . '&hellip;';
+		$custom_text = \gp\tool\Output::SelectText('Search');
+		if( $custom_text != '' ){
+			$placeholder = htmlspecialchars($custom_text) . '&hellip;';
 		}
 
 		echo '<h3>';
@@ -115,7 +130,9 @@ class Search extends \gp\special\Base{
 		echo '</h3>';
 		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
 		echo '<div>';
-		echo '<input name="q" type="text" class="text" value="' . htmlspecialchars($query) . '"/>';
+		echo '<input name="q" type="text" class="text" ';
+		echo 	'placeholder="' . $placeholder . '" ';
+		echo 	'value="' . htmlspecialchars($query) . '"/>';
 		echo '<input type="hidden" name="src" value="gadget" />';
 
 		$html = '<input type="submit" class="submit" name="" value="%s" />';

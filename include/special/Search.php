@@ -82,7 +82,7 @@ class Search extends \gp\special\Base{
 
 		echo '<div class="GPAREA filetype-special_search search_results">';
 		echo '<h2>' . \gp\tool\Output::GetAddonText('Search') . '</h2>';
-		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
+		echo '<form role="search" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
 		echo '<input name="q" type="text" class="text" ';
 		echo	'placeholder="' . $placeholder . '" ';
 		echo	'value="' . htmlspecialchars($_REQUEST['q']) . '"/> ';
@@ -128,7 +128,7 @@ class Search extends \gp\special\Base{
 		echo '<h3>';
 		echo \gp\tool\Output::GetAddonText('Search');
 		echo '</h3>';
-		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
+		echo '<form role="search" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
 		echo '<div>';
 		echo '<input name="q" type="text" class="text" ';
 		echo 	'placeholder="' . $placeholder . '" ';

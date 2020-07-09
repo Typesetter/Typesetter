@@ -241,7 +241,7 @@ class Classes extends \gp\special\Base{
 		];
 		$bs4[] = [
 			'names'	=> 'text-break',
-			'desc'	=> 'BS4 text utils: prevent long text from breaking layout',
+			'desc'	=> 'BS4 text utils: force long words to break at the section boundaries',
 		];
 
 		// background colors
@@ -400,18 +400,31 @@ class Classes extends \gp\special\Base{
 			'desc'	=> 'BS4 card content: use for child sections inside wrapper sections with the ‘card’ class',
 		];
 		$bs4[] = [
-			'names'	=> 'card-image card-image-top card-image-bottom',
+			'names'	=> 'card-img card-img-top card-img-bottom',
 			'desc'	=> 'BS4 card content: use for child image sections inside wrapper sections with the ‘card’ class',
 		];
 		$bs4[] = [
-			'names'	=> 'card-image-overlay',
+			'names'	=> 'card-img-overlay',
 			'desc'	=> 'BS4 card content: use for child sections inside wrapper sections with the ‘card’ class. The section must follow a ‘card-image’ section so its content can overlay the image',
 		];
 		$bs4[] = [
-			'names'	=> 'card-title card-text',
+			'names'	=> 'card-title card-subtitle card-text',
 			'desc'	=> 'BS4 card content: use for child sections inside wrapper sections with the ‘card-header -body or -footer’ classes',
 		];
 
+
+		// alerts
+		$bs4[] = [
+			'names'	=> 'alert',
+			'desc'	=> 'BS4 alert: a message-box-style section. Use together with alert-color classes',
+		];
+		addSet(
+			$bs4,
+			'BS4 alerts: color classes to be used together with the ‘alert’ class',
+			'alert',
+			[''],
+			$colors
+		);
 
 
 		// overflow
@@ -603,7 +616,7 @@ class Classes extends \gp\special\Base{
 		/*
 		// shadows (disabled by default)
 		$bs4[] = [
-			'names'	=> 'shadow-none shadow-sm shadow-lg',
+			'names'	=> 'shadow shadow-none shadow-sm shadow-lg',
 			'desc'	=> 'BS4: change shadow display and size added via box-shadow utility classes. Requires $enable-shadows: true; in variables.scss',
 		];
 		*/

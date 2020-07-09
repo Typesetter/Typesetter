@@ -1977,8 +1977,6 @@ namespace gp\tool{
 		 * @static
 		 */
 		public static function GetAdminLink($messages=true){
-			global $config, $langmessage, $page;
-
 			self::GetSitemapLink(); // as of 5.2-rc
 			echo ' ';
 			self::GetLoginLink(); // as of 5.2-rc
@@ -2047,6 +2045,10 @@ namespace gp\tool{
 				\gp\tool\Plugins::Action('GetLoginLink');
 				echo '</span>';
 			}
+		}
+
+		public static function AdminLinkGadget(){
+			self::GetAdminLink(false);
 		}
 
 		public static function LoginLinkGadget(){

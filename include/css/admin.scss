@@ -494,9 +494,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	background: lighten($gp_panel_warning_color, 10);
 }
 
-#admincontent_panel .fa {
-	font-size: 14px;
-}
+#admincontent_panel .fa {}
 
 #admincontent_panel span > .fa,
 #admincontent_panel a > .fa {
@@ -1174,12 +1172,13 @@ html.admin_body #simplepanel .toolbar {
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 8px;
-	font-size:14px;
+	font-size: 14px;
 }
 
 #simplepanel .toolbar .fa {
-	font-size:16px;
+	font-size: 16px;
 }
+
 #simplepanel .gpversion {
 	color: #888 !important;
 	font-size: 11px;
@@ -2420,6 +2419,7 @@ table.tp-tablesorter {
  */
 #gp_admin_html .fa {
 	font-family: FontAwesome;
+	font-size: 14px;
 }
 
 /**

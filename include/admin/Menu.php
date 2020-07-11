@@ -948,7 +948,7 @@ class Menu extends \gp\special\Base{
 
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
-			$img	= '<i class="menu_icon fa fa-user"></i>';
+			$img	= '<i class="menu_icon fa fa-user-circle-o"></i>';
 			$attrs	= array(
 				'title'		=> $langmessage['permissions'],
 				'data-cmd'	=> 'gpabox'

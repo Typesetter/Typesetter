@@ -691,7 +691,7 @@ namespace gp\admin{
 
 			//content
 			$links = self::GetAdminGroup('content');
-			self::_AdminPanelLinks($in_panel, $links, 'Content', 'fa fa-file-text-o', 'con');
+			self::_AdminPanelLinks($in_panel, $links, 'Content', 'fa fa-file-text', 'con');
 
 			//appearance
 			$links = self::GetAppearanceGroup($in_panel);
@@ -743,7 +743,7 @@ namespace gp\admin{
 			echo '</li>';
 
 			$links = ob_get_clean();
-			self::_AdminPanelLinks($in_panel, $links, $gpAdmin['useralias'], 'fa fa-user', 'use');
+			self::_AdminPanelLinks($in_panel, $links, $gpAdmin['useralias'], 'fa fa-user-circle', 'use');
 
 			// stats
 			ob_start();

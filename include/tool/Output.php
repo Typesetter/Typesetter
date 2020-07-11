@@ -939,6 +939,18 @@ namespace gp\tool{
 
 
 		/**
+		 * Simply determine if a Gadget exists
+		 * allows us to check whether a plugin gadget exists before loading it in template.php
+		 * @param string Gadget id
+		 * @return boolean
+		 */
+		public static function GadgetExists($id){
+			global $config;
+			return isset($config['gadgets'][$id]);
+		}
+
+
+		/**
 		 * Get a Single Gadget
 		 * This method should be called using \gp\tool\Output::Fetch('Gadget',$gadget_name)
 		 *

@@ -170,16 +170,15 @@
  * Collapsable Sections
  *
  */
-#section_sorting .secsort_wrapper_toggle:before {
-	display: inline-block;
+ #section_sorting .secsort_wrapper_toggle:before {
 	font-family: FontAwesome;
+	display: inline-block;
 	content: '\f0d7';
+	width: 1em;
+	text-align: center;
 	position: relative;
 	color: #333;
-	top: 0;
-	padding: 0 2px;
 	margin-right: 0.25em;
-	font-size: 14px !important;
 }
 
 #section_sorting .wrapper_collapsed .secsort_wrapper_toggle:before {

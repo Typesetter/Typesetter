@@ -138,13 +138,28 @@ namespace gp\tool\Output{
 			static $types = false;
 
 			if( !$types ){
-				$types['text']['label']				= $langmessage['editable_text'];
-				$types['image']['label']			= $langmessage['Image'];
-				$types['gallery']['label']			= $langmessage['Image Gallery'];
-				$types['include']['label']			= $langmessage['File Include'];
-				$types['wrapper_section']['label']	= $langmessage['Section Wrapper'];
+				$types['text']['label']					= $langmessage['editable_text'];
+				$types['text']['file_under']			= 'default'; // required as of Typesetter 5.2
+
+				$types['image']['label']				= $langmessage['Image'];
+				$types['image']['file_under']			= 'default';
+
+				$types['gallery']['label']				= $langmessage['Image Gallery'];
+				$types['gallery']['file_under']			= 'default';
+
+				$types['include']['label']				= $langmessage['File Include'];
+				$types['include']['file_under']			= 'default';
+
+				$types['wrapper_section']['label']		= $langmessage['Section Wrapper'];
+				$types['wrapper_section']['file_under']	= 'default';
 
 				$types = \gp\tool\Plugins::Filter('SectionTypes', [$types]);
+
+				foreach( $types as $key => $type ){
+					if( !isset($type['file_under']) ){
+						$types[$key]['file_under'] = 'plugins';
+					}
+				}
 			}
 
 			return $types;

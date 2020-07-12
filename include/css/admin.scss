@@ -38,10 +38,10 @@
 #gp_admin_html * {
 	text-shadow: none;
 	@include box-sizing( content-box );
-	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
+	// background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense
 	font-family: inherit;
 	font-size: inherit;
-	line-height: inherit; //* conflicts with fontawesome */
+	line-height: inherit; // conflicts with fontawesome
 }
 
 #gp_admin_html hr {
@@ -55,7 +55,7 @@
 
 #gp_admin_html li {
 	list-style: none;
-	background-image: none; /* ex: a bullet image for <li>, but it messes up ckeditor */
+	background-image: none; // ex: a bullet image for <li>, but it messes up ckeditor
 }
 
 #gp_admin_html table,
@@ -101,7 +101,6 @@
 	color: inherit;
 	text-decoration: inherit;
 }
-
 
 #gp_admin_html h1,
 #gp_admin_html .h1,
@@ -160,7 +159,6 @@
 #gp_admin_html p {
 	margin: 1em 0;
 }
-
 
 
 #gp_admin_html .gpselect,
@@ -494,7 +492,9 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	background: lighten($gp_panel_warning_color, 10);
 }
 
-#admincontent_panel .fa {}
+#admincontent_panel .fa {
+	font-size: 14px;
+}
 
 #admincontent_panel span > .fa,
 #admincontent_panel a > .fa {
@@ -2196,13 +2196,36 @@ body #addon_about {
  * New section options
  */
 
-#new_section_links > div {
+#new_section_links .collapsible {
+	background: #fff;
+	h4 {
+		font-size: inherit;
+		a {
+			background: #fff;
+			border: none !important;
+			border-radius: 0;
+			&:before {
+				color: inherit !important;
+				width: 1em;
+				margin-right: 0.25em;
+			}
+		}
+	}
+	.collapsearea {
+		padding: 2px;
+	}
+}
+
+#new_section_links .new_section_link {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 	max-width: 100px;
 	width: 50%;
 	position: relative;
 	overflow: hidden;
 	display: inline-block;
 	vertical-align: top;
+	padding: 2px;
 }
 
 #new_section_links input {
@@ -2211,32 +2234,31 @@ body #addon_about {
 	top: 0px;
 }
 
-#new_section_links label,
-#new_section_links a {
+#new_section_links .new_section_link label,
+#new_section_links .new_section_link a {
 	display: block;
 	border: 1px solid #ddd;
 	border-radius: 3px;
 	padding: 0;
 	background: #fff;
-	margin: 0 3px 3px 0;
+	margin: 0;
 	color: #666 !important;
 	box-sizing: border-box;
 	text-align: center;
 	height: 52px;
-	vertical-align: top;
 	overflow: hidden;
 	outline: none;
 	position: relative;
 	cursor: pointer;
 }
 
-#new_section_links a:hover
-#new_section_links input:checked + label {
+#new_section_links .new_section_link a:hover,
+#new_section_links .new_section_link input:checked + label {
 	border-color: #999;
 }
 
-#new_section_links a:hover:after,
-#new_section_links input:checked + label:after {
+#new_section_links .new_section_link a:hover:after,
+#new_section_links .new_section_link input:checked + label:after {
 	position: absolute;
 	top: 1px;
 	left: 1px;
@@ -2247,19 +2269,24 @@ body #addon_about {
 	content: ' ';
 }
 
-
-#new_section_links span {
+#new_section_links .new_section_link span {
 	font-size: 12px;
 	padding: 4px;
 	position: relative;
 	top: 50%;
 	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 	display: inline-block;
 	text-shadow: 0 1px 1px #fff;
 }
 
+#new_section_links .new_section_link img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
 
 
 /**

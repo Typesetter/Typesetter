@@ -77,7 +77,7 @@ class Map extends \gp\special\Base{
 				echo "\n";
 				echo '<url>';
 				echo '<loc>';
-				echo isset($info['url']) ? $info['url'] : \gp\tool::AbsoluteUrl($title,'','','',true);
+				echo isset($info['url']) ? $info['url'] : \gp\tool::AbsoluteUrl($title,'',true,'',true);
 				echo '</loc>';
 				echo '</url>';
 			}

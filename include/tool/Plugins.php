@@ -389,7 +389,7 @@ namespace gp\tool{
 
 
 		/**
-		 * Get the addon_key of an addon by it's id
+		 * Get the addon_key of an addon by its id
 		 * @static
 		 * @param int $addon_id
 		 * @return mixed Returns addon_key string if found, false otherwise
@@ -405,6 +405,50 @@ namespace gp\tool{
 					return $addon_key;
 				}
 			}
+			return false;
+		}
+
+
+		/**
+		 * Checks if an addon is installed
+		 * @since 5.2
+		 * @param string $name - the addon name, very forgiving in terms of case, blanks, underscores and dashes
+		 * @param mixed (string | number) $min_ver, optional minimum addon version
+		 * @param mixed (string | number) $max_ver, optional maximum addon version
+		 * @return mixed (array | boolean ) returns an array with name and version if the addon is installed, false otherwise
+		 */
+		public static function AddonInstalled($name, $min_ver=false, $max_ver=false){
+			global $config;
+
+			if( empty($config['addons']) ){
+				return false;
+			}
+
+			$requested = preg_replace('/[ _-]+/', '', strtolower($name));
+
+			foreach( $config['addons'] as $key => $data ){
+				$found = $data['name'];
+				$current = preg_replace('/[ _-]+/', '', strtolower($found));
+
+				if( $current != $requested ){
+					continue;
+				}
+
+				$current_ver = $data['version'];
+
+				$in_range = true;
+				if( !empty($min_ver) ){
+					$in_range = version_compare($current_ver, $min_ver, '>=');
+				}
+				if( !empty($max_ver) ){
+					$in_range = $in_range && version_compare($current_ver, $max_ver, '<=');
+				}
+
+				if( $in_range ){
+					return [ 'name' => $found, 'version' => $current_ver ];
+				}
+			}
+
 			return false;
 		}
 

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace gp\tool{
 
 	defined('is_running') or die('Not an entry point...');
@@ -8,16 +7,15 @@ namespace gp\tool{
 
 	class Plugins{
 
-
 		/**
 		 * Holds the configuration values of the current plugin if there is an active plugin
 		 *
 		 */
 		public static $current = false;
 
-		private static $stack = array();
+		private static $stack = [];
 
-		public static $curr_page_calls = array();
+		public static $curr_page_calls = [];
 
 
 		/**
@@ -39,29 +37,28 @@ namespace gp\tool{
 		 * @param string $file The path of the css file relative to the addon folder
 		 * @param bool $combine Set to false to keep the file from being combined with other css files
 		 */
-		public static function css($file, $combine = true){
+		public static function css($file, $combine=true){
 			global $page;
 
-			$file 					= \gp\tool::WinPath( $file );
+			$file 					= \gp\tool::WinPath($file);
 
 			if( $combine ){
-				$page->css_admin[] 	= self::$current['code_folder_part'].'/'.ltrim($file,'/');
-				return self::$current['code_folder_part'].'/'.ltrim($file,'/');
+				$page->css_admin[] 	= self::$current['code_folder_part'] . '/' . ltrim($file, '/');
+				return self::$current['code_folder_part'] . '/' . ltrim($file, '/');
 			}
 
-
-			//less file
+			//less or scss file
 			$ext = \gp\tool::Ext($file);
 			if( $ext === 'less' || $ext === 'scss' ){
-				$full_path			= self::$current['code_folder_full'].'/'.ltrim($file,'/');
-				$path				= \gp\tool\Output\Css::Cache($full_path,$ext);
+				$full_path			= self::$current['code_folder_full'] . '/' . ltrim($file, '/');
+				$path				= \gp\tool\Output\Css::Cache($full_path, $ext);
 			}else{
 				$file				= self::AddCacheBuster($file);
-				$path				= self::$current['code_folder_part'].'/'.ltrim($file,'/');
+				$path				= self::$current['code_folder_part'] . '/' . ltrim($file, '/');
 			}
 
 			if( $path !== false ){
-				$page->head			.= "\n".'<link rel="stylesheet" type="text/css" href="'.\gp\tool::GetDir($path).'"/>';
+				$page->head			.= "\n" . '<link rel="stylesheet" type="text/css" href="' . \gp\tool::GetDir($path) . '"/>';
 			}
 
 			return $path;
@@ -77,17 +74,16 @@ namespace gp\tool{
 		public static function js($file, $combine=true){
 			global $page;
 
-			$file = \gp\tool::WinPath( $file );
+			$file = \gp\tool::WinPath($file);
 
 			if( $combine ){
-				$page->head_js[] = self::$current['code_folder_part'].'/'.ltrim($file,'/');
+				$page->head_js[]	= self::$current['code_folder_part'] . '/' . ltrim($file, '/');
 			}else{
-				$file			= self::AddCacheBuster($file);
-				$url			= self::$current['code_folder_rel'].'/'.ltrim($file,'/');
-				$page->head		.= "\n".'<script type="text/javascript" src="'.$url.'"></script>';
+				$file				= self::AddCacheBuster($file);
+				$url				= self::$current['code_folder_rel'].'/'.ltrim($file,'/');
+				$page->head			.= "\n" . '<script type="text/javascript" src="' . $url . '"></script>';
 			}
 		}
-
 
 
 		/**
@@ -95,21 +91,21 @@ namespace gp\tool{
 		 *
 		 */
 		public static function AddCacheBuster($file){
-			if( strpos('?',$file) == false ){
-				$full = self::$current['code_folder_full'].'/'.ltrim($file,'/');
+			if( strpos('?', $file) == false ){
+				$full = self::$current['code_folder_full'] . '/' . ltrim($file, '/');
 				if( file_exists($full) ){
-					$file .= '?'.filemtime($full);
+					$file .= '?' . filemtime($full);
 				}
 			}
 			return $file;
 		}
 
 
-
-		public static function GetDir($path='',$ampersands = false){
-			$path = self::$current['code_folder_part'].'/'.ltrim($path,'/');
+		public static function GetDir($path='', $ampersands=false){
+			$path = self::$current['code_folder_part'] . '/' . ltrim($path, '/');
 			return \gp\tool::GetDir($path, $ampersands);
 		}
+
 
 		/**
 		 * Similar to php's register_shutdown_function()
@@ -119,10 +115,13 @@ namespace gp\tool{
 		 */
 		public static function RegisterShutdown(){
 			global $addonFolderName;
-			if( gp_safe_mode ) return;
+			if( gp_safe_mode ){
+				return;
+			}
 			$args = func_get_args();
-			register_shutdown_function(array('\\gp\\tool\\Plugins','ShutdownFunction'),$addonFolderName,$args);
+			register_shutdown_function(['\\gp\\tool\\Plugins','ShutdownFunction'], $addonFolderName, $args);
 		}
+
 
 		/**
 		 * Handle functions passed to \gp\tool\Plugins::RegisterShutdown()
@@ -130,7 +129,9 @@ namespace gp\tool{
 		 */
 		public static function ShutdownFunction($addonFolderName,$args){
 
-			if( gp_safe_mode ) return;
+			if( gp_safe_mode ){
+				return;
+			}
 
 			if( !is_array($args) || count($args) < 1 ){
 				return false;
@@ -141,9 +142,9 @@ namespace gp\tool{
 			$function = array_shift($args);
 
 			if( count($args) > 0 ){
-				call_user_func_array( $function , $args );
+				call_user_func_array($function, $args);
 			}else{
-				call_user_func( $function  );
+				call_user_func($function);
 			}
 
 			self::ClearDataFolder();
@@ -154,10 +155,10 @@ namespace gp\tool{
 		 * Similar to wordpress apply_filters_ref_array()
 		 *
 		 */
-		public static function Filter($hook, $args = array() ){
+		public static function Filter($hook, $args=[]){
 			global $gp_hooks;
 
-			self::$curr_page_calls[] = 'Filter:'.$hook;
+			self::$curr_page_calls[] = 'Filter:' . $hook;
 
 			if( !self::HasHook($hook) ){
 				if( isset($args[0]) ){
@@ -167,7 +168,7 @@ namespace gp\tool{
 			}
 
 			foreach($gp_hooks[$hook] as $hook_info){
-				$args[0] = self::ExecHook($hook,$hook_info,$args);
+				$args[0] = self::ExecHook($hook, $hook_info, $args);
 			}
 
 			if( isset($args[0]) ){
@@ -177,10 +178,10 @@ namespace gp\tool{
 		}
 
 
-		public static function OneFilter( $hook, $args=array(), $addon = false ){
+		public static function OneFilter($hook, $args=[], $addon=false){
 			global $gp_hooks;
 
-			self::$curr_page_calls[] = 'OneFilter:'.$hook;
+			self::$curr_page_calls[] = 'OneFilter:' . $hook;
 
 			if( !self::HasHook($hook) ){
 				return false;
@@ -188,31 +189,33 @@ namespace gp\tool{
 
 			if( $addon === false ){
 				$hook_info = end($gp_hooks[$hook]);
-				return self::ExecHook($hook,$hook_info,$args);
+				return self::ExecHook($hook, $hook_info, $args);
 			}
 
 			foreach($gp_hooks[$hook] as $addon_key => $hook_info){
 				if( $addon_key === $addon ){
-					return self::ExecHook($hook,$hook_info,$args);
+					return self::ExecHook($hook, $hook_info, $args);
 				}
 			}
 
 			return false;
 		}
 
-		public static function Action($hook, $args = array() ){
+
+		public static function Action($hook, $args=[]){
 			global $gp_hooks;
 
-			self::$curr_page_calls[] = 'Action:'.$hook;
+			self::$curr_page_calls[] = 'Action:' . $hook;
 
 			if( !self::HasHook($hook) ){
 				return;
 			}
 
 			foreach($gp_hooks[$hook] as $hook_info){
-				self::ExecHook($hook,$hook_info,$args);
+				self::ExecHook($hook, $hook_info, $args);
 			}
 		}
+
 
 		/**
 		 * Check to see if there area any hooks matching $hook
@@ -242,7 +245,7 @@ namespace gp\tool{
 		 * @param array $args
 		 *
 		 */
-		public static function ExecHook($hook,$info,$args = array()){
+		public static function ExecHook($hook, $info, $args=[]){
 			global $dataDir, $gp_current_hook;
 
 			if( gp_safe_mode ){
@@ -253,7 +256,7 @@ namespace gp\tool{
 			}
 
 			if( !is_array($args) ){
-				$args = array($args);
+				$args = [$args];
 			}
 			$gp_current_hook[] = $hook;
 
@@ -262,7 +265,7 @@ namespace gp\tool{
 				$args[0] = $info['value'];
 			}
 
-			$args = \gp\tool\Output::ExecInfo($info,$args);
+			$args = \gp\tool\Output::ExecInfo($info, $args);
 
 			array_pop( $gp_current_hook );
 			if( isset($args[0]) ){
@@ -271,6 +274,7 @@ namespace gp\tool{
 			return false;
 		}
 
+
 		/**
 		 * Set global path variables for the current addon
 		 * @param string $addon_key Key used to identify a plugin uniquely in the configuration
@@ -278,8 +282,9 @@ namespace gp\tool{
 		 */
 		public static function SetDataFolder($addon_key){
 			global $dataDir, $config;
-			global $addonDataFolder,$addonCodeFolder; //deprecated
-			global $addonRelativeCode,$addonRelativeData,$addonPathData,$addonPathCode,$addonFolderName,$addon_current_id,$addon_current_version;
+			global $addonDataFolder, $addonCodeFolder; //deprecated
+			global $addonRelativeCode, $addonRelativeData, $addonPathData, $addonPathCode;
+			global $addonFolderName, $addon_current_id, $addon_current_version;
 
 			if( !isset($config['addons'][$addon_key]) ){
 				return;
@@ -305,31 +310,39 @@ namespace gp\tool{
 		public static function GetAddonConfig($addon_key){
 			global $config, $dataDir;
 
-			if( !array_key_exists($addon_key,$config['addons']) ){
+			if( !array_key_exists($addon_key, $config['addons']) ){
 				return false;
 			}
-
 
 			$addon_config = $config['addons'][$addon_key];
 			if( !is_array($addon_config) ){
-				trigger_error('Corrupted configuration for addon: '.$addon_key); //.pre($config['addons']));
+				trigger_error('Corrupted configuration for addon: ' . $addon_key); //.pre($config['addons']));
 				return false;
 			}
-			$addon_config += array( 'version'=>false, 'id'=>false, 'data_folder'=>$addon_key, 'order'=>false, 'code_folder_part'=>'/data/_addoncode/'.$addon_key,'name'=>$addon_key );
+
+			$addon_config += [
+				'version'			=>	false,
+				'id'				=>	false,
+				'data_folder'		=>	$addon_key,
+				'order'				=>	false,
+				'code_folder_part'	=>	'/data/_addoncode/' . $addon_key,
+				'name'				=>	$addon_key
+			];
 
 			//data folder
-			$addon_config['data_folder_part'] = '/data/_addondata/'.$addon_config['data_folder'];
-			$addon_config['data_folder_full'] = $dataDir.$addon_config['data_folder_part'];
-			$addon_config['data_folder_rel'] = \gp\tool::GetDir($addon_config['data_folder_part']);
+			$addon_config['data_folder_part']	= '/data/_addondata/' . $addon_config['data_folder'];
+			$addon_config['data_folder_full']	= $dataDir . $addon_config['data_folder_part'];
+			$addon_config['data_folder_rel']	= \gp\tool::GetDir($addon_config['data_folder_part']);
 
 
 			// Code folder
-			//$addon_config['code_folder_part'] = $addon_config['code_folder'].'/'.$addon_key;
-			$addon_config['code_folder_full'] = $dataDir.$addon_config['code_folder_part'];
-			$addon_config['code_folder_rel'] = \gp\tool::GetDir($addon_config['code_folder_part']);
+			//$addon_config['code_folder_part']	= $addon_config['code_folder'].'/'.$addon_key;
+			$addon_config['code_folder_full']	= $dataDir.$addon_config['code_folder_part'];
+			$addon_config['code_folder_rel']	= \gp\tool::GetDir($addon_config['code_folder_part']);
 
 			return $addon_config;
 		}
+
 
 		/**
 		 * If there's a current addon folder or addon id, push it onto the stack
@@ -341,7 +354,7 @@ namespace gp\tool{
 			if( !$addon_current_id && !$addonFolderName ){
 				return;
 			}
-			self::$stack[] = array('folder'=>$addonFolderName,'id'=>$addon_current_id);
+			self::$stack[] = ['folder' => $addonFolderName, 'id' => $addon_current_id];
 		}
 
 
@@ -349,15 +362,19 @@ namespace gp\tool{
 		 * Reset global path variables
 		 */
 		public static function ClearDataFolder(){
-			global $addonDataFolder,$addonCodeFolder; //deprecated
-			global $addonRelativeCode,$addonRelativeData,$addonPathData,$addonPathCode,$addonFolderName,$addon_current_id,$addon_current_version;
+			global $addonDataFolder, $addonCodeFolder; //deprecated
+			global $addonRelativeCode, $addonRelativeData, $addonPathData, $addonPathCode;
+			global $addonFolderName, $addon_current_id, $addon_current_version;
 
-
-			self::$current		= array();
-			$addonFolderName	= false;
-			$addonDataFolder	= false;
-			$addonCodeFolder	= false;
-			$addonRelativeCode	= $addonRelativeData = $addonPathData = $addonPathCode = $addon_current_id = $addon_current_version = false;
+			self::$current			= [];
+			$addonFolderName		= false;
+			$addonDataFolder		= false;
+			$addonCodeFolder		= false;
+			$addonRelativeCode		= false;
+			$addonRelativeData		= false;
+			$addonPathData			= false;
+			$addon_current_id		= false;
+			$addon_current_version	= false;
 
 			//Make the most recent addon folder or addon id in the stack the current addon
 			if( count(self::$stack) > 0 ){
@@ -369,6 +386,7 @@ namespace gp\tool{
 				}
 			}
 		}
+
 
 		/**
 		 * Get the addon_key of an addon by it's id
@@ -398,8 +416,8 @@ namespace gp\tool{
 		 */
 		public static function GetConfig(){
 
-			$file = self::$current['data_folder_full'].'/_config.php';
-			return \gp\tool\Files::Get($file,'config');
+			$file = self::$current['data_folder_full'] . '/_config.php';
+			return \gp\tool\Files::Get($file, 'config');
 		}
 
 
@@ -410,9 +428,9 @@ namespace gp\tool{
 		 */
 		public static function SaveConfig($config){
 
-			$file = self::$current['data_folder_full'].'/_config.php';
+			$file = self::$current['data_folder_full'] . '/_config.php';
 
-			if( \gp\tool\Files::SaveData($file,'config',$config) ){
+			if( \gp\tool\Files::SaveData($file, 'config', $config) ){
 				return true;
 			}
 			return false;

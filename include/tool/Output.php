@@ -941,6 +941,7 @@ namespace gp\tool{
 		/**
 		 * Simply determine if a Gadget exists
 		 * allows us to check whether a plugin gadget exists before loading it in template.php
+		 * @since 5.2-rc
 		 * @param string Gadget id
 		 * @return boolean
 		 */
@@ -1179,6 +1180,69 @@ namespace gp\tool{
 			if( $wrap ){
 				echo '</div>';
 			}
+		}
+
+
+		/**
+		 * Get additional CSS classes that can be added to the
+		 * html or body elements' class atrribute
+		 * e.g. to display an larger header only on the homepage
+		 * Use in template.php: <html class="<?php gpOutput::GetPageInfoClasses(); ?>">
+		 * @since 5.2-rc
+		 * @param boolean $echo_classes (defaults to true), output the class names as space-separated string
+		 * @return array of css class names that apply
+		 *
+		 */
+		public static function GetPageInfoClasses($echo_classes=true){
+			global $page;
+
+			$classes = [];
+		
+			if( self::is_front_page() ){
+				$classes[] = 'is-homepage';
+			}
+
+			if( $page->pagetype == 'special_display' ){
+				$classes[] = 'is-special-page';
+			}
+
+			switch( $page->gp_index ){
+				case 'special_contact':
+					$classes[] = 'is-contactform-page';
+					break;
+
+				case 'special_galleries':
+					$classes[] = 'is-galleries-page';
+					break;
+
+				case 'special_gpsearch':
+					$classes[] = 'is-search-page';
+					break;
+
+				case 'special_missing':
+					$classes[] = 'is-missing-page';
+					break;
+
+				case 'special_blog':
+					$classes[] = 'is-blog-page';
+					if( isset($_GET['id']) ){
+						$classes[] = 'is-single-post-page';
+					}
+					break;
+
+				case 'special_blog_categories':
+					$classes[] = 'is-blog-page is-blog-categories-page';
+					if( isset($_GET['cat']) ){
+						$classes[] = 'is-single-category-page';
+					}
+					break;
+			}
+
+			if( $echo_classes && !empty($classes) ){
+				echo ' ' . implode(' ', $classes) . ' ';
+			}
+
+			return $classes;
 		}
 
 

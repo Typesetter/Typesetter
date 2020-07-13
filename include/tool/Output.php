@@ -1231,7 +1231,8 @@ namespace gp\tool{
 					break;
 
 				case 'special_blog_categories':
-					$classes[] = 'is-blog-page is-blog-categories-page';
+					$classes[] = 'is-blog-page';
+					$classes[] = 'is-blog-categories-page';
 					if( isset($_GET['cat']) ){
 						$classes[] = 'is-single-category-page';
 					}

@@ -49,7 +49,7 @@ class Search extends \gp\special\Base{
 
 		echo '<div class="inline_box">';
 		echo '<div id="admin_search">';
-		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get"';
+		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
 		echo '<h3>' . $langmessage['Search'] . '</h3>';
 		echo '<input name="q" type="text" class="gpinput" value="' . htmlspecialchars($_REQUEST['q']) . '" required />';
 		echo '<input type="submit" name="" value="' . $langmessage['Search'] . '" class="gpabox gpsubmit gpvalidate" />';

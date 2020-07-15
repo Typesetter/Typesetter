@@ -71,7 +71,8 @@ namespace gp\Page{
 			$class		= 'new_title';
 
 			if( $title == \gp\admin\Tools::LabelToSlug($label) ){
-				$attr = 'disabled="disabled" ';
+				//$attr = 'disabled="disabled" ';
+				$attr = 'readonly="readonly"" ';
 				$class .= ' sync_label';
 			}
 			self::FormLabel('Slug/URL');
@@ -89,7 +90,7 @@ namespace gp\Page{
 
 			if( empty($title_info['browser_title']) ){
 				$browser_title = htmlspecialchars($label);
-				$attr = 'disabled="disabled" ';
+				$attr = 'readonly="readonly" ';
 				$class .= ' sync_label';
 			}
 
@@ -375,8 +376,8 @@ namespace gp\Page{
 			if( ($new_title !== false) && $new_title != $page->title ){
 				msg(sprintf($langmessage['will_redirect'],\gp\tool::Link_Page($new_title)));
 
-				$page->head				.= '<meta http-equiv="refresh" content="15;url='.\gp\tool::GetUrl($new_title).'">';
-				$page->ajaxReplace[]	= array('location',\gp\tool::GetUrl($new_title),15000);
+				$page->head				.= '<meta http-equiv="refresh" content="15;url='.\gp\tool::GetUrl($new_title,'',false,'').'">';
+				$page->ajaxReplace[]	= array('location',\gp\tool::GetUrl($new_title,'',false,''),15000);
 				return true;
 			}
 			return false;

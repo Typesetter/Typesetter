@@ -15,7 +15,6 @@ class Text extends \gp\admin\Layout{
 		$this->cmds['AddonTextForm']			= '';
 		$this->cmds['SaveAddonText']			= 'ReturnHeader';
 
-
 		$cmd = \gp\tool::GetCommand();
 		$this->RunCommands($cmd);
 	}
@@ -111,24 +110,25 @@ class Text extends \gp\admin\Layout{
 		echo '<div class="inline_box">';
 		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Text').'" method="post">';
 		echo '<input type="hidden" name="cmd" value="savetext" />';
-		echo '<input type="hidden" name="key" value="'.$value.'" />';
+		echo '<input type="hidden" name="key" value="'.$key.'" />';
 
-		echo '<table class="bordered">';
+		echo '<table class="bordered full_width">';
 		echo '<tr><th>';
 		echo $langmessage['default'];
 		echo '</th><th>';
+		echo $langmessage['edit'];
 		echo '</th></tr>';
 		echo '<tr><td>';
 		echo $default;
 		echo '</td><td>';
 		//$value is already escaped using htmlspecialchars()
-		echo '<input type="text" name="value" value="'.$value.'" class="gpinput"/>';
-		echo '<p>';
-		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" class="gpsubmit"/>';
-		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
-		echo '</p>';
+		echo '<input type="text" name="value" value="'.$value.'" class="gpinput full_width"/>';
 		echo '</td></tr>';
 		echo '</table>';
+		echo '<p>';
+		echo ' <input type="submit" name="aaa" value="'.$langmessage['save'].'" data-cmd="gpajax" class="gpsubmit"/>';
+		echo ' <input type="submit" name="cmd" value="'.$langmessage['cancel'].'" class="admin_box_close gpcancel" />';
+		echo '</p>';
 
 		echo '</form>';
 		echo '</div>';

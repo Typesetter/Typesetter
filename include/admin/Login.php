@@ -17,7 +17,7 @@ class Login extends \gp\Page{
 		$this->title			= $title;
 		$this->lang				= $config['language'];
 		$this->language			= $languages[$this->lang];
-		$this->get_theme_css 	= false;
+		$this->get_theme_css	= false;
 		$_REQUEST['gpreq']		= 'admin';
 
 		$this->head .= "\n".'<meta name="robots" content="noindex,nofollow" />';
@@ -28,8 +28,6 @@ class Login extends \gp\Page{
 
 	public function GetGpxContent(){
 
-
-		$this->head		.= "\n<script type=\"text/javascript\">var IE_LT_10 = false;</script><!--[if lt IE 10]>\n<script type=\"text/javascript\">IE_LT_10=true;</script>\n<![endif]-->";
 		$this->head_js[] = '/include/js/login.js';
 		$this->head_js[] = '/include/js/md5_sha.js';
 		$this->head_js[] = '/include/thirdparty/js/jsSHA.js';
@@ -157,32 +155,28 @@ class Login extends \gp\Page{
 	public function BrowserWarning(){
 		global $langmessage;
 
-		echo '<div id="browser_warning" class="nodisplay">';
-		echo '<div><b>'.$langmessage['Browser Warning'].'</b></div>';
-		echo '<p>';
-		echo $langmessage['Browser !Supported'];
-		echo '</p>';
-		echo '<p>';
-		echo '<a href="http://www.mozilla.com/">Firefox</a>';
-		echo '<a href="http://www.google.com/chrome">Chrome</a>';
-		echo '<a href="http://www.apple.com/safari">Safari</a>';
-		echo '<a href="http://www.microsoft.com/windows/internet-explorer/default.aspx">Explorer</a>';
-
-		echo '</p>';
-		echo'</div>';
+		echo	'<div id="browser_warning" class="nodisplay">';
+		echo 		'<h2>'.$langmessage['Browser Warning'].'</h2>';
+		echo 		'<p>'.$langmessage['Browser !Supported'].'</p>';
+		echo		'<a href="https://www.mozilla.com/"><i class="fa fa-firefox"></i> Mozilla Firefox</a>';
+		echo		'<a href="https://www.google.com/chrome"><i class="fa fa-chrome"></i> Google Chrome</a>';
+		echo		'<a href="https://www.opera.com/"><i class="fa fa-opera"></i> Opera</a>';
+		echo		'<a href="https://www.apple.com/safari"><i class="fa fa-safari"></i> Apple Safari</a>';
+		echo		'<a href="https://www.microsoft.com/edge/"><i class="fa fa-edge"></i> Microsoft Edge</a>';
+		echo	'</div>';
 	}
 
 	public function JavascriptWarning(){
 		global $langmessage;
 
-		echo '<div class="without_script" id="javascript_warning">';
-		echo '<p><b>'.$langmessage['JAVASCRIPT_REQ'].'</b></p>';
-		echo '<p>';
-		echo $langmessage['INCOMPAT_BROWSER'];
-		echo ' ';
-		echo $langmessage['MODERN_BROWSER'];
-		echo '</p>';
-		echo '</div>';
+		echo	'<div class="without_script" id="javascript_warning" style="opacity:0">';
+		echo		'<h2>'.$langmessage['JAVASCRIPT_REQ'].'</h2>';
+		echo		'<p>';
+		echo			$langmessage['INCOMPAT_BROWSER'];
+		echo			' ';
+		echo			$langmessage['MODERN_BROWSER'];
+		echo		'</p>';
+		echo	'</div>';
 	}
 
 

@@ -1,108 +1,96 @@
-// Yeti 4.0.0
-// Bootswatch
-
+// Theme Bootswatch 4 Scss
+// Layout Yeti 4.0.0
 //
+// For all Bootstrap 4 variables see /include/thirdparty/Bootstrap4/scss/bootstrap/_variables.scss
+
 // Color system
-//
+$white:     #fff;
+$gray-100:  #f8f9fa;
+$gray-200:  #eee;
+$gray-300:  #dee2e6;
+$gray-400:  #ccc;
+$gray-500:  #adb5bd;
+$gray-600:  #888;
+$gray-700:  #495057;
+$gray-800:  #333;
+$gray-900:  #222;
+$black:     #000;
 
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #eee !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ccc !default;
-$gray-500: #adb5bd !default;
-$gray-600: #888 !default;
-$gray-700: #495057 !default;
-$gray-800: #333 !default;
-$gray-900: #222 !default;
-$black:    #000 !default;
+$blue:      #008cba;
+$indigo:    #6610f2;
+$purple:    #6f42c1;
+$pink:      #e83e8c;
+$red:       #F04124;
+$orange:    #fd7e14;
+$yellow:    #E99002;
+$green:     #43ac6a;
+$teal:      #20c997;
+$cyan:      #5bc0de;
 
-$blue:    #008cba !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #F04124 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #E99002 !default;
-$green:   #43ac6a !default;
-$teal:    #20c997 !default;
-$cyan:    #5bc0de !default;
-
-$primary:       $blue !default;
-$secondary:     $gray-200 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-200 !default;
-$dark:          $gray-900 !default;
+$primary:   $blue;
+$secondary: $gray-200;
+$success:   $green;
+$info:      $cyan;
+$warning:   $yellow;
+$danger:    $red;
+$light:     $gray-200;
+$dark:      $gray-900;
 
 // Components
-
-$border-radius:               0 !default;
-$border-radius-lg:            0 !default;
-$border-radius-sm:            0 !default;
+$border-radius: 0;
+$border-radius-lg: 0;
+$border-radius-sm: 0;
 
 // Fonts
-
-$font-family-sans-serif:      "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-
-$font-size-base:              0.9375rem !default;
-
-$headings-font-weight:        300 !default;
+$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700";
+$font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$headings-font-weight: 300;
+$font-size-base: 1rem;
+$navbar-font-size: 1rem;
+$footer-font-size: 0.875rem;
 
 // Buttons
-
-$input-btn-padding-x:         1rem !default;
-
-$btn-font-weight:             300 !default;
+$input-btn-padding-x: 1rem;
+$btn-font-weight: 300;
 
 // Dropdowns
-
-$dropdown-border-color:             rgba($black,.1) !default;
-$dropdown-divider-bg:               rgba($black,.1) !default;
+$dropdown-border-color: rgba($black, 0.1);
+$dropdown-divider-bg: rgba($black, 0.1);
 
 // Navs
-
-$nav-link-disabled-color:           $gray-400 !default;
-
-$nav-tabs-border-color:             $dropdown-border-color !default;
-$nav-tabs-link-hover-border-color:  $nav-tabs-border-color !default;
-$nav-tabs-link-active-border-color: $nav-tabs-border-color !default;
+$nav-link-disabled-color: $gray-400;
+$nav-tabs-border-color: $dropdown-border-color;
+$nav-tabs-link-hover-border-color: $nav-tabs-border-color;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color;
 
 // Navbar
-
-$navbar-dark-color:                 rgba($white,.7) !default;
-$navbar-dark-hover-color:           $white !default;
+$navbar-dark-color: rgba($white, 0.7);
+$navbar-dark-hover-color: $white;
 
 // Pagination
-
-$pagination-color:                  $gray-600 !default;
-$pagination-border-color:           $nav-tabs-border-color !default;
-
-$pagination-active-border-color:    darken($primary, 5%) !default;
-
-$pagination-disabled-color:         $gray-200 !default;
+$pagination-color: $gray-600;
+$pagination-border-color: $nav-tabs-border-color;
+$pagination-active-border-color: darken($primary, 5%);
+$pagination-disabled-color: $gray-200;
 
 // Jumbotron
-
-$jumbotron-padding:                 4rem !default;
+$jumbotron-padding: 4rem;
 
 // Badges
-
-$badge-font-weight:                 300 !default;
-$badge-padding-x:                   1rem !default;
+$badge-font-weight: 300;
+$badge-padding-x: 1rem;
 
 // Progress bars
-
-$progress-bg:                       #f6f6f6 !default;
-$progress-bar-color:                $primary !default;
+$progress-bg: #f6f6f6;
+$progress-bar-color: $primary;
 
 // List group
-
-$list-group-disabled-bg:            $gray-200 !default;
+$list-group-disabled-bg: $gray-200;
 
 // Close
+$close-color: $gray-600;
+$close-text-shadow: none;
 
-$close-color:                       $gray-600 !default;
-$close-text-shadow:                 none !default;
+// Footer
+$footer-bg: $gray-300;
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss

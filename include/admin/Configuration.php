@@ -26,75 +26,83 @@ class Configuration extends \gp\special\Base{
 
 		$this->variables = array(
 
-						// these values aren't used
-						//'timeoffset'=>'',
-						//'dateformat'=>'',
+			// these values aren't used
+			//'timeoffset'=>'',
+			//'dateformat'=>'',
 
-						/* General Settings */
-						'general_settings'			=> false,
-						'title'						=> '',
-						'keywords'					=> '',
-						'desc'						=> 'textarea',
+			/* General Settings */
+			'general_settings'			=> false,
+			'title'						=> '',
+			'keywords'					=> '',
+			'desc'						=> 'textarea',
 
-						'Interface'					=> false,
-						'colorbox_style'			=> array(
-															'minimalistic'	=> 'Minimalistic',
-															'example1'		=> 'Example 1',
-															'example2'		=> 'Example 2',
-															'example3'		=> 'Example 3',
-															'example4'		=> 'Example 4',
-															'example5'		=> 'Example 5',
-														),
-						'gallery_legacy_style'		=> 'boolean',
-						'language'					=> '',
-						'langeditor'				=> '',
-						'showsitemap'				=> 'boolean',
-						'showlogin'					=> 'boolean',
-						'showgplink'				=> 'boolean',
+			'Interface'					=> false,
+			'colorbox_style'			=> [
+				'minimalistic'	=> 'Minimalistic',
+				'example1'		=> 'Example 1',
+				'example2'		=> 'Example 2',
+				'example3'		=> 'Example 3',
+				'example4'		=> 'Example 4',
+				'example5'		=> 'Example 5',
+			],
+			'gallery_legacy_style'		=> 'boolean',
+			'language'					=> '',
+			'langeditor'				=> '',
+			'showsitemap'				=> 'boolean',
+			'showlogin'					=> 'boolean',
+			'showgplink'				=> 'boolean',
 
-						'Images'					=> false,
-						'allow_svg_upload'			=> 'boolean',
-						'maximgarea'				=> 'integer',
-						'resize_images'				=> 'boolean',
-						'preserve_icc_profiles' 	=> 'boolean',
-						'preserve_image_metadata' 	=> 'boolean',
-						'maxthumbsize'				=> 'integer',
-						'maxthumbheight'			=> 'integer',
-						'thumbskeepaspect'			=> 'boolean',
+			'Images'					=> false,
+			'allow_svg_upload'			=> 'boolean',
+			'maximgarea'				=> 'integer',
+			'resize_images'				=> 'boolean',
+			'preserve_icc_profiles'		=> 'boolean',
+			'preserve_image_metadata'	=> 'boolean',
+			'maxthumbsize'				=> 'integer',
+			'maxthumbheight'			=> 'integer',
+			'thumbskeepaspect'			=> 'boolean',
 
-						'Performance'				=> false,
-						'auto_redir'				=> 'integer',
-						'history_limit'				=> 'integer',
-						'HTML_Tidy'					=> '',
-						'Report_Errors'				=> 'boolean',
-						'combinejs'					=> 'boolean',
-						'minifyjs'					=> 'boolean',
-						'combinecss'				=> 'boolean',
-						'etag_headers'				=> 'boolean',
-						'space_char'				=> array('_'=>'Undersorce "_"','-'=>'Dash "-"'),
+			'Performance'				=> false,
+			'auto_redir'				=> 'integer',
+			'history_limit'				=> 'integer',
+			'HTML_Tidy'					=> '',
+			'Report_Errors'				=> 'boolean',
+			'combinejs'					=> 'boolean',
+			'minifyjs'					=> 'boolean',
+			'combinecss'				=> 'boolean',
+			'etag_headers'				=> 'boolean',
+			'space_char'				=> [
+				'_'			=> 'Underscore "_"',
+				'-'			=> 'Dash "-"'
+			],
 
+			/* Hide Admin UI Settings */
+			'Hide Admin UI'				=> false,
+			'admin_ui_autohide_below'	=> 'integer',
+			'admin_ui_hotkey'			=> '',
+			'admin_ui_hotkey_code'		=> 'hidden',
 
-						/* Contact Configuration */
-						'contact_config'		=> false,
-						'toemail'				=> '',
-						'toname'				=> '',
-						'from_address'			=> '',
-						'from_name'				=> '',
-						'from_use_user'			=> 'boolean',
-						'require_email'			=> '',
-						'contact_advanced'		=> false,
-						'mail_method'			=> '',
-						'sendmail_path'			=> '',
-						'smtp_hosts'			=> '',
-						'smtp_user'				=> '',
-						'smtp_pass'				=> 'password',
-						//'fromemail'			=> '',
+			/* Contact Configuration */
+			'contact_config'			=> false,
+			'toemail'					=> '',
+			'toname'					=> '',
+			'from_address'				=> '',
+			'from_name'					=> '',
+			'from_use_user'				=> 'boolean',
+			'require_email'				=> '',
+			'contact_advanced'			=> false,
+			'mail_method'				=> '',
+			'sendmail_path'				=> '',
+			'smtp_hosts'				=> '',
+			'smtp_user'					=> '',
+			'smtp_pass'					=> 'password',
+			//'fromemail'				=> '',
 
-						'reCaptcha'				=> false,
-						'recaptcha_public'		=> '',
-						'recaptcha_private'		=> '',
-						'recaptcha_language'	=> '',
-						);
+			'reCaptcha'					=> false,
+			'recaptcha_public'			=> '',
+			'recaptcha_private'			=> '',
+			'recaptcha_language'		=> '',
+		);
 
 	}
 
@@ -169,10 +177,10 @@ class Configuration extends \gp\special\Base{
 				'Admin/Configuration',
 				$langmessage['recreate_all_thumbnails'],
 				'cmd=recreate_thumbs',
-				array(
+				[
 					'class'		=> '',
-					'data-cmd'	=>'creq',
-				)
+					'data-cmd'	=> 'creq',
+				]
 			));
 		}
 
@@ -231,43 +239,65 @@ class Configuration extends \gp\special\Base{
 
 
 		//recaptcha language
-		$possible['recaptcha_language'] = array();
+		$possible['recaptcha_language'] = [];
 		$possible['recaptcha_language']['inherit'] = $langmessage['default'];
-		$possible['recaptcha_language']['en'] = 'en';
-		$possible['recaptcha_language']['nl'] = 'nl';
-		$possible['recaptcha_language']['fr'] = 'fr';
-		$possible['recaptcha_language']['de'] = 'de';
-		$possible['recaptcha_language']['pt'] = 'pt';
-		$possible['recaptcha_language']['ru'] = 'ru';
-		$possible['recaptcha_language']['es'] = 'es';
-		$possible['recaptcha_language']['tr'] = 'tr';
 
-
+		// According to https://developers.google.com/recaptcha/docs/language
+		$recaptcha_languages = [
+			'af', 'am', 'ar', 'az',
+			'bn', 'bg',
+			'ca', 'cs',
+			'da', 'de', 'de-AT', 'de-CH',
+			'el', 'en', 'en-GB', 'es', 'es-419', 'et', 'eu',
+			'fa', 'fi', 'fil', 'fr', 'fr-CA',
+			'gl', 'gu',
+			'hi', 'hr', 'hu', 'hy',
+			'id', 'is', 'it', 'iw',
+			'ja',
+			'ka', 'kn', 'ko',
+			'lo', 'lt', 'lv',
+			'ml', 'mn', 'mr', 'ms',
+			'nl', 'no',
+			'pl', 'pt', 'pt-BR', 'pt-PT',
+			'ro', 'ru',
+			'si', 'sk', 'sl', 'sr', 'sv', 'sw',
+			'ta', 'te', 'th', 'tr',
+			'uk', 'ur',
+			'vi',
+			'zh-HK', 'zh-CN', 'zh-TW', 'zu',
+		];
+		foreach($recaptcha_languages as $lang){
+			$possible['recaptcha_language'][$lang] = $lang;
+		}
 
 		//website language
 		$possible['language'] = $this->GetPossibleLanguages();
 
-
 		//tidy
 		if( function_exists('tidy_parse_string') ){
-			$possible['HTML_Tidy'] = array('off'=>$langmessage['Off'],''=>$langmessage['On']);
+			$possible['HTML_Tidy'] = [
+				'off'	=> $langmessage['Off'],
+				''		=> $langmessage['On']
+			];
 		}else{
-			$possible['HTML_Tidy'] = array(''=>'Unavailable');
+			$possible['HTML_Tidy'] = [''=>'Unavailable'];
 		}
 
-
-
 		//required email fields
-		$possible['require_email'] = array(	'none'		=> 'None',
-											''			=> 'Subject &amp; Message',
-											'email'		=> 'Subject, Message &amp; Email' );
+		$possible['require_email'] = [
+			'none'	=> 'None',
+			''		=> 'Subject &amp; Message',
+			'email'	=> 'Subject, Message &amp; Email'
+		];
 
 
 		//see xoopsmultimailer.php
-		$possible['mail_method'] = array(	'mail'		=> 'PHP mail()',
-											'sendmail'	=> 'sendmail',
-											'smtp'		=> 'smtp',
-											'smtpauth'	=> 'SMTPAuth' );
+		$possible['mail_method'] = [
+			'mail'		=> 'PHP mail()',
+			'sendmail'	=> 'sendmail',
+			'smtp'		=> 'smtp',
+			'smtpauth'	=> 'SMTPAuth'
+		];
 
 		//CDN
 		foreach(\gp\tool\Output\Combine::$scripts as $key => $script_info){
@@ -286,9 +316,7 @@ class Configuration extends \gp\special\Base{
 			array_unshift($possible[$config_key],$langmessage['None']);
 		}
 
-
 		gpSettingsOverride('configuration',$possible);
-
 
 		return $possible;
 	}
@@ -315,6 +343,7 @@ class Configuration extends \gp\special\Base{
 
 		return array_combine($languages, $languages);
 	}
+
 
 	/**
 	 * Display configuration settings
@@ -360,8 +389,11 @@ class Configuration extends \gp\special\Base{
 
 			echo "\n\n";
 
-
-			echo '<tr><td style="white-space:nowrap">';
+			$tr_class_attr = '';
+			if( !is_array($possible_value) && $possible_value == 'hidden' ){
+				$tr_class_attr = ' class="nodisplay"';
+			}
+			echo '<tr' . $tr_class_attr . '><td style="white-space:nowrap">';
 			if( isset($langmessage[$key]) ){
 				echo $langmessage[$key];
 			}else{
@@ -372,8 +404,6 @@ class Configuration extends \gp\special\Base{
 
 			if( is_array($possible_value) ){
 				self::formSelect($key,$possible_value,$value);
-
-
 			}else{
 				switch($possible_value){
 					case 'boolean':

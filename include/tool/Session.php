@@ -695,6 +695,10 @@ class Session{
 			'Dismiss Draft'				=>	'DismissDraft',
 			'Select Image'				=>	'SelectImage',
 			'edit'						=>	'edit',
+			'Expand Editor'				=>	'ExpandEditor',
+			'Shrink Editor'				=>	'ShrinkEditor',
+			'Hide Admin UI'				=>	'HideAdminUI',
+			'Show Admin UI'				=>	'ShowAdminUI',
 			'options'					=>	'options',
 			'Copy'						=>	'Copy',
 			'Copy to Clipboard'			=>	'CopyToClipboard',
@@ -711,6 +715,9 @@ class Session{
 			'Move Behind'				=>	'MoveBehind',
 			'Section %s'				=>	'Section',
 			'generic_delete_confirm'	=>	'generic_delete_confirm',
+			'Ctrl Key'					=>	'ctrlKey',
+			'Shift Key'					=>	'shiftKey',
+			'Alt Key'					=>	'altKey',
 		);
 
 
@@ -814,6 +821,7 @@ class Session{
 			'gpui_ty'		=> 39,
 			'gpui_ckx'		=> 20,
 			'gpui_cky'		=> 240,
+			'gpui_exp'		=> 1,
 			'gpui_vis'		=> 'cur',
 			'gpui_thw'		=> 250,
 		);

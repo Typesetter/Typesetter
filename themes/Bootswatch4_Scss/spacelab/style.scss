@@ -1,13 +1,13 @@
+// Theme Bootswatch 4 Scss
+// Layout Spacelab 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Spacelab 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-
-// Variables ===================================================================
-
-$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" !default;
-@import url($web-font-path);
+// Variables and Mixins==========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 @mixin btn-shadow($color){
   @include gradient-y-three-colors(lighten($color, 15%), $color, 50%, darken($color, 4%));
@@ -15,16 +15,11 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700
   border: 1px solid darken($color, 10%);
 }
 
-
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
 // Navbar =======================================================================
-
 .navbar {
-
   .nav-link,
   .navbar-brand {
     text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.1);
@@ -57,13 +52,7 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400italic,700
   }
 }
 
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-300;
-}
-
 // Buttons =====================================================================
-
 .btn {
   text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.1);
 
@@ -156,9 +145,7 @@ footer.main-footer {
 // Navs ========================================================================
 
 // Indicators ==================================================================
-
 .badge {
-
   &-secondary {
     color: $white;
   }
@@ -167,7 +154,6 @@ footer.main-footer {
 // Progress bars ===============================================================
 
 // Containers ==================================================================
-
 .card,
 .list-group-item {
   h1, h2, h3, h4, h5, h6 {

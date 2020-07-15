@@ -38,10 +38,10 @@
 #gp_admin_html * {
 	text-shadow: none;
 	@include box-sizing( content-box );
-	/* background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense */
+	// background: none; prevents other backgrounds from showing. "inherit" wouldn't make sense
 	font-family: inherit;
 	font-size: inherit;
-	line-height: inherit; //* conflicts with fontawesome */
+	line-height: inherit; // conflicts with fontawesome
 }
 
 #gp_admin_html hr {
@@ -55,7 +55,7 @@
 
 #gp_admin_html li {
 	list-style: none;
-	background-image: none; /* ex: a bullet image for <li>, but it messes up ckeditor */
+	background-image: none; // ex: a bullet image for <li>, but it messes up ckeditor
 }
 
 #gp_admin_html table,
@@ -89,7 +89,9 @@
 #gp_admin_html a:visited,
 #gp_admin_html a:hover {
 	color: $link-color;
+	font-style: normal;
 	text-decoration: none;
+	text-transform: none;
 }
 #gp_admin_html a:hover {
 	color: $link-hover-color;
@@ -99,7 +101,6 @@
 	color: inherit;
 	text-decoration: inherit;
 }
-
 
 #gp_admin_html h1,
 #gp_admin_html .h1,
@@ -158,7 +159,6 @@
 #gp_admin_html p {
 	margin: 1em 0;
 }
-
 
 
 #gp_admin_html .gpselect,
@@ -461,7 +461,7 @@
 }
 
 #admincontent_panel ul a {
-	display:block;
+	display: block;
 }
 
 
@@ -695,6 +695,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 	padding-top: 20px; // spare space for close button when there is an y-scrollbar
 	transform: translateX(-50%);
 	@include box-shadow( 0 0 6px rgba(0, 0, 0, 0.4) );
+	max-height: calc(100vh - 100px);
 	overflow: auto;
 }
 #gp_admin_boxc {
@@ -715,6 +716,7 @@ html.isPrivate #admincontent_panel .admin-link-dropdown-options:hover {
 @media (max-width:768px) {
 	#gp_admin_box {
 		top: 15px;
+		max-height: calc(100vh - 70px);
 	}
 	#gp_admin_boxc {
 		max-height: calc(100vh - 95px);
@@ -763,6 +765,10 @@ input.admin_box_close {
 	opacity: 0.5;
 }
 
+#gp_admin_box .show-notifications-box td:first-child {
+	white-space:nowrap;
+}
+
 
 .layout_color_id {
 	display: inline-block;
@@ -776,7 +782,7 @@ input.admin_box_close {
 }
 
 .layout_default {
-	@include opacity(.6);
+	@include opacity(0.6);
 }
 
 
@@ -791,19 +797,15 @@ body.gpAdmin .GPAREA[data-gp_hidden="true"] {
 	display: none!important;
 }
 
-body.gpAdmin div.editable_area {
-	min-height: 1em;
-}
-
 
 /**
  * general
  */
 
- .full_width,
- #gp_admin_html .full_width {
- 	width: 100%;
- }
+.full_width,
+#gp_admin_html .full_width {
+	width: 100%;
+}
 
 
 #gp_admin_html .bordered,
@@ -811,7 +813,6 @@ body.gpAdmin div.editable_area {
 	margin-top: 1em;
 	border-spacing: 0;
 	border-top: 1px solid #eee;
-
 
 	> tbody > tr > th,
 	> thead > tr > th,
@@ -849,7 +850,7 @@ body.gpAdmin div.editable_area {
 		background-color: #ddd;
 	}
 
- 	> tbody > tr.active > td {
+	> tbody > tr.active > td {
 		background-color: $gp_teal !important;
 		&,
 		> a {
@@ -1171,12 +1172,13 @@ html.admin_body #simplepanel .toolbar {
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 8px;
-	font-size:14px;
+	font-size: 14px;
 }
 
 #simplepanel .toolbar .fa {
-	font-size:16px;
+	font-size: 16px;
 }
+
 #simplepanel .gpversion {
 	color: #888 !important;
 	font-size: 11px;
@@ -2193,13 +2195,37 @@ body #addon_about {
 /**
  * New section options
  */
-#new_section_links > div {
+
+#new_section_links .collapsible {
+	background: #fff;
+	h4 {
+		font-size: inherit;
+		a {
+			background: #fff;
+			border: none !important;
+			border-radius: 0;
+			&:before {
+				color: inherit !important;
+				width: 1em;
+				margin-right: 0.25em;
+			}
+		}
+	}
+	.collapsearea {
+		padding: 2px;
+	}
+}
+
+#new_section_links .new_section_link {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 	max-width: 100px;
 	width: 50%;
 	position: relative;
 	overflow: hidden;
 	display: inline-block;
 	vertical-align: top;
+	padding: 2px;
 }
 
 #new_section_links input {
@@ -2208,32 +2234,31 @@ body #addon_about {
 	top: 0px;
 }
 
-#new_section_links label,
-#new_section_links a {
+#new_section_links .new_section_link label,
+#new_section_links .new_section_link a {
 	display: block;
 	border: 1px solid #ddd;
 	border-radius: 3px;
 	padding: 0;
 	background: #fff;
-	margin: 0 3px 3px 0;
+	margin: 0;
 	color: #666 !important;
 	box-sizing: border-box;
 	text-align: center;
 	height: 52px;
-	vertical-align: top;
 	overflow: hidden;
 	outline: none;
 	position: relative;
 	cursor: pointer;
 }
 
-#new_section_links a:hover
-#new_section_links input:checked + label {
+#new_section_links .new_section_link a:hover,
+#new_section_links .new_section_link input:checked + label {
 	border-color: #999;
 }
 
-#new_section_links a:hover:after,
-#new_section_links input:checked + label:after {
+#new_section_links .new_section_link a:hover:after,
+#new_section_links .new_section_link input:checked + label:after {
 	position: absolute;
 	top: 1px;
 	left: 1px;
@@ -2244,18 +2269,44 @@ body #addon_about {
 	content: ' ';
 }
 
-
-#new_section_links span {
+#new_section_links .new_section_link span {
 	font-size: 12px;
 	padding: 4px;
 	position: relative;
 	top: 50%;
 	-webkit-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
 	display: inline-block;
 	text-shadow: 0 1px 1px #fff;
 }
+
+#new_section_links .new_section_link img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+
+/**
+ * New Page / Copy Page
+ */
+#gp_admin_html .new_page_table .gp_scrolllist > div {
+	height: 164px;
+}
+
+#gp_admin_html .new_page_table #new_section_links {
+	max-height: 164px;
+	overflow-y:	auto;
+}
+
+#gp_admin_html .new_page_table .selectable_row.selected_row {
+	td {
+		background-color: #f2f2f2;
+	}
+}
+
 
 
 /**
@@ -2276,7 +2327,6 @@ body #addon_about {
 	overflow-x: hidden;
 	margin-top: 24px;
 }
-
 
 .gp_scrolllist > div > input.gpsearch {
 	box-sizing: border-box !important;
@@ -2375,16 +2425,173 @@ table.tp-tablesorter {
 }
 
 /**
+ * Keyboard keys
+ */
+#gp_admin_html kbd.keyboard-key {
+	display: inline-block;
+	background: #f7f7f7;
+	background-image: linear-gradient(rgba(255, 255, 255, 0.4), rgba(127, 127, 127, 0.2));
+	border-style: solid;
+	border-width: 1px 1px 2px 1px;
+	border-color: #bbb;
+	border-radius: 2px;
+	font-family: inherit;
+	padding: 3px 6px;
+	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+	white-space: nowrap;
+}
+
+/**
  * Fontawesome
  */
 #gp_admin_html .fa {
 	font-family: FontAwesome;
+	font-size: 14px;
 }
-
 
 /**
  * Layout Editor/Codemirror
  */
 .CodeMirror {
 	font-family: $font_family_monospace !important;
+}
+
+
+/**
+ * Hide Admin UI overrides
+ * keep this part at the very end of the stylesheet
+ * for precedence
+ */
+html.override_admin_style {
+	// page offset when editor is open
+	margin-left: 0 !important;
+	margin-top: 0 !important;
+	width: auto !important;
+
+	// all Admin UI elements
+	#gp_admin_html,
+	.messages.gp-fixed-adjust {
+		display: none;
+	}
+
+	// fixed navbars - top bar compensation
+	.gp-fixed-adjust {
+		margin-top: 0 !important;
+	}
+
+	body.gpAdmin .navbar-fixed-top {
+	top: 0;
+	}
+
+	// Theme Cajon Navbar
+	.navbar-theme-cajon.navbar-fixed-side-left {
+		left: 0 !important;
+	}
+}
+
+// The Hide UI icon
+#admincontent_panel .admin-link-hide-ui {
+	padding: 8px 10px;
+	> .fa {
+		margin: 0;
+	}
+	> img {
+		display: inline-block;
+		height: 14px;
+		width: auto;
+	}
+}
+
+// The Show UI icon
+div.show-admin-ui {
+	display: none;
+}
+html.override_admin_style div.show-admin-ui {
+	display: block;
+	z-index: 12000;
+	cursor: pointer;
+	position: fixed;
+	left: 0;
+	top: 0;
+	padding: 8px;
+	font-size: 13px;
+	line-height: 13px;
+	-webkit-animation: 2s ease 1 admin-ui-hide;
+	animation: 2s ease 1 admin-ui-hide;
+
+	&:hover {
+		background: rgba(60, 60, 60, 0.5);
+	}
+
+	> i.fa {
+		color: rgba(221, 221, 221, 0.8);
+		-webkit-animation: 2s infinite indicator-pulse;
+		animation: 2s infinite indicator-pulse;
+	}
+
+	> img {
+		display: inline-block;
+		height: 14px;
+		width: auto;
+	}
+}
+
+@media print {
+	html.override_admin_style div.show-admin-ui {
+		display: none;
+	}
+}
+
+/**
+ * Animations
+ */
+
+// continously pulsate the show admin ui icon
+@-webkit-keyframes indicator-pulse {
+	0%		{ color: rgba(221, 221, 221, 0.85); }
+	50%		{ color: rgba(60,60,60,0.85); }
+	100%	{ color: rgba(221,221,221,0.85); }
+}
+@keyframes indicator-pulse {
+	0%		{ color: rgba(221, 221, 221, 0.85); }
+	50%		{ color: rgba(60,60,60,0.85); }
+	100%	{ color: rgba(221,221,221,0.85); }
+}
+
+// initial slide + scale animation for the show admin ui icon
+@-webkit-keyframes admin-ui-hide {
+	0%, 50% {
+		left: 50vw;
+		top: 50vh;
+		background: rgba(60, 60, 60, 0.5);
+		border-radius: 5px;
+		-webkit-transform: translate(-50%, -50%) scale(4);
+		transform: translate(-50%, -50%) scale(4);
+	}
+	100% {
+		left: 0;
+		top: 0;
+		background: rgba(60, 60, 60, 0);
+		border-radius: 0;
+		-webkit-transform: translate(0, 0) scale(1);
+		transform: translate(0, 0) scale(1);
+	}
+}
+@keyframes admin-ui-hide {
+	0%, 50% {
+		left: 50vw;
+		top: 50vh;
+		background: rgba(60, 60, 60, 0.5);
+		border-radius: 5px;
+		-webkit-transform: translate(-50%, -50%) scale(4);
+		transform: translate(-50%, -50%) scale(4);
+	}
+	100% {
+		left: 0;
+		top: 0;
+		background: rgba(60, 60, 60, 0);
+		border-radius: 0;
+		-webkit-transform: translate(0, 0) scale(1);
+		transform: translate(0, 0) scale(1);
+	}
 }

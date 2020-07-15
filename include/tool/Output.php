@@ -6,96 +6,100 @@ namespace gp\tool{
 
 	global $GP_ARRANGE, $gpOutConf;
 
-	$GP_ARRANGE = true;
-	$gpOutConf = array();
+	$GP_ARRANGE	= true;
+	$gpOutConf	= [];
 
 
 	//named menus should just be shortcuts to the numbers in custom menu
 	//	custom menu format: $top_level,$bottom_level,$expand_level
 
 	//custom menu: 0,0,0,0
-	$gpOutConf['FullMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetFullMenu',
-								'link'			=> 'all_links',
-								);
-
+	$gpOutConf['FullMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetFullMenu',
+		'link'		=> 'all_links',
+	];
 
 	//custom menu: 0,0,1,1
-	$gpOutConf['ExpandMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetExpandMenu',
-								'link'			=> 'expanding_links',
-								);
-
+	$gpOutConf['ExpandMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetExpandMenu',
+		'link'		=> 'expanding_links',
+	];
 
 	//custom menu: 0,0,2,1
-	$gpOutConf['ExpandLastMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetExpandLastMenu',
-								'link'			=> 'expanding_bottom_links',
-								);
+	$gpOutConf['ExpandLastMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetExpandLastMenu',
+		'link'		=> 'expanding_bottom_links',
+	];
 
 	//custom menu: 0,1,0,0
-	$gpOutConf['Menu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetMenu',
-								'link'			=> 'top_level_links',
-								);
+	$gpOutConf['Menu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetMenu',
+		'link'		=> 'top_level_links',
+	];
 
 	//custom menu: 1,0,0,0
-	$gpOutConf['SubMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetSubMenu',
-								'link'			=> 'subgroup_links',
-								);
+	$gpOutConf['SubMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetSubMenu',
+		'link'		=> 'subgroup_links',
+	];
 
 	//custom menu: 0,2,0,0
-	$gpOutConf['TopTwoMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetTopTwoMenu',
-								'link'			=> 'top_two_links',
-								);
+	$gpOutConf['TopTwoMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetTopTwoMenu',
+		'link'		=> 'top_two_links',
+	];
 
 	//custom menu: does not translate, this pays no attention to grouping
-	$gpOutConf['BottomTwoMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetBottomTwoMenu',
-								'link'			=> 'bottom_two_links',
-								);
+	$gpOutConf['BottomTwoMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetBottomTwoMenu',
+		'link'		=> 'bottom_two_links',
+	];
 
 	//custom menu: 1,2,0,0
-	$gpOutConf['MiddleSubMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetSecondSubMenu',
-								'link'			=> 'second_sub_links',
-								);
+	$gpOutConf['MiddleSubMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetSecondSubMenu',
+		'link'		=> 'second_sub_links',
+	];
 
 	//custom menu: 2,3,0,0
-	$gpOutConf['BottomSubMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'GetThirdSubMenu',
-								'link'			=> 'third_sub_links',
-								);
+	$gpOutConf['BottomSubMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'GetThirdSubMenu',
+		'link'		=> 'third_sub_links',
+	];
 
 	//custom menu
-	$gpOutConf['CustomMenu'] = array(
-								'class'			=> '\\gp\\tool\\Output\\Menu',
-								'method'		=> 'CustomMenu',
-								);
+	$gpOutConf['CustomMenu'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'CustomMenu',
+	];
+
+	//breadcrumb nav
+	$gpOutConf['Breadcrumbs'] = [
+		'class'		=> '\\gp\\tool\\Output\\Menu',
+		'method'	=> 'BreadcrumbNav',
+		'link'		=> 'Breadcrumb Links',
+	];
+	//$gpOutConf['Breadcrumbs']['method']	= ['\\gp\\tool\\Output', 'BreadcrumbNav'];
+	//$gpOutConf['Breadcrumbs']['link']		= 'Breadcrumb Links';
 
 
-	$gpOutConf['Extra']['method']			= array('\\gp\\tool\\Output', 'GetExtra');
-	//$gpOutConf['Text']['method']			= array('\\gp\\tool\\Output','GetText'); //use Area() and GetArea() instead
+	$gpOutConf['Extra']['method']			= ['\\gp\\tool\\Output', 'GetExtra'];
 
-	//$gpOutConf['Image']['method']			= array('\\gp\\tool\\Output','GetImage');
+	//$gpOutConf['Text']['method']			= ['\\gp\\tool\\Output','GetText']; //use Area() and GetArea() instead
+
+	//$gpOutConf['Image']['method']			= ['\\gp\\tool\\Output','GetImage'];
 
 	/* The following methods should be used with \gp\tool\Output'::Fetch() */
-	$gpOutConf['Gadget']['method']			= array('\\gp\\tool\\Output', 'GetGadget');
-
-
-	$gpOutConf['Breadcrumbs']['method']		= array('\\gp\\tool\\Output', 'BreadcrumbNav');
-	$gpOutConf['Breadcrumbs']['link']		= 'Breadcrumb Links';
+	$gpOutConf['Gadget']['method']			= ['\\gp\\tool\\Output', 'GetGadget'];
 
 
 	class Output{
@@ -105,14 +109,14 @@ namespace gp\tool{
 		public static $template_included	= false;
 
 		private static $out_started			= false;
-		private static $gadget_cache		= array();
+		private static $gadget_cache		= [];
 
 		public static $edit_area_id			= '';
 
-		private static $catchable			= array();
+		private static $catchable			= [];
 
-		public static $lang_values			= array();
-		public static $inline_vars			= array();
+		public static $lang_values			= [];
+		public static $inline_vars			= [];
 		public static $nested_edit			= false;
 
 		private static $edit_index			= 0;
@@ -122,16 +126,15 @@ namespace gp\tool{
 		private static $head_js				= '';
 
 
-
 		/**
 		 * Backwards compat for functions moved to \gp\tool\Output\Menu
 		 *
 		 */
-		public static function __callStatic($name,$args){
+		public static function __callStatic($name, $args){
 
 			if( method_exists('\\gp\\tool\\Output\\Menu', $name) ){
 				$menu = new \gp\tool\Output\Menu();
-				return call_user_func_array( array($menu, $name), $args);
+				return call_user_func_array([$menu, $name], $args);
 			}
 
 			throw new \Exception('Call to undefined method gp\\tool\\Output::' . $name);
@@ -159,7 +162,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Send only messages and the content buffer to the client
 		 * @static
@@ -172,7 +174,6 @@ namespace gp\tool{
 		}
 
 
-
 		public static function Content(){
 			global $page;
 			self::StandardHeaders();
@@ -181,12 +182,10 @@ namespace gp\tool{
 		}
 
 
-
 		public static function StandardHeaders(){
 			header('Content-Type: text/html; charset=utf-8');
 			Header('Vary: Accept,Accept-Encoding'); // for proxies
 		}
-
 
 
 		/**
@@ -219,7 +218,6 @@ namespace gp\tool{
 		}
 
 
-
 		public static function AdminHtml(){
 			global $page;
 
@@ -244,7 +242,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Send all content according to the current layout
 		 * @static
@@ -255,8 +252,8 @@ namespace gp\tool{
 			global $addon_current_id, $GP_MENU_LINKS, $GP_MENU_CLASS;
 			global $GP_MENU_CLASSES, $GP_MENU_ELEMENTS;
 
-			$get_all_gadgets_called = false;
-			self::$template_included = true;
+			$get_all_gadgets_called		= false;
+			self::$template_included	= true;
 
 			if( isset($page->theme_addon_id) ){
 				$addon_current_id = $page->theme_addon_id;
@@ -270,11 +267,11 @@ namespace gp\tool{
 			$return = IncludeScript(
 				$path,
 				'require',
-				array(
+				[
 					'page',	'GP_ARRANGE',
 					'GP_MENU_LINKS', 'GP_MENU_CLASS',
 					'GP_MENU_CLASSES', 'GP_MENU_ELEMENTS'
-				)
+				]
 			);
 
 			//return will be false if there's a fatal error with the template.php file
@@ -295,9 +292,8 @@ namespace gp\tool{
 			global $page;
 
 			$path = $page->theme_dir . '/settings.php';
-			IncludeScript($path, 'require_if', array('page', 'GP_GETALLGADGETS'));
+			IncludeScript($path, 'require_if', ['page', 'GP_GETALLGADGETS']);
 		}
-
 
 
 		/**
@@ -322,7 +318,6 @@ namespace gp\tool{
 		}
 
 
-
 		/*
 		 *
 		 * Content Area Functions
@@ -333,8 +328,8 @@ namespace gp\tool{
 			static $indices;
 
 			$name = str_replace(
-				array('+', '/', '='),
-				array('', '', ''),
+				['+', '/', '='],
+				['', '', ''],
 				base64_encode($name)
 			);
 			if( !isset($indices[$name]) ){
@@ -344,7 +339,6 @@ namespace gp\tool{
 			}
 			return $name . '_' . $indices[$name];
 		}
-
 
 
 		/**
@@ -358,7 +352,6 @@ namespace gp\tool{
 		}
 
 
-
 		public static function Get($default='', $arg=''){
 			global $page, $gpLayouts, $gpOutConf;
 
@@ -368,14 +361,14 @@ namespace gp\tool{
 			$layout_info =& $gpLayouts[$page->gpLayout];
 
 			//container id
-			$container_id = $default . ':' . substr($arg, 0, 10);
-			$container_id = self::GetContainerID($container_id);
+			$container_id	= $default . ':' . substr($arg, 0, 10);
+			$container_id	= self::GetContainerID($container_id);
 
 			if( isset($layout_info) && isset($layout_info['handlers']) ){
 				$handlers =& $layout_info['handlers'];
 				if( isset($handlers[$container_id]) ){
-					$outKeys = $handlers[$container_id];
-					$outSet = true;
+					$outKeys	= $handlers[$container_id];
+					$outSet		= true;
 				}
 			}
 
@@ -388,12 +381,11 @@ namespace gp\tool{
 		}
 
 
-
-		public static function ForEachOutput($outKeys,$container_id){
+		public static function ForEachOutput($outKeys, $container_id){
 
 			if( !is_array($outKeys) || (count($outKeys) == 0) ){
-				$info = array();
-				$info['gpOutCmd'] = '';
+				$info				= [];
+				$info['gpOutCmd']	= '';
 				self::CallOutput($info, $container_id);
 				return;
 			}
@@ -410,20 +402,19 @@ namespace gp\tool{
 		}
 
 
-
 		/* static */
 		public static function GetgpOutInfo($gpOutCmd){
 			global $gpOutConf, $config;
 
-			$key = $gpOutCmd = trim($gpOutCmd, ':');
-			$info = false;
-			$arg = '';
-			$pos = mb_strpos($key, ':');
+			$key	= $gpOutCmd = trim($gpOutCmd, ':');
+			$info	= false;
+			$arg	= '';
+			$pos	= mb_strpos($key, ':');
+
 			if( $pos > 0 ){
 				$arg = mb_substr($key, $pos + 1);
 				$key = mb_substr($key, 0, $pos);
 			}
-
 
 			if( isset($gpOutConf[$key]) ){
 				$info = $gpOutConf[$key];
@@ -433,9 +424,10 @@ namespace gp\tool{
 			}else{
 				return false;
 			}
-			$info['key'] = $key;
-			$info['arg'] = $arg;
-			$info['gpOutCmd'] = $gpOutCmd;
+
+			$info['key']		= $key;
+			$info['arg']		= $arg;
+			$info['gpOutCmd']	= $gpOutCmd;
 
 			return $info;
 		}
@@ -454,18 +446,17 @@ namespace gp\tool{
 				$label = $langmessage[$info['link']];
 			}
 
-			return str_replace(array(' ','_',':'), array('&nbsp;', '&nbsp;', ':&nbsp;'), $label);
+			return str_replace([' ', '_', ':'], ['&nbsp;', '&nbsp;', ':&nbsp;'], $label);
 		}
-
 
 
 		public static function CallOutput($info,$container_id){
 			global $GP_ARRANGE, $page, $langmessage, $GP_MENU_LINKS;
 			global $GP_MENU_CLASS, $GP_MENU_CLASSES, $gp_current_container;
 
-			$gp_current_container = $container_id;
-			self::$out_started = true;
-			self::$edit_area_id = '';
+			$gp_current_container	= $container_id;
+			self::$out_started		= true;
+			self::$edit_area_id		= '';
 
 			if( isset($info['disabled']) ){
 				return;
@@ -485,7 +476,12 @@ namespace gp\tool{
 				$class = $info['gpOutCmd'];
 			}
 
-			$class			= 'gpArea_' . str_replace(array(':', ','), array('_', ''), trim($class, ':'));
+			//add gpMenu class to all menu areas for better styling
+			$add_menu_class = '';
+			if( isset($info['class']) && $info['class'] == '\gp\tool\Output\Menu' ){
+				$add_menu_class = 'gpMenu ';
+			}
+			$class			= $add_menu_class . 'gpArea_' . str_replace([':', ','], ['_', ''], trim($class, ':'));
 			$param			= $container_id . '|' . $info['gpOutCmd'];
 			$permission		= self::ShowEditLink('Admin_Theme_Content');
 
@@ -502,10 +498,7 @@ namespace gp\tool{
 					'Admin_Theme_Content/Edit/' . $page->gpLayout,
 					$param,
 					'cmd=DragArea&dragging=' . urlencode($param) . '&to=%s',
-					array(
-						'data-cmd'	=>	'creq',
-						'class'		=>	'dragdroplink nodisplay',
-					)
+					['data-cmd' => 'creq', 'class' => 'dragdroplink nodisplay']
 				); //drag-drop link
 
 				echo '<div class="output_area_label">';
@@ -521,14 +514,14 @@ namespace gp\tool{
 					'Admin_Theme_Content/Edit/' . $page->gpLayout,
 					'<i class="fa fa-plus"></i> ' . $langmessage['insert'],
 					'cmd=SelectContent&param=' . $param,
-					array('data-cmd' => 'gpabox')
+					['data-cmd' => 'gpabox']
 				);
 				if( !$empty_container ){
 					echo ' ' . \gp\tool::Link(
 						'Admin_Theme_Content/Edit/' . $page->gpLayout,
 						'<i class="fa fa-times"></i> ' . $langmessage['remove'],
 						'cmd=RemoveArea&param=' . $param,
-						array('data-cmd' => 'creq')
+						['data-cmd' => 'creq']
 					);
 				}
 				echo '</div>';
@@ -547,10 +540,7 @@ namespace gp\tool{
 						'Admin_Theme_Content/Edit/' . urlencode($page->gpLayout),
 						$langmessage['edit'],
 						'cmd=LayoutMenu&handle=' . $param,
-						array(
-							'data-cmd' 	=> 'gpabox',
-							'title'		=> $label,
-						)
+						['data-cmd' => 'gpabox', 'title' => $label ]
 					);
 					echo '<span class="nodisplay" id="ExtraEditLnks' . $edit_index . '">';
 					echo $edit_link;
@@ -558,9 +548,7 @@ namespace gp\tool{
 						'Admin/Menu',
 						$langmessage['file_manager'],
 						'',
-						array(
-							'class' => 'nodisplay',
-						)
+						['class' => 'nodisplay']
 					);
 					//call to current also not needed, there will only be 1 entry);
 					echo '</span>';
@@ -574,10 +562,7 @@ namespace gp\tool{
 						'Admin_Theme_Content/Edit/' . urlencode($page->gpLayout),
 						$langmessage['edit'],
 						'cmd=LayoutMenu&handle=' . $param,
-						array(
-							'data-cmd' 	=> 'gpabox',
-							'title'		=> $langmessage['Links'],
-						)
+						['data-cmd' => 'gpabox', 'title' => $langmessage['Links']]
 					);
 
 					echo '<span class="nodisplay" id="ExtraEditLnks' . $edit_index . '">';
@@ -588,12 +573,12 @@ namespace gp\tool{
 						'Admin/Menu',
 						$langmessage['file_manager'],
 						'',
-						array('class' => 'nodisplay')
+						['class' => 'nodisplay']
 					);
 
 					echo '</span>';
 
-					self::$edit_area_id = 'ExtraEditArea'.$edit_index;
+					self::$edit_area_id = 'ExtraEditArea' . $edit_index;
 				}
 			}
 
@@ -608,13 +593,12 @@ namespace gp\tool{
 		}
 
 
-
 		public static function ExecArea($info){
 			//retreive from gadget cache if set
 			if( isset($info['gpOutCmd']) ){
 				$gadget = $info['gpOutCmd'];
 				if( substr($gadget, 0, 7) == 'Gadget:' ){
-					$gadget = substr($gadget,7);
+					$gadget = substr($gadget, 7);
 				}
 				if( isset(self::$gadget_cache[$gadget]) ){
 					echo self::$gadget_cache[$gadget];
@@ -622,10 +606,10 @@ namespace gp\tool{
 				}
 			}
 
-			$info += array('arg' => '');
-			$args = array($info['arg'], $info);
+			$info += ['arg' => ''];
+			$args = [$info['arg'], $info];
 
-			$info = \gp\tool\Plugins::Filter('ExecArea', array($info, $args));
+			$info = \gp\tool\Plugins::Filter('ExecArea', [$info, $args]);
 			if( !$info ){
 				return;
 			}
@@ -634,15 +618,14 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Execute a set of directives for theme areas, hooks and special pages
 		 *
 		 */
-		public static function ExecInfo($info, $args=array()){
+		public static function ExecInfo($info, $args=[]){
 			global $addonFolderName, $installed_addon, $page;
 
-			$args += array('page' => $page);
+			$args += ['page' => $page];
 
 			//addonDir is deprecated as of 2.0b3
 			$addon = false;
@@ -670,11 +653,16 @@ namespace gp\tool{
 				return $args;
 			}
 
-
 			try{
-				$args = self::_ExecInfo($info,$args);
+				$args = self::_ExecInfo($info, $args);
 			}catch(\Throwable $e){
-				\showError( E_ERROR ,'ExecInfo() Fatal Error: '.$e->getMessage(), $e->GetFile(), $e->GetLine(), [], $e->getTrace());
+				\showError(E_ERROR,
+					'ExecInfo() Fatal Error: ' . $e->getMessage(),
+					$e->GetFile(),
+					$e->GetLine(),
+					[],
+					$e->getTrace()
+				);
 			}
 
 			if( $addon !== false ){
@@ -687,13 +675,12 @@ namespace gp\tool{
 		}
 
 
-
-		public static function _ExecInfo($info, $args=array()){
+		public static function _ExecInfo($info, $args=[]){
 			global $dataDir, $gp_overwrite_scripts;
 
 			// get data
 			if( !empty($info['data']) ){
-				IncludeScript($dataDir. $info['data'], 'include_if', array('page', 'dataDir', 'langmessage'));
+				IncludeScript($dataDir . $info['data'], 'include_if', ['page', 'dataDir', 'langmessage']);
 			}
 
 			// get script
@@ -711,7 +698,7 @@ namespace gp\tool{
 					return $args;
 				}
 
-				if( IncludeScript($full_path, 'include_once', array('page', 'dataDir', 'langmessage')) ){
+				if( IncludeScript($full_path, 'include_once', ['page', 'dataDir', 'langmessage']) ){
 					$has_script = true;
 				}
 			}
@@ -732,7 +719,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Execute hooks that have a ['class'] defined
 		 *
@@ -748,14 +734,13 @@ namespace gp\tool{
 
 			if( !empty($info['method']) ){
 				if( method_exists($object, $info['method']) ){
-					$args[0] = call_user_func_array(array($object, $info['method']), $args );
+					$args[0] = call_user_func_array([$object, $info['method']], $args);
 				}elseif( $has_script ){
 					self::ExecError(\CMS_NAME . ' Error: Addon hook method doesn\'t exist (1).', $info, 'method');
 				}
 			}
 			return $args;
 		}
-
 
 
 		/**
@@ -769,18 +754,17 @@ namespace gp\tool{
 			//object callbacks since 3.0
 			if( is_string($callback) && strpos($callback, '->') !== false ){
 				$has_script = true;
-				list($object,$method) = explode('->', $callback);
-				if( isset($GLOBALS[$object])
-					&& is_object($GLOBALS[$object])
-					&& method_exists($GLOBALS[$object],$method)
-					){
-					$callback = array($GLOBALS[$object],$method);
+				list($object, $method) = explode('->', $callback);
+				if( isset($GLOBALS[$object]) &&
+					is_object($GLOBALS[$object]) &&
+					method_exists($GLOBALS[$object], $method)
+				){
+					$callback = [$GLOBALS[$object], $method];
 				}
 			}
 
 			if( is_callable($callback) ){
-				$args[0] = call_user_func_array($callback,$args);
-
+				$args[0] = call_user_func_array($callback, $args);
 			}elseif( $has_script ){
 				self::ExecError(\CMS_NAME.' Error: Addon hook method doesn\'t exist (2).', $info, 'method');
 			}
@@ -789,12 +773,11 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Trigger an error
 		 *
 		 */
-		public static function ExecError( $msg, $exec_info, $error_info ){
+		public static function ExecError($msg, $exec_info, $error_info){
 			global $config, $addonFolderName;
 
 			// append addon name
@@ -806,7 +789,7 @@ namespace gp\tool{
 			if( !isset($exec_info[$error_info]) ){
 				$msg	.= $error_info;
 			}elseif( is_array($exec_info[$error_info]) ){
-				$msg	.= $error_info . ': ' . implode('::',$exec_info[$error_info]);
+				$msg	.= $error_info . ': ' . implode('::', $exec_info[$error_info]);
 			}else{
 				$msg	.= $error_info . ': ' . $exec_info[$error_info];
 			}
@@ -815,13 +798,12 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Check for fatal errors corresponing to $hash
 		 * Notify administrators of disabled components
 		 *
 		 */
-		public static function FatalNotice( $type, $info ){
+		public static function FatalNotice($type, $info){
 			global $dataDir, $page;
 			static $notified = false;
 
@@ -848,7 +830,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Return true if the limit of fatal errors has been reached
 		 *
@@ -871,11 +852,9 @@ namespace gp\tool{
 		}
 
 
-
 		public static function PopCatchable(){
 			array_pop(self::$catchable);
 		}
-
 
 
 		/**
@@ -893,7 +872,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * @param int $index
 		 * @param string $href
@@ -907,18 +885,18 @@ namespace gp\tool{
 			$index = self::$edit_index; //since &$index is passed by reference
 
 			if( is_array($attr) ){
-				$attr += array(
-					'class' => 'ExtraEditLink nodisplay',
-					'id'	=> 'ExtraEditLink' . $index,
-					'data-gp-area-id' => $index,
-				);
+				$attr += [
+					'class'				=> 'ExtraEditLink nodisplay',
+					'id'				=> 'ExtraEditLink' . $index,
+					'data-gp-area-id'	=> $index,
+				];
 			}else{
-				$attr .= ' class="ExtraEditLink nodisplay" id="ExtraEditLink' . $index . '" '
-				. 'data-gp-area-id="' . $index . '"';
+				$attr .= ' class="ExtraEditLink nodisplay" ' .
+					'id="ExtraEditLink' . $index . '" ' .
+					'data-gp-area-id="' . $index . '"';
 			}
 			return \gp\tool::Link($href, $label, $query, $attr);
 		}
-
 
 
 		/**
@@ -954,11 +932,23 @@ namespace gp\tool{
 			}
 
 			//Show the area as editable if there isn't anything to show
-			$info = array();
-			$info['gpOutCmd'] = '';
+			$info				= [];
+			$info['gpOutCmd']	= '';
 			self::CallOutput($info, 'GetAllGadgets');
 		}
 
+
+		/**
+		 * Simply determine if a Gadget exists
+		 * allows us to check whether a plugin gadget exists before loading it in template.php
+		 * @since 5.2-rc
+		 * @param string Gadget id
+		 * @return boolean
+		 */
+		public static function GadgetExists($id){
+			global $config;
+			return isset($config['gadgets'][$id]);
+		}
 
 
 		/**
@@ -975,7 +965,6 @@ namespace gp\tool{
 
 			self::ExecArea($config['gadgets'][$id]);
 		}
-
 
 
 		/**
@@ -1003,7 +992,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Return information about the gadgets being used in the current layout
 		 * @return array
@@ -1011,7 +999,7 @@ namespace gp\tool{
 		public static function WhichGadgets($layout){
 			global $config, $gpLayouts;
 
-			$gadget_info = $temp_info = array();
+			$gadget_info = $temp_info = [];
 			if( !isset($config['gadgets']) ){
 				return $gadget_info;
 			}
@@ -1045,11 +1033,11 @@ namespace gp\tool{
 			}
 
 			foreach($temp_info as $gpOutCmd => $info){
-				if( isset($info['is_gadget'])
-					&& $info['is_gadget']
-					&& !isset($info['disabled'])
-					){
-						$gadget_info[$gpOutCmd] = $info;
+				if( isset($info['is_gadget']) &&
+					$info['is_gadget'] &&
+					!isset($info['disabled'])
+				){
+					$gadget_info[$gpOutCmd] = $info;
 				}
 			}
 
@@ -1057,44 +1045,45 @@ namespace gp\tool{
 		}
 
 
-		public static function GetExtra($name='Side_Menu',$info=[]){
+		public static function GetExtra($name='Side_Menu', $info=[]){
 			echo \gp\tool\Output\Extra::GetExtra($name);
 		}
 
 
-		public static function GetImage($src,$attributes = array()){
+		public static function GetImage($src, $attributes=[]){
 			global $page, $dataDir, $langmessage, $gpLayouts;
 
 			//$width,$height,$attributes = ''
-			$attributes = (array)$attributes;
-			$attributes += array('class' => '');
-			$attributes['class'] .= 'GPAREA filetype-image';
+			$attributes				= (array)$attributes;
+			$attributes				+= ['class' => ''];
+			$attributes['class'] 	.= 'GPAREA filetype-image';
 			unset($attributes['id']);
 
 			//default image information
 			$img_rel = dirname($page->theme_rel) . '/' . ltrim($src, '/');
 
 			//container id
-			$container_id = 'Image:'.$src;
+			$container_id = 'Image:' . $src;
 			$container_id = self::GetContainerID($container_id);
 
 			//select custom image
-			if( isset($gpLayouts[$page->gpLayout])
-				&& isset($gpLayouts[$page->gpLayout]['images'])
-				&& isset($gpLayouts[$page->gpLayout]['images'][$container_id])
-				&& is_array($gpLayouts[$page->gpLayout]['images'][$container_id])
-				){
-					//shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]);
-					//Does not make sense ? There will always be only 1 entry in for this container as it is per img element
-					//call to current also not needed, there will only be 1 entry
-					$image = $gpLayouts[$page->gpLayout]['images'][$container_id][0];
+			if( isset($gpLayouts[$page->gpLayout]) &&
+				isset($gpLayouts[$page->gpLayout]['images']) &&
+				isset($gpLayouts[$page->gpLayout]['images'][$container_id]) &&
+				is_array($gpLayouts[$page->gpLayout]['images'][$container_id])
+			){
+				//shuffle($gpLayouts[$page->gpLayout]['images'][$container_id]);
+				//Does not make sense ? There will always be only 1 entry in 
+				//for this container as it is per img element
+				//call to current also not needed, there will only be 1 entry
+				$image = $gpLayouts[$page->gpLayout]['images'][$container_id][0];
 
-					$img_full = $dataDir.$image['img_rel'];
-					if( file_exists($img_full) ){
-						$img_rel = $image['img_rel'];
-						$attributes['width']	= $image['width'];
-						$attributes['height']	= $image['height'];
-					}
+				$img_full = $dataDir.$image['img_rel'];
+				if( file_exists($img_full) ){
+					$img_rel				= $image['img_rel'];
+					$attributes['width']	= $image['width'];
+					$attributes['height']	= $image['height'];
+				}
 			}
 
 			//attributes
@@ -1110,12 +1099,12 @@ namespace gp\tool{
 					'Admin_Theme_Content/Image/' . $page->gpLayout,
 					$langmessage['edit'],
 					'file=' . rawurlencode($img_rel) . '&container=' . $container_id . '&time=' . time(),
-					array(
-						'title' 	=> 'Edit Image',
-						'data-cmd'	=> 'inline_edit_generic',
-					)
+					['title' => 'Edit Image', 'data-cmd' => 'inline_edit_generic' ]
 				);
-				self::$editlinks 		.= '<span class="nodisplay" id="ExtraEditLnks' . $edit_index . '">' . $edit_link . '</span>';
+				self::$editlinks 		.= '<span class="nodisplay" id="ExtraEditLnks' .
+												$edit_index . '">' .
+												$edit_link .
+											'</span>';
 				$attributes['class']	.= ' editable_area';
 				$attributes['id']		= 'ExtraEditArea' . $edit_index;
 			}
@@ -1129,11 +1118,10 @@ namespace gp\tool{
 			//convert attributes to string
 			$str = '';
 			foreach($attributes as $key => $value){
-				$str .= ' ' . $key . '="' . htmlspecialchars($value,ENT_COMPAT,'UTF-8', false) . '"';
+				$str .= ' ' . $key . '="' . htmlspecialchars($value, ENT_COMPAT, 'UTF-8', false) . '"';
 			}
 			echo '<img src="' . \gp\tool::GetDir($img_rel, true) . '"' . $str . '/>';
 		}
-
 
 
 		/*
@@ -1150,15 +1138,17 @@ namespace gp\tool{
 				return;
 			}
 			$name 						= '[text]' . $name;
-			$gpOutConf[$name]			= array();
-			$gpOutConf[$name]['method']	= array('\\gp\\tool\\Output', 'GetAreaOut');
+			$gpOutConf[$name]			= [];
+			$gpOutConf[$name]['method']	= ['\\gp\\tool\\Output', 'GetAreaOut'];
 			$gpOutConf[$name]['html']	= $html;
 		}
 
-		public static function GetArea($name,$text){
-			$name = '[text]'.$name;
-			self::Get($name,$text);
+
+		public static function GetArea($name, $text){
+			$name = '[text]' . $name;
+			self::Get($name, $text);
 		}
+
 
 		public static function GetAreaOut($text,$info){
 			global $config, $langmessage, $page;
@@ -1172,10 +1162,7 @@ namespace gp\tool{
 					'Admin_Theme_Content/Text',
 					$langmessage['edit'],
 					'cmd=EditText&key=' . urlencode($text) . '&return=' . urlencode($page->title),
-					array(
-						'title'		=> htmlspecialchars($text),
-						'data-cmd'	=> 'gpabox',
-					)
+					['title' => htmlspecialchars($text), 'data-cmd'	=> 'gpabox']
 				);
 				echo '<div class="editable_area inner_size" id="ExtraEditArea' . $edit_index . '">';
 				// class="edit_area" added by javascript
@@ -1196,6 +1183,69 @@ namespace gp\tool{
 		}
 
 
+		/**
+		 * Get additional CSS classes that can be added to the
+		 * html or body elements' class atrribute
+		 * e.g. to display an larger header only on the homepage
+		 * Use in template.php: <html class="<?php gpOutput::GetPageInfoClasses(); ?>">
+		 * @since 5.2-rc
+		 * @param boolean $echo_classes (defaults to true), output the class names as space-separated string
+		 * @return array of css class names that apply
+		 *
+		 */
+		public static function GetPageInfoClasses($echo_classes=true){
+			global $page;
+
+			$classes = [];
+		
+			if( self::is_front_page() ){
+				$classes[] = 'is-homepage';
+			}
+
+			if( $page->pagetype == 'special_display' ){
+				$classes[] = 'is-special-page';
+			}
+
+			switch( $page->gp_index ){
+				case 'special_contact':
+					$classes[] = 'is-contactform-page';
+					break;
+
+				case 'special_galleries':
+					$classes[] = 'is-galleries-page';
+					break;
+
+				case 'special_gpsearch':
+					$classes[] = 'is-search-page';
+					break;
+
+				case 'special_missing':
+					$classes[] = 'is-missing-page';
+					break;
+
+				case 'special_blog':
+					$classes[] = 'is-blog-page';
+					if( isset($_GET['id']) ){
+						$classes[] = 'is-single-post-page';
+					}
+					break;
+
+				case 'special_blog_categories':
+					$classes[] = 'is-blog-page';
+					$classes[] = 'is-blog-categories-page';
+					if( isset($_GET['cat']) ){
+						$classes[] = 'is-single-category-page';
+					}
+					break;
+			}
+
+			if( $echo_classes && !empty($classes) ){
+				echo ' ' . implode(' ', $classes) . ' ';
+			}
+
+			return $classes;
+		}
+
 
 		/*
 		 *
@@ -1204,7 +1254,7 @@ namespace gp\tool{
 		 *
 		 */
 
-		/*
+		/**
 		 * similar to ReturnText() but links to script for editing all addon texts
 		 * the $html parameter should primarily be used when the text is to be placed
 		 * inside of a link or other element that cannot have a link and/or span as a child node
@@ -1221,12 +1271,10 @@ namespace gp\tool{
 		}
 
 
-
 		public static function ReturnText($key,$html='%s', $wrapper_class=''){
 			$query = 'cmd=EditText&key='.urlencode($key);
 			return self::ReturnTextWorker($key, $html, $query, $wrapper_class);
 		}
-
 
 
 		public static function ReturnTextWorker($key, $html, $query, $wrapper_class=''){
@@ -1248,22 +1296,18 @@ namespace gp\tool{
 					'Admin_Theme_Content/Text',
 					$langmessage['edit'],
 					$query,
-					array(
-						'title' => $title,
-						'data-cmd' => 'gpabox',
-					)
+					['title' => $title, 'data-cmd' => 'gpabox']
 				);
 				return '<span class="editable_area ' . $wrapper_class .'" '
 				 . 'id="ExtraEditArea' . $edit_index . '">' . $result . '</span>';
 			}
 
 			if( $wrapper_class ){
-				return '<span class="'.$wrapper_class.'">'.$result.'</span>';
+				return '<span class="' . $wrapper_class . '">' . $result . '</span>';
 			}
 
 			return $result;
 		}
-
 
 
 		/**
@@ -1285,7 +1329,6 @@ namespace gp\tool{
 		}
 
 
-
 		/*
 		 *
 		 * Generate and output the <head> portion of the html document
@@ -1297,7 +1340,6 @@ namespace gp\tool{
 			self::PrepGadgetContent();
 			echo '<!-- get_head_placeholder ' . \gp_random . ' -->';
 		}
-
 
 
 		public static function HeadContent(){
@@ -1329,7 +1371,6 @@ namespace gp\tool{
 			self::GetHead_CSS($scripts['css']); //css before js so it's available to scripts
 			self::$head_css = ob_get_clean();
 
-
 			//javascript
 			ob_start();
 			self::GetHead_Lang();
@@ -1350,7 +1391,6 @@ namespace gp\tool{
 				self::MoveScript($page->head);
 			}
 		}
-
 
 
 		/**
@@ -1383,7 +1423,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Output the title, keywords, description and other meta for the current html document
 		 * @static
@@ -1392,7 +1431,10 @@ namespace gp\tool{
 			global $config, $page, $gpLayouts;
 
 			//charset
-			if( $page->gpLayout && isset($gpLayouts[$page->gpLayout]) && isset($gpLayouts[$page->gpLayout]['doctype']) ){
+			if( $page->gpLayout &&
+				isset($gpLayouts[$page->gpLayout]) &&
+				isset($gpLayouts[$page->gpLayout]['doctype'])
+			){
 				echo $gpLayouts[$page->gpLayout]['doctype'];
 			}
 
@@ -1405,9 +1447,8 @@ namespace gp\tool{
 				echo "\n" . '<meta name="robots" content="' . $page->TitleInfo['rel'] . '" />';
 			}
 
-			echo "\n<meta name=\"generator\" content=\"Typesetter CMS\" />";
+			echo "\n" . '<meta name="generator" content="' . \CMS_NAME_FULL . '" />';
 		}
-
 
 
 		/**
@@ -1433,12 +1474,14 @@ namespace gp\tool{
 			}
 			$meta_title .= $config['title'];
 
-			$meta_title = \gp\tool\Plugins::Filter('MetaTitle', array($meta_title, $page_title, $config['title']) );
+			$meta_title = \gp\tool\Plugins::Filter(
+				'MetaTitle',
+				[$meta_title, $page_title, $config['title']]
+			);
 
 			echo "\n" . '<title>' . strip_tags($meta_title) . '</title>';
 			return $page_title;
 		}
-
 
 
 		/**
@@ -1466,7 +1509,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Add the <meta name="dscription"> tag to the page
 		 *
@@ -1490,10 +1532,9 @@ namespace gp\tool{
 			$description = trim($description);
 
 			if( !empty($description) ){
-				echo "\n<meta name=\"description\" content=\"" . $description . "\" />";
+				echo "\n" . '<meta name="description" content="' . $description . '" />';
 			}
 		}
-
 
 
 		/**
@@ -1511,8 +1552,11 @@ namespace gp\tool{
 				if( isset($page->gp_index) &&
 					isset($gp_titles[$page->gp_index]['vis']) &&
 					$gp_titles[$page->gp_index]['vis'] == 'private'
-					){
+				){
 					echo "\n" . '$("html").addClass("isPrivate");' . "\n";
+				}
+				if( \gp\tool::LoggedIn() && $page->pagetype !== 'admin_display' ){
+					echo "\n" . '$gp.HideAdminUI.init();' . "\n";
 				}
 				echo $page->jQueryCode;
 				echo '});';
@@ -1521,7 +1565,7 @@ namespace gp\tool{
 			$inline = ob_get_clean();
 			$inline = ltrim($inline);
 			if( !empty($inline) ){
-				echo "\n<script>\n" . $inline . "\n</script>\n";
+				echo "\n" . '<script type="text/javascript">' . "\n" . $inline . "\n" . '</script>' . "\n";
 			}
 		}
 
@@ -1538,22 +1582,16 @@ namespace gp\tool{
 				return;
 			}
 
-			echo "\n<script type=\"text/javascript\">";
+			echo "\n" . '<script type="text/javascript">';
 			echo 'var gplang = {';
 			$comma = '';
 			foreach(self::$lang_values as $from_key => $to_key){
 				echo $comma;
-				echo $to_key . ':"'
-					. str_replace(
-						array('\\', '"'),
-						array('\\\\', '\"'),
-						$langmessage[$from_key]
-					) . '"';
+				echo $to_key . ':"'	. str_replace(['\\', '"'], ['\\\\', '\"'], $langmessage[$from_key]) . '"';
 				$comma = ',';
 			}
 			echo "}; </script>";
 		}
-
 
 
 		/**
@@ -1584,8 +1622,7 @@ namespace gp\tool{
 				trigger_error('$page->head_js is not an array');
 			}
 
-
-			Output\Assets::CombineFiles($scripts, 'js', $combine );
+			Output\Assets::CombineFiles($scripts, 'js', $combine);
 		}
 
 
@@ -1598,22 +1635,21 @@ namespace gp\tool{
 
 			$scripts	= [];
 			$to_add		= self::GetHead_CDN('css', $to_add);
-			$scripts	= Output\Assets::MergeScripts($scripts,$to_add);
+			$scripts	= Output\Assets::MergeScripts($scripts, $to_add);
 
 
 			if( isset($page->css_user) ){
-				$scripts	= Output\Assets::MergeScripts($scripts,$page->css_user);
+				$scripts	= Output\Assets::MergeScripts($scripts, $page->css_user);
 			}
 
 			// add theme css
 			if( !empty($page->theme_name) && $page->get_theme_css === true ){
-				$scripts	= Output\Assets::MergeScripts($scripts,Output\Assets::LayoutStyleFiles());
-
+				$scripts	= Output\Assets::MergeScripts($scripts, Output\Assets::LayoutStyleFiles());
 			}
 
 			//styles that need to override admin.css should be added to $page->css_admin;
 			if( isset($page->css_admin)  ){
-				$scripts	= Output\Assets::MergeScripts($scripts,$page->css_admin);
+				$scripts	= Output\Assets::MergeScripts($scripts, $page->css_admin);
 			}
 
 			// disable 'combine css' if 'create_css_sourcemaps' is set to true in /gpconfig.php
@@ -1627,7 +1663,7 @@ namespace gp\tool{
 		 * Add CDN hosted resources to the page
 		 *
 		 */
-		public static function GetHead_CDN($type,$scripts){
+		public static function GetHead_CDN($type, $scripts){
 			global $config;
 
 			if( empty($config['cdn']) ){
@@ -1726,7 +1762,6 @@ namespace gp\tool{
 		public static function BufferOut($buffer){
 			global $config;
 
-
 			//add error notice if there was a fatal error
 			if( !ini_get('display_errors') ){
 				$last_error	= self::LastFatal();
@@ -1747,13 +1782,12 @@ namespace gp\tool{
 				return $buffer;
 			}
 
-			$replacements		= array();
+			$replacements		= [];
 
 			//performace stats
 			if( class_exists('admin_tools') ){
 				$replacements	= self::PerformanceStats();
 			}
-
 
 			//head content
 			//add css to bottom of <body>
@@ -1766,7 +1800,6 @@ namespace gp\tool{
 
 			//add js to bottom of <body>
 			$buffer = self::AddToBody($buffer, self::$head_js);
-
 
 			//add jquery if needed
 			$placeholder = '<!-- jquery_placeholder ' . \gp_random . ' -->';
@@ -1790,7 +1823,6 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Add content to the html document before the </body> tag
 		 *
@@ -1810,12 +1842,11 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Return the message displayed when a fatal error has been caught
 		 *
 		 */
-		public static function FatalMessage( $error_details ){
+		public static function FatalMessage($error_details){
 
 			$message = '<p>Oops, an error occurred while generating this page.<p>';
 
@@ -1839,7 +1870,6 @@ namespace gp\tool{
 				return $message;
 			}
 
-
 			$message .= '<h3>Error Details</h3>'
 					.pre($error_details)
 					. '<p><a href="?">Reload this page</a></p>'
@@ -1857,13 +1887,11 @@ namespace gp\tool{
 		 * @return array
 		 */
 		public static function LastFatal(){
-
-			$fatal_errors	= array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR );
+			$fatal_errors	= [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR];
 			$last_error		= error_get_last();
 			if( is_array($last_error) && in_array($last_error['type'], $fatal_errors) ){
 				return $last_error;
 			}
-
 		}
 
 
@@ -1912,7 +1940,6 @@ namespace gp\tool{
 					break;
 				}
 			}
-
 		}
 
 
@@ -1923,7 +1950,7 @@ namespace gp\tool{
 		 */
 		public static function PerformanceStats(){
 
-			$stats = array();
+			$stats = [];
 
 			if( function_exists('memory_get_peak_usage') ){
 				$stats['<span cms-memory-usage>?</span>']	= \gp\admin\Tools::FormatBytes(memory_get_usage());
@@ -1938,7 +1965,6 @@ namespace gp\tool{
 
 			$stats['<span cms-seconds>?</span>']	= round($time, 3);
 			$stats['<span cms-ms>?</span>']			= round($time * 1000);
-
 
 			return $stats;
 		}
@@ -1963,12 +1989,31 @@ namespace gp\tool{
 		}
 
 
-
 		/**
-		 * Outputs the sitemap link, admin login/logout link, powered by link, admin html and messages
+		 * Outputs the sitemap link, admin login/logout link, powered by link and messages
 		 * @static
 		 */
-		public static function GetAdminLink(){
+		public static function GetAdminLink($messages=true){
+			self::GetSitemapLink(); // as of 5.2-rc
+			echo ' ';
+			self::GetLoginLink(); // as of 5.2-rc
+			echo ' ';
+			self::GetPoweredByLink(); // as of 5.2-rc
+
+			\gp\tool\Plugins::Action('GetAdminLink');
+
+			if( $messages ){
+				echo GetMessages();
+			}
+		}
+
+
+		/**
+		 * Outputs only the sitemap link
+		 * as of 5.2-rc
+		 * @static
+		 */
+		public static function GetSitemapLink(){
 			global $config, $langmessage, $page;
 
 			if( !isset($config['showsitemap']) || $config['showsitemap'] ){
@@ -1977,48 +2022,70 @@ namespace gp\tool{
 					'Special_Site_Map',
 					$langmessage['site_map']
 				);
+				\gp\tool\Plugins::Action('GetSitemapLink');
 				echo '</span>';
 			}
+		}
 
-			if( !isset($config['showlogin']) || $config['showlogin'] ){
-				echo ' <span class="login_link">';
+
+		/**
+		 * Outputs only the login/logout link
+		 * as of 5.2-rc
+		 * @static
+		 */
+		public static function GetLoginLink($force_show=false){
+			global $config, $langmessage, $page;
+
+			if( $force_show || !isset($config['showlogin']) || $config['showlogin'] ){
+				echo '<span class="login_link">';
 					if( \gp\tool::LoggedIn() ){
 						echo \gp\tool::Link(
 							$page->title,
 							$langmessage['logout'],
 							'cmd=logout',
-							array(
-								'data-cmd'	=> 'cnreq',
-								'rel'		=> 'nofollow',
-							)
+							['data-cmd' => 'cnreq', 'rel' => 'nofollow']
 						);
 					}else{
 						echo \gp\tool::Link(
 							'Admin',
 							$langmessage['login'],
 							'file=' . rawurlencode($page->title),
-							array(
-								'data-cmd'	=> 'login',
-								'rel'		=> 'nofollow',
-							)
+							['data-cmd' => 'login', 'rel' => 'nofollow']
 						);
 					}
+				\gp\tool\Plugins::Action('GetLoginLink');
 				echo '</span>';
 			}
+		}
+
+
+		public static function AdminLinkGadget(){
+			self::GetAdminLink(false);
+		}
+
+
+		public static function LoginLinkGadget(){
+			self::GetLoginLink(true);
+		}
+
+
+		/**
+		 * Outputs only the powered_by link
+		 * as of 5.2-rc
+		 * @static
+		 */
+		public static function GetPoweredByLink($always_show=false){
+			global $config;
 
 			if( !isset($config['showgplink']) || $config['showgplink'] ){
-				if( self::is_front_page() ){
-					echo ' <span id="powered_by_link">';
+				if( self::is_front_page() || $always_show ){
+					echo '<span id="powered_by_link">';
 					echo 'Powered by <a href="' . \CMS_DOMAIN . '" target="_blank">' . \CMS_NAME . '</a>';
+					\gp\tool\Plugins::Action('GetPoweredByLink');
 					echo '</span>';
 				}
 			}
-
-			\gp\tool\Plugins::Action('GetAdminLink');
-
-			echo GetMessages();
 		}
-
 
 
 		/**
@@ -2039,7 +2106,6 @@ namespace gp\tool{
 			}
 			return $string . ' ';
 		}
-
 
 
 		public static function RunOut(){
@@ -2115,21 +2181,19 @@ namespace gp\tool{
 		}
 
 
-
 		/**
 		 * Add one or more components to the page. Output the <script> and/or <style> immediately
 		 * @param string $names comma separated list of components
 		 *
 		 */
-		public static function GetComponents($names = ''){
-			$scripts = \gp\tool\Output\Combine::ScriptInfo( $names );
+		public static function GetComponents($names=''){
+			$scripts = \gp\tool\Output\Combine::ScriptInfo($names);
 
 			$scripts['css'] = self::GetHead_CDN('css', $scripts['css']);
-			Output\Assets::CombineFiles($scripts['css'], 'css', false );
-
+			Output\Assets::CombineFiles($scripts['css'], 'css', false);
 
 			$scripts['js'] = self::GetHead_CDN('js', $scripts['js']);
-			Output\Assets::CombineFiles($scripts['js'], 'js', false );
+			Output\Assets::CombineFiles($scripts['js'], 'js', false);
 		}
 
 	}

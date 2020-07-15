@@ -1,27 +1,19 @@
+// Theme Bootswatch 4 Scss
+// Layout Pulse 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Pulse 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-
-// Variables ===================================================================
+// Variables and Mixins =========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
-// Navbar =======================================================================
-
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-400;
-}
-
 // Buttons =====================================================================
-
 .btn {
-
   &:focus,
   &:active,
   &:active:focus,
@@ -78,30 +70,29 @@ footer.main-footer {
   &.disabled:focus {
     box-shadow: none;
   }
-
 }
 
 // Typography ==================================================================
 
-// Tables ======================================================================
+.lead {
+  font-size: 1.3rem;
+}
 
+// Tables ======================================================================
 .table .thead-dark th {
   background-color: $secondary;
   border-color: $table-border-color;
 }
 
 // Forms =======================================================================
-
 .form-control:focus {
-  box-shadow: 0 0 5px rgba(100,65,164,.4);
+  box-shadow: 0 0 5px rgba(100, 65, 164, 0.4);
 }
 
 // Navs ========================================================================
-
 .nav-tabs {
-
   .nav-link,
-  .nav-link.active, {
+  .nav-link.active {
     border-width: 0 0 1px 0;
   }
 
@@ -124,7 +115,6 @@ footer.main-footer {
 }
 
 // Indicators ==================================================================
-
 .badge {
   padding-bottom: 0.4em;
 
@@ -135,15 +125,12 @@ footer.main-footer {
 }
 
 // Progress bars ===============================================================
-
 .progress {
   height: 8px;
 }
 
 // Containers ==================================================================
-
 .list-group {
-
   &-item {
     color: rgba(255, 255, 255, 0.8);
 

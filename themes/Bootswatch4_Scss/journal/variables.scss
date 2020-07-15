@@ -1,60 +1,65 @@
-// Journal 4.0.0
-// Bootswatch
-
+// Theme Bootswatch 4 Scss
+// Layout Journal 4.0.0
 //
+// For all Bootstrap 4 variables see /include/thirdparty/Bootstrap4/scss/bootstrap/_variables.scss
+
 // Color system
-//
+$white:      #fff;
+$gray-100:   #f8f9fa;
+$gray-200:   #eee;
+$gray-300:   #dee2e6;
+$gray-400:   #ced4da;
+$gray-500:   #aaa;
+$gray-600:   #777;
+$gray-700:   #495057;
+$gray-800:   #333;
+$gray-900:   #222;
+$black:      #000;
 
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #eee !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #aaa !default;
-$gray-600: #777 !default;
-$gray-700: #495057 !default;
-$gray-800: #333 !default;
-$gray-900: #222 !default;
-$black:    #000 !default;
+$blue:       #EB6864;
+$indigo:     #6610f2;
+$purple:     #6f42c1;
+$pink:       #e83e8c;
+$red:        #F57A00;
+$orange:     #fd7e14;
+$yellow:     #F5E625;
+$green:      #22B24C;
+$teal:       #20c997;
+$cyan:       #369;
 
-$blue:    #EB6864 !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #F57A00 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #F5E625 !default;
-$green:   #22B24C !default;
-$teal:    #20c997 !default;
-$cyan:    #369 !default;
-
-$primary:       $blue !default;
-$secondary:     $gray-500 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-100 !default;
-$dark:          $gray-900 !default;
+$primary:    $blue;
+$secondary:  $gray-500;
+$success:    $green;
+$info:       $cyan;
+$warning:    $yellow;
+$danger:     $red;
+$light:      $gray-100;
+$dark:       $gray-900;
 
 // Fonts
-
-$headings-font-family:   "News Cycle", "Arial Narrow Bold", sans-serif !default;
-$headings-font-weight:        700 !default;
-$headings-line-height:        1.1 !default;
+$web-font-path: "https://fonts.googleapis.com/css?family=News+Cycle:400,700";
+$headings-font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
+$headings-font-weight: 700;
+$headings-line-height: 1.1;
+$font-size-base: 1rem;
+$navbar-font-size: 1.125rem;
+$footer-font-size: 0.875rem;
 
 // Buttons
-
-$input-btn-padding-x:         1rem !default;
+$input-btn-padding-x: 1rem;
 
 // Navbar
-
-$navbar-light-color:                rgba($black,.7) !default;
-$navbar-light-hover-color:          $black !default;
-$navbar-light-active-color:         $black !default;
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
+$navbar-light-color: rgba($black, 0.7);
+$navbar-light-hover-color: $black;
+$navbar-light-active-color: $black;
 
 // Pagination
+$pagination-hover-color: $white;
+$pagination-hover-bg: $primary;
+$pagination-hover-border-color: $primary;
 
-$pagination-hover-color:            $white !default;
-$pagination-hover-bg:               $primary !default;
-$pagination-hover-border-color:     $primary !default;
+// Footer
+$footer-bg: $gray-300;
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss

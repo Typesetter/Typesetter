@@ -74,10 +74,18 @@ class Search extends \gp\special\Base{
 	public function Search(){
 		global $langmessage;
 
+		$placeholder = $langmessage['Search'] . '&hellip;';
+		$custom_text = \gp\tool\Output::SelectText('Search');
+		if( $custom_text != '' ){
+			$placeholder = htmlspecialchars($custom_text) . '&hellip;';
+		}
+
 		echo '<div class="GPAREA filetype-special_search search_results">';
 		echo '<h2>' . \gp\tool\Output::GetAddonText('Search') . '</h2>';
-		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
-		echo '<input name="q" type="text" class="text" value="' . htmlspecialchars($_REQUEST['q']) . '"/> ';
+		echo '<form role="search" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
+		echo '<input name="q" type="text" class="text" ';
+		echo	'placeholder="' . $placeholder . '" ';
+		echo	'value="' . htmlspecialchars($_REQUEST['q']) . '"/> ';
 		$html = '<input type="submit" name="" class="submit" value="%s" />';
 		echo \gp\tool\Output::GetAddonText('Search', $html);
 		echo '</form>';
@@ -90,7 +98,12 @@ class Search extends \gp\special\Base{
 		$this->RunQuery();
 
 		if( \gp\tool::LoggedIn() ){
-			echo \gp\tool::Link('special_gpsearch', $langmessage['configuration'], 'cmd=config', 'data-cmd="gpabox"');
+			echo \gp\tool::Link(
+				'special_gpsearch',
+				$langmessage['configuration'],
+				'cmd=config',
+				['data-cmd' => 'gpabox', 'class' => 'search-config-link']
+			);
 		}
 
 		echo '</div>';
@@ -99,18 +112,27 @@ class Search extends \gp\special\Base{
 
 
 	public static function Gadget(){
+		global $langmessage;
 
 		$query = '';
 		if( isset($_GET['q']) ){
 			$query = $_GET['q'];
 		}
 
+		$placeholder = $langmessage['Search'] . '&hellip;';
+		$custom_text = \gp\tool\Output::SelectText('Search');
+		if( $custom_text != '' ){
+			$placeholder = htmlspecialchars($custom_text) . '&hellip;';
+		}
+
 		echo '<h3>';
 		echo \gp\tool\Output::GetAddonText('Search');
 		echo '</h3>';
-		echo '<form action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
+		echo '<form role="search" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
 		echo '<div>';
-		echo '<input name="q" type="text" class="text" value="' . htmlspecialchars($query) . '"/>';
+		echo '<input name="q" type="text" class="text" ';
+		echo 	'placeholder="' . $placeholder . '" ';
+		echo 	'value="' . htmlspecialchars($query) . '"/>';
 		echo '<input type="hidden" name="src" value="gadget" />';
 
 		$html = '<input type="submit" class="submit" name="" value="%s" />';
@@ -139,9 +161,11 @@ class Search extends \gp\special\Base{
 		global $langmessage;
 
 		if( !count($this->results) ){
-			echo '<p>';
-			echo \gp\tool\Output::GetAddonText($langmessage['search_no_results']);
-			echo '</p>';
+			if( !empty($_REQUEST['q']) ){
+				echo '<p class="search_results">';
+				echo \gp\tool\Output::GetAddonText($langmessage['search_no_results']);
+				echo '</p>';
+			}
 			return;
 		}
 
@@ -232,17 +256,30 @@ class Search extends \gp\special\Base{
 		if( $total_pages < 1 ){
 			return;
 		}
-		
+
+		$prev_text		= $langmessage['Previous'];
+		$next_text		= $langmessage['Next'];
+		$current_text	= $langmessage['Current Page'];
+
 		echo '<nav aria-label="' . $langmessage['All Pages'] . '">';
 		echo '<ul class="search_nav search_nav_bottom pagination">';
 
 		//previous
 		if( $current_page > 0 ){
-			echo '<li class="page-item">';
-			self::PaginationLink($slug, '&laquo;', $query, $page_key, $attr, ($current_page - 1));
+			echo '<li class="page-item page-item-previous">';
+			self::PaginationLink(
+				$slug,
+				$prev_text,
+				$query,
+				$page_key,
+				$attr . ' aria-label="' . $prev_text . '"',
+				($current_page - 1)
+			);
 			echo '</li>';
 		}else{
-			echo '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
+			echo '<li class="page-item page-item-previous disabled">';
+			echo 	'<span class="page-link">' . $prev_text . '</span>';
+			echo '</li>';
 		}
 
 		// i
@@ -250,21 +287,39 @@ class Search extends \gp\special\Base{
 		$max_page	= min($min_page + 6, $total_pages);
 		for($i = $min_page; $i < $max_page; $i++){
 			if( $i == $current_page ){
-				echo '<li class="page-item active"><span class="page-link">' . ($i + 1) . '</span></li> ';
+				echo '<li class="page-item active">';
+				echo 	'<span class="page-link" aria-label="' . $current_text . '">' . ($i + 1) . '</span>';
+				echo '</li>';
 				continue;
 			}
 			echo '<li class="page-item">';
-			self::PaginationLink($slug, ($i + 1), $query, $page_key, $attr, $i);
+			self::PaginationLink(
+				$slug,
+				($i + 1),
+				$query,
+				$page_key,
+				$attr,
+				$i
+			);
 			echo '</li>';
 		}
 
 		// next
 		if( ($current_page+1) < $total_pages ){
-			echo '<li class="page-item">';
-			self::PaginationLink($slug, '&raquo;', $query, $page_key, $attr, ($current_page + 1));
+			echo '<li class="page-item page-item-next">';
+			self::PaginationLink(
+				$slug,
+				$next_text,
+				$query,
+				$page_key,
+				$attr . ' aria-label="' . $next_text . '"',
+				($current_page + 1)
+			);
 			echo '</li>';
 		}else{
-			echo '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
+			echo '<li class="page-item page-item-next disabled">';
+			echo 	'<span class="page-link">' . $next_text . '</span>';
+			echo '</li>';
 		}
 
 		echo '</ul>';
@@ -335,11 +390,17 @@ class Search extends \gp\special\Base{
 
 
 	public function Admin(){
+		global $langmessage;
 
 		if( !\gp\tool::LoggedIn() ){
 			return false;
 		}
-		$this->page->admin_links[] = array('special_gpsearch', 'Configuration', 'cmd=config', 'data-cmd="gpabox"');
+		$this->page->admin_links[] = array(
+			'special_gpsearch',
+			$langmessage['configuration'],
+			'cmd=config',
+			[ 'data-cmd' => 'gpabox', 'class' => 'admin-link-search-config' ]
+		);
 		$cmd = \gp\tool::GetCommand();
 
 		switch($cmd){
@@ -399,25 +460,33 @@ class Search extends \gp\special\Base{
 		echo '<h2>' . $langmessage['Search'] . ' &raquo; ' . $langmessage['configuration'] . '</h2>';
 
 		echo '<form class="renameform" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="post">';
-		echo '<table style="width:100%" class="bordered">';
-		echo '<tr><th>' . $langmessage['options'] . '</th><th>' . $langmessage['Value'] . '</th>';
-		echo '<th>' . $langmessage['default'] . '</th></tr>';
 
-		echo '<tr><td>'.$langmessage['Search Hidden Files'].'</td><td>';
-			if( isset($array['search_hidden']) && $array['search_hidden'] ){
-				echo '<input type="checkbox" name="search_hidden" checked="checked" value="true" />';
-			}else{
-				echo '<input type="checkbox" name="search_hidden" value="true" />';
-			}
-			echo '</td><td>' . $langmessage['False'] . '</td></tr>';
+		echo '<table class="bordered full_width">';
 
-		echo '<tr><td></td><td>';
-			echo '<input type="hidden" name="cmd" value="save_config" />';
-			echo '<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit" /> ';
-			echo '<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '" class="admin_box_close gpcancel" /> ';
-			echo '</td><td></td></tr>';
+		echo '<tr>';
+		echo 	'<th>' . $langmessage['options'] . '</th>';
+		echo 	'<th>' . $langmessage['Value'] . '</th>';
+		echo 	'<th style="text-align:right;">' . $langmessage['default'] . '</th>';
+		echo '</tr>';
+
+		echo '<tr>';
+		echo 	'<td>' . $langmessage['Search Hidden Files'] . '</td>';
+		echo 	'<td>';
+		$checked = isset($array['search_hidden']) && $array['search_hidden'] ? ' checked="checked"' : '';
+		echo 		'<input type="checkbox" name="search_hidden" value="true"' . $checked . ' />';
+		echo 	'</td>';
+		echo 	'<td style="text-align:right;">' . $langmessage['False'] . '</td>';
+		echo '</tr>';
 
 		echo '</table>';
+
+		echo '<p>';
+		echo 	'<input type="hidden" name="cmd" value="save_config" />';
+		echo 	'<input type="submit" name="" value="' . $langmessage['save'] . '" class="gpsubmit" /> ';
+		echo 	'<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '"';
+		echo		' class="admin_box_close gpcancel" /> ';
+		echo '</p>';
+
 		echo '</form>';
 	}
 

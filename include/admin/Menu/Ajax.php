@@ -123,27 +123,9 @@ class Ajax extends \gp\admin\Menu{
 		$_REQUEST += array('title' => '');
 		$_REQUEST['gpx_content'] = 'gpabox';
 
-		//reusable format
-		ob_start();
-		echo '<p>';
-		echo '<button type="submit" name="cmd" value="%s" class="gpsubmit gpvalidate" data-cmd="gppost">%s</button>';
-		echo '<button class="admin_box_close gpcancel">' . $langmessage['cancel'] . '</button>';
-		echo '</p>';
-		echo '</td></tr>';
-		echo '</tbody>';
-		$format_bottom = ob_get_clean();
-
-
 		echo '<div class="inline_box">';
 
-		echo '<div class="layout_links" style="float:right">';
-		echo '<a href="#gp_new_copy" data-cmd="tabs" class="selected">' . $langmessage['Copy'] . '</a>';
-		echo '<a href="#gp_new_type" data-cmd="tabs">' . $langmessage['Content Type'] . '</a>';
-		echo '</div>';
-
-
 		echo '<h3>'.$langmessage['new_file'].'</h3>';
-
 
 		echo '<form action="'.$this->GetUrl('Admin/Menu/Ajax').'" method="post">';
 		if( isset($_REQUEST['redir']) ){
@@ -151,7 +133,7 @@ class Ajax extends \gp\admin\Menu{
 		}
 
 
-		echo '<table class="bordered full_width">';
+		echo '<table class="bordered full_width new_page_table">';
 		echo '<tr><th colspan="2">' . $langmessage['options'] . '</th></tr>';
 
 		//title
@@ -165,8 +147,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '</td></tr>';
 
 		//copy
-		echo '<tbody id="gp_new_copy">';
-		echo '<tr><td>';
+		echo '<tr class="selectable_row"><td>';
 		echo $langmessage['Copy'];
 		echo '</td><td>';
 		$gp_index_no_special = array();
@@ -176,20 +157,36 @@ class Ajax extends \gp\admin\Menu{
 			}
 		}
 		\gp\admin\Menu\Tools::ScrollList($gp_index_no_special);
-		echo sprintf($format_bottom, 'CopyPage', $langmessage['create_new_file']);
+		echo '</td></tr>';
 
 
-		//content type
-		echo '<tr id="gp_new_type" style="display:none"><td>';
+		//new content type
+		echo '<tr class="selectable_row selected_row"><td>';
 		echo str_replace(' ', '&nbsp;', $langmessage['Content Type']);
 		echo '</td><td>';
 		echo '<div id="new_section_links">';
 		\gp\Page\Edit::NewSections(true);
 		echo '</div>';
+		echo '</td></tr>';
 
-		echo sprintf($format_bottom, 'NewFile', $langmessage['create_new_file']);
+		echo '</table>';
+
+		echo '<p>';
+		echo '<button type="submit" name="cmd" value="CopyPage" style="display:none;" class="gpsubmit gpvalidate" data-cmd="gppost">' . $langmessage['Copy'] . '</button>';
+		echo '<button type="submit" name="cmd" value="NewFile" class="gpsubmit gpvalidate" data-cmd="gppost">' . $langmessage['create_new_file'] . '</button>';
+		echo '<button class="admin_box_close gpcancel">' . $langmessage['cancel'] . '</button>';
+		echo '</p>';
 		echo '</form>';
 		echo '</div>';
+		echo '<script>';
+		echo '$(".new_page_table input[type=radio]").on("click change", function(e){';
+		echo '$(this).closest("tr").addClass("selected_row").siblings().removeClass("selected_row");';
+		echo 'var type = $(this).attr("name") == "from_title" ? "CopyPage" : "NewFile";';
+		echo '$("button[value=CopyPage], button[value=NewFile]").hide();';
+		echo '$("button[value=" + type + "]").show();';
+		echo '});';
+		echo '</script>';
+
 	}
 
 

@@ -73,10 +73,18 @@ body {
 			a {
 				display: inline-block;
 				margin-right: 0.6em;
+				max-width: calc(100% + 0.6em);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 				&:last-child {
 					margin-right: 0;
 				}
 			}
+		}
+		tr:not(.active) td.revision_history_links a{
+			color:#ccc;
+			pointer-events: none;
 		}
 		td.revision_history_username {
 			overflow: hidden;

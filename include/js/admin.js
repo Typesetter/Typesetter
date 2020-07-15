@@ -306,11 +306,11 @@ $gp.links.remote = function(evt){
 	}
 
 	//40px margin + 17px*2 border + 20px padding + 10 (extra padding) = approx 130
-	var height = $gp.$win.height() - 130;
+	// var height = $gp.$win.height() - 130;
 
 	var opts = {context:'iframe',width:780};
 
-	var iframe = '<iframe src="'+src+'" style="height:'+height+'px;" frameborder="0" />';
+	var iframe = '<iframe src="'+src+'" frameborder="0" />';
 	$gp.AdminBoxC(iframe,opts);
 };
 
@@ -358,7 +358,7 @@ $gp.AdminBoxC = function(data, options){
 
 	options = $.extend({
 			context : '',
-			width : 660,
+			width : 680,
 			zIndex: 11000
 		},
 		options);
@@ -818,6 +818,9 @@ $gp.response.location = function(obj){
 	window.setTimeout(function(){
 		window.location = obj.SELECTOR;
 	},obj.CONTENT);
+	window.setInterval(function(){
+		$('#redir-countdown').text($('#redir-countdown').text() - 1);
+	}, 1000);
 };
 
 
@@ -1239,7 +1242,6 @@ $(function(){
 			},1);
 		});
 
-
 	}
 
 
@@ -1259,6 +1261,7 @@ $(function(){
 		});
 	});
 
+
 	/**
 	 * Configuration -> Settings
 	 * Disable minifyjs when combinejs is unchecked
@@ -1273,7 +1276,234 @@ $(function(){
 	CheckCombineJs();
 
 
-});
+	/**
+	 * Modifier key names based on UI language and OS
+	 *
+	 */
+	$gp.mod_keys = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform) ?
+		{
+			// Apple
+			ctrlKey:	'˄ control',
+			shiftKey:	'⇑ shift',
+			altKey:		'⌥ option',
+			metaKey:	'⌘ command'
+		} :
+		{
+			// others
+			ctrlKey:	gplang.ctrlKey,
+			shiftKey:	'⇑ ' + gplang.shiftKey,
+			altKey:		gplang.altKey,
+			metaKey:	'Meta'
+		};
+
+
+	/**
+	 * Get visual representation of modifier keys in a <span>
+	 * @param array of keys, possible values: ctrlKey, shiftKey, altKey, metaKey
+	 * @return html
+	 *
+	 */
+	$gp.GetModkeys = function(mod_keys){
+		if( !mod_keys.length ){
+			return '';
+		}
+		var html = '';
+		$.each(mod_keys, function(i, k){
+			html += '<kbd class="keyboard-key">' + $gp.mod_keys[k] + '</kbd> + ';
+		});
+		return '<span class="show_modkeys">' + html + '</span>';
+	};
+
+
+	/**
+	 * Insert modifier keys pepresentation to an element
+	 * @param stringa valid jQuery selector
+	 * @param string 'before' or 'after''
+	 * @param array of keys, modifier keys and regular key, e.g. ['ctrlKey','H'], optional
+	 *
+	 */
+	$gp.InsertModkeys = function(selector, where, mod_keys){
+		$(selector).siblings('.show_modkeys').remove();
+		if( typeof(mod_keys) == 'undefined' ){
+			// get from hideAdminUIcfg
+			var mod_keys = hideAdminUIcfg.hotkey_modkeys;
+		}
+
+		var modkeys_html = $gp.GetModkeys(mod_keys);
+		if( where == 'before' ){
+			$(modkeys_html).insertBefore(selector);
+		}else{
+			$(modkeys_html).insertAfter(selector);
+		}
+	};
+
+
+	/**
+	 * Get hotkey hint
+	 * @param array of keys, modifier keys and regular key, e.g. ['ctrlKey','H']
+	 * @return string e.g. for title attr
+	 *
+	 */
+	$gp.GetHotkeyHint = function(keys){
+		var hint = '';
+		if( typeof(keys) == 'undefinded' || !keys.length ){
+			return '';
+		}
+		$.each(keys, function(i, k){
+			switch(k){
+				case 'ctrlKey':
+				case 'shiftKey':
+				case 'altKey':
+				case 'metaKey':
+					hint += '[' + $gp.mod_keys[k] + ']+';
+					break;
+				default:
+					hint += '[' + k + ']';
+					break;
+			}
+		});
+		return hint;
+	};
+
+
+	/*
+	 * Hide Admin UI
+	 * Configuration -> Settings
+	 * input capture hotkey combination
+	 */
+
+	$('#admin_ui_hotkey').on('focus', function(){
+			$(this).select();
+		}).on('keydown', function(evt){
+			var key_stroke	= $.inArray(evt.key, ['Control', 'Shift', 'Alt', 'AltGraph', 'Meta']) != -1 ? '' : evt.key.toUpperCase();
+			var key_which	= $.inArray(evt.key, ['Control', 'Shift', 'Alt', 'AltGraph', 'Meta']) != -1 ? '' : evt.which;
+
+			var mod_keys = [];
+			evt.ctrlKey		&& mod_keys.push('ctrlKey');
+			evt.shiftKey	&& mod_keys.push('shiftKey');
+			evt.altKey		&& mod_keys.push('altKey');
+			evt.metaKey		&& mod_keys.push('metaKey');
+
+			// show the modifier keys
+			$gp.InsertModkeys('#admin_ui_hotkey', 'before', mod_keys);
+
+			var key_code =
+				(evt.ctrlKey  ? 'ctrlKey+'	: '') +
+				(evt.shiftKey ? 'shiftKey+'	: '') +
+				(evt.altKey   ? 'altKey+'	: '') +
+				(evt.metaKey  ? 'metaKey+'	: '') +
+				key_which;
+
+			if( key_stroke == '' ||
+				key_stroke == ' ' ||
+				key_stroke == 'DEAD' ||
+				key_stroke == 'DELETE' ||
+				key_stroke == 'BACKSPACE'
+				){
+				key_stroke = '';
+				key_code = '';
+			}
+			$(this).val(key_stroke);
+			$('#admin_ui_hotkey_code').val(key_code);
+			evt.stopPropagation();
+			evt.preventDefault();
+
+		}).on('keyup', function(evt){
+			var code_val = $('#admin_ui_hotkey_code').val();
+			var has_modifier_key = /ctrlKey\+|shiftKey\+|altKey\+|metaKey\+/g.test(code_val);
+			if( code_val == '' || !has_modifier_key ){
+				$(this).val('');
+				$('#admin_ui_hotkey_code').val('');
+				$gp.InsertModkeys('#admin_ui_hotkey', 'before', []);
+			}
+		});
+
+	// make the input smaller and show the modifier keys on load
+	if( $('#admin_ui_hotkey').length ){
+		$('#admin_ui_hotkey').width(96);
+		$gp.InsertModkeys('#admin_ui_hotkey', 'before');
+	}
+
+}); /* end on DOM ready */
+
+
+
+/**
+ * Hide Admin UI
+ *
+ */
+$gp.HideAdminUI = {
+
+	init: function(){
+
+		$gp.HideAdminUI.hotkey_hint = '';
+		if( hideAdminUIcfg.hotkey != '' && hideAdminUIcfg.hotkey_code != '' ){
+			var hotkey_arr = hideAdminUIcfg.hotkey_modkeys;
+			hotkey_arr.push(hideAdminUIcfg.hotkey);
+			$gp.HideAdminUI.hotkey_hint = ' ' + $gp.GetHotkeyHint(hotkey_arr);
+		}
+
+		$('<div class="show-admin-ui" '
+			+ 'title="'	+ gplang.ShowAdminUI + $gp.HideAdminUI.hotkey_hint + '"'
+			+ '><i class="fa fa-user-circle"></i></div>')
+		.on('click', function(){
+			$gp.HideAdminUI.toggle(false);
+		}).appendTo('body');
+
+		$('.admin-link-hide-ui')
+			.attr('title', $('.admin-link-hide-ui').attr('title') + $gp.HideAdminUI.hotkey_hint);
+
+		if( hideAdminUIcfg.autohide_below ){
+			$gp.HideAdminUI.ww = $gp.$win.width();
+			$gp.$win.on('load', function(evt){
+				var ww = $gp.$win.width();
+				if( ww < hideAdminUIcfg.autohide_below ){
+					$gp.HideAdminUI.toggle(true);
+					$gp.HideAdminUI.ww = ww;
+				}
+			}).on('resize', function(evt){
+				var ww = $gp.$win.width();
+				var threshold = hideAdminUIcfg.autohide_below;
+				if( ww < threshold && $gp.HideAdminUI.ww >= threshold ){
+					$gp.HideAdminUI.toggle(true);
+					$gp.HideAdminUI.ww = ww;
+				}else if( ww >= threshold && $gp.HideAdminUI.ww < threshold ){
+					$gp.HideAdminUI.toggle(false);
+					$gp.HideAdminUI.ww = ww;
+				}
+			});
+		}
+
+		if( hideAdminUIcfg.hotkey_which != '' ){
+			$gp.$doc.on('keydown.hideAdminUI', function(evt){
+				var modkeys_pressed = true;
+				$.each(hideAdminUIcfg.hotkey_modkeys, function(i, key){
+					if( evt[key] === false ){
+						modkeys_pressed = false;
+						return false;
+					}
+				});
+				if( modkeys_pressed && evt.which == hideAdminUIcfg.hotkey_which ){
+					evt.preventDefault();
+					$gp.HideAdminUI.toggle();
+				}
+				if( evt.which == 27 ){ /* 27 [Esc] key always exits hidden state */
+					$gp.HideAdminUI.toggle(false);
+				}
+			});
+		}
+	},
+
+	toggle: function(show_hide){
+		if( typeof(show_hide) == 'boolean' ){
+			$("html").toggleClass("override_admin_style", show_hide);
+		}else{
+			$("html").toggleClass("override_admin_style");
+		}
+	},
+
+};
+
 
 
 /**
@@ -1295,7 +1525,9 @@ function SimpleDrag(selector, drag_area, positioning, callback_done){
 	//dragging
 	$gp.$doc.off('mousedown.sdrag',selector).on('mousedown.sdrag',selector,function(e){
 
-		if( e.which != 1 ) return;
+		if( e.which != 1 ){
+			return;
+		}
 
 		var box, click_offsetx, click_offsety;
 		e.preventDefault();
@@ -1471,10 +1703,10 @@ $gp.response.renameprep = function(){
 
 		if( vis.length ){
 			if( vis.hasClass('slug_edit') ){
-				td.find('input').addClass('sync_label').prop('disabled',true).fadeTo(400,0.6);
+				td.find('input').addClass('sync_label').prop('readonly',true).fadeTo(400,0.6);
 				SyncSlug();
 			}else{
-				td.find('input').removeClass('sync_label').prop('disabled',false).fadeTo(400,1);
+				td.find('input').removeClass('sync_label').prop('readonly',false).fadeTo(400,1);
 			}
 		}
 	}

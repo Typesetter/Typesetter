@@ -43,7 +43,7 @@ namespace gp\tool{
 		public static function GetForm($theme='light', $size='', $lang=''){
 			global $config;
 			$custom_size	= !empty($size) ? ' data-size="' . htmlspecialchars($size) .'"' : ''; // conpact, normal
-			$custom_lang	= !empty($lang) ? '&hl='. htmlspecialchars($lang) : '';
+			$custom_lang	= !empty($lang) || $lang != 'inherit' ? '?hl='. htmlspecialchars($lang) : '';
 			$html = '';
 			if( self::hasRecaptcha() ){
 				includeFile('thirdparty/recaptcha/autoload.php');
@@ -61,7 +61,8 @@ namespace gp\tool{
 		 *
 		 */
 		public static function Form($theme='light'){
-			echo self::GetForm($theme);
+			global $config;
+			echo self::GetForm($theme,'',$config['recaptcha_language']);
 		}
 
 		/**

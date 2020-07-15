@@ -8,7 +8,7 @@ Open source CMS written in PHP focused on ease of use with true WYSIWYG editing 
 
 
 ## Requirements ##
-* PHP 5.4+ as of Typesetter 5.1.1-b1
+* PHP 5.6+ as of Typesetter 5.1.1-b1
 
 
 ## Installation ##

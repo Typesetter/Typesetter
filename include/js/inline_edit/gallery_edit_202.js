@@ -265,8 +265,8 @@
 		//gp_editor.edit_div.get(0).innerHTML = section_object.content;
 
 		ShowEditor();
-		var orig_content			= gp_editor.getData(gp_editor.edit_div, section_object);
-		gp_editor.editorLoaded();
+		gp_editor.editorLoaded(section_object);
+		var orig_content = gp_editor.getData(gp_editor.edit_div, section_object);
 
 
 		function ShowEditor(){

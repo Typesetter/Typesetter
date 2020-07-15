@@ -1461,15 +1461,15 @@ class Layout extends \gp\admin\Addon\Install{
 
 		ob_start();
 		echo '<span class="layout_label_'.$layout.' layout_label">';
-		echo '<a data-cmd="layout_id" title="'.$layout_info['color'].'" data-arg="'.$layout_info['color'].'">';
+		echo '<a data-cmd="layout_id" data-arg="'.$layout_info['color'].'">';
 		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
 		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';
-		echo '<span class="layout_color_id" style="background-color:'.$layout_info['color'].';"></span> ';
+		echo '<span class="layout_color_id" title="'.$layout_info['color'].'" style="background-color:'.$layout_info['color'].';"></span> ';
 		if( $config['gpLayout'] == $layout ){
 			echo ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
 			echo '&nbsp;';
 		}
-		echo $layout_info['label'];
+		echo '<span title="'.$layout_info['label'].'">'.$layout_info['label'].'</span>';
 
 		echo '</a>';
 		echo '</span>';

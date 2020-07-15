@@ -1,79 +1,78 @@
-// Lumen 4.0.0
-// Bootswatch
-
+// Theme Bootswatch 4 Scss
+// Layout Lumen 4.0.0
 //
+// For all Bootstrap 4 variables see /include/thirdparty/Bootstrap4/scss/bootstrap/_variables.scss
+
 // Color system
-//
+$white:      #fff;
+$gray-100:   #f6f6f6;
+$gray-200:   #f0f0f0;
+$gray-300:   #dee2e6;
+$gray-400:   #ced4da;
+$gray-500:   #adb5bd;
+$gray-600:   #999;
+$gray-700:   #555;
+$gray-800:   #333;
+$gray-900:   #222;
+$black:      #000;
 
-$white:    #fff !default;
-$gray-100: #f6f6f6 !default;
-$gray-200: #f0f0f0 !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #999 !default;
-$gray-700: #555 !default;
-$gray-800: #333 !default;
-$gray-900: #222 !default;
-$black:    #000 !default;
+$blue:       #158CBA;
+$indigo:     #6610f2;
+$purple:     #6f42c1;
+$pink:       #e83e8c;
+$red:        #FF4136;
+$orange:     #fd7e14;
+$yellow:     #FF851B;
+$green:      #28B62C;
+$teal:       #20c997;
+$cyan:       #75CAEB;
 
-$blue:    #158CBA !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #FF4136 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #FF851B !default;
-$green:   #28B62C !default;
-$teal:    #20c997 !default;
-$cyan:    #75CAEB !default;
-
-$primary:       $blue !default;
-$secondary:     $gray-200 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-100 !default;
-$dark:          $gray-900 !default;
+$primary:    $blue;
+$secondary:  $gray-200;
+$success:    $green;
+$info:       $cyan;
+$warning:    $yellow;
+$danger:     $red;
+$light:      $gray-100;
+$dark:       $gray-900;
 
 // Fonts
+$web-font-path: "https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic";
+$font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-size-base: 0.9375rem;
+$navbar-font-size: 0.9375rem;
+$footer-font-size: 0.875rem;
 
-$font-family-sans-serif:      "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-
-$font-size-base:              0.875rem !default;
+// Navbar
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
 
 // Dropdowns
-
-$dropdown-link-color:               rgba(0,0,0,.5) !default;
+$dropdown-link-color: rgba(0, 0, 0, 0.5);
 
 // Navs
-
-$nav-tabs-border-color:             $gray-200 !default;
-$nav-tabs-link-hover-border-color:  $nav-tabs-border-color !default;
-$nav-tabs-link-active-border-color: $nav-tabs-border-color !default;
+$nav-tabs-border-color: $gray-200;
+$nav-tabs-link-hover-border-color: $nav-tabs-border-color;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color;
 
 // Pagination
-
-$pagination-color:                  $gray-700 !default;
-$pagination-bg:                     $gray-200 !default;
-
-$pagination-hover-color:            $pagination-color !default;
-$pagination-hover-bg:               $pagination-bg !default;
-
-$pagination-active-border-color:    darken($primary, 5%) !default;
-
-$pagination-disabled-color:         $gray-600 !default;
-$pagination-disabled-bg:            $pagination-bg !default;
+$pagination-color: $gray-700;
+$pagination-bg:  $gray-200;
+$pagination-hover-color: $pagination-color;
+$pagination-hover-bg: $pagination-bg;
+$pagination-active-border-color: darken($primary, 5%);
+$pagination-disabled-color: $gray-600;
+$pagination-disabled-bg: $pagination-bg;
 
 // Jumbotron
-
-$jumbotron-bg:                      #fafafa !default;
+$jumbotron-bg: #fafafa;
 
 // Modals
-
-$modal-content-border-color:        rgba($black,.1) !default;
+$modal-content-border-color: rgba($black, 0.1);
 
 // Close
+$close-color: $white;
 
-$close-color:                       $white !default;
+// Footer
+$footer-bg: $gray-300;
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss

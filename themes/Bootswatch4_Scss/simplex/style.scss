@@ -1,13 +1,13 @@
+// Theme Bootswatch 4 Scss
+// Layout Simplex 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Simplex 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-
-// Variables ===================================================================
-
-$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !default;
-@import url($web-font-path);
+// Variables and Mixins =========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 @mixin btn-shadow($color){
   @include gradient-y-three-colors(lighten($color, 3%), $color, 6%, darken($color, 3%));
@@ -15,48 +15,38 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:400,700" !def
   border: 1px solid darken($color, 6.5%);
 }
 
-
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
 // Navbar =======================================================================
-
 .navbar {
   border-width: 1px;
   border-style: solid;
 
-  &-fixed-top {
+  &.fixed-top {
     border-width: 0 0 1px 0;
   }
 
-  &-fixed-bottom {
+  &.fixed-bottom {
     border-top-width: 1px 0 0 0;
     border-style: solid;
   }
-}
 
-.bg-primary {
-  background-color: $primary !important;
-  border-color: darken($primary, 6.5%) !important;
-}
+  &.bg-primary {
+    background-color: $primary !important;
+    border-color: darken($primary, 6.5%) !important;
+  }
 
-.bg-dark {
-  border-color: darken($dark, 6.5%) !important;
-}
+  &.bg-dark {
+    border-color: darken($dark, 6.5%) !important;
+  }
 
-.bg-light {
-  border-color: darken(#fff, 6.5%);
-}
-
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-200;
+  &.bg-light {
+    border-color: darken(#fff, 6.5%);
+  }
 }
 
 // Buttons =====================================================================
-
 .btn-primary,
 .btn-primary:hover {
   @include btn-shadow($primary);
@@ -114,22 +104,19 @@ footer.main-footer {
 }
 
 // Typography ==================================================================
-
-body {
-  font-weight: 200;
+b, strong {
+  font-weight: 700;
 }
 
 // Tables ======================================================================
 
 // Forms =======================================================================
-
 legend,
 label {
   color: $headings-color;
 }
 
 // Navs =======================================================================
-
 .breadcrumb {
   border: 1px solid darken(#fff, 6.5%);
 }

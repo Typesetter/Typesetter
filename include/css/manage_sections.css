@@ -171,19 +171,18 @@
  *
  */
 #section_sorting .secsort_wrapper_toggle:before {
+	font-family: FontAwesome;
 	display: inline-block;
-	content: '\25bc';
+	content: '\f0d7';
+	width: 1em;
+	text-align: center;
 	position: relative;
 	color: #333;
-	top: -0.2em;
-	padding: 0 2px;
 	margin-right: 0.25em;
-	font-size: 10px !important;
 }
 
-
 #section_sorting .wrapper_collapsed .secsort_wrapper_toggle:before {
-	content: '\25b6';
+	content: '\f0da';
 }
 
 #section_sorting .wrapper_collapsed > ul {
@@ -279,6 +278,10 @@ ul#section-clipboard-items li {
 	margin: 0 0 3px 0;
 	padding: 2px 2px 2px 14px;
 	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 ul#section-clipboard-items li a.preview_section {

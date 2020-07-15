@@ -41,7 +41,7 @@ $upload_extensions_deny = array();
  * Also the theme/color that Typesetter will use should the user specified theme become unavailable
  *
  */
-define('gp_default_theme','Three_point_5/Shore');
+define('gp_default_theme','Bootswatch_Scss/Flatly');
 
 
 /**
@@ -177,7 +177,6 @@ defined('gpdebug') or define('gpdebug',false);
 //define('gpdebugjs',false);
 
 
-
 /**
  * Prevent errors from being displayed to site visitors
  * Should be set to "0" for any production site
@@ -185,6 +184,7 @@ defined('gpdebug') or define('gpdebug',false);
  *
  */
 @ini_set('display_errors',0);
+
 
 /**
  * gp_safe_mode
@@ -195,11 +195,25 @@ defined('gpdebug') or define('gpdebug',false);
 
 
 /**
+ * Show notifications of deprecated addons
+ * Some addons should be uninstalled with the current version of Typesetter
+ * e.g. due to incompatibilities or because their functionality has been added to the CMS core
+ * Set to false if you still want to keep them installed and prevent notifications
+ * See also /include/deprecated.php
+ * Defaults to true
+ *
+ */
+define('notify_deprecated',true);
+
+
+/**
  * gp_prefix_urls
  * Set to true will prefix internal content URLs (href, src, ..., starting with '/')
  * with $LinkPrefix or $dirPrefix variables when saving in order to make the
  * content portable across different directory levels and hosts
  * Defaults to false
+ *
+ * not yet implemented
  */
 define('gp_prefix_urls',false);
 

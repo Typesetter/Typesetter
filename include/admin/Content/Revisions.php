@@ -99,13 +99,19 @@ class Revisions extends \gp\Page\Edit{
 
 		foreach($files as $time => $file){
 			$info		= $this->BackupInfo($file);
-			$rows[]		= ['time'=>$time,'row'=>$this->HistoryRow($info['time'], $info['size'], $info['username'])];
+			$rows[]		= [
+				'time'	=> $time,
+				'row'	=> $this->HistoryRow($info['time'], $info['size'], $info['username'])
+			];
 		}
 
 		// current page
 		// this will overwrite one of the history entries if there is a draft
 		$page_file		= \gp\tool\Files::FilePath($this->file);
-		$rows[]			= ['time'=>$this->fileModTime,'row'=>$this->HistoryRow($this->fileModTime, filesize($page_file), $this->file_stats['username'], 'current')];
+		$rows[]			= [
+			'time'	=> $this->fileModTime,
+			'row'	=> $this->HistoryRow($this->fileModTime, filesize($page_file), $this->file_stats['username'], 'current')
+		];
 
 		usort($rows,function($a,$b){
 			return strnatcmp($b['time'],$a['time']);
@@ -186,8 +192,26 @@ class Revisions extends \gp\Page\Edit{
 					$this->title,
 					$langmessage['View'],
 					'cmd=ViewCurrent',
-					['target' => 'gp_layout_iframe']
+					[
+						'target' => 'gp_layout_iframe'
+					]
 				);
+				if( $this->draft_exists ){
+					echo \gp\tool::Link(
+						'Admin/Revisions/' . $this->gp_index,
+						$langmessage['restore'],
+						'cmd=UseRevision&revision=current',
+						[
+							'data-cmd'	=> 'post',
+							'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft'
+						]
+					);
+				}else{
+					echo \gp\tool::Link(
+						$this->title,
+						$langmessage['edit']
+					);
+				}
 				break;
 
 			case 'draft':
@@ -195,7 +219,9 @@ class Revisions extends \gp\Page\Edit{
 					$this->title,
 					$langmessage['View'],
 					'cmd=ViewRevision&revision=draft',
-					['target' => 'gp_layout_iframe']
+					[
+						'target' => 'gp_layout_iframe'
+					]
 				);
 
 				echo \gp\tool::Link(
@@ -209,30 +235,30 @@ class Revisions extends \gp\Page\Edit{
 					$this->title,
 					$langmessage['View'],
 					'cmd=ViewRevision&revision=' . $time,
-					array(
+					[
 						'target'	=> 'gp_layout_iframe',
-					)
+					]
 				);
 
 				echo \gp\tool::Link(
 					'Admin/Revisions/' . $this->gp_index,
 					$langmessage['restore'],
 					'cmd=UseRevision&revision=' . $time,
-					array(
+					[
 						'data-cmd'	=> 'post',
 						'class'		=> 'msg_publish_draft admin-link admin-link-publish-draft'
-					)
+					]
 				);
 
 				echo \gp\tool::Link(
 					'/Admin/Revisions/'.$this->gp_index,
 					'<i class="fa fa-trash fa-fw"></i>',
 					'cmd=DeleteRevision&revision=' . $time,
-					array(
+					[
 						'title'		=> $langmessage['delete'],
 						'class'		=> 'gpconfirm',
 						'data-cmd'	=> 'post',
-					)
+					]
 				);
 				break;
 		}
@@ -261,7 +287,12 @@ class Revisions extends \gp\Page\Edit{
 	protected function UseRevision(){
 
 		$revision			=& $_REQUEST['revision'];
-		$file_sections		= $this->GetRevision($revision);
+
+		if ($revision == 'current') {
+			$file_sections		= \gp\tool\Files::Get($this->file, 'file_sections');
+		} else {
+			$file_sections		= $this->GetRevision($revision);
+		}
 
 		if( $file_sections === false ){
 			return false;

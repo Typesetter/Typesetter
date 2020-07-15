@@ -1,143 +1,124 @@
-// Superhero 4.0.0
-// Bootswatch
-
+// Theme Bootswatch 4 Scss
+// Layout Superhero 4.0.0
 //
+// For all Bootstrap 4 variables see /include/thirdparty/Bootstrap4/scss/bootstrap/_variables.scss
+
 // Color system
-//
+$white:     #fff;
+$gray-100:  #EBEBEB;
+$gray-200:  #4E5D6C;
+$gray-300:  #dee2e6;
+$gray-400:  #ced4da;
+$gray-500:  #adb5bd;
+$gray-600:  #868e96;
+$gray-700:  #495057;
+$gray-800:  #343a40;
+$gray-900:  #212529;
+$black:     #000;
 
-$white:    #fff !default;
-$gray-100: #EBEBEB !default;
-$gray-200: #4E5D6C !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #868e96 !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
-$black:    #000 !default;
+$blue:      #DF691A;
+$indigo:    #6610f2;
+$purple:    #6f42c1;
+$pink:      #e83e8c;
+$red:       #d9534f;
+$orange:    #f0ad4e;
+$yellow:    #f0ad4e;
+$green:     #5cb85c;
+$teal:      #20c997;
+$cyan:      #5bc0de;
 
-$blue:    #DF691A !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #d9534f !default;
-$orange:  #f0ad4e !default;
-$yellow:  #f0ad4e !default;
-$green:   #5cb85c !default;
-$teal:    #20c997 !default;
-$cyan:    #5bc0de !default;
-
-$primary:       $blue !default;
-$secondary:     $gray-200 !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         lighten($gray-200, 25%) !default;
-$dark:          $gray-200 !default;
+$primary:   $blue;
+$secondary: $gray-200;
+$success:   $green;
+$info:      $cyan;
+$warning:   $yellow;
+$danger:    $red;
+$light:     lighten($gray-200, 25%);
+$dark:      $gray-200;
 
 // Body
-
-$body-bg:                   #2B3E50 !default;
-$body-color:                $gray-100 !default;
+$body-bg: #2B3E50;
+$body-color: $gray-100;
 
 // Components
-
-$border-radius:               0 !default;
-$border-radius-lg:            0 !default;
-$border-radius-sm:            0 !default;
+$border-radius: 0;
+$border-radius-lg: 0;
+$border-radius-sm: 0;
 
 // Fonts
-$font-family-sans-serif:      "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
-
-$text-muted:                  rgba(255,255,255,.4) !default;
+$web-font-path: "https://fonts.googleapis.com/css?family=Lato:300,400,700,300i,400i,700i";
+$font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$text-muted: rgba(255, 255, 255, 0.4);
+$font-size-base: 1rem;
+$navbar-font-size: 0.875rem;
+$footer-font-size: 0.875rem;
 
 // Tables
-
-$table-accent-bg:             rgba($white,.05) !default;
-$table-hover-bg:              rgba($white,.075) !default;
-
-$table-dark-bg:               $light !default;
-$table-dark-border-color:     $gray-200 !default;
-$table-dark-color:            $body-bg !default;
+$table-accent-bg: rgba($white, 0.05);
+$table-hover-bg: rgba($white, 0.075);
+$table-dark-bg: $light;
+$table-dark-border-color: $gray-200;
+$table-dark-color: $body-bg;
 
 // Forms
-
-$input-group-addon-color:           $gray-400 !default;
+$input-group-addon-color: $gray-400;
 
 // Dropdowns
-
-$dropdown-bg:                       $gray-200 !default;
-$dropdown-divider-bg:               rgba($black,.15) !default;
-
-$dropdown-link-color:               $body-color !default;
-$dropdown-link-hover-color:         $dropdown-link-color !default;
-$dropdown-link-hover-bg:            $table-hover-bg !default;
+$dropdown-bg: $gray-200;
+$dropdown-divider-bg: rgba($black, 0.15);
+$dropdown-link-color: $body-color;
+$dropdown-link-hover-color: $dropdown-link-color;
+$dropdown-link-hover-bg: $table-hover-bg;
 
 // Navs
-
-$nav-link-disabled-color:           rgba(255,255,255,.4) !default;
-
-$nav-tabs-border-color:             $gray-200 !default;
-$nav-tabs-link-active-color:        $body-color !default;
-$nav-tabs-link-active-border-color: $gray-200 !default;
+$nav-link-disabled-color: rgba(255, 255, 255, 0.4);
+$nav-tabs-border-color: $gray-200;
+$nav-tabs-link-active-color: $body-color;
+$nav-tabs-link-active-border-color: $gray-200;
 
 // Navbar
-
-$navbar-padding-y:                  0.25rem !default;
-
-$navbar-dark-color:                 rgba($white,.75) !default;
-$navbar-dark-hover-color:           $white !default;
+$navbar-padding-y: 0.25rem;
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
 
 // Pagination
-
-$pagination-color:                  $white !default;
-$pagination-bg:                     $gray-200 !default;
-$pagination-border-color:           transparent !default;
-
-$pagination-hover-color:            $white !default;
-$pagination-hover-bg:               $nav-link-disabled-color !default;
-$pagination-hover-border-color:     $pagination-border-color !default;
-
-$pagination-disabled-color:         $nav-link-disabled-color !default;
-$pagination-disabled-bg:            $pagination-bg !default;
-$pagination-disabled-border-color:  $pagination-border-color !default;
+$pagination-color: $white;
+$pagination-bg: $gray-200;
+$pagination-border-color: transparent;
+$pagination-hover-color: $white;
+$pagination-hover-bg: $nav-link-disabled-color;
+$pagination-hover-border-color: $pagination-border-color;
+$pagination-disabled-color: $nav-link-disabled-color;
+$pagination-disabled-bg: $pagination-bg;
+$pagination-disabled-border-color: $pagination-border-color;
 
 // Modals
-
-$modal-content-bg:                  $gray-200 !default;
-
-$modal-header-border-color:         rgba(0,0,0,.2) !default;
+$modal-content-bg: $gray-200;
+$modal-header-border-color: rgba(0, 0, 0, 0.2);
 
 // Cards
-
-$card-cap-bg:                       $table-hover-bg !default;
-$card-bg:                           $gray-200 !default;
+$card-cap-bg: $table-hover-bg;
+$card-bg: $gray-200;
 
 // Popovers
-
-$popover-bg:                        $gray-200 !default;
-
-$popover-header-bg:                 $table-hover-bg !default;
+$popover-bg: $gray-200;
+$popover-header-bg: $table-hover-bg;
 
 // Progress bars
-
-$progress-bar-color:                $primary !default;
+$progress-bar-color: $primary;
 
 // List group
-
-$list-group-bg:                     $gray-200 !default;
-$list-group-border-color:           transparent !default;
-
-$list-group-hover-bg:               $nav-link-disabled-color !default;
-
-$list-group-disabled-color:         $nav-link-disabled-color !default;
-
-$list-group-action-color:           $white !default;
-$list-group-action-hover-color:     $white !default;
+$list-group-bg: $gray-200;
+$list-group-border-color: transparent;
+$list-group-hover-bg: $nav-link-disabled-color;
+$list-group-disabled-color: $nav-link-disabled-color;
+$list-group-action-color: $white;
+$list-group-action-hover-color: $white;
 
 // Breadcrumbs
+$breadcrumb-divider-color: $body-color;
+$breadcrumb-active-color: $body-color;
 
-$breadcrumb-divider-color:          $body-color !default;
-$breadcrumb-active-color:           $body-color !default;
+// Footer
+$footer-bg: rgba($black, 0.125);
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss

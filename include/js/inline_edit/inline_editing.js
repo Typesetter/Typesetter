@@ -10,10 +10,17 @@
 		is_dirty:			false,	// true if we know gp_editor has been edited
 
 
+		debug:function(msg){
+			if( debugjs ){
+				console.log(msg);
+			}
+		},
+
+
 		get_path:function(id_num){
 			var lnk = $('a#ExtraEditLink' + id_num);
 			if( lnk.length == 0 ){
-				console.log('get_path() link not found', id_num, lnk.length);
+				gp_editing.debug('get_path() link not found', id_num, lnk.length);
 				return false;
 			}
 			return lnk.attr('href');
@@ -24,7 +31,7 @@
 
 			var content = $('#ExtraEditArea' + id_num);
 			if( content.length == 0 ){
-				console.log('no content found for get_edit_area()', id_num);
+				gp_editing.debug('no content found for get_edit_area()', id_num);
 				return false;
 			}
 
@@ -83,7 +90,7 @@
 				return;
 			}
 
-			loading(); // console.log('loading');
+			loading();
 
 			$wrap.addClass('ck_saving');
 			gp_editing.AutoSave.destroy(); // kill the autosave timer while saving to avoid timing conflicts
@@ -154,7 +161,7 @@
 					$("a.msg_publish_draft_disabled").hide();
 					$("a.msg_saving_draft").hide();
 					gp_editing.AutoSave.init(); // re-init autosave when saving completed
-					loaded(); // console.log('loaded');
+					loaded();
 				},
 			});
 
@@ -189,11 +196,11 @@
 			}
 
 			if( $area.data('draft') == 1 ){
-				document.querySelectorAll('.ck_publish').forEach(function(el) {
+				document.querySelectorAll('.ckeditor_control.ck_publish, .ck_publish[data-gp-area-id="' + $gp.AreaId($area) + '"]').forEach(function(el) {
 					el.style.removeProperty('display');
 				});				
 			} else {
-				document.querySelectorAll('.ck_publish').forEach(function(el) {
+				document.querySelectorAll('.ckeditor_control.ck_publish, .ck_publish[data-gp-area-id="' + $gp.AreaId($area) + '"]').forEach(function(el) {
 					el.style.setProperty('display','none','important');
 				});
 			}	
@@ -236,16 +243,25 @@
 		 * Initiate dragging
 		 *
 		 */
-		editor_tools:function(){
+		editor_tools: function(){
 
 			var $ck_area_wrap = $('#ck_area_wrap');
 
 			//inline editor html
 			if( !$ck_area_wrap.length ){
-				var html = '<div id="ckeditor_wrap" class="nodisplay">';
+
+				var editor_expanded_class = !!gpui.exp ? ' editor_expanded' : '';
+
+				var html = '<div id="ckeditor_wrap" class="nodisplay' + editor_expanded_class + '">';
 
 				html += '<a id="cktoggle" data-cmd="ToggleEditor">';
 				html += '<i class="fa fa-angle-double-left"></i><i class="fa fa-angle-double-right"></i>';
+				html += '</a>';
+
+				//expandable editor
+				html += '<a id="editor_toggle_width" data-cmd="ToggleEditorWidth">';
+				html += '<i title="' + gplang.ExpandEditor + '" class="fa fa-plus-square-o"></i>';
+				html += '<i title="' + gplang.ShrinkEditor + '" class="fa fa-minus-square-o"></i>';
 				html += '</a>';
 
 				//tabs
@@ -369,7 +385,13 @@
 				editor_info.section_type 	= section_type.substring(section_type.indexOf('filetype-') + 9);
 			}
 
-			// console.log('editor_info = ', editor_info);
+			// do not expand the editor area when CK Editor is active
+			if( editor_info.section_type == 'text' ){
+				$('#ckeditor_wrap').addClass('overrule_editor_expanded');
+			}else{
+				$('#ckeditor_wrap').removeClass('overrule_editor_expanded');
+			}
+
 
 			$(document).trigger('editor:loaded', editor_info);
 
@@ -395,7 +417,7 @@
 
 		/**
 		 * Get the content type from the class name
-		 * todo: use regexp to find filetype-.*
+		 * TODO: use regexp to find filetype-.*
 		 */
 		TypeFromClass: function(div){
 			var $section	= $(div);
@@ -547,7 +569,7 @@
 		 * Deprecated methods
 		 */
 		save_changes: function(callback){
-			console.log('Please use gp_editing.SaveChanges() instead of gp_editing.save_changes()');
+			gp_editing.debug('Please use gp_editing.SaveChanges() instead of gp_editing.save_changes()');
 			gp_editing.SaveChanges(callback);
 		},
 
@@ -671,9 +693,15 @@
 			return;
 		}
 
+		var $lnk = $('#ExtraEditLink' + area_id);
+
+		if( $lnk.attr('data-cmd') == 'gpabox' ){
+			// legacy gpArea
+			return;
+		}
+
 		evt.stopImmediatePropagation(); //don't check if we need to swith back to the section manager
 
-		var $lnk = $('#ExtraEditLink' + area_id);
 		var arg = $lnk.data('arg');
 		$gp.LoadEditor($lnk.get(0).href, area_id, arg);
 
@@ -719,12 +747,23 @@
 
 
 	/**
+	 * Expand / shrink the editor area
+	 *
+	 */
+	$gp.links.ToggleEditorWidth = function(){
+		$('#ckeditor_wrap').toggleClass('editor_expanded');
+		gpui.exp = $('#ckeditor_wrap').hasClass('editor_expanded') ? 1 : 0;
+		$gp.SaveGPUI();
+	};
+
+
+	/**
 	 * Move the page to the left to keep the editor off of the editable area if needed
 	 *
 	 */
 	function AdjustForEditor(){
 
-		$('html').css({'margin-left':0, 'width':'auto'});
+		$('html').css({'margin-left' : 0, 'width' : 'auto'});
 
 		var win_width	= $gp.$win.width();
 		var $edit_div	= $gp.CurrentDiv();

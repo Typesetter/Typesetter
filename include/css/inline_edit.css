@@ -20,9 +20,9 @@ html {
 		"Noto Sans", sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji",
 		"Segoe UI Symbol", "Noto Color Emoji";
-	-webkit-transition: right 0.5s;
-	-moz-transition: right 0.5s;
-	transition: right 0.5s;
+	-webkit-transition: right 0.5s, width 0.2s;
+	-moz-transition: right 0.5s, width 0.2s;
+	transition: right 0.5s, width 0.2s;
 }
 
 #ckeditor_wrap.show_editor {
@@ -31,30 +31,75 @@ html {
 	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
+#ckeditor_wrap:not(.show_editor) #cktoggle .fa-angle-double-right {
+	display: none;
+}
+
 #ckeditor_wrap.show_editor #cktoggle .fa-angle-double-left {
 	display: none;
 }
 
+#ckeditor_wrap.editor_expanded:not(.overrule_editor_expanded) {
+	right: -320px;
+	width: 320px;
+}
+
+#ckeditor_wrap.editor_expanded.overrule_editor_expanded #editor_toggle_width {
+	display: none;
+}
+
+#ckeditor_wrap.editor_expanded.show_editor:not(.overrule_editor_expanded) #new_section_links div[data-type-id] {
+	width: 33.3333%;
+}
+
+#ckeditor_wrap.editor_expanded.show_editor:not(.overrule_editor_expanded) {
+	right: 0;
+}
+
+#ckeditor_wrap.editor_expanded #editor_toggle_width .fa-minus-square-o { display: inline-block; }
+#ckeditor_wrap.editor_expanded #editor_toggle_width .fa-plus-square-o  { display: none; }
+#ckeditor_wrap:not(.editor_expanded) #editor_toggle_width .fa-minus-square-o { display: none; }
+#ckeditor_wrap:not(.editor_expanded) #editor_toggle_width .fa-plus-square-o  { display: inline-block; }
+
+
+#ckeditor_tabs a,
+#cktoggle,
+#editor_toggle_width {
+	background: #444;
+	height: 30px;
+	line-height: 30px;
+	background: #444;
+}
+
 #ckeditor_tabs a,
 #cktoggle {
-	height: 29px;
-	line-height: 29px;
 	color: #fff !important;
-	background: #444;
+	outline: none;
+}
+
+#cktoggle,
+#editor_toggle_width {
+	display: block;
+	position: absolute;
+	top: 0;
+	width: 30px;
+	font-size: 14px;
+	text-align: center;
+	overflow: hidden;
 	outline: none;
 }
 
 #cktoggle {
-	display: block;
-	position: absolute;
-	top: 0;
 	left: -30px;
-	padding: 0 5px;
-	width: 20px;
-	font-size: 20px;
-	line-height: 29px;
-	text-align: center;
-	overflow: hidden;
+}
+
+#editor_toggle_width {
+	color: #aaa !important;
+	left: 0;
+}
+
+#editor_toggle_width:hover {
+	color: #fff !important;
 }
 
 
@@ -64,6 +109,13 @@ html {
 	display: -moz-flex;
 	display: -ms-flexbox;
 	display: flex;
+	margin-left: 30px;
+	width: calc(100% - 30px);
+}
+
+#ckeditor_wrap.editor_expanded.overrule_editor_expanded #ckeditor_tabs {
+	margin-left: 0;
+	width: 100%;
 }
 
 #ckeditor_tabs a {
@@ -87,6 +139,7 @@ html {
 #ckeditor_tabs a:last-child {
 	color: #fff !important;
 }
+
 
 /**
  * Edit mode

@@ -15,6 +15,12 @@
 
 		allowAutoSave: true,
 
+		debug:function(msg){
+			if( debugjs ){
+				console.log(msg);
+			}
+		},
+
 		CanAutoSave: function(){ 
 			return gp_editor.allowAutoSave || true; 
 		},
@@ -83,22 +89,9 @@
 
 			});
 
-			/*
+			/**
 			 * FIX for too many sections issue
-			 *
-			 * with large amounts of sections, we may exceed max_post_values
-			 * which causes an error and prevents further editing of the page.
-			 *
-			 * sending all the section data in a single JSON string 
-			 * instead of parametrizing all values will address this issue.
-			 *
-			 * the current implementation should be considered as a hot fix.
-			 * it should eventually be done more elegant.
-			 *
-			 * See its server side counterpart in /include/Page/Edit.php line 490-519
 			 */
-
-			// console.log('manage_sections -> SaveData -> args = ', args);
 			var json_encoded = JSON.stringify(args, function(key, value){
 				// make sure every value is a string
 				switch( value ){
@@ -123,14 +116,8 @@
 				}
 				return value;
 			});
-			// console.log('manage_sections -> SaveData -> json_encoded = ' + json_encoded);
 			return 'cmd=SaveSections&sections_json=' + encodeURIComponent(json_encoded);
 
-			/*
-			 * FIX for too many sections issue
-			 * 
-			 */
-			 // return $.param(args);
 		},
 
 
@@ -175,7 +162,6 @@
 					}
 				}
 				if( v.destroy ){
-					// console.log('gp_editor.AfterSave.' + i + ' deleted');
 					delete( gp_editor.AfterSave[i] );
 				}
 			});
@@ -212,11 +198,9 @@
 		 */
 		SaveToClipboard: function(area_id){
 
-			// console.log("arguments = " , arguments);
-			// console.log("SaveToClipboard called with area_id = ", area_id);
 			var $li = $('#section_sorting li[data-gp-area-id="' + area_id + '"]');
 			if( !$li.length ){
-				console.log('SaveToClipboard Error: section_sorting li[data-gp-area-id="' + area_id + '"] does not exist!');
+				gp_editor.debug('SaveToClipboard Error: section_sorting li[data-gp-area-id="' + area_id + '"] does not exist!');
 				return;
 			}
 			var $area			= gp_editor.GetArea( $li );
@@ -226,7 +210,7 @@
 				cmd				: 'SaveToClipboard',
 				section_number	: section_number
 			};
-			// console.log("SectionToClipboard", data);
+
 			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
@@ -239,19 +223,13 @@
 		 */
 		SectionFromClipboard: function(item_index){
 
-			// console.log("SectionFromClipboard: item_index = " + item_index);
-
 			var $link = $('#section-clipboard-items '
 				+ 'li[data-item_index="' + item_index + '"] '
 				+ 'a.preview_section');
 
-			// console.log("SectionFromClipboard: $link = " , $link);
-
 			//remove preview
 			$link.removeClass('previewing');
 			$('.temporary-section').remove();
-
-			// console.log("$section = " , $link.data('response'));
 
 			// append section(s) content client side
 			var $section = $($link.data('response'))
@@ -272,7 +250,6 @@
 				item_number	: item_index
 			};
 
-			// console.log("AddFromClipboard", data);
 			data = $.param(data);
 			$gp.postC(window.location.href, data);
 			loading();
@@ -456,6 +433,10 @@
 
 				// highlight sections in editor
 				$this.on("mouseenter", function(){
+					$('li[data-gp-area-id].section-sorting-highlight')
+						.not($('li[data-gp-area-id="' + area_id + '"]').parents('li'))
+						.not($('li[data-gp-area-id="' + area_id + '"]').find('li'))
+							.removeClass('section-sorting-highlight');
 					$('li[data-gp-area-id="' + area_id + '"]').addClass('section-sorting-highlight');
 				}).on("mouseleave", function(){
 					$('li[data-gp-area-id="' + area_id + '"]').removeClass('section-sorting-highlight');
@@ -530,7 +511,6 @@
 				$area.insertAfter($prev_area).trigger('SectionSorted');
 
 				// trigger immediate save
-				// console.log('immediate save');
 				gp_editing.SaveChanges();
 				return;
 			}
@@ -541,7 +521,6 @@
 				$area.prependTo('#gpx_content').trigger('SectionSorted');
 
 				// trigger immediate save
-				// console.log('immediate save');
 				gp_editing.SaveChanges();
 				return;
 			}
@@ -551,7 +530,6 @@
 			$area.trigger('SectionSorted');
 
 			// trigger immediate save
-			// console.log('immediate save');
 			gp_editing.SaveChanges();
 		},
 
@@ -704,7 +682,6 @@
 		$this.removeClass('previewing').trigger('mousemove');
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -760,7 +737,6 @@
 				.data('gp_hidden', false)
 				.hide().slideDown(150, function(){
 					// trigger immediate save
-					// console.log('immediate save');
 					gp_editing.SaveChanges();
 				});
 
@@ -777,7 +753,6 @@
 					.data('gp_hidden', true);
 
 				// trigger immediate save
-				// console.log('immediate save');
 				gp_editing.SaveChanges();
 			});
 		}
@@ -832,7 +807,6 @@
 		$gp.CloseAdminBox();
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -852,7 +826,6 @@
 			$li.remove();
 
 			// trigger immediate save
-			// console.log('immediate save');
 			gp_editing.SaveChanges();
 		}
 	};
@@ -873,7 +846,6 @@
 		gp_editor.InitSorting();
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -885,7 +857,6 @@
 	 */
 	$gp.links.SectionToClipboard = function(evt){
 		var area_id		= $(this).closest('li').data('gp-area-id');
-		// console.log("SectionToClipboard: area_id = " + area_id);
 		var is_dirty	= gp_editor.checkDirty();
 		if( is_dirty ){
 			// inhibit auto-save while doing instant saving to prevent timing conflicts
@@ -917,7 +888,7 @@
 
 		var item_index = $(this).closest('li').attr("data-item_index");
 		if( !item_index ){
-			console.log('RemoveSectionClipboardItem Error: Atribute data_item_index missing');
+			gp_editor.debug('RemoveSectionClipboardItem Error: Atribute data_item_index missing');
 			return;
 		}
 
@@ -939,7 +910,7 @@
 
 		var item_index = $(this).closest('li').attr("data-item_index");
 		if( !item_index ){
-			console.log('RelabelClipboardItem Error: Atribute data_item_index missing');
+			gp_editor.debug('RelabelClipboardItem Error: Atribute data_item_index missing');
 			return;
 		}
 
@@ -1035,7 +1006,6 @@
 		$li.children().show();
 
 		// trigger immediate save
-		// console.log('immediate save without creating a draft');
 		var callback = function(){};
 		gp_editing.SaveChanges(callback, false); // passing false as 2nd argument will prevent creating a new draft
 	};
@@ -1061,7 +1031,6 @@
 		$area.attr('data-gp_collapse', clss).data('gp_collapse', clss);
 
 		// trigger immediate save
-		// console.log('immediate save without creating a draft');
 		var callback = function(){};
 		gp_editing.SaveChanges(callback, false); // passing false as 2nd argument will prevent creating a new draft
 	};
@@ -1107,12 +1076,13 @@
 		var id					= $li.data('gp-area-id')
 		var attrs				= gp_editor.GetArea( $li ).data('gp-attrs');
 		var current_classes		= '';
+		var available_classes	= '';
 
 		//popup
 		html = '<div class="inline_box"><form id="section_attributes_form" data-gp-area-id="' + id + '">';
 		html += '<h2>' + gplang.SectionAttributes + '</h2>';
 		html += '<table class="bordered full_width">';
-		html += '<thead><tr><th>' + gplang.Attribute + '</th><th>' + gplang.Value + '</th></tr></thead><tbody>';
+		html += '<thead><tr><th style="width:25%;">' + gplang.Attribute + '</th><th>' + gplang.Value + '</th></tr></thead><tbody>';
 
 		$.each(attrs,function(name){
 
@@ -1135,8 +1105,8 @@
 			}
 
 			html += '<tr><td>';
-			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" size="8" />';
-			html += '</td><td style="white-space:nowrap">';
+			html += '<input class="gpinput attr_name" value="' + $gp.htmlchars(name) + '" style="width:100%;" />';
+			html += '</td><td class="ui-front" style="white-space:nowrap">';
 			html += '<textarea rows="1" class="gptextarea attr_value' + (name == 'class' ? ' attr_value_class' : '') + '">' + $gp.htmlchars(value) + '</textarea>';
 			if( name == 'class' ){
 				html += '<div class="class_only admin_note">Default: GPAREA filetype-*</div>';
@@ -1165,6 +1135,7 @@
 			html += ClassSelect(gp_avail_classes[i].names, current_classes);
 			html += '</div>';
 			html += '<div class="avail_classes_desc">' + gp_avail_classes[i].desc + '<span x-arrow="true" class="popover_arrow"></span></div>';
+			available_classes += ' ' + gp_avail_classes[i].names;
 		}
 		html += '</div>';
 
@@ -1181,8 +1152,27 @@
 		html += '</form></div>';
 		var $html = $(html);
 
+		available_classes = available_classes
+			.trim()
+			.split(/(\s+)/)
+			.filter(function(e){
+				return e.trim().length > 0;
+			});
+		// console.log('available_classes = ', available_classes);
+
 		var $classes_input = $html.find('.attr_value_class')
+			.on('keydown', function(evt){
+				// prevent tabbing to other controls when autocomplete list has focus
+				if( evt.keyCode === $.ui.keyCode.TAB && $(this).autocomplete('instance').menu.active ){
+					evt.preventDefault();
+				}
+			})
+			.on('focus keyup mouseup touchend', function(){
+				TextareaSetAutocomplete(this, available_classes);
+			})
 			.on('input', UpdateAvailClasses);
+
+		$classes_input
 
 		var $cols = $html.find('.avail_classes_col')
 			.on('mouseenter', function(){
@@ -1211,7 +1201,7 @@
 				});
 			})
 			.on('mouseleave', function(){
-				this.popup.destroy();
+				this.popup && this.popup.destroy();
 
 				var $popup = $(this).next('.avail_classes_desc:not(:empty)')
 					.stop()
@@ -1232,6 +1222,130 @@
 		var $area = gp_editor.GetArea($li);
 		$area.trigger("section_options:loaded");
 	};
+
+
+	/**
+	 * Parse the value of the class textarea and initialize autocomplete based on the caret position
+	 * @param {object} elem DOM element of the textarea
+	 * @param {array} available_classes
+	 *
+	 */
+	function TextareaSetAutocomplete(elem, available_classes){
+		var value		= elem.value; // console.log('elem.value = ', value);
+		var caret_pos	= elem.selectionEnd;
+		var end_pos		= value.indexOf(' ', caret_pos);
+		if( end_pos === -1 ){
+			end_pos		= value.length;
+		}
+		var current_term = /\S+$/.exec(value.slice(0, end_pos));
+		current_term = current_term ? current_term[0] : false;
+		// console.log('current_term = ', current_term);
+
+		if( !current_term ){
+			if( $(elem).hasClass('ui-autocomplete-input') ){
+				// console.log('autocomplete destroy');
+				$(elem).autocomplete('destroy');
+			}
+			return;
+		}
+		// console.log('$(elem).data("values") = ', $(elem).data('values'));
+		if( $(elem).data('values') &&
+			( $(elem).data('values').caretPos === caret_pos ||
+			$(elem).data('values').current === current_term )
+			){
+			return;
+		}
+
+		var terms = value
+			.split(/(\s+)/)
+			.filter(function(term){
+				return term.trim().length > 0;
+			});
+		// console.log('terms = ', terms);
+
+		var regex = new RegExp('(\\b' + current_term + ')(?![\\w-])', 'gm');
+		// console.log('regex = ', regex);
+		var matches = [];
+		while( (match = regex.exec(value)) != null ){
+			var start	= match.index;
+			var end		= match.index + current_term.length;
+			matches.push({
+				match		: match,
+				term		: current_term,
+				start		: start,
+				end			: end,
+				is_current	: (caret_pos >= start && caret_pos <= end)
+			});
+		}
+		// console.log('current_term = "' + current_term + '", matches = ', matches);
+
+		var values = {
+			leading		: '',
+			current		: '',
+			trailing	: '',
+			index		: -1,
+			caretPos	: caret_pos
+		};
+
+		var matches_index = -1;
+
+		$.each(terms, function(i, term){
+			if( term == current_term ){
+				matches_index++;
+				if( matches[matches_index] && matches[matches_index].is_current ){
+					values.current = term;
+					values.index = i;
+					return;
+				}
+			}
+			if( values.index == -1 ){
+				values.leading += (term + ' ');
+			}else{
+				values.trailing += (' ' + term);
+			}
+		});
+
+		if( $(elem).hasClass('ui-autocomplete-input') &&
+			$(elem).data('values').current != current_term
+			){
+			$(elem).autocomplete('destroy');
+		}
+
+		$(elem)
+			.data('values', values)
+			.autocomplete({
+				minLength : 0,
+				source : function(request, response){
+					// console.log('autocomplete -> source -> $(this.element.context).data() = ', $(this.element.context).data());
+					var values = $(this.element.context).data('values');
+					var filtered_classes = $.ui.autocomplete.filter(available_classes, values.current);
+					filtered_classes.sort(function(a, b){
+						var ai = a.indexOf(values.current);
+						var bi = b.indexOf(values.current);
+						return ai < bi ? -1 : ai > bi ? 1 : 0;
+					});
+					response(filtered_classes);
+				},
+				focus : function(){
+					return false;
+				},
+				select : function(event, ui){
+					// console.log('$(this.data) = ', $(this).data());
+					var $this			= $(this);
+					var leading			= $this.data('values').leading;
+					var selected		= ui.item.value;
+					var trailing		= $this.data('values').trailing;
+					var new_val			= leading + selected + trailing;
+					var new_caret_pos 	= leading.length + selected.length;
+					$this.val(new_val)
+						.trigger('input')
+						.get(0).setSelectionRange(new_caret_pos, new_caret_pos);
+					return false;
+				}
+			})
+			.trigger('keydown');
+	}
+
 
 
 	/**
@@ -1451,7 +1565,6 @@
 		$area.trigger('section_options:closed');
 
 		// trigger immediate save
-		// console.log('immediate save');
 		gp_editing.SaveChanges();
 	};
 
@@ -1461,7 +1574,6 @@
 	 * which will bypass the delete section confirmation dialog
 	 */
 	$(document).on('keydown keyup', function(evt){
-		// console.log('keyboard event =', evt);
 		var ctrlKeyDowm = (evt.type == 'keydown' && evt.ctrlKey);
 		$('#section_sorting').toggleClass('warn-instant-section-removal', ctrlKeyDowm);
 	});
@@ -1529,7 +1641,6 @@
 					.data('gp_label', label);
 
 				// trigger immediate save
-				// console.log('immediate save without creating a draft');
 				var callback = function(){};
 				gp_editing.SaveChanges(callback, false); // passing false as 2nd argument will prevent creating a new draft
 			});

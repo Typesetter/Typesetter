@@ -1041,12 +1041,13 @@ namespace gp{
 				'preserve_image_metadata'	=> true,		//5.1
 				'maxthumbsize'				=> '300',
 				'maxthumbheight'			=> '',			//5.1
+				'thumbskeepaspect'			=> false,
 				'check_uploads'				=> false,
 				'colorbox_style'			=> 'example1',
 				'gallery_legacy_style'		=> true,
 				'combinecss'				=> true,
 				'combinejs'					=> true,
-				'minifyjs'					=> false,		//5.1.1
+				'minifyjs'					=> false,		//5.2
 				'etag_headers'				=> true,
 				'customlang'				=> array(),
 				'showgplink'				=> true,
@@ -1062,8 +1063,10 @@ namespace gp{
 				'hooks'						=> array(),
 				'space_char'				=> '-',			//4.6
 				'cdn'						=> '',
-				'thumbskeepaspect'			=> false,
-				'homepath_auto'				=> true,		//5.1.1
+				'admin_ui_autohide_below'	=> '992',		//5.2
+				'admin_ui_hotkey'			=> 'H',			//5.2
+				'admin_ui_hotkey_code'		=> 'ctrlKey+72',	//5.2
+				'homepath_auto'				=> true,		//5.2
 			);
 
 			//cdn settings
@@ -1078,8 +1081,10 @@ namespace gp{
 			}
 
 			// default gadgets
-			$config['gadgets']['Contact'] =	array('class'	=> '\\gp\\special\\ContactGadget');
-			$config['gadgets']['Search'] =	array('method'	=> array('\\gp\\special\\Search','gadget'));
+			$config['gadgets']['Contact']		=	array('class'	=> '\\gp\\special\\ContactGadget');
+			$config['gadgets']['Search']		=	array('method'	=> array('\\gp\\special\\Search','gadget'));
+			$config['gadgets']['Admin_Link']	=	array('method'	=> array('\\gp\\tool\\Output','AdminLinkGadget'));
+			$config['gadgets']['Login_Link']	=	array('method'	=> array('\\gp\\tool\\Output','LoginLinkGadget'));
 
 
 			foreach($config['hooks'] as $hook => $hook_info){
@@ -1742,15 +1747,18 @@ namespace gp{
 				}else{
 					\gp\tool\Output::$inline_vars['debugjs']	= true;
 				}
+			}else{
+				\gp\tool\Output::$inline_vars['debugjs']		= false;
 			}
 
 			if( self::LoggedIn() ){
 
-				\gp\tool\Output::$inline_vars['isadmin']		= true;
-				\gp\tool\Output::$inline_vars['req_time']		= time();
-				\gp\tool\Output::$inline_vars['gpBLink']		= self::HrefEncode($linkPrefix, false);
-				\gp\tool\Output::$inline_vars['post_nonce']		= \gp\tool\Nonce::Create('post', true);
-				\gp\tool\Output::$inline_vars['gpFinderUrl']	= \gp\tool::GetUrl('Admin/Browser');
+				\gp\tool\Output::$inline_vars['isadmin']			= true;
+				\gp\tool\Output::$inline_vars['req_time']			= time();
+				\gp\tool\Output::$inline_vars['gpBLink']			= self::HrefEncode($linkPrefix, false);
+				\gp\tool\Output::$inline_vars['post_nonce']			= \gp\tool\Nonce::Create('post', true);
+				\gp\tool\Output::$inline_vars['gpFinderUrl']		= \gp\tool::GetUrl('Admin/Browser');
+				\gp\tool\Output::$inline_vars['hideAdminUIcfg']		= self::HideAdminUIcfg();
 
 				\gp\tool\Session::GPUIVars();
 			}
@@ -1762,6 +1770,46 @@ namespace gp{
 			echo ';';
 		}
 
+
+		/**
+		 * Get config values for hiding the admin UI
+		 *
+		 * @return array $cfg configuration values
+		 *
+		 */
+		public static function HideAdminUIcfg(){
+			global $config, $langmessage;
+			$cfg = [
+				'autohide_below'	=> 0,
+				'hotkey'			=> '',
+				'hotkey_modkeys'	=> [],
+				'hotkey_which'		=> '',
+			];
+
+			if( !empty($config['admin_ui_autohide_below']) && is_numeric($config['admin_ui_autohide_below']) ){
+				$cfg['autohide_below'] = (int)$config['admin_ui_autohide_below'];
+			}
+
+			if( !empty($config['admin_ui_hotkey']) && !empty($config['admin_ui_hotkey_code']) ){
+				$cfg['hotkey'] = $config['admin_ui_hotkey'];
+				if( strpos($config['admin_ui_hotkey_code'], 'ctrlKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'ctrlKey';
+				}
+				if( strpos($config['admin_ui_hotkey_code'], 'shiftKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'shiftKey';
+				}
+				if( strpos($config['admin_ui_hotkey_code'], 'altKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'altKey';
+				}
+				if( strpos($config['admin_ui_hotkey_code'], 'metaKey+') !== false ){
+					$cfg['hotkey_modkeys'][] = 'metaKey';
+				}
+				$parts 					= explode('+', $config['admin_ui_hotkey_code']);
+				$cfg['hotkey_which']	= array_pop($parts);
+			}
+
+			return $cfg;
+		}
 
 
 		/**

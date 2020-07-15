@@ -60,6 +60,7 @@ class Menu{
 		$this->OutputMenu($source_menu_array,0,$source_menu_array);
 	}
 
+
 	public function GetExpandLastMenu($arg=''){
 		global $page;
 		$this->curr_menu = $arg;
@@ -94,6 +95,7 @@ class Menu{
 		$this->OutputMenu($menu,0,$source_menu_array);
 	}
 
+
 	public function GetMenu($arg=''){
 		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
@@ -108,6 +110,7 @@ class Menu{
 
 		$this->OutputMenu($sendMenu,0,$source_menu_array);
 	}
+
 
 	public function GetSubMenu($arg='',$info=false,$search_level=false){
 		global $page;
@@ -158,6 +161,7 @@ class Menu{
 		}
 	}
 
+
 	public function GetTopTwoMenu($arg=''){
 		$this->curr_menu = $arg;
 		$source_menu_array = $this->GetMenuArray($arg);
@@ -188,10 +192,12 @@ class Menu{
 		$this->OutputMenu($sendMenu,1,$source_menu_array);
 	}
 
+
 	/* alias */
 	public function GetSecondSubMenu($arg,$info){
 		$this->GetSubMenu($arg,$info,1);
 	}
+
 
 	/* alias */
 	public function GetThirdSubMenu($arg,$info){
@@ -256,7 +262,6 @@ class Menu{
 
 		return \gp\tool\Plugins::Filter('GetMenuArray',array($menu));
 	}
-
 
 
 	/**
@@ -367,8 +372,6 @@ class Menu{
 					}
 			}
 
-
-
 			//reduce the menu to the current group
 			$submenu = $this->MenuReduce_Group($menu,$curr_title_key,$expand_level,$curr_level);
 
@@ -401,12 +404,10 @@ class Menu{
 				}
 			}
 
-
 			// titles above selected title, deeper than $expand_level, and within the group
 			$this->MenuReduce_Sub($good_titles,$submenu,$curr_title_key,$expand_level,$curr_level);
 			$this->MenuReduce_Sub($good_titles,array_reverse($submenu),$curr_title_key,$expand_level,$curr_level);
 		}
-
 
 
 		//rebuild $good_titles in order
@@ -418,9 +419,7 @@ class Menu{
 		}
 
 		return $result_menu;
-
 	}
-
 
 
 	// reduce the menu to the group
@@ -436,7 +435,6 @@ class Menu{
 				$group_temp = array();
 				$found_title = false;
 			}
-
 
 			if( $title_key == $curr_title_key ){
 				$found_title = true;
@@ -454,6 +452,7 @@ class Menu{
 
 		return $result;
 	}
+
 
 	// titles above selected title, deeper than $expand_level, and within the group
 	public function MenuReduce_Sub(&$good_titles,$menu,$curr_title_key,$expand_level,$curr_level){
@@ -480,6 +479,7 @@ class Menu{
 			}
 		}
 	}
+
 
 	//Reduce the menu to titles deeper than ($show_level-1)
 	public function MenuReduce_Top($menu,$show_level,$curr_title_key){
@@ -563,11 +563,8 @@ class Menu{
 		$args += array( 0=>0, 1=>3, 2=>-1, 3=>1, 4=>'' ); //defaults
 		list($top_level,$bottom_level,$expand_level,$expand_all,$source_menu) = $args;
 
-
 		//get menu array
 		$source_menu_array = $this->GetMenuArray($source_menu);
-
-
 
 		//reduce array to $title => $level
 		$menu = array();
@@ -587,7 +584,6 @@ class Menu{
 				$menu = $this->MenuReduce_Expand($menu,$expand_level,$title_index,$top_level);
 			}
 		}
-
 
 		//Reduce if $top_level >= 0
 		//second reduction
@@ -619,7 +615,6 @@ class Menu{
 			$source_menu =& $gp_menu;
 		}
 
-
 		// opening ul
 		$attr_ul = $this->clean_attributes;
 		$attr_ul['class']['menu_top'] = $GP_MENU_CLASSES['menu_top'];
@@ -637,7 +632,6 @@ class Menu{
 			return;
 		}
 
-
 		$this->prev_level		= $start_level;
 		$open					= false;
 		$li_count				= array();
@@ -645,7 +639,6 @@ class Menu{
 
 		//output
 		$this->FormatMenuElement('ul', $attr_ul);
-
 
 		$menu			= array_keys($menu);
 
@@ -655,16 +648,13 @@ class Menu{
 			$this->curr_info	= $source_menu[$menu_key];
 			$this->curr_level	= $this->curr_info['level'];
 
-
 			if( $this->HiddenLevel() ){
 				continue;
 			}
 
-
 			$attr_a			= $this->MenuAttributesA();
 			$attr_li		= $this->clean_attributes;
 			$attr_ul		= $this->clean_attributes;
-
 
 			//ordered or "indexed" classes
 			if( $page->menu_css_ordered && !empty($GP_MENU_CLASSES['li_']) ){
@@ -709,7 +699,6 @@ class Menu{
 				}
 			}
 
-
 			$this->Attrs($attr_a, $attr_li);
 			$this->FormatStart($menu_ii, $attr_li, $attr_ul, $open);
 			$this->FormatMenuElement('li', $attr_li);
@@ -718,7 +707,6 @@ class Menu{
 			}else{
 				$this->FormatMenuElement('a', $attr_a);
 			}
-
 
 			$this->prev_level	= $this->curr_level;
 			$open				= true;
@@ -729,7 +717,6 @@ class Menu{
 			echo '</li></ul>';
 		}
 	}
-
 
 
 	/**
@@ -766,7 +753,6 @@ class Menu{
 			}
 		}
 
-
 		reset($source_menu_array);
 
 		//add homepage
@@ -774,9 +760,6 @@ class Menu{
 		if( $last_index != $first_index ){
 			array_unshift($output,$first_index);
 		}
-
-
-
 
 		// opening ul
 		$attr_ul = $this->clean_attributes;
@@ -787,16 +770,15 @@ class Menu{
 		}
 		$this->FormatMenuElement('ul', $attr_ul);
 
-
-		//
 		foreach($output as $i => $curr_key){
 
 			$this->curr_key		= $curr_key;
 			$this->curr_level	= $this->curr_info['level'];
 
+			$attr_li					= $this->clean_attributes;
+			$attr_li['class']['li_'] 	= $GP_MENU_CLASSES['li_'];
 
-			$attr_li			= $this->clean_attributes;
-			$attr_a				= $this->MenuAttributesA();
+			$attr_a						= $this->MenuAttributesA();
 
 			$this->Attrs($attr_a, $attr_li);
 			$this->FormatMenuElement('li', $attr_li);
@@ -806,6 +788,7 @@ class Menu{
 
 		echo '</ul>';
 	}
+
 
 	/**
 	 * Set menu element attributes
@@ -825,7 +808,6 @@ class Menu{
 		}elseif( in_array($this->curr_key,$this->parents) ){
 			$attr_a['class']['childselected']			= $GP_MENU_CLASSES['childselected'];
 			$attr_li['class']['childselected_li']		= $GP_MENU_CLASSES['childselected_li'];
-
 		}
 	}
 
@@ -836,7 +818,6 @@ class Menu{
 	 */
 	private function HiddenLevel(){
 		global $gp_titles;
-
 
 		// hidden pages
 		if( !is_null($this->hidden_level) ){
@@ -890,6 +871,7 @@ class Menu{
 
 			return;
 		}
+
 
 		//current is higher than the previous
 		$this->CloseLevel($this->curr_level);
@@ -1008,7 +990,7 @@ class Menu{
 		}
 	}
 
-	public function PrepMenuOutput(){}
 
+	public function PrepMenuOutput(){}
 
 }

@@ -229,39 +229,56 @@ class Missing extends \gp\special\Base{
 		$result		= '';
 
 		foreach($similar as $title => $percent_similar){
-			$result .= \gp\tool::Link_Page($title).', ';
+			if ( $title === key($similar) || $percent_similar > 10 ) {
+				$result .= \gp\tool::Link_Page($title).', ';
+			}
 		}
 
 		return rtrim($result,', ');
 	}
 
+
 	/**
 	 * Get a list of existing titles similar to the requested page
-	 * @return array
+	 * @param string $title of requested page
+	 * @return array of similar titles reverse-numerical sorted by similarity (percent)
 	 *
 	 */
 	public function SimilarTitleArray($title){
 		global $gp_index, $gp_titles;
 
-		$similar			= array();
+		$similar_titles		= [];
 		$lower				= str_replace(' ','_',strtolower($title));
-		$admin				= \gp\tool::LoggedIn();
 
 		foreach($gp_index as $title => $index){
 
-			//skip private pages
-			if( !$admin ){
-
-				if( isset($gp_titles[$index]['vis']) ){
-					continue;
-				}
+			//skip 'special_missing' page
+			if( $index == 'special_missing' ){
+				continue;
 			}
 
-			similar_text($lower,strtolower($title),$percent);
-			$similar[$title] = $percent;
+			//skip private pages when not logged-in
+			if( !\gp\tool::LoggedIn() && isset($gp_titles[$index]['vis']) ){
+				continue;
+			}
+
+			similar_text($lower,mb_strtolower($title),$percent);
+			$similar_titles[$index] = [
+				'title'		=> $title,
+				'percent'	=> $percent,
+			];
 		}
 
-		arsort($similar);
+		uasort($similar_titles, function($a, $b) {
+			return $b['percent'] - $a['percent'];
+		});
+
+		$similar_titles = \gp\tool\Plugins::Filter('SimilarTitles', [$similar_titles]);
+
+		$similar = [];
+		foreach( $similar_titles as $similar_title ){
+			$similar[$similar_title['title']] = $similar_title['percent'];
+		}
 
 		return $similar;
 	}

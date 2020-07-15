@@ -280,6 +280,11 @@ namespace gp\admin{
 
 			// Remove items lacking user permissions and therefore cannot be dealt with anyway
 
+			// deprecated addons
+			if( !\gp\admin\Tools::HasPermission('Admin/Addons') ){
+				$this->FilterType('Deprecated Addons','deprecated_addons');
+			}
+
 			// debug / development
 			if( $gpAdmin['granted'] != 'all' || $gpAdmin['editing'] != 'all' ){
 				$this->FilterType('Development','superuser');
@@ -438,6 +443,10 @@ namespace gp\admin{
 			$this->Add('updates', $items, '#3153b7');
 
 
+			$items = $this->GetDeprecatedAddons();
+			$this->Add('Deprecated Addons', $items, '#d61b1b');
+
+
 			$items = $this->GetDebugNotifications();
 			$this->Add('Development', $items, '#ff8c00', '#000');
 
@@ -590,6 +599,69 @@ namespace gp\admin{
 
 
 		/**
+		 * Get a Notification array for deprecatd addons as defined in /gpconfig.php
+		 * @return array $deprecated_note single notification array
+		 *
+		 */
+		public function GetDeprecatedAddons(){
+			global $config, $deprecated_addons, $langmessage;
+
+			$deprecated_note = array();
+
+			if( !\notify_deprecated || !is_array($config['addons']) || empty($deprecated_addons) ){
+				return $deprecated_note;
+			}
+
+			foreach($deprecated_addons as $deprec_addon_name => $deprec_addon_data){
+
+				if( empty($deprec_addon_data['notify']) ){
+					continue;
+				}
+
+				foreach( $config['addons'] as $inst_addon_key => $inst_addon_data ){
+
+					if( $deprec_addon_name != $inst_addon_data['name'] ){
+						// addon is not installed
+						continue;
+					}
+
+					$version_affected = empty($deprec_addon_data['upto_version']) ||
+						$deprec_addon_data['upto_version'] == 'all' ||
+						version_compare($deprec_addon_data['upto_version'], $inst_addon_data['version'], '<=');
+					if( !$version_affected ){
+						continue;
+					}
+
+					$label			= $deprec_addon_name;
+					$uninstall_link	= \gp\tool::Link(
+						'Admin/Addons',
+						$langmessage['uninstall'],
+						'cmd=uninstall&addon=' . $inst_addon_data['data_folder'],
+						array(
+							'data-cmd'	=> 'gpabox',
+							'title'		=> $langmessage['uninstall']
+						)
+					);
+					$action			= empty($deprec_addon_data['reason']) ?
+										$uninstall_link :
+										$deprec_addon_data['reason'] . ' ' . $uninstall_link;
+
+					$deprecated_note[] = array(
+						'type'		=> 'deprecated_addons',
+						'label'		=> $label,
+						'id'		=> 'deprecated addon ' . $label,
+						'priority'	=> 200, // that's a rather high priority
+						'action'	=> $action,
+					);
+
+				}
+			}
+
+			return $deprecated_note;
+		}
+
+
+		/**
 		 * Get a Notification array for debugging / development relevant information
 		 * @return array $debug_note single notification array
 		 *
@@ -600,7 +672,7 @@ namespace gp\admin{
 			$debug_note = array();
 
 			if( ini_get('display_errors') ){
-				$label = '<strong>ini_set(display_errors,' . htmlspecialchars(ini_get('display_errors')) . ')</em></strong>';
+				$label = '<strong>ini_set(display_errors,' . htmlspecialchars(ini_get('display_errors')) . ')</strong>';
 				$debug_note[] = array(
 					'type'		=> 'any_user',
 					'label'		=> $label,
@@ -654,7 +726,7 @@ namespace gp\admin{
 			if( gp_remote_update && isset(\gp\Admin\Tools::$new_versions['core']) ){
 				$label = \CMS_NAME . ' ' . \gp\Admin\Tools::$new_versions['core'];
 				$updates[] = array(
-					'type'		=> 'cms_core',
+					'type'		=> 'core',
 					'label'		=> $label,
 					'id'		=> $label,
 					'priority'	=> 60,
@@ -737,8 +809,15 @@ namespace gp\admin{
 
 				foreach( $folders as $folder ){
 
+					// no draft
 					$draft_path = $dir . '/' . $folder . '/draft.php';
 					if( !\gp\tool\Files::Exists($draft_path) ){
+						continue;
+					}
+
+					// drafts of 'trashed' pages will not count
+					$deleted_path = $dir . '/' . $folder . '/deleted.php';
+					if( \gp\tool\Files::Exists($deleted_path) ){
 						continue;
 					}
 

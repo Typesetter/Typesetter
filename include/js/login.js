@@ -1,8 +1,8 @@
 
 
 $(function(){
-
-	if( typeof(IE_LT_10) != 'undefined' && IE_LT_10 ){
+	// if( typeof(IE_LT_10) != 'undefined' && IE_LT_10 ){
+	if( window.navigator.userAgent.match(/(MSIE|Trident)/) ){
 		$('#browser_warning').show();
 	}
 	$('#loginform .login_text').first().find('input').trigger('focus');

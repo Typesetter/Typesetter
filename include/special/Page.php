@@ -81,25 +81,28 @@ class Page extends \gp\Page{
 	 *
 	 */
 	public function AdminLinks(){
-		global $langmessage;
+		global $langmessage, $config;
 
 		$admin_links			= $this->admin_links;
 
+
+		// HideAdminUI
+		array_unshift(
+			$admin_links, 
+			\gp\tool::Link(
+				$this->title,
+				'<i class="fa fa-eye-slash"></i>',
+				'',
+				[
+					'title'		=> $langmessage['Hide Admin UI'],
+					'class'		=> 'admin-link admin-link-hide-ui',
+					'data-cmd'	=> 'hide_ui',
+				]
+			)
+		);
+
+
 		$menu_permissions		= \gp\admin\Tools::HasPermission('Admin_Menu');
-
-
-		if( $menu_permissions ){
-			//visibility
-			$q							= 'cmd=ToggleVisibility';
-			$label						= '<i class="fa fa-eye-slash"></i> '.$langmessage['Visibility'].': '.$langmessage['Private'];
-			if( !$this->visibility ){
-				$label					= '<i class="fa fa-eye"></i> '.$langmessage['Visibility'].': '.$langmessage['Public'];
-				$q						.= '&visibility=private';
-			}
-			$attrs						= array('title'=>$label,'data-cmd'=>'creq');
-			$admin_links[]				= \gp\tool::Link($this->title,$label,$q,$attrs);
-		}
-
 
 		// page options: less frequently used links that don't have to do with editing the content of the page
 		$option_links		= array();
@@ -110,6 +113,10 @@ class Page extends \gp\Page{
 
 		if( \gp\admin\Tools::HasPermission('Admin_User') ){
 			$option_links[] = \gp\tool::Link('Admin/Permissions',$langmessage['permissions'],'index='.urlencode($this->gp_index),array('title'=>$langmessage['permissions'],'data-cmd'=>'gpabox'));
+		}
+
+		if( $menu_permissions ){
+			$option_links[]	= \gp\Page\Edit::ToggleVisibilityLink($this->gp_index, $this->visibility != 'private');
 		}
 
 		if( !empty($option_links) ){

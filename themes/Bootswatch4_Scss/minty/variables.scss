@@ -1,95 +1,92 @@
-// Minty 4.0.0
-// Bootswatch
+// Theme Bootswatch 4 Scss
+// Layout Minty 4.0.0
 
-//
+// The following line may be removed in Layout Editor
+@import '../_common/common_variables.scss';
+
 // Color system
-//
+$white:    #fff;
+$gray-100: #f5f6f7;
+$gray-200: #f0f1f2;
+$gray-300: #eceeef;
+$gray-400: #ced4da;
+$gray-500: #aaa;
+$gray-600: #888;
+$gray-700: #5a5a5a;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black:    #000;
 
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #f7f7f9 !default;
-$gray-300: #eceeef !default;
-$gray-400: #ced4da !default;
-$gray-500: #aaa !default;
-$gray-600: #888 !default;
-$gray-700: #5a5a5a !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
-$black:    #000 !default;
+$blue:     #007bff;
+$indigo:   #6610f2;
+$purple:   #6f42c1;
+$pink:     #e83e8c;
+$red:      #FF7851;
+$orange:   #fd7e14;
+$yellow:   #FFCE67;
+$green:    #56CC9D;
+$teal:     #20c997;
+$cyan:     #6CC3D5;
 
-$blue:    #007bff !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #FF7851 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #FFCE67 !default;
-$green:   #56CC9D !default;
-$teal:    #20c997 !default;
-$cyan:    #6CC3D5 !default;
-
-$primary:       #78C2AD !default;
-$secondary:     #F3969A !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-100 !default;
-$dark:          $gray-800 !default;
+$primary:  #78C2AD;
+$secondary:#F3969A;
+$success:  $green;
+$info:     $cyan;
+$warning:  $yellow;
+$danger:   $red;
+$light:    $gray-100;
+$dark:     $gray-800;
 
 // Body
-
-$body-color:                $gray-600 !default;
+$body-color: $gray-600;
 
 // Components
-
-$border-radius:               .4rem !default;
-$border-radius-lg:            .6rem !default;
-$border-radius-sm:            .3rem !default;
+$border-radius: 0.4rem;
+$border-radius-lg: 0.6rem;
+$border-radius-sm: 0.3rem;
 
 // Fonts
-
-$headings-font-family:        "Montserrat", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
-$headings-color:              $gray-700 !default;
+$web-font-path: "https://fonts.googleapis.com/css?family=Montserrat";
+$headings-font-family: Montserrat, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$headings-color: $gray-700;
+$font-weight-base: 500;
+$font-size-base: 1rem;
+$navbar-font-size: 1rem;
+$footer-font-size: 0.875rem;
 
 // Tables
-
-$table-border-color:          rgba(0,0,0,0.05) !default;
+$table-border-color: rgba(0,0,0,0.05);
 
 // Dropdowns
-
-$dropdown-link-hover-color:         $white !default;
-$dropdown-link-hover-bg:            $secondary !default;
+$dropdown-link-hover-color: $white;
+$dropdown-link-hover-bg: $secondary;
 
 // Navbar
-
-$navbar-dark-color:                 rgba($white,.6) !default;
-$navbar-dark-hover-color:           $white !default;
-
-$navbar-light-color:                rgba($black,.3) !default;
-$navbar-light-hover-color:          $gray-700 !default;
-$navbar-light-active-color:         $gray-700 !default;
-$navbar-light-disabled-color:       rgba($black,.1) !default;
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
+$navbar-light-color: rgba($black, 0.3);
+$navbar-light-hover-color: $gray-700;
+$navbar-light-active-color: $gray-700;
+$navbar-light-disabled-color: rgba($black, 0.1);
 
 // Pagination
-
-$pagination-color:                  $white !default;
-$pagination-bg:                     $primary !default;
-$pagination-border-color:           $primary !default;
-
-$pagination-hover-color:            $white !default;
-$pagination-hover-bg:               $secondary !default;
-$pagination-hover-border-color:     $pagination-hover-bg !default;
-
-$pagination-active-bg:              $secondary !default;
-$pagination-active-border-color:    $pagination-active-bg !default;
-
-$pagination-disabled-color:         $white !default;
-$pagination-disabled-bg:            #CCE8E0 !default;
-$pagination-disabled-border-color:  $pagination-disabled-bg !default;
+$pagination-color: $white;
+$pagination-bg: $primary;
+$pagination-border-color: $primary;
+$pagination-hover-color: $white;
+$pagination-hover-bg: $secondary;
+$pagination-hover-border-color: $pagination-hover-bg;
+$pagination-active-bg: $secondary;
+$pagination-active-border-color: $pagination-active-bg;
+$pagination-disabled-color: $white;
+$pagination-disabled-bg: #CCE8E0;
+$pagination-disabled-border-color: $pagination-disabled-bg;
 
 // Breadcrumbs
+$breadcrumb-bg: $primary;
+$breadcrumb-divider-color: $white;
+$breadcrumb-active-color: $breadcrumb-divider-color;
 
-$breadcrumb-bg:                     $primary !default;
-$breadcrumb-divider-color:          $white !default;
-$breadcrumb-active-color:           $breadcrumb-divider-color !default;
+// Footer
+$footer-bg: $gray-200;
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss

@@ -1,92 +1,79 @@
+// Theme Bootswatch 4 Scss
+// Layout Yeti 4.0.0
+// https://bootswatch.com
+// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.4/migration/
+
+// Import Bootstrap Scss ========================================================
 @import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
-// Yeti 4.0.0
-// Bootswatch
-// Migrate to Bootstrap 4: check out https://getbootstrap.com/docs/4.1/migration/
 
-
-// Variables ===================================================================
-
-$web-font-path: "https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700" !default;
-@import url($web-font-path);
-
+// Variables and Mixins =========================================================
+$navbar-height: ($nav-link-height + $navbar-padding-y * 2);
 
 // Import Common Styles =========================================================
-
 @import '../_common/common_style.scss';
 
-
 // Navbar =======================================================================
-
 .navbar {
-  font-size: $font-size-sm;
   font-weight: $headings-font-weight;
-}
 
-.bg-primary {
+  &.bg-primary {
+    .dropdown-menu {
+      background-color: $primary;
 
-  .dropdown-menu {
-    background-color: $primary;
+      .dropdown-item,
+      .dropdown-item:focus {
+        color: $navbar-dark-color;
+      }
 
-    .dropdown-item,
-    .dropdown-item:focus {
-      color: $navbar-dark-color;
-    }
-
-    .dropdown-item.active,
-    .dropdown-item:hover,
-    .dropdown-item:focus {
-      background-color: darken($primary, 5%);
-      color: #fff;
-    }
-  }
-}
-
-.bg-dark {
-  background-color: $gray-800 !important;
-
-  .dropdown-menu {
-    background-color: $gray-800;
-
-    .dropdown-item,
-    .dropdown-item:focus {
-      color: $navbar-dark-color;
-    }
-
-    .dropdown-item.active,
-    .dropdown-item:hover,
-    .dropdown-item:focus  {
-      background-color: darken($gray-800, 5%);
-      color: #fff;
+      .dropdown-item.active,
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: darken($primary, 5%);
+        color: #fff;
+      }
     }
   }
-}
 
-.bg-light {
+  &.bg-dark {
+    background-color: $gray-800 !important;
 
-  .dropdown-menu {
-    background-color: $gray-200;
+    .dropdown-menu {
+      background-color: $gray-800;
 
-    .dropdown-item,
-    .dropdown-item:focus {
-      color: $navbar-light-color;
-    }
+      .dropdown-item,
+      .dropdown-item:focus {
+        color: $navbar-dark-color;
+      }
 
-    .dropdown-item.active,
-    .dropdown-item:hover,
-    .dropdown-item:focus  {
-      background-color: lighten($gray-200, 5%);
-      color: $navbar-light-hover-color;
+      .dropdown-item.active,
+      .dropdown-item:hover,
+      .dropdown-item:focus  {
+        background-color: darken($gray-800, 5%);
+        color: #fff;
+      }
     }
   }
-}
 
-// Footer ==================================================================
-footer.main-footer {
-  background-color: $gray-300;
+  &.bg-light {
+    .dropdown-menu {
+      background-color: $gray-200;
+
+      .dropdown-item,
+      .dropdown-item:focus {
+        color: $navbar-light-color;
+      }
+
+      .dropdown-item.active,
+      .dropdown-item:hover,
+      .dropdown-item:focus  {
+        background-color: lighten($gray-200, 5%);
+        color: $navbar-light-hover-color;
+      }
+    }
+  }
 }
 
 // Buttons =====================================================================
-
 .btn {
   &-primary {
     border-color: darken($primary, 5%);
@@ -124,13 +111,11 @@ footer.main-footer {
 }
 
 .btn-group {
-
   .dropdown-menu {
     border-top-width: 0;
   }
 
   .dropdown-toggle {
-
     &.btn-primary ~ .dropdown-menu {
       background-color: $primary;
       border-color: darken($primary, 5%);
@@ -218,18 +203,13 @@ footer.main-footer {
 }
 
 // Typography ==================================================================
-
 .blockquote-footer {
   color: $gray-600;
 }
 
 // Tables ======================================================================
-
 table {
   font-size: $font-size-sm;
-}
-
-.table {
 
   &-success,
   &-info,
@@ -292,7 +272,6 @@ table {
 }
 
 // Forms =======================================================================
-
 label,
 .control-label,
 .help-block,
@@ -303,7 +282,6 @@ label,
 }
 
 // Navs ========================================================================
-
 .dropdown-item {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
@@ -368,7 +346,6 @@ label,
 }
 
 // Indicators ==================================================================
-
 .close {
   opacity: 0.6;
   text-shadow: none;
@@ -425,7 +402,6 @@ label,
 }
 
 // Progress bars ===============================================================
-
 .progress[value] {
   height: 22px;
   padding: 2px;

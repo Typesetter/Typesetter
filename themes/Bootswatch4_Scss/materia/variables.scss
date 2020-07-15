@@ -1,107 +1,102 @@
-// Materia 4.0.0
-// Bootswatch
-
+// Theme Bootswatch 4 Scss
+// Layout Materia 4.0.0
 //
+// For all Bootstrap 4 variables see /include/thirdparty/Bootstrap4/scss/bootstrap/_variables.scss
+
 // Color system
-//
+$white:     #fff;
+$gray-100:  #f8f9fa;
+$gray-200:  #f1f3f4;
+$gray-300:  #dee2e6;
+$gray-400:  #ced4da;
+$gray-500:  #bbb;
+$gray-600:  #666;
+$gray-700:  #444;
+$gray-800:  #222;
+$gray-900:  #212121;
+$black:     #000;
 
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #eee !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #bbb !default;
-$gray-600: #666 !default;
-$gray-700: #444 !default;
-$gray-800: #222 !default;
-$gray-900: #212121 !default;
-$black:    #000 !default;
+$blue:      #2196F3;
+$indigo:    #6610f2;
+$purple:    #6f42c1;
+$pink:      #e83e8c;
+$red:       #e51c23;
+$orange:    #fd7e14;
+$yellow:    #ff9800;
+$green:     #4CAF50;
+$teal:      #20c997;
+$cyan:      #9C27B0;
 
-$blue:    #2196F3 !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #e51c23 !default;
-$orange:  #fd7e14 !default;
-$yellow:  #ff9800 !default;
-$green:   #4CAF50 !default;
-$teal:    #20c997 !default;
-$cyan:    #9C27B0 !default;
-
-$primary:       $blue !default;
-$secondary:     $white !default;
-$success:       $green !default;
-$info:          $cyan !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $white !default;
-$dark:          $gray-800 !default;
+$primary:   $blue;
+$secondary: $white;
+$success:   $green;
+$info:      $cyan;
+$warning:   $yellow;
+$danger:    $red;
+$light:     $white;
+$dark:      $gray-800;
 
 // Body
-
-$body-color:    $gray-700 !default;
+$body-color: $gray-700;
 
 // Fonts
-
-$font-family-sans-serif: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
-
-$font-size-base: 0.8125rem !default;
-
-$font-weight-base: 400 !default;
+$web-font-path: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
+$font-family-sans-serif: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-size-base: 1rem;
+$navbar-font-size: 1rem;
+$footer-font-size: 0.875rem;
+$font-weight-base: 400;
+$h1-font-size: 3.75rem;
+$h2-font-size: 2rem;
+$h3-font-size: 1.5rem;
+$h4-font-size: 1.25rem;
+$h5-font-size: 1.125rem;
+$h6-font-size: 1rem;
+$headings-color: $gray-900;
 
 // Buttons
-
-$input-btn-padding-y:       1rem !default;
-$input-btn-padding-x:       1rem !default;
+$input-btn-padding-y: 1rem;
+$input-btn-padding-x: 1rem;
 
 // Forms
-
-$input-bg:                       transparent !default;
-$input-disabled-bg:              transparent !default;
-
-$input-color:                    $gray-600 !default;
-$input-border-color:             transparent !default;
-
-$input-border-radius:            0 !default;
-$input-border-radius-lg:         0 !default;
-$input-border-radius-sm:         0 !default;
-
-$input-placeholder-color:        rgba(0,0,0,0.4) !default;
-
-$input-group-addon-bg:           transparent !default;
+$input-bg: transparent;
+$input-disabled-bg: transparent;
+$input-color: $gray-600;
+$input-border-color: transparent;
+$input-border-radius: 0;
+$input-border-radius-lg: 0;
+$input-border-radius-sm: 0;
+$input-placeholder-color: rgba(0,0,0,0.4);
+$input-group-addon-bg: transparent;
 
 // Navs
-
-$nav-link-disabled-color:       $gray-500 !default;
-
-$nav-tabs-border-color:                       transparent !default;
+$nav-link-disabled-color: $gray-500;
+$nav-tabs-border-color: transparent;
 
 // Navbar
-
-$navbar-padding-y:                  1rem !default;
-
-$navbar-dark-color:                 rgba($white,.75) !default;
-$navbar-dark-hover-color:           $white !default;
+$navbar-padding-y: 1rem;
+$navbar-nav-link-padding-x: 1rem;
+$navbar-dark-color: rgba($white, 0.75);
+$navbar-dark-hover-color: $white;
 
 // Cards
-
-$card-border-width:                 0;
-$card-border-color:                 transparent;
+$card-border-width: 0;
+$card-border-color: transparent;
 
 // Tooltips
-
-$tooltip-bg:                        $gray-700 !default;
+$tooltip-bg: $gray-700;
 
 // Modals
-
-$modal-content-border-color:        transparent !default;
+$modal-content-border-color: transparent;
 
 // Progress bars
-
-$progress-height:               6px !default;
-$progress-border-radius:        0 !default;
+$progress-height: 6px;
+$progress-border-radius: 0;
 
 // Close
+$close-font-size: 2.125rem;
+$close-font-weight: 300;
 
-$close-font-size:             2.125rem !default;
-$close-font-weight:           300 !default;
+// Footer
+$footer-bg: $gray-200;
+// For more footer variables see /themes/Bootswatch4_Scss/_common/footer.scss

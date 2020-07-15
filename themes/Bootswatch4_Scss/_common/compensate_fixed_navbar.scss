@@ -1,31 +1,25 @@
-/**
- * Bootswatch 4 Scss 
- *
- * compensations for fixed navbar
- * required when the main navbar has the css class 'fixed-top'
- */
+// Theme Bootswatch 4 Scss
+// Compensations for fixed navbar
+// only required when the main navbar has the css class 'fixed-top'
 
-$body-padding-top: 2rem;
-
-// additional padding-top to the body element
+// padding-top for the body element
 body {
-  padding-top: calc( #{$navbar-height} + #{$body-padding-top} );
+  padding-top: $navbar-height;
 }
 
-// Prevent targeted anchors hiding behind fixed header navbar
-
+// Prevent targeted anchors hiding behind fixed navbar
 // default compensation
 .GPAREA a[name]:not([href]),
 .GPAREA a[id]:not([href]) {
-  margin-top: calc( ( #{$navbar-height} + #{$body-padding-top} ) * -1 );
-  padding-top: calc( #{$navbar-height} + #{$body-padding-top} );
+  margin-top: calc( ( #{$navbar-height} + 2rem ) * -1 );
+  padding-top: calc( #{$navbar-height} + 2rem );
   z-index: -5;
 }
 
-// compensation when logged-in 
+// compensation when logged-in
 // with support for HideAdminUI plugin https://github.com/juek/HideAdminUI
 html:not(.override_admin_style) body.gpAdmin .GPAREA a[name]:not([href]),
 html:not(.override_admin_style) body.gpAdmin .GPAREA a[id]:not([href]) {
-  margin-top: calc( ( #{$navbar-height} + #{$body-padding-top} + 29px ) * -1 );
-  padding-top: calc( #{$navbar-height} + #{$body-padding-top} + 29px );
+  margin-top: calc( ( #{$navbar-height} + 2rem + 29px ) * -1 );
+  padding-top: calc( #{$navbar-height} + 2rem + 29px );
 }

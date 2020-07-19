@@ -7,7 +7,6 @@ namespace gp{
 
 	class tool{
 
-
 		/**
 		 * Return the type of response was requested by the client
 		 * @since 3.5b2
@@ -15,7 +14,7 @@ namespace gp{
 		 */
 		public static function RequestType(){
 
-			$types = ['body','flush','json','content','admin'];
+			$types = ['body', 'flush', 'json', 'content', 'admin'];
 
 			if( isset($_REQUEST['gpreq']) && in_array($_REQUEST['gpreq'], $types) ){
 				return $_REQUEST['gpreq'];
@@ -34,16 +33,21 @@ namespace gp{
 		public static function Send304($etag){
 			global $config;
 
-			if( !$config['etag_headers'] ) return;
+			if( !$config['etag_headers'] ){
+				return;
+			}
 
-			if( headers_sent() ) return;
+			if( headers_sent() ){
+				return;
+			}
 
 			//always send the etag
-			header('ETag: "'.$etag.'"');
+			header('ETag: "' . $etag . '"');
 
-			if( empty($_SERVER['HTTP_IF_NONE_MATCH'])
-				|| trim($_SERVER['HTTP_IF_NONE_MATCH'], '"') != $etag ){
-					return;
+			if( empty($_SERVER['HTTP_IF_NONE_MATCH']) ||
+				trim($_SERVER['HTTP_IF_NONE_MATCH'], '"') != $etag
+			){
+				return;
 			}
 
 			//don't use ob_get_level() in while loop to prevent endless loops;
@@ -74,7 +78,7 @@ namespace gp{
 		 * @param string $text HTTP status
 		 * @return unknown
 		 */
-		public static function status_header( $header, $text ) {
+		public static function status_header($header, $text){
 
 			$protocol = '';
 			if( isset($_SERVER['SERVER_PROTOCOL']) ){
@@ -85,20 +89,21 @@ namespace gp{
 			}
 
 			$status_header = "$protocol $header $text";
-			return @header( $status_header, true, $header );
+			return @header($status_header, true, $header);
 		}
+
 
 		public static function GenEtag(){
 			global $dirPrefix, $dataDir;
 			$etag = '';
 			$args = func_get_args();
-			$args[] = $dataDir.$dirPrefix;
+			$args[] = $dataDir . $dirPrefix;
 			foreach($args as $arg){
 				if( !ctype_digit($arg) ){
 					$arg = crc32( $arg );
-					$arg = sprintf("%u\n", $arg );
+					$arg = sprintf("%u\n", $arg);
 				}
-				$etag .= base_convert( $arg, 10, 36);
+				$etag .= base_convert($arg, 10, 36);
 			}
 			return $etag;
 		}
@@ -109,12 +114,12 @@ namespace gp{
 		 * @param array $files
 		 *
 		 */
-		public static function FilesEtag( $files ){
-			$modified = 0;
-			$content_length = 0;
-			foreach($files as $file ){
-				$content_length += @filesize( $file );
-				$modified = max($modified, @filemtime($file));
+		public static function FilesEtag($files){
+			$modified				= 0;
+			$content_length			= 0;
+			foreach($files as $file){
+				$content_length		+= @filesize($file);
+				$modified			= max($modified, @filemtime($file));
 			}
 
 			return self::GenEtag($modified, $content_length);
@@ -128,11 +133,12 @@ namespace gp{
 			}
 		}
 
+
 		/**
 		 * Return an array of information about the layout
 		 * @param string $layout the layout key
 		 * @param bool $check_existence Whether or not to check for the existence of the template.php file
-		 * @return false|array
+		 * @return mixed false | array
 		 */
 		public static function LayoutInfo($layout, $check_existence=true){
 			global $gpLayouts, $dataDir;
@@ -142,7 +148,7 @@ namespace gp{
 			}
 
 			$layout_info = $gpLayouts[$layout];
-			$layout_info += array('is_addon' => false);
+			$layout_info += ['is_addon' => false];
 			$layout_info['theme_name'] = self::DirName($layout_info['theme']);
 			$layout_info['theme_color'] = basename($layout_info['theme']);
 
@@ -150,9 +156,9 @@ namespace gp{
 			if( $layout_info['is_addon'] ){
 				$relative = '/data/_themes/';
 			}
-			$layout_info['path'] = $relative.$layout_info['theme'];
+			$layout_info['path'] = $relative . $layout_info['theme'];
 
-			$layout_info['dir'] = $dataDir.$relative.$layout_info['theme_name'];
+			$layout_info['dir'] = $dataDir . $relative . $layout_info['theme_name'];
 			if( $check_existence && !file_exists($layout_info['dir'] . '/template.php') ){
 				return false;
 			}
@@ -229,14 +235,12 @@ namespace gp{
 				$ob_gzhandler = true;
 			}
 
-
-			self::SetGlobalPaths($level,$expecting);
-			spl_autoload_register(array('\\gp\\tool', 'Autoload'));
-
+			self::SetGlobalPaths($level, $expecting);
+			spl_autoload_register(['\\gp\\tool', 'Autoload']);
 
 			includeFile('tool/functions.php');
 			if( $sessions ){
-				ob_start(array('\\gp\\tool\\Output', 'BufferOut'));
+				ob_start(['\\gp\\tool\\Output', 'BufferOut']);
 			}elseif( !$ob_gzhandler ){
 				ob_start();
 			}
@@ -261,7 +265,6 @@ namespace gp{
 			$class		= trim($class, '\\');
 			$parts		= explode('\\', $class);
 			$part_0		= array_shift($parts);
-
 
 			if( !$parts ){
 				return;
@@ -288,7 +291,6 @@ namespace gp{
 
 				foreach($config['addons'] as $addon_key => $addon){
 					if( isset($addon['Namespace']) && $addon['Namespace'] == $namespace ){
-
 
 						\gp\tool\Plugins::SetDataFolder($addon_key);
 						$path = \gp\tool\Plugins::$current['code_folder_full'] . '/' . implode('/', $parts) . '.php';
@@ -323,14 +325,12 @@ namespace gp{
 				return;
 			}
 
-
 			if( !isset($_SERVER['CONTENT_LENGTH']) ){
 				header('HTTP/1.1 503 Service Temporarily Unavailable');
 				header('Status: 503 Service Temporarily Unavailable');
 				header('Retry-After: 300');//300 seconds
 				die();
 			}
-
 
 			if( function_exists('getallheaders') ){
 
@@ -379,6 +379,7 @@ namespace gp{
 			}
 		}
 
+
 		/**
 		 * Convert backslashes to forward slashes
 		 *
@@ -387,17 +388,19 @@ namespace gp{
 			return str_replace('\\', '/', $path);
 		}
 
+
 		/**
 		 * Returns parent directory's path with forward slashes
 		 * php's dirname() method may change slashes from / to \
 		 *
 		 */
-		public static function DirName($path, $dirs = 1){
+		public static function DirName($path, $dirs=1){
 			for($i = 0; $i < $dirs; $i++){
 				$path = dirname($path);
 			}
 			return self::WinPath( $path );
 		}
+
 
 		/**
 		 * Determine if this installation is supressing index.php in urls or not
@@ -411,6 +414,7 @@ namespace gp{
 			// gp_rewrite = 'On' and gp_rewrite = 'gpuniq' are deprecated since 4.1
 			// gp_rewrite = bool will still be used internally
 			if( isset($_SERVER['gp_rewrite']) ){
+
 				if( $_SERVER['gp_rewrite'] === true || $_SERVER['gp_rewrite'] == 'On' ){
 					$_SERVER['gp_rewrite'] = true;
 				}elseif( $_SERVER['gp_rewrite'] == @substr($config['gpuniq'], 0, 7) ){
@@ -442,7 +446,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Get the environment variable and make sure it contains an expected value
 		 *
@@ -464,7 +467,6 @@ namespace gp{
 			}
 			return $value;
 		}
-
 
 
 		/**
@@ -496,11 +498,9 @@ namespace gp{
 		}
 
 
-
 		public static function ReduceGlobalPath($path, $DirectoriesAway){
 			return self::DirName($path, $DirectoriesAway + 1);
 		}
-
 
 
 		//use dirPrefix to find requested level
@@ -536,7 +536,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Escape ampersands in hyperlink attributes and other html tag attributes
 		 *
@@ -548,16 +547,18 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Similar to htmlspecialchars, but designed for labels
 		 * Does not convert existing ampersands "&"
 		 *
 		 */
 		public static function LabelSpecialChars($string){
-			return str_replace(array('<', '>', '"', "'"), array('&lt;', '&gt;', '&quot;', '&#39;'), $string);
+			return str_replace(
+				['<',		'>',	'"',		"'"],
+				['&lt;',	'&gt;',	'&quot;',	'&#39;'],
+				$string
+			);
 		}
-
 
 
 		/**
@@ -577,7 +578,6 @@ namespace gp{
 				. self::Ampersands($label)
 				. '</a>';
 		}
-
 
 
 		/**
@@ -601,14 +601,16 @@ namespace gp{
 					unset($attr['name']);
 				}
 
-				$nonce_cmds = ['creq','cnreq','postlink','post'];
+				$nonce_cmds = ['creq', 'cnreq', 'postlink', 'post'];
 				if( isset($attr['data-cmd']) && in_array($attr['data-cmd'], $nonce_cmds) ){
-					$attr['data-nonce'] = \gp\tool\Nonce::Create('post',true);
+					$attr['data-nonce'] = \gp\tool\Nonce::Create('post', true);
 				}
 				$string = \gp\tool\HTML::Attributes($attr);
+
 			}else{
+
 				$string = $attr;
-				if( strpos($attr,'title="') !== false){
+				if( strpos($attr, 'title="') !== false){
 					$has_title = true;
 				}
 
@@ -634,7 +636,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Return an html hyperlink for a page
 		 *
@@ -650,15 +651,14 @@ namespace gp{
 
 			$label = self::GetLabel($title);
 
-			return self::Link($title,$label);
+			return self::Link($title, $label);
 		}
-
 
 
 		public static function GetUrl($href='', $query='', $ampersands=true, $nonce_action=false){
 			global $linkPrefix, $config;
 
-			$filtered = \gp\tool\Plugins::Filter('GetUrl', array(array($href, $query)));
+			$filtered = \gp\tool\Plugins::Filter('GetUrl', [[$href, $query]]);
 			if( is_array($filtered) ){
 				list($href, $query) = $filtered;
 			}
@@ -689,9 +689,8 @@ namespace gp{
 				$query = '?' . ltrim($query, '?');
 			}
 
-			return self::HrefEncode($href,$ampersands).$query;
+			return self::HrefEncode($href, $ampersands) . $query;
 		}
-
 
 
 		/**
@@ -709,16 +708,15 @@ namespace gp{
 			}
 
 			$lower = mb_strtolower($href);
-			if( !isset($gp_index[$href])
-					&& strpos($lower, 'special_') === 0
-					&& $index_title = self::IndexToTitle($lower)
-					){
-						$href = $index_title;
+			if( !isset($gp_index[$href]) &&
+				strpos($lower, 'special_') === 0 &&
+				$index_title = self::IndexToTitle($lower)
+			){
+				$href = $index_title;
 			}
 
 			return $href . $href2;
 		}
-
 
 
 		/**
@@ -733,9 +731,12 @@ namespace gp{
 				$ampersand = '&amp;';
 			}
 			$href = rawurlencode($href);
-			return str_replace(array('%26amp%3B', '%26', '%2F', '%5C'), array($ampersand, $ampersand, '/', '\\'), $href);
+			return str_replace(
+				['%26amp%3B',	'%26',		'%2F',	'%5C'],
+				[$ampersand,	$ampersand,	'/',	'\\'],
+				$href
+			);
 		}
-
 
 
 		/**
@@ -773,7 +774,6 @@ namespace gp{
 		}
 
 
-
 		public static function AbsoluteLink($href, $label, $query='', $attr=''){
 
 			if( strpos($attr,'title="') === false){
@@ -782,7 +782,6 @@ namespace gp{
 
 			return '<a href="' . self::AbsoluteUrl($href, $query) . '" ' . $attr . '>' . self::Ampersands($label) . '</a>';
 		}
-
 
 
 		public static function AbsoluteUrl($href='', $query='', $with_schema=true, $ampersands=true, $with_port=false){
@@ -829,12 +828,10 @@ namespace gp{
 		}
 
 
-
 		public static function UrlChars($string){
 			$string = str_replace(' ', '%20', $string);
 			return preg_replace('|[^a-z0-9-~+_.?#=!&;,/:%@$\|*\'()\[\]\\x80-\\xff]|i', '', $string);
 		}
-
 
 
 		/**
@@ -856,7 +853,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Get the label for a page from it's index
 		 * @param string $index
@@ -865,7 +861,7 @@ namespace gp{
 		public static function GetLabelIndex($index=null, $amp=false){
 			global $gp_titles,$langmessage;
 
-			$info = array();
+			$info = [];
 			if( isset($gp_titles[$index]) ){
 				$info = $gp_titles[$index];
 			}
@@ -885,7 +881,6 @@ namespace gp{
 			}
 			return $return;
 		}
-
 
 
 		/**
@@ -916,7 +911,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Get the browser title for a page
 		 * @param string $title
@@ -942,7 +936,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Add js and css components to the current web page
 		 *
@@ -960,15 +953,17 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Add gallery js and css to the <head> section of a page
 		 *
 		 */
 		public static function ShowingGallery(){
 			global $page, $config;
+
 			static $showing = false;
-			if( $showing ) return;
+			if( $showing ){
+				return;
+			}
 			$showing = true;
 
 			self::AddColorBox();
@@ -982,62 +977,61 @@ namespace gp{
 
 				$page->css_user[] = '/include/css/default_gallery.css';
 				self::LoadComponents('dotdotdot');
-				$page->jQueryCode .= "\n"
-					.'$(".filetype-gallery .caption")'
-					. '.dotdotdot({ '
-					.   'watch : "window", '
-					.   'callback : function(isTruncated, orgContent){ '
-					.      '$(this).data("originalContent",orgContent); '
-					.   '}'
-					. '});';
+				$page->jQueryCode .= "\n" .
+					'$(".filetype-gallery .caption")'.
+						'.dotdotdot({ ' .
+							'watch : "window", ' .
+							'callback : function(isTruncated, orgContent){ ' .
+							'$(this).data("originalContent", orgContent); ' .
+						'}' .
+					'});';
 
 				if( \gp\tool::LoggedIn() ){
-					$page->head_script 	.= "\n"
-						. 'var gallery_editing_options = { legacy_style : false };';
-					$page->jQueryCode 	.= "\n"
-						. '$(document).on("editor_area:loaded", function(){ '
-						.   '$(".filetype-gallery .caption").trigger("destroy.dot"); '
-						. '});';
+					$page->head_script	.= "\n" .
+						'var gallery_editing_options = { legacy_style : false };';
+					$page->jQueryCode	.= "\n" .
+						'$(document).on("editor_area:loaded", function(){ ' .
+							'$(".filetype-gallery .caption").trigger("destroy.dot"); ' .
+						'});';
 				}
 
 				return;
 			}
-			$page->head .= "\n"
-				. '<link type="text/css" media="screen" rel="stylesheet" href="' . $css . '" />';
-		}
 
+			$page->head .= "\n" .
+				'<link type="text/css" media="screen" rel="stylesheet" href="' . $css . '" />';
+		}
 
 
 		public static function AddColorBox(){
 			global $page, $config, $dataDir;
-			static $init = false;
 
+			static $init = false;
 			if( $init ){
 				return;
 			}
 			$init = true;
 
 			// use page->lang for colorbox
-			if( isset($page->lang)
-				&& $page->lang != $config['language']
-				&& file_exists($dataDir . '/include/languages/' . $page->lang . '.main.inc')
+			if( isset($page->lang) &&
+				$page->lang != $config['language'] &&
+				file_exists($dataDir . '/include/languages/' . $page->lang . '.main.inc')
 			){
 				include($dataDir . '/include/languages/' . $page->lang . '.main.inc');
 			}else{
 				global $langmessage;
 			}
 
-			\gp\tool\Output::$inline_vars['colorbox_lang'] = array(
+			\gp\tool\Output::$inline_vars['colorbox_lang'] = [
 				'previous'	=> $langmessage['Previous'],
 				'next'		=> $langmessage['Next'],
 				'close'		=> $langmessage['Close'],
 				'caption'	=> $langmessage['caption'],
 				'current'	=> sprintf($langmessage['Image_of'],'{current}','{total}')
-			); //'Start Slideshow'=>'slideshowStart', 'Stop Slideshow'=>'slideshowStop'
+			]; //'Start Slideshow'=>'slideshowStart', 'Stop Slideshow'=>'slideshowStop'
 
 			self::LoadComponents('colorbox');
 		}
-
 
 
 		/**
@@ -1054,7 +1048,7 @@ namespace gp{
 			}
 
 			//make sure defaults are set
-			$config += array(
+			$config += [
 				'maximgarea'				=> '2073600',
 				'preserve_icc_profiles'		=> true,		//5.1
 				'preserve_image_metadata'	=> true,		//5.1
@@ -1068,29 +1062,29 @@ namespace gp{
 				'combinejs'					=> true,
 				'minifyjs'					=> false,		//5.2
 				'etag_headers'				=> true,
-				'customlang'				=> array(),
+				'customlang'				=> [],
 				'showgplink'				=> true,
 				'showsitemap'				=> true,
 				'showlogin'					=> true,
 				'auto_redir'				=> 90,			//2.5
 				'history_limit'				=> min(gp_backup_limit, 30),
 				'resize_images'				=> true,		//3.5
-				'addons'					=> array(),
-				'themes'					=> array(),
-				'gadgets'					=> array(),
+				'addons'					=> [],
+				'themes'					=> [],
+				'gadgets'					=> [],
 				'passhash'					=> 'sha1',
-				'hooks'						=> array(),
+				'hooks'						=> [],
 				'space_char'				=> '-',			//4.6
 				'cdn'						=> '',
 				'admin_ui_autohide_below'	=> '992',		//5.2
 				'admin_ui_hotkey'			=> 'H',			//5.2
 				'admin_ui_hotkey_code'		=> 'ctrlKey+72',	//5.2
 				'homepath_auto'				=> true,		//5.2
-			);
+			];
 
 			//cdn settings
 			if( isset($config['jquery']) && $config['jquery'] != 'local' ){
-				$config['cdn']   = 'CloudFlare';
+				$config['cdn'] = 'CloudFlare';
 				unset($config['jquery']);
 			}
 
@@ -1100,10 +1094,10 @@ namespace gp{
 			}
 
 			// default gadgets
-			$config['gadgets']['Contact']		=	array('class'	=> '\\gp\\special\\ContactGadget');
-			$config['gadgets']['Search']		=	array('method'	=> array('\\gp\\special\\Search','gadget'));
-			$config['gadgets']['Admin_Link']	=	array('method'	=> array('\\gp\\tool\\Output','AdminLinkGadget'));
-			$config['gadgets']['Login_Link']	=	array('method'	=> array('\\gp\\tool\\Output','LoginLinkGadget'));
+			$config['gadgets']['Contact']		= ['class'	=> '\\gp\\special\\ContactGadget'];
+			$config['gadgets']['Search']		= ['method'	=> ['\\gp\\special\\Search', 'gadget']];
+			$config['gadgets']['Admin_Link']	= ['method'	=> ['\\gp\\tool\\Output', 'AdminLinkGadget']];
+			$config['gadgets']['Login_Link']	= ['method'	=> ['\\gp\\tool\\Output', 'LoginLinkGadget']];
 
 
 			foreach($config['hooks'] as $hook => $hook_info){
@@ -1122,7 +1116,6 @@ namespace gp{
 				new \gp\tool\Upgrade();
 			}
 		}
-
 
 
 		/**
@@ -1152,6 +1145,7 @@ namespace gp{
 			);
 		}
 
+
 		/**
 		 * Return true if
 		 *
@@ -1162,13 +1156,13 @@ namespace gp{
 			return \gp\tool\Files::Exists($dataDir . '/data/_site/config.php');
 		}
 
+
 		/**
-		 * Set global variables ( $gp_index, $gp_titles, $gp_menu and $gpLayouts ) from _site/pages.php
+		 * Set global variables ($gp_index, $gp_titles, $gp_menu and $gpLayouts) from _site/pages.php
 		 *
 		 */
 		public static function GetPagesPHP(){
 			global $gp_index, $gp_titles, $gp_menu, $gpLayouts, $config;
-
 
 			$pages			= \gp\tool\Files::Get('_site/pages');
 			$gpLayouts		= $pages['gpLayouts'];
@@ -1185,7 +1179,6 @@ namespace gp{
 				$config['homepath_key'] = key($gp_menu);
 			}
 			$config['homepath'] = self::IndexToTitle($config['homepath_key']);
-
 		}
 
 
@@ -1196,8 +1189,8 @@ namespace gp{
 		public static function NewFileIndex(){
 			global $gp_index, $gp_titles, $dataDir, $config;
 
-			$last_index = 'a';
-			$num_index	= 0;
+			$last_index		= 'a';
+			$num_index		= 0;
 
 			/*prevent reusing old indexes */
 			if( count($gp_index) > 0 ){
@@ -1241,7 +1234,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Return the title of file using the index
 		 * Will return false for titles that are external links
@@ -1253,15 +1245,14 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Traverse the $menu upwards looking for the parents of the a title given by it's index
 		 * @param string $index The data index of the child title
 		 * @return array
 		 *
 		 */
-		public static function Parents($index,$menu){
-			$parents = array();
+		public static function Parents($index, $menu){
+			$parents = [];
 
 			if( !isset($menu[$index]) || !isset($menu[$index]['level']) ){
 				return $parents;
@@ -1269,7 +1260,7 @@ namespace gp{
 
 			$checkLevel = $menu[$index]['level'];
 			$menu_ids = array_keys($menu);
-			$key = array_search($index,$menu_ids);
+			$key = array_search($index, $menu_ids);
 			for($i = ($key-1); $i >= 0; $i--){
 				$id = $menu_ids[$i];
 
@@ -1287,9 +1278,9 @@ namespace gp{
 					return $parents;
 				}
 			}
+
 			return $parents;
 		}
-
 
 
 		/**
@@ -1301,7 +1292,7 @@ namespace gp{
 		 */
 		public static function Descendants($index, $menu, $children_only=false){
 
-			$titles = array();
+			$titles = [];
 
 			if( !isset($menu[$index]) || !isset($menu[$index]['level']) ){
 				return $titles;
@@ -1309,7 +1300,7 @@ namespace gp{
 
 			$start_level	= $menu[$index]['level'];
 			$menu_ids		= array_keys($menu);
-			$key			= array_search($index,$menu_ids);
+			$key			= array_search($index, $menu_ids);
 			$count			= count($menu);
 			for($i = ($key+1); $i < $count; $i++){
 				$id = $menu_ids[$i];
@@ -1325,9 +1316,9 @@ namespace gp{
 					$titles[] = $id;
 				}
 			}
+
 			return $titles;
 		}
-
 
 
 		/**
@@ -1348,7 +1339,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Generate a random alphanumeric string of variable length
 		 *
@@ -1366,9 +1356,8 @@ namespace gp{
 			$string = str_shuffle($string);
 			$start = mt_rand(1, (strlen($string) - $len));
 
-			return substr($string,$start,$len);
+			return substr($string, $start, $len);
 		}
-
 
 
 		/**
@@ -1429,7 +1418,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Return the name of the page being requested based on $_SERVER['REQUEST_URI']
 		 * May also redirect the request
@@ -1448,7 +1436,7 @@ namespace gp{
 				$path = mb_substr($path, 0, $pos);
 			}
 
-			$path = \gp\tool\Plugins::Filter('WhichPage', array($path));
+			$path = \gp\tool\Plugins::Filter('WhichPage', [$path]);
 
 			//redirect if an "external link" is the first entry of the main menu
 			if( empty($path) && isset($gp_menu[$config['homepath_key']]) ){
@@ -1471,7 +1459,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Redirect the request to $path with http $code
 		 *
@@ -1482,17 +1469,16 @@ namespace gp{
 		public static function Redirect($path, $code=302){
 			global $wbMessageBuffer, $gpAdmin;
 
-
 			// if $path is an array, generate a url with \gp\tool::GetUrl($path);
 			// add gpreq and jsoncallback to maintain ajax requests
 			if( is_array($path) ){
-				$add_query	= ['gpreq'=>1,'jsoncallback'=>1];
-				$add_query	= array_intersect_key($_REQUEST,$add_query);
+				$add_query	= ['gpreq' => 1, 'jsoncallback' => 1];
+				$add_query	= array_intersect_key($_REQUEST, $add_query);
 				$path		+= [1=>[]];
 				$path[1]	+= $add_query;
 
-				$path		= \gp\tool::GetUrl($path[0],http_build_query($path[1],'','&'),false);
-		   }
+				$path		= \gp\tool::GetUrl($path[0], http_build_query($path[1], '', '&'), false);
+			}
 
 
 			//store any messages for display after the redirect
@@ -1503,11 +1489,11 @@ namespace gp{
 
 
 			//prevent a cache from creating an infinite redirect
-			Header( 'Last-Modified: ' . gmdate('D, j M Y H:i:s') . ' GMT' );
-			Header( 'Expires: ' . gmdate('D, j M Y H:i:s', time()) . ' GMT' );
-			Header( 'Cache-Control: no-store, no-cache, must-revalidate' ); // HTTP/1.1
-			Header( 'Cache-Control: post-check=0, pre-check=0', false );
-			Header( 'Pragma: no-cache' ); // HTTP/1.0
+			Header('Last-Modified: ' . gmdate('D, j M Y H:i:s') . ' GMT');
+			Header('Expires: ' . gmdate('D, j M Y H:i:s', time()) . ' GMT');
+			Header('Cache-Control: no-store, no-cache, must-revalidate'); // HTTP/1.1
+			Header('Cache-Control: post-check=0, pre-check=0', false);
+			Header('Pragma: no-cache' ); // HTTP/1.0
 
 			switch((int)$code){
 				case 301:
@@ -1518,10 +1504,9 @@ namespace gp{
 				break;
 			}
 
-			header('Location: '.$path);
+			header('Location: ' . $path);
 			die();
 		}
-
 
 
 		/**
@@ -1551,7 +1536,6 @@ namespace gp{
 
 			return $path;
 		}
-
 
 
 		/**
@@ -1587,7 +1571,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Return true if an administrator is logged in
 		 * @return bool
@@ -1600,7 +1583,7 @@ namespace gp{
 				$loggedin = true;
 			}
 
-			return \gp\tool\Plugins::Filter('LoggedIn', array($loggedin));
+			return \gp\tool\Plugins::Filter('LoggedIn', [$loggedin]);
 		}
 
 
@@ -1616,7 +1599,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * @deprecated
 		 * Verify a nonce ($check_nonce)
@@ -1630,11 +1612,10 @@ namespace gp{
 		 * @return mixed Return false if the $check_nonce did not pass. 1 or 2 if it passes.
 		 *
 		 */
-		public static function verify_nonce($action='none', $check_nonce=false, $anon=false, $factor=43200 ){
+		public static function verify_nonce($action='none', $check_nonce=false, $anon=false, $factor=43200){
 			// trigger_error('Deprecated: \gp\tool::verify_nonce(), use \gp\tool\Nonce::Verify() instead', E_USER_WARNING);
-			return \gp\tool\Nonce::Verify($action, $check_nonce, $anon, $factor );
+			return \gp\tool\Nonce::Verify($action, $check_nonce, $anon, $factor);
 		}
-
 
 
 		/**
@@ -1650,9 +1631,8 @@ namespace gp{
 		 */
 		public static function nonce_hash($nonce, $tick_offset=0, $factor=43200){
 			// trigger_error('Deprecated: \gp\tool::nonce_hash(), use \gp\tool\Nonce::Hash() instead', E_USER_WARNING);
-			return \gp\tool\Nonce::Hash($nonce, $tick_offset, $factor );
+			return \gp\tool\Nonce::Hash($nonce, $tick_offset, $factor);
 		}
-
 
 
 		/**
@@ -1676,7 +1656,6 @@ namespace gp{
 			}
 			return false;
 		}
-
 
 
 		/**
@@ -1720,7 +1699,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Fix the $_COOKIE array if RAW_HTTP_COOKIE is set
 		 * Some servers encrypt cookie values before sending them to the client
@@ -1744,7 +1722,6 @@ namespace gp{
 				}
 			}
 		}
-
 
 
 		/**
@@ -1839,7 +1816,7 @@ namespace gp{
 		 * @param int $loops The number of times to loop the $arg through the algorithm
 		 *
 		 */
-		public static function hash($arg, $algo='sha512', $loops = 1000){
+		public static function hash($arg, $algo='sha512', $loops=1000){
 			$arg = trim($arg);
 
 			switch($algo){
@@ -1858,7 +1835,6 @@ namespace gp{
 				return sha1($arg);
 			}
 
-
 			//sha512: looped with dynamic salt
 			for($i = 0; $i < $loops; $i++){
 				$ints			= preg_replace('#[a-f]#', '', $arg);
@@ -1872,12 +1848,10 @@ namespace gp{
 		}
 
 
-
 		public static function AjaxWarning(){
 			global $page,$langmessage;
-			$page->ajaxReplace[] = array('gpabox', '', $langmessage['OOPS_Start_over']);
+			$page->ajaxReplace[] = ['gpabox', '', $langmessage['OOPS_Start_over']];
 		}
-
 
 
 		public static function IdUrl($request_cmd='cv'){
@@ -1887,7 +1861,7 @@ namespace gp{
 			$args				= [];
 			$args['cmd']		= $request_cmd;
 
-			$_SERVER += array('SERVER_SOFTWARE' => '');
+			$_SERVER += ['SERVER_SOFTWARE' => ''];
 
 			//checkin
 			if( isset($config['gpuniq']) ){
@@ -1906,7 +1880,7 @@ namespace gp{
 			}
 
 			//plugins
-			$addon_ids = array();
+			$addon_ids = [];
 			if( isset($config['addons']) && is_array($config['addons']) ){
 				self::AddonIds($addon_ids, $config['addons']);
 			}
@@ -1933,8 +1907,7 @@ namespace gp{
 		}
 
 
-
-		public static function AddonIds( &$addon_ids, $array ){
+		public static function AddonIds(&$addon_ids, $array){
 
 			foreach($array as $addon_info){
 				if( !isset($addon_info['id']) ){
@@ -1947,7 +1920,6 @@ namespace gp{
 				$addon_ids[] = $addon_id;
 			}
 		}
-
 
 
 		/**
@@ -1975,12 +1947,11 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Return a debug message with link to online debug info
 		 *
 		 */
-		public static function Debug($lang_key, $debug=array()){
+		public static function Debug($lang_key, $debug=[]){
 			global $langmessage, $dataDir;
 
 			//add backtrace info
@@ -1991,12 +1962,12 @@ namespace gp{
 
 			$debug['trace']	= array_intersect_key(
 				$backtrace[0],
-				array(
+				[
 					'file'		=> '',
 					'line'		=> '',
 					'function'	=> '',
 					'class'		=> '',
-				)
+				]
 			);
 
 			if( !empty($debug['trace']['file']) && !empty($dataDir) && strpos($debug['trace']['file'],$dataDir) === 0 ){
@@ -2020,7 +1991,6 @@ namespace gp{
 
 			return ' <span>' . $label . ' <a href="' . \debug_path . '?data=' . $debug . '" target="_blank">More Info...</a></span>';
 		}
-
 
 
 		//only include error buffer when admin is logged in
@@ -2069,7 +2039,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Test if function exists.  Also handles case where function is disabled via Suhosin.
 		 * Modified from: http://dev.piwik.org/trac/browser/trunk/plugins/Installation/Controller.php
@@ -2109,7 +2078,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * A more functional JSON Encode function
 		 * @param mixed $data
@@ -2117,8 +2085,8 @@ namespace gp{
 		 */
 		public static function JsonEncode($data){
 
-			$search		= array('<script', '<\/script>');
-			$repl		= array('<"+"script', '<"+"\/script>');
+			$search		= ['<script', '<\/script>'];
+			$repl		= ['<"+"script', '<"+"\/script>'];
 
 			$type = gettype($data);
 			switch( $type ){
@@ -2142,8 +2110,8 @@ namespace gp{
 					$data = get_object_vars($data);
 				case 'array':
 					$output_index_count = 0;
-					$output_indexed = array();
-					$output_associative = array();
+					$output_indexed = [];
+					$output_associative = [];
 					foreach( $data as $key => $value ){
 						$output_indexed[] = self::JsonEncode($value);
 						$output_associative[] = self::JsonEncode($key) . ':' . self::JsonEncode($value);
@@ -2162,13 +2130,12 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Date format funciton, uses formatting similar to php's strftime function
 		 * http://php.net/manual/en/function.strftime.php
 		 *
 		 */
-		public static function Date($format='',$time=null){
+		public static function Date($format='', $time=null){
 
 			if( empty($format) ){
 				return '';
@@ -2187,7 +2154,7 @@ namespace gp{
 					if( $len%2 ){
 						$replacement = strftime($match[0], $time);
 					}else{
-						$piece = substr($match[0],-2,2);
+						$piece = substr($match[0], -2, 2);
 						switch($piece){
 							case '%e':
 								$replacement = strftime(substr($match[0], 0, -2), $time) . ltrim(strftime('%d', $time), '0');
@@ -2202,7 +2169,6 @@ namespace gp{
 			}
 			return $format;
 		}
-
 
 
 		/**
@@ -2234,7 +2200,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Generate a checksum for the $array
 		 *
@@ -2242,7 +2207,6 @@ namespace gp{
 		public static function ArrayHash($array){
 			return md5(json_encode($array));
 		}
-
 
 
 		/**
@@ -2268,7 +2232,6 @@ namespace gp{
 
 			return array_search($array[$key], $array, true);
 		}
-
 
 
 		/**
@@ -2299,7 +2262,6 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * Get the extension of the $file
 		 *
@@ -2308,7 +2270,6 @@ namespace gp{
 			$ext = pathinfo($file, PATHINFO_EXTENSION);
 			return strtolower($ext);
 		}
-
 
 
 		/**
@@ -2321,12 +2282,11 @@ namespace gp{
 		}
 
 
-
 		/**
 		 * @deprecated 3.0
 		 * Use \gp\tool\Editing::UseCK();
 		 */
-		public static function UseCK($contents, $name='gpcontent', $options=array()){
+		public static function UseCK($contents, $name='gpcontent', $options=[]){
 			trigger_error('Deprecated Function');
 			\gp\tool\Editing::UseCK($contents, $name, $options);
 		}

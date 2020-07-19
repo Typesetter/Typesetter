@@ -162,7 +162,7 @@ namespace gp{
 
 
 		/**
-		 * Return the layout id used by the current page
+		 * Returns the layout id used by the current page
 		 * @return string $layout_id
 		 *
 		 */
@@ -187,6 +187,25 @@ namespace gp{
 
 			// page uses the default layout
 			return $config['gpLayout'];
+		}
+
+
+		/**
+		 * Returns detailed information of the layout used by the current page
+		 * @return array $layout_info
+		 *
+		 */
+		public static function GetCurrentLayoutInfo(){
+			global $gpLayouts;
+		
+			$layout_id = self::GetCurrentLayoutId();
+			if( empty($layout_id) ){
+				return [];
+			}
+			$layout_info = $gpLayouts[$layout_id];
+			$layout_info['layout_id'] = $layout_id;
+
+			return $layout_info;
 		}
 
 

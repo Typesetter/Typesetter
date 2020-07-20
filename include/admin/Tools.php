@@ -6,8 +6,7 @@ namespace gp\admin{
 
 	class Tools{
 
-		// public static $notifications	= array();
-		public static $new_versions		= array();
+		public static $new_versions		= [];
 		public static $update_status	= 'checklater';
 		public static $show_toolbar		= true;
 
@@ -62,7 +61,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Get or cache data about available versions of cms and addons
 		 *
@@ -79,11 +77,10 @@ namespace gp\admin{
 
 
 			$update_data	= \gp\tool\Files::Get('_updates/updates', 'update_data');
-			$update_data	+= array('packages'=>array());
+			$update_data	+= ['packages' => []];
 
 			return \gp\tool\Files::$last_modified;
 		}
-
 
 
 		public static function CheckArray($array, $update_data){
@@ -122,205 +119,234 @@ namespace gp\admin{
 		}
 
 
-
 		public static function AdminScripts(){
 			global $langmessage, $config;
-			$scripts = array();
-
+			$scripts = [];
 
 			// Content
-			$scripts['Admin/Menu']						= array(	'class'		=> '\\gp\\admin\\Menu',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['file_manager'],
-																	'group'		=> 'content',
-																	);
+			$scripts['Admin/Menu'] = [
+				'class'		=> '\\gp\\admin\\Menu',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['file_manager'],
+				'group'		=> 'content',
+			];
 
-			$scripts['Admin/Menu/Menus']				= array(	'class'		=> '\\gp\\admin\\Menu\\Menus',
-																	'method'	=> 'RunScript',
-																	);
+			$scripts['Admin/Menu/Menus'] = [
+				'class'		=> '\\gp\\admin\\Menu\\Menus',
+				'method'	=> 'RunScript',
+			];
 
-			$scripts['Admin/Menu/Ajax']					= array(	'class'		=> '\\gp\\admin\\Menu\\Ajax',
-																	'method'	=> 'RunScript',
-																	);
+			$scripts['Admin/Menu/Ajax'] = [
+				'class'		=> '\\gp\\admin\\Menu\\Ajax',
+				'method'	=> 'RunScript',
+			];
 
-			$scripts['Admin/Uploaded']					= array(	'class'		=> '\\gp\\admin\\Content\\Uploaded',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['uploaded_files'],
-																	'group'		=> 'content',
-																	);
+			$scripts['Admin/Uploaded'] = [
+				'class'		=> '\\gp\\admin\\Content\\Uploaded',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['uploaded_files'],
+				'group'		=> 'content',
+			];
 
-			$scripts['Admin/Extra']						= array(	'class'		=> '\\gp\\admin\\Content\\Extra',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['theme_content'],
-																	'group'		=> 'content',
-																	);
+			$scripts['Admin/Extra'] = [
+				'class'		=> '\\gp\\admin\\Content\\Extra',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['theme_content'],
+				'group'		=> 'content',
+			];
 
-			$scripts['Admin/Galleries']					= array(	'class'		=> '\\gp\\admin\\Content\\Galleries',
-																	'label'		=> $langmessage['galleries'],
-																	'group'		=> 'content',
-																	);
+			$scripts['Admin/Galleries'] = [
+				'class'		=> '\\gp\\admin\\Content\\Galleries',
+				'label'		=> $langmessage['galleries'],
+				'group'		=> 'content',
+			];
 
-			$scripts['Admin/Trash']						= array(	'class'		=> '\\gp\\admin\\Content\\Trash',
-																	'label'		=> $langmessage['trash'],
-																	'group'		=> 'content',
-																	);
+			$scripts['Admin/Trash'] = [
+				'class'		=> '\\gp\\admin\\Content\\Trash',
+				'label'		=> $langmessage['trash'],
+				'group'		=> 'content',
+			];
 
 			// Appearance
-			$scripts['Admin_Theme_Content']				= array(	'class'		=> '\\gp\\admin\\Layout',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['Appearance'],
-																	'group'		=> 'appearance',
-																	);
+			$scripts['Admin_Theme_Content'] = [
+				'class'		=> '\\gp\\admin\\Layout',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['Appearance'],
+				'group'		=> 'appearance',
+			];
 
-			$scripts['Admin_Theme_Content/Edit']		= array(	'class'		=> '\\gp\\admin\\Layout\\Edit',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['layouts'],
-																	);
+			$scripts['Admin_Theme_Content/Edit'] = [
+				'class'		=> '\\gp\\admin\\Layout\\Edit',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['layouts'],
+			];
 
-			$scripts['Admin_Theme_Content/Available']	 = array(	'class'		=> '\\gp\\admin\\Layout\\Available',
-																	'method'	=> 'ShowAvailable',
-																	'label' 	=> $langmessage['Available']
-																					. ' (' . $langmessage['layouts'] . ')',
-																	);
+			$scripts['Admin_Theme_Content/Available'] = [
+				'class'		=> '\\gp\\admin\\Layout\\Available',
+				'method'	=> 'ShowAvailable',
+				'label'		=> $langmessage['Available'] . ' (' . $langmessage['layouts'] . ')',
+			];
 
-			$scripts['Admin_Theme_Content/Text']		= array(	'class'		=> '\\gp\\admin\\Layout\\Text',
-																	'method'	=> 'RunScript',
-																	);
+			$scripts['Admin_Theme_Content/Text'] = [
+				'class'		=> '\\gp\\admin\\Layout\\Text',
+				'method'	=> 'RunScript',
+			];
 
-			$scripts['Admin_Theme_Content/Image']		= array(	'class'		=> '\\gp\\admin\\Layout\\Image',
-																	'method'	=> 'RunScript',
-																	);
+			$scripts['Admin_Theme_Content/Image'] = [
+				'class'		=> '\\gp\\admin\\Layout\\Image',
+				'method'	=> 'RunScript',
+			];
 
 			if( gp_remote_themes ){
-				$scripts['Admin_Theme_Content/Remote']	= array(	'class'		=> '\\gp\\admin\\Layout\\Remote',
-																	'method'	=> 'DefaultDisplay',
-																	'label' 	=> $langmessage['Search']
-																					. ' (' . $langmessage['layouts'] . ')',
-																	);
+				$scripts['Admin_Theme_Content/Remote'] = [
+					'class'		=> '\\gp\\admin\\Layout\\Remote',
+					'method'	=> 'DefaultDisplay',
+					'label'		=> $langmessage['Search'] . ' (' . $langmessage['layouts'] . ')',
+				];
 			}
 
 			// Settings
-			$scripts['Admin/Configuration']				= array(	'class'		=> '\\gp\\admin\\Configuration',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['configuration'],
-																	'group'		=> 'settings',
-																);
+			$scripts['Admin/Configuration'] = [
+				'class'		=> '\\gp\\admin\\Configuration',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['configuration'],
+				'group'		=> 'settings',
+			];
 
-			$scripts['Admin/Configuration/CDN']			= array(	'class'		=> '\\gp\\admin\\Configuration\\CDN',
-																	'method'	=> 'RunScript',
-																	'label'		=> 'CDN',
-																	'group'		=> 'settings',
-																);
+			$scripts['Admin/Configuration/CDN'] = [
+				'class'		=> '\\gp\\admin\\Configuration\\CDN',
+				'method'	=> 'RunScript',
+				'label'		=> 'CDN',
+				'group'		=> 'settings',
+			];
 
-			$scripts['Admin/Users']						= array(	'class'		=> '\\gp\\admin\\Settings\\Users',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['user_permissions'],
-																	'group'		=> 'settings',
-																);
+			$scripts['Admin/Users'] = [
+				'class'		=> '\\gp\\admin\\Settings\\Users',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['user_permissions'],
+				'group'		=> 'settings',
+			];
 
-			$scripts['Admin/Permissions']				= array(	'class'		=> '\\gp\\admin\\Settings\\Permissions',
-																	'method'	=> 'RunScript',
-																);
+			$scripts['Admin/Permissions'] = [
+				'class'		=> '\\gp\\admin\\Settings\\Permissions',
+				'method'	=> 'RunScript',
+			];
 
-			$scripts['Admin/CKEditor']					= array(	'class'		=> '\\gp\\admin\\Settings\\CKEditor',
-																	'label'		=> 'CKEditor',
-																	'group'		=> 'settings',
-																);
+			$scripts['Admin/CKEditor'] = [
+				'class'		=> '\\gp\\admin\\Settings\\CKEditor',
+				'label'		=> 'CKEditor',
+				'group'		=> 'settings',
+			];
 
-			$scripts['Admin/Classes']					= array(	'class'		=> '\\gp\\admin\\Settings\\Classes',
-																	'label'		=> $langmessage['Manage Classes'],
-																	'group'		=> 'settings',
-																);
+			$scripts['Admin/Classes'] = [
+				'class'		=> '\\gp\\admin\\Settings\\Classes',
+				'label'		=> $langmessage['Manage Classes'],
+				'group'		=> 'settings',
+			];
 
-			$scripts['Admin/Permalinks']				= array(	'class'		=> '\\gp\\admin\\Settings\\Permalinks',
-																	'label'		=> $langmessage['permalinks'],
-																	'group'		=> 'settings',
-																);
+			$scripts['Admin/Permalinks'] = [
+				'class'		=> '\\gp\\admin\\Settings\\Permalinks',
+				'label'		=> $langmessage['permalinks'],
+				'group'		=> 'settings',
+			];
 
-			$scripts['Admin/Missing']					= array(	'class'		=> '\\gp\\admin\\Settings\\Missing',
-																	'method'	=> 'RunScript',
-																	'label'		=> $langmessage['Link Errors'],
-																	'group'		=> 'settings',
-																);
+			$scripts['Admin/Missing'] = [
+				'class'		=> '\\gp\\admin\\Settings\\Missing',
+				'method'	=> 'RunScript',
+				'label'		=> $langmessage['Link Errors'],
+				'group'		=> 'settings',
+			];
 
 			// Tools
-			$scripts['Admin/Port']		= array(	'class'		=> '\\gp\\admin\\Tools\\Port',
-													'label'		=> $langmessage['Export'],
-													'group'		=> 'tools',
-													'method'	=> 'RunScript'
-												);
+			$scripts['Admin/Port'] = [
+				'class'		=> '\\gp\\admin\\Tools\\Port',
+				'label'		=> $langmessage['Export'],
+				'group'		=> 'tools',
+				'method'	=> 'RunScript',
+			];
 
-			$scripts['Admin/Status']	= array(	'class'		=> '\\gp\\admin\\Tools\\Status',
-													'label'		=> $langmessage['Site Status'],
-													'group'		=> 'tools',
-													'method'	=> 'RunScript'
-												);
+			$scripts['Admin/Status'] = [
+				'class'		=> '\\gp\\admin\\Tools\\Status',
+				'label'		=> $langmessage['Site Status'],
+				'group'		=> 'tools',
+				'method'	=> 'RunScript',
+			];
 
-			$scripts['Admin/Uninstall']	= array(	'class'		=> '\\gp\\admin\\Tools\\Uninstall',
-													'label'		=> $langmessage['uninstall_prep'],
-													'group'		=> 'tools'
-												);
+			$scripts['Admin/Uninstall'] = [
+				'class'		=> '\\gp\\admin\\Tools\\Uninstall',
+				'label'		=> $langmessage['uninstall_prep'],
+				'group'		=> 'tools',
+			];
 
-			$scripts['Admin/Cache']		= array(	'class'		=> '\\gp\\admin\\Tools\\Cache',
-													'label'		=> $langmessage['Resource Cache'],
-													'group'		=> 'tools'
-												);
+			$scripts['Admin/Cache'] = [
+				'class'		=> '\\gp\\admin\\Tools\\Cache',
+				'label'		=> $langmessage['Resource Cache'],
+				'group'		=> 'tools',
+			];
 
 			// Unlisted
-			$scripts['Admin/Addons']				= array(	'class'		=> '\\gp\\admin\\Addons',
-																'method'	=> 'RunScript',
-																'label' 	=> $langmessage['plugins'],
-													);
+			$scripts['Admin/Addons'] = [
+				'class'		=> '\\gp\\admin\\Addons',
+				'method'	=> 'RunScript',
+				'label' 	=> $langmessage['plugins'],
+			];
 
-			$scripts['Admin/Addons/Available']		= array(	'class'		=> '\\gp\\admin\\Addon\\Available',
-																'method'	=> 'DefaultDisplay',
-																'label' 	=> $langmessage['Available']
-																				. ' (' . $langmessage['plugins'] . ')',
-													);
+			$scripts['Admin/Addons/Available'] = [
+				'class'		=> '\\gp\\admin\\Addon\\Available',
+				'method'	=> 'DefaultDisplay',
+				'label' 	=> $langmessage['Available'] . ' (' . $langmessage['plugins'] . ')',
+			];
 
 			if( gp_remote_plugins ){
-				$scripts['Admin/Addons/Remote']		= array(	'class'		=> '\\gp\\admin\\Addon\\Remote',
-																'method'	=> 'DefaultDisplay',
-																'label'		=> $langmessage['Search']
-																				. ' (' . $langmessage['plugins'] . ')',
-													);
+				$scripts['Admin/Addons/Remote'] = [
+					'class'		=> '\\gp\\admin\\Addon\\Remote',
+					'method'	=> 'DefaultDisplay',
+					'label'		=> $langmessage['Search'] . ' (' . $langmessage['plugins'] . ')',
+				];
 			}
 
-			$scripts['Admin/Errors']				= array(	'class'		=> '\\gp\\admin\\Tools\\Errors',
-																'label' 	=> 'Errors',
-													);
+			$scripts['Admin/Errors'] = [
+				'class'			=> '\\gp\\admin\\Tools\\Errors',
+				'label' 		=> 'Errors',
+			];
 
-			$scripts['Admin/About']					= array(	'class'			=> '\\gp\\admin\\About',
-																'label'			=> 'About ' . CMS_NAME,
-													);
+			$scripts['Admin/About'] = [
+				'class'			=> '\\gp\\admin\\About',
+				'label'			=> 'About ' . CMS_NAME,
+			];
 
-			$scripts['Admin/Browser']				= array(	'class'			=> '\\gp\\admin\\Content\\Browser',
-																'permission'	=> 'Admin_Uploaded',
-													);
+			$scripts['Admin/Browser'] = [
+				'class'			=> '\\gp\\admin\\Content\\Browser',
+				'permission'	=> 'Admin_Uploaded',
+			];
 
-			$scripts['Admin/Preferences']			= array(	'class'			=> '\\gp\\admin\\Settings\\Preferences',
-																'label'			=> $langmessage['Preferences'],
-													);
+			$scripts['Admin/Preferences'] = [
+				'class'			=> '\\gp\\admin\\Settings\\Preferences',
+				'label'			=> $langmessage['Preferences'],
+			];
 
-			$scripts['Admin/Notifications']			= array(	'class'			=> '\\gp\\admin\\Notifications',
-																'method'		=> 'ListNotifications',
-																'label'			=> $langmessage['Notifications'],
-													);
+			$scripts['Admin/Notifications'] = [
+				'class'			=> '\\gp\\admin\\Notifications',
+				'method'		=> 'ListNotifications',
+				'label'			=> $langmessage['Notifications'],
+			];
 
-			$scripts['Admin/Notifications/Manage']	= array(	'class'			=> '\\gp\\admin\\Notifications',
-																'method'		=> 'ManageNotifications',
-																'permission'	=> 'Admin/Notifications',
-													);
+			$scripts['Admin/Notifications/Manage'] = [
+				'class'			=> '\\gp\\admin\\Notifications',
+				'method'		=> 'ManageNotifications',
+				'permission'	=> 'Admin/Notifications',
+			];
 
-			$scripts['Admin/Revisions']				= array(	'class'			=> '\\gp\\admin\\Content\\Revisions',
-																'method'		=> 'RunScript',
-													);
+			$scripts['Admin/Revisions'] = [
+				'class'			=> '\\gp\\admin\\Content\\Revisions',
+				'method'		=> 'RunScript',
+			];
 
 			// Addon admin links
 			if( isset($config['admin_links']) && is_array($config['admin_links']) ){
 				foreach( $config['admin_links'] as $link_name => $addon_info ){
 					$link_label = $addon_info['label'];
-					$link_label	= \gp\tool\Plugins::Filter('AdminLinkLabel', array($link_label, $link_name));
+					$link_label	= \gp\tool\Plugins::Filter('AdminLinkLabel', [$link_label, $link_name]);
 					$config['admin_links'][$link_name]['label'] = $link_label;
 				}
 
@@ -333,28 +359,26 @@ namespace gp\admin{
 				$scripts += $admin_links;
 			}
 
-
 			gpSettingsOverride('admin_scripts', $scripts);
 
 			return $scripts;
 		}
 
 
-
 		/**
 		 * Determine if the current user has permissions for the $script
 		 * @static
 		 * @return bool
+		 *
 		 */
 		public static function HasPermission($script){
 			global $gpAdmin;
 			if( is_array($gpAdmin) ){
-				$gpAdmin += array('granted' => '');
+				$gpAdmin += ['granted' => ''];
 				return self::CheckPermission($gpAdmin['granted'], $script);
 			}
 			return false;
 		}
-
 
 
 		/**
@@ -362,6 +386,7 @@ namespace gp\admin{
 		 * @static
 		 * @since 3.0b2
 		 * @return bool
+		 *
 		 */
 		public static function CheckPermission($granted,$script){
 
@@ -379,7 +404,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Return the permission setting that should be checked against a list of grated permissions
 		 * Admin_Browser -> Admin_Uploaded
@@ -390,7 +414,7 @@ namespace gp\admin{
 
 			// prepare list of permissions
 			$scripts	= self::AdminScripts();
-			$possible	= array();
+			$possible	= [];
 			foreach($scripts as $pscript => $info){
 				$pscript = str_replace('/', '_', $pscript);
 				if( isset($info['permission']) ){
@@ -418,13 +442,13 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Determine if a user can edit a specific page
 		 * @static
 		 * @since 3.0b2
 		 * @param string $index The data index of the page
 		 * @return bool
+		 *
 		 */
 		public static function CanEdit($index){
 			global $gpAdmin;
@@ -451,6 +475,7 @@ namespace gp\admin{
 		 * Used to update the basic 'file_editing' permission value to the new 'editing' value used in 3.0b2+
 		 * @since 3.0b2
 		 * @static
+		 *
 		 */
 		public static function EditingValue(&$user_info){
 			if( isset($user_info['editing']) ){
@@ -468,6 +493,7 @@ namespace gp\admin{
 		/**
 		 * Output the main admin toolbar
 		 * @static
+		 *
 		 */
 		public static function GetAdminPanel(){
 			global $page, $gpAdmin;
@@ -524,7 +550,7 @@ namespace gp\admin{
 					'special_gpsearch',
 					'<i class="fa fa-search"></i>',
 					'',
-					array('data-cmd' => 'gpabox')
+					['data-cmd' => 'gpabox']
 				);
 
 			echo '</div>';
@@ -537,7 +563,6 @@ namespace gp\admin{
 
 			self::AdminToolbar();
 		}
-
 
 
 		/**
@@ -574,7 +599,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Toolbar edit links
 		 *
@@ -594,10 +618,10 @@ namespace gp\admin{
 					$page->title,
 					'<i class="fa fa-bars"></i> ' . $langmessage['Sections'],
 					'cmd=ManageSections',
-					array(
+					[
 						'data-cmd'	=> 'inline_edit_generic',
 						'data-arg'	=> 'manage_sections'
-					)
+					]
 				);
 			}
 
@@ -606,12 +630,12 @@ namespace gp\admin{
 				$page->title,
 				'<i class="fa fa-cube"></i> ' . $langmessage['theme_content'],
 				'cmd=ManageSections&mode=extra',
-				array(
+				[
 					'data-cmd'	=> 'inline_edit_generic',
 					'data-arg'	=> 'manage_sections',
 					'data-mode'	=> 'extra',
 					'class'		=> 'gp_extra_edit'
-				)
+				]
 			);
 
 			//layout edit
@@ -626,10 +650,10 @@ namespace gp\admin{
 				'/Admin/Revisions/'.$page->gp_index,
 				'<i class="fa fa-history"></i> ' . $langmessage['Revision History'],
 				'',
-				array(
+				[
 					'title'		=> $langmessage['Revision History'],
 					'class'		=> 'admin-link admin-link-revision-history',
-				)
+				]
 			);
 
 			echo '<ul class="panel_tabs">';
@@ -640,7 +664,6 @@ namespace gp\admin{
 		}
 
 
-
 		public static function FormatAdminLinks($links){
 			global $langmessage;
 
@@ -649,7 +672,7 @@ namespace gp\admin{
 
 				if( is_numeric($label) ){
 					if( is_array($link) ){
-						echo call_user_func_array(array('\\gp\\tool', 'Link'), $link); /* preferred */
+						echo call_user_func_array(['\\gp\\tool', 'Link'], $link); /* preferred */
 					}else{
 						echo $link; //just a text label
 					}
@@ -680,11 +703,11 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Output the link areas that are displayed in the main admin toolbar and admin_main
 		 * @param bool $in_panel Whether or not the links will be displayed in the toolbar
 		 * @static
+		 *
 		 */
 		public static function AdminPanelLinks($in_panel=true){
 			global $langmessage, $page, $gpAdmin;
@@ -714,7 +737,6 @@ namespace gp\admin{
 			$links = self::GetAdminGroup('tools');
 			self::_AdminPanelLinks($in_panel, $links, 'Tools', 'fa fa-wrench', 'tool');
 
-
 			//notifications
 			if( \gp\admin\Tools::HasPermission('Admin/Notifications') ){
 				$notifications = new \gp\admin\Notifications();
@@ -734,7 +756,7 @@ namespace gp\admin{
 					$page->title,
 					$langmessage['logout'],
 					'cmd=logout',
-					array('data-cmd' => 'cnreq')
+					['data-cmd' => 'cnreq']
 				);
 			echo '</li>';
 
@@ -786,7 +808,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Get the appropriate remote browse url if available
 		 *
@@ -807,7 +828,6 @@ namespace gp\admin{
 
 			return false;
 		}
-
 
 
 		/**
@@ -837,7 +857,6 @@ namespace gp\admin{
 		}
 
 
-
 		public static function PanelHeading($in_panel, $label, $icon, $arg, $badge){
 			global $gpAdmin;
 
@@ -864,7 +883,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Get the links for the Frequently Used section of the admin toolbar
 		 *
@@ -879,43 +897,48 @@ namespace gp\admin{
 
 			//frequently used
 			echo '<li class="' . $expand_class . '">';
-				echo '<a>';
-				echo $langmessage['frequently_used'];
-				echo '</a>';
-				if( $in_panel ){
-					echo '<ul class="in_window">';
-				}else{
-					echo '<ul>';
-				}
-				$scripts = self::AdminScripts();
-				$add_one = true;
-				if( isset($gpAdmin['freq_scripts']) ){
-					foreach($gpAdmin['freq_scripts'] as $link => $hits ){
-						if( isset($scripts[$link]) && isset($scripts[$link]['label']) ){
-							echo '<li>';
-							echo \gp\tool::Link($link, $scripts[$link]['label']);
-							echo '</li>';
-							if( $link === 'Admin/Menu' ){
-								$add_one = false;
-							}
+
+			echo '<a>';
+			echo $langmessage['frequently_used'];
+			echo '</a>';
+			if( $in_panel ){
+				echo '<ul class="in_window">';
+			}else{
+				echo '<ul>';
+			}
+			$scripts = self::AdminScripts();
+			$add_one = true;
+			if( isset($gpAdmin['freq_scripts']) ){
+				foreach($gpAdmin['freq_scripts'] as $link => $hits ){
+					if( isset($scripts[$link]) && isset($scripts[$link]['label']) ){
+						echo '<li>';
+						echo \gp\tool::Link($link, $scripts[$link]['label']);
+						echo '</li>';
+						if( $link === 'Admin/Menu' ){
+							$add_one = false;
 						}
 					}
-					if( $add_one && count($gpAdmin['freq_scripts']) >= 5 ){
-						$add_one = false;
-					}
 				}
-				if( $add_one ){
-					echo '<li>';
-					echo \gp\tool::Link('Admin/Menu', $scripts['Admin/Menu']['label']);
-					echo '</li>';
+				if( $add_one && count($gpAdmin['freq_scripts']) >= 5 ){
+					$add_one = false;
 				}
-				echo '</ul>';
+			}
+			if( $add_one ){
+				echo '<li>';
+				echo \gp\tool::Link('Admin/Menu', $scripts['Admin/Menu']['label']);
+				echo '</li>';
+			}
+			echo '</ul>';
+
 			echo '</li>';
 		}
 
 
-
-		//uses $status from update codes to execute some cleanup code on a regular interval (7 days)
+		/**
+		 * Ues $update_status from update codes to execute some cleanup code
+		 * on a regular interval (7 days)
+		 *
+		 */
 		public static function ScheduledTasks(){
 			global $dataDir;
 
@@ -934,7 +957,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Delete all files older than 2 weeks
 		 * If there are more than 200 files older than one week
@@ -949,7 +971,7 @@ namespace gp\admin{
 			}
 
 			$files = scandir($dir);
-			$times = array();
+			$times = [];
 			foreach($files as $file){
 				if( $file == '.' || $file == '..' || strpos($file, '.php') !== false ){
 					continue;
@@ -981,7 +1003,6 @@ namespace gp\admin{
 		}
 
 
-
 		public static function AdminHtml(){
 			global $page, $gp_admin_html;
 
@@ -1001,7 +1022,6 @@ namespace gp\admin{
 		}
 
 
-
 		public static function CheckStatus(){
 
 			switch(self::$update_status){
@@ -1015,7 +1035,6 @@ namespace gp\admin{
 				break;
 			}
 		}
-
 
 
 		public static function GetAdminGroup($grouping){
@@ -1040,7 +1059,7 @@ namespace gp\admin{
 							$script,
 							$info['label'],
 							'',
-							array('data-cmd' => 'gpabox')
+							['data-cmd' => 'gpabox']
 						);
 				}else{
 					echo \gp\tool::Link(
@@ -1057,10 +1076,10 @@ namespace gp\admin{
 								'Admin/Menu/Ajax',
 								'+ ' . $langmessage['create_new_file'],
 								'cmd=AddHidden&redir=redir',
-								array(
+								[
 									'title'		=> $langmessage['create_new_file'],
 									'data-cmd'	=> 'gpabox',
-								)
+								]
 							);
 						echo '</li>';
 						break;
@@ -1075,7 +1094,6 @@ namespace gp\admin{
 
 			return false;
 		}
-
 
 
 		public static function GetAppearanceGroup($in_panel){
@@ -1143,9 +1161,9 @@ namespace gp\admin{
 					echo '<li>';
 				}
 
-				$display = '<span class="layout_color_id" '
-					. 'style="background-color:' . $info['color'] . ';"></span>'
-					. '&nbsp; ' . $info['label'];
+				$display = '<span class="layout_color_id" ' .
+					'style="background-color:' . $info['color'] . ';"></span>' .
+					'&nbsp; ' . $info['label'];
 				echo \gp\tool::Link(
 						'Admin_Theme_Content/Edit/' . rawurlencode($layout),
 						$display
@@ -1157,7 +1175,6 @@ namespace gp\admin{
 
 			return ob_get_clean();
 		}
-
 
 
 		/**
@@ -1177,7 +1194,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Convert a label to a slug
 		 * Does not use PostedSlug() so entity_unescape isn't called twice
@@ -1189,12 +1205,12 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Clean a slug posted by the user
 		 * @param string $slug The slug provided by the user
 		 * @return string
 		 * @since 2.4b5
+		 *
 		 */
 		public static function PostedSlug($string, $from_label=false){
 			global $config;
@@ -1205,8 +1221,8 @@ namespace gp\admin{
 
 			//illegal characters
 			$string = str_replace(
-				array('?',	'*',	':',	'|'),
-				array('',	'',		'',		''),
+				['?',	'*',	':',	'|'],
+				['',	'',		'',		''],
 				$string
 			);
 
@@ -1220,8 +1236,8 @@ namespace gp\admin{
 
 				//after removing tags, unescape special characters
 				$string = str_replace(
-					array('&lt;',	'&gt;',	'&quot;',	'&#39;',	'&amp;'),
-					array('<',		'>',	'"',		"'", 		'&'),
+					['&lt;',	'&gt;',	'&quot;',	'&#39;',	'&amp;'],
+					['<',		'>',	'"',		"'", 		'&'],
 					$string
 				);
 			}
@@ -1234,9 +1250,8 @@ namespace gp\admin{
 
 			$string = str_replace(' ', $config['space_char'], $string);
 
-			return \gp\tool\Plugins::Filter('PostedSlug', array($string, $orig_string, $from_label));
+			return \gp\tool\Plugins::Filter('PostedSlug', [$string, $orig_string, $from_label]);
 		}
-
 
 
 		/**
@@ -1274,25 +1289,24 @@ namespace gp\admin{
 			//Per http://www.w3.org/TR/xhtml1/dtds.html#dtdentry_xhtml1-strict.dtd_a.content
 			$string = strip_tags(
 				$string,
-				  '<abbr><acronym>'
-				. '<b><big><bdo><br><button>'
-				. '<cite><code>'
-				. '<del><dfn>'
-				. '<em>'
-				. '<kbd>'
-				. '<i><img><input><ins>'
-				. '<label>'
-				. '<map>'
-				. '<object>'
-				. '<q>'
-				. '<samp><select><small><span><sub><sup><strong>'
-				. '<textarea><tt>'
-				. '<var>'
+				'<abbr><acronym>' .
+				'<b><big><bdo><br><button>' .
+				'<cite><code>' .
+				'<del><dfn>' .
+				'<em>' .
+				'<kbd>' .
+				'<i><img><input><ins>' .
+				'<label>' .
+				'<map>' .
+				'<object>' .
+				'<q>' .
+				'<samp><select><small><span><sub><sup><strong>' .
+				'<textarea><tt>' .
+				'<var>'
 			);
 
 			return trim($string);
 		}
-
 
 
 		/**
@@ -1323,19 +1337,18 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Case insenstively check the title against all other titles
-		 *
 		 * @param string $title The title to be checked
 		 * @return mixed false or the data index of the matched title
 		 * @since 2.4b5
+		 *
 		 */
 		public static function CheckTitleCase($title){
 			global $gp_index;
 
-			$titles_lower = array_change_key_case($gp_index, CASE_LOWER);
-			$title_lower = strtolower($title);
+			$titles_lower	= array_change_key_case($gp_index, CASE_LOWER);
+			$title_lower	= strtolower($title);
 			if( isset($titles_lower[$title_lower]) ){
 				return $titles_lower[$title_lower];
 			}
@@ -1344,13 +1357,12 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Check a title against existing titles, special pages and reserved unique string
-		 *
 		 * @param string $title The title to be checked
 		 * @return mixed false if the title doesn't exist, string if a conflict is found
 		 * @since 2.4b5
+		 *
 		 */
 		public static function CheckTitle($title, &$message){
 			global $gp_index, $config, $langmessage;
@@ -1386,7 +1398,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Check a title against existing titles and special pages
 		 *
@@ -1409,7 +1420,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Save config.php and pages.php
 		 *
@@ -1426,7 +1436,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Save CMS page info
 		 * @return bool
@@ -1438,7 +1447,7 @@ namespace gp\admin{
 			$saved = false;
 			if( is_array($gp_menu) && is_array($gp_index) && is_array($gp_titles) && is_array($gpLayouts) ){
 
-				$pages					= array();
+				$pages					= [];
 				$pages['gp_menu']		= $gp_menu;
 				$pages['gp_index']		= $gp_index;
 				$pages['gp_titles']		= $gp_titles;
@@ -1449,7 +1458,6 @@ namespace gp\admin{
 
 			return self::SaveNotify($saved, $notify_fail, $notify_save, ' (Page info not saved)');
 		}
-
 
 
 		/**
@@ -1466,14 +1474,13 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Return the save result and notify the user if needed
-		 *
 		 * @param bool $result
 		 * @param bool $notify_fail
 		 * @param bool $noltify_save
 		 * @param string $append
+		 *
 		 */
 		public static function SaveNotify($result, $notify_fail, $notify_save, $append=''){
 			global $langmessage;
@@ -1489,10 +1496,10 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * @deprecated
 		 * used by simpleblog1
+		 *
 		 */
 		public static function tidyFix(&$text){
 			trigger_error('tidyFix should be called using gp_edit::tidyFix() instead of admin_tools:tidyFix()');
@@ -1500,12 +1507,12 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Returns an array
 		 * 	0 => html of the addon section of the admin panel
 		 * 	1 => boolean indicating if the current user has any addon admin permissions or there are special links
 		 * @return array
+		 *
 		 */
 		public static function GetAddonLinks($in_panel){
 			global $langmessage, $config;
@@ -1573,12 +1580,10 @@ namespace gp\admin{
 				}
 			}
 
-
 			$links = ob_get_clean();
 			$any_permissions = true;
-			return array($links, $any_permissions);
+			return [$links, $any_permissions];
 		}
-
 
 
 		/**
@@ -1615,12 +1620,12 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Returns an array
 		 * 	0 => formatted list of links associated with $addon
 		 * 	1 => boolean indicating if the current user has addon admin permissions or if special pages exist
 		 * @return array
+		 *
 		 */
 		public static function GetAddonSubLinks($addon=false){
 			global $config;
@@ -1642,15 +1647,14 @@ namespace gp\admin{
 			foreach($admin_links as $linkName => $linkInfo){
 				if( self::HasPermission($linkName) ){
 					$any_permissions = true;
-					$result 	.= '<li>';
+					$result		.= '<li>';
 					$linkLabel	 = $linkInfo['label'];
-					$result 	.= \gp\tool::Link($linkName, $linkLabel);
-					$result 	.= '</li>';
+					$result		.= \gp\tool::Link($linkName, $linkLabel);
+					$result		.= '</li>';
 				}
 			}
-			return array($result, $any_permissions);
+			return [$result, $any_permissions];
 		}
-
 
 
 		/**
@@ -1662,7 +1666,7 @@ namespace gp\admin{
 		public static function GetAddonTitles($addon){
 			global $gp_index, $gp_titles;
 
-			$sublinks = array();
+			$sublinks = [];
 			foreach($gp_index as $slug => $id){
 				$info = $gp_titles[$id];
 				if( !is_array($info) ){
@@ -1676,9 +1680,9 @@ namespace gp\admin{
 				}
 				$sublinks[$slug] = $info;
 			}
+
 			return $sublinks;
 		}
-
 
 
 		/**
@@ -1686,8 +1690,8 @@ namespace gp\admin{
 		 * @return array List of addon links
 		 *
 		 */
-		public static function GetAddonComponents($from,$addon){
-			$result = array();
+		public static function GetAddonComponents($from, $addon){
+			$result = [];
 
 			if( !is_array($from) ){
 				return $result;
@@ -1710,14 +1714,13 @@ namespace gp\admin{
 		}
 
 
+		public static function FormatBytes($size, $precision=2){
+			$base		= log($size) / log(1024);
+			$suffixes	= array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
+			$floor		= max(0, floor($base));
 
-		public static function FormatBytes($size, $precision = 2){
-			$base = log($size) / log(1024);
-			$suffixes = array('B', 'KB', 'MB', 'GB', 'TB', 'PB');
-			$floor = max(0,floor($base));
 			return round(pow(1024, $base - $floor), $precision) . ' ' . $suffixes[$floor];
 		}
-
 
 
 		/**
@@ -1750,7 +1753,6 @@ namespace gp\admin{
 		}
 
 
-
 		/**
 		 * Return the size in bytes of the /data directory
 		 *
@@ -1762,12 +1764,13 @@ namespace gp\admin{
 			return self::DirSize($dir);
 		}
 
+
 		public static function DirSize($dir){
 			$size	= 0;
 			$files	= scandir($dir);
 			$len	= count($files);
 
-			for($i=0;$i<$len;$i++){
+			for($i = 0; $i < $len; $i++){
 				$file = $files[$i];
 				if( $file == '.' || $file == '..' ){
 					continue;
@@ -1780,27 +1783,30 @@ namespace gp\admin{
 					$size += self::DirSize($full_path);
 					continue;
 				}
-
 				$size += filesize($full_path);
 			}
+
 			return $size;
 		}
 
-		public static function encode64( $input ){
+
+		public static function encode64($input){
 			$encoded	= base64_encode($input);
-			$encoded	= rtrim($encoded,'=');
+			$encoded	= rtrim($encoded, '=');
+
 			return strtr($encoded, '+/', '-_');
 		}
 
-		public static function decode64( $input ){
+
+		public static function decode64($input){
 			$mod = strlen($input) % 4;
 			if( $mod !== 0 ){
 				$append_len	= 4 - $mod;
 				$input		.= substr('===', 0, $append_len);
 			}
+
 			return base64_decode(strtr($input, '-_', '+/'));
 		}
-
 
 
 		/**
@@ -1817,13 +1823,12 @@ namespace gp\admin{
 
 			$difference = round($difference);
 
-			if($difference != 1) {
-			   $periods[$j].= 's';
+			if( $difference != 1 ){
+				$periods[$j] .= 's';
 			}
 
-			return $difference.' '.$periods[$j];
+			return $difference . ' ' . $periods[$j];
 		}
-
 
 
 		//deprecated v4.4

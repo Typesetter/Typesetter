@@ -595,6 +595,15 @@ class Combine{
 			'file'			=> '/include/thirdparty/Popper.js/popper.min.js',
 		],
 
+		// Bootstrap colorpicker (v2.3.6, bootstrap deps removed)
+		'colorpicker' => [
+			'file'			=> '/include/thirdparty/bootstrap-colorpicker/bootstrap-colorpicker.min.js',
+			'requires'		=> 'colorpicker-css',
+		],
+		'colorpicker-css' => [
+			'file'			=> '/include/thirdparty/bootstrap-colorpicker/bootstrap-colorpicker.min.css',
+		],
+
 	];
 
 

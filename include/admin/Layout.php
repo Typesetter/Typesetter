@@ -23,15 +23,15 @@ How To Identify the Output Functions for the Output Lists?
 		$info['class']
 
 
-$gpOutConf = array() of output functions/classes.. to use with the theme content
+$gpOutConf = [] of output functions/classes.. to use with the theme content
 	==potential values==
 	$gpOutConf[-ident-]['script'] = -path relative to datadir or rootdir?
 	$gpOutConf[-ident-]['data'] = -path relative to datadir-
 	$gpOutConf[-ident-]['class'] = -path relative to datadir or rootdir?
-	$gpOutConf[-ident-]['method'] = string or array: string=name of function, array(class,method)
+	$gpOutConf[-ident-]['method'] = string or array: string=name of function, [class, method]
 
 
-	$gpLayout['Loyout_Name']['handlers'][-ident-] = array(0=>-ident-,1=>-ident-)
+	$gpLayout['Loyout_Name']['handlers'][-ident-] = [0 => -ident-, 1 => -ident-]
 	$gpLayout['Loyout_Name']['color'] = '#123456'
 	$gpLayout['Loyout_Name']['theme'] = 'One_Point_5/Blue'
 
@@ -44,7 +44,7 @@ class Layout extends \gp\admin\Addon\Install{
 	protected $layout_request		= false;
 	protected $LayoutArray;
 	protected $scriptUrl			= 'Admin_Theme_Content';
-	protected $versions				= array();
+	protected $versions				= [];
 
 
 	//remote install variables
@@ -64,16 +64,13 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->gpLayouts_before		= $gpLayouts;
 		$this->config_before		= $config;
 
-		$this->page->head_js[]			= '/include/js/theme_content.js';
-		$this->page->head_js[]			= '/include/js/dragdrop.js';
-		$this->page->css_admin[]		= '/include/css/theme_content.scss';
-
+		$this->page->head_js[]		= '/include/js/theme_content.js';
+		$this->page->head_js[]		= '/include/js/dragdrop.js';
+		$this->page->css_admin[]	= '/include/css/theme_content.scss';
 
 		\gp\tool::LoadComponents('resizable');
 
-
 		$this->GetPossible();
-
 	}
 
 
@@ -94,7 +91,6 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$this->SetLayoutArray();
 
-
 		//Installation
 		$this->cmds['remote_install']			= 'RemoteInstall';
 		$this->cmds['RemoteInstall']			= '';
@@ -112,11 +108,10 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$this->cmds['addontext']				= 'RedirectText';
 
-
-
 		$this->LayoutCommands();
 		$this->RunCommands($cmd);
 	}
+
 
 	/**
 	 * Redirect addontext requests to correct path for TS 5.0+
@@ -126,10 +121,13 @@ class Layout extends \gp\admin\Addon\Install{
 		$params = $_GET;
 		$params['cmd'] = 'AddonTextForm';
 
-		$url = \gp\tool::GetUrl('Admin_Theme_Content/Text',http_build_query($params,'','&'),false);
+		$url = \gp\tool::GetUrl(
+			'Admin_Theme_Content/Text',
+			http_build_query($params, '', '&'),
+			false
+		);
 		\gp\tool::Redirect($url);
 	}
-
 
 
 	/**
@@ -145,7 +143,6 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->cmds['CSSPreferences']	= '';
 		$this->cmds['RestoreLayout']	= 'DefaultDisplay';
 		$this->cmds['RmGadget']			= 'ShowGadgets';
-
 	}
 
 
@@ -170,9 +167,9 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '<hr/>';
 		echo '<p class="admin_note">';
-		echo $langmessage['see_also'].' '.\gp\tool::Link('Admin/Menu',$langmessage['file_manager']);
+		echo	$langmessage['see_also'] . ' ';
+		echo	\gp\tool::Link('Admin/Menu', $langmessage['file_manager']);
 		echo '</p>';
-
 
 		$this->ColorSelector();
 	}
@@ -188,8 +185,8 @@ class Layout extends \gp\admin\Addon\Install{
 		//affected titles
 		$titles_count = $this->TitlesCount($this->curr_layout);
 
-		echo '<h2>'.$langmessage['titles_using_layout'];
-		echo ': '.$titles_count;
+		echo '<h2>' . $langmessage['titles_using_layout'];
+		echo ': ' . $titles_count;
 		echo '</h2>';
 
 		if( $titles_count > 0 ){
@@ -203,10 +200,10 @@ class Layout extends \gp\admin\Addon\Install{
 						continue; //may be external link
 					}
 
-					echo "\n<li>";
+					echo "\n" . '<li>';
 					$label = \gp\tool::GetLabel($title);
 					$label = \gp\tool::LabelSpecialChars($label);
-					echo \gp\tool::Link($title,$label);
+					echo \gp\tool::Link($title, $label);
 					echo '</li>';
 				}
 			}
@@ -214,7 +211,6 @@ class Layout extends \gp\admin\Addon\Install{
 			echo '</ul>';
 			echo '<div class="clear"></div>';
 		}
-
 	}
 
 
@@ -227,7 +223,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$gadget_info = \gp\tool\Output::WhichGadgets($this->curr_layout);
 
-		echo '<h2>'.$langmessage['gadgets'].'</h2>';
+		echo '<h2>' . $langmessage['gadgets'] . '</h2>';
 		echo '<table class="bordered full_width">';
 		echo '<tr><th colspan="2">&nbsp;</th></tr>';
 
@@ -238,10 +234,15 @@ class Layout extends \gp\admin\Addon\Install{
 		}else{
 			foreach($config['gadgets'] as $gadget => $temp){
 				echo '<tr><td>';
-				echo str_replace('_',' ',$gadget);
+				echo str_replace('_', ' ', $gadget);
 				echo '</td><td>';
 				if( isset($gadget_info[$gadget]) ){
-					echo $this->LayoutLink( $this->curr_layout, $langmessage['remove'], 'cmd=RmGadget&gadget='.urlencode($gadget), array('data-cmd'=>'gpabox') );
+					echo $this->LayoutLink(
+						$this->curr_layout,
+						$langmessage['remove'],
+						'cmd=RmGadget&gadget=' . urlencode($gadget),
+						['data-cmd' => 'gpabox']
+					);
 				}else{
 					echo $langmessage['disabled'];
 				}
@@ -252,7 +253,6 @@ class Layout extends \gp\admin\Addon\Install{
 	}
 
 
-
 	/**
 	 * Create a drop-down menu for the layout options
 	 *
@@ -260,37 +260,55 @@ class Layout extends \gp\admin\Addon\Install{
 	public function LayoutOptions($layout,$info){
 		global $langmessage, $config;
 
-
 		//theme name
 		echo '<li>';
-		echo '<span>'.$langmessage['theme'].': '.$this->ThemeLabel($info['theme_name']).'</span>';
+		echo	'<span>' . $langmessage['theme'] . ': ';
+		echo		$this->ThemeLabel($info['theme_name']);
+		echo	'</span>';
 		echo '</li>';
 
 
 		//default
 		echo '<li>';
 		if( $config['gpLayout'] == $layout ){
-			echo '<span><b>'.$langmessage['default'].'</b></span>';
+			echo '<span><b>' . $langmessage['default'] . '</b></span>';
 		}else{
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['make_default'],'cmd=MakeDefault&layout='.rawurlencode($layout),array('data-cmd'=>'creq','title'=>$langmessage['make_default']));
+			echo \gp\tool::Link(
+					'Admin_Theme_Content',
+					$langmessage['make_default'],
+					'cmd=MakeDefault&layout=' . rawurlencode($layout),
+					[
+						'data-cmd'	=> 'creq',
+						'title'		=> $langmessage['make_default'],
+					]
+				);
 		}
 		echo '</li>';
 
-
 		//gadgets
 		echo '<li>';
-		echo $this->LayoutLink( $layout, $langmessage['gadgets'], 'cmd=ShowGadgets', 'data-cmd="gpabox"' );
+		echo $this->LayoutLink(
+				$layout,
+				$langmessage['gadgets'],
+				'cmd=ShowGadgets',
+				['data-cmd' => 'gpabox']
+			);
 		echo '</li>';
 
 
 		//titles using layout
 		echo '<li>';
 		$titles_count	= $this->TitlesCount($layout);
-		$label			= sprintf($langmessage['%s Pages'],$titles_count);
+		$label			= sprintf($langmessage['%s Pages'], $titles_count);
 		if( $titles_count ){
-			echo $this->LayoutLink( $layout, $label, 'cmd=ShowTitles', 'data-cmd="gpabox"' );
+			echo $this->LayoutLink(
+					$layout,
+					$label,
+					'cmd=ShowTitles',
+					['data-cmd' => 'gpabox']
+				);
 		}else{
-			echo '<span>'.$label.'</span>';
+			echo '<span>' . $label . '</span>';
 		}
 		echo '</li>';
 
@@ -299,24 +317,44 @@ class Layout extends \gp\admin\Addon\Install{
 		$handlers_count = $this->HandlersCount($info);
 		echo '<li>';
 		if( $handlers_count ){
-			echo $this->LayoutLink( $layout, $langmessage['restore_defaults'], 'cmd=RestoreLayout', array('data-cmd'=>'creq') );
+			echo $this->LayoutLink(
+					$layout,
+					$langmessage['restore_defaults'],
+					'cmd=RestoreLayout',
+					['data-cmd' => 'creq']
+				);
 		}else{
-			echo '<span>'.$langmessage['content_arrangement'].': '.$langmessage['default'].'</span>';
+			echo '<span>';
+			echo 	$langmessage['content_arrangement'] . ': ' . $langmessage['default'];
+			echo '</span>';
 		}
 		echo '</li>';
 
-
 		//copy
 		echo '<li>';
-		$query = 'cmd=CopyLayoutPrompt&layout='.$layout;
-		echo \gp\tool::Link('Admin_Theme_Content',$langmessage['Copy'],$query,'data-cmd="gpabox"');
+		$query = 'cmd=CopyLayoutPrompt&layout=' . $layout;
+		echo \gp\tool::Link(
+				'Admin_Theme_Content',
+				$langmessage['Copy'],
+				$query,
+				['data-cmd' => 'gpabox']
+			);
 		echo '</li>';
 
 		//delete
 		if( $config['gpLayout'] != $layout ){
 			echo '<li>';
-			$attr = array( 'data-cmd'=>'creq','class'=>'gpconfirm','title'=>sprintf($langmessage['generic_delete_confirm'],$info['label']) );
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['delete'],'cmd=deletelayout&layout='.$layout,$attr);
+			$attr = [
+				'data-cmd'	=> 'creq',
+				'class'		=> 'gpconfirm',
+				'title'		=> sprintf($langmessage['generic_delete_confirm'], $info['label']),
+			];
+			echo \gp\tool::Link(
+					'Admin_Theme_Content',
+					$langmessage['delete'],
+					'cmd=deletelayout&layout=' . $layout,
+					$attr
+				);
 			echo '</li>';
 		}
 	}
@@ -349,7 +387,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function LayoutCSS($layout){
 
-		$custom_file		= $this->LayoutCSSFile($layout);
+		$custom_file = $this->LayoutCSSFile($layout);
 
 		if( file_exists($custom_file) ){
 			return file_get_contents($custom_file);
@@ -366,7 +404,6 @@ class Layout extends \gp\admin\Addon\Install{
 	public function SaveCustom($layout, $css){
 		global $langmessage;
 
-
 		$custom_file		= $this->LayoutCSSFile($layout);
 
 		//delete css file if empty
@@ -374,10 +411,9 @@ class Layout extends \gp\admin\Addon\Install{
 			return $this->RemoveCSS($layout, $custom_file);
 		}
 
-
 		//save if not empt
-		if( !\gp\tool\Files::Save($custom_file,$css) ){
-			msg($langmessage['OOPS'].' (CSS not saved)');
+		if( !\gp\tool\Files::Save($custom_file, $css) ){
+			msg($langmessage['OOPS'] . ' (CSS not saved)');
 			return false;
 		}
 
@@ -391,8 +427,8 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function LayoutCSSFile($layout){
 
-		$layout_info		= \gp\tool::LayoutInfo($layout,false);
-		$dir				= $layout_info['dir'].'/'.$layout_info['theme_color'];
+		$layout_info		= \gp\tool::LayoutInfo($layout, false);
+		$dir				= $layout_info['dir'] . '/' . $layout_info['theme_color'];
 		$style_type			= \gp\tool\Output::StyleType($dir);
 
 		return \gp\tool\Output::CustomStyleFile($layout, $style_type);
@@ -411,7 +447,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		$dir	= dirname($custom_file);
-		$path	= $dir.'/index.html';
+		$path	= $dir . '/index.html';
 
 		if( file_exists($path) ){
 			unlink($path);
@@ -466,8 +502,12 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 		$content = $this->CSSPreferenceForm($this->curr_layout,$new_info);
-		$this->page->ajaxReplace = array();
-		$this->page->ajaxReplace[] = array('replace','#layout_css_ul_'.$this->curr_layout,$content);
+		$this->page->ajaxReplace = [];
+		$this->page->ajaxReplace[] = [
+			'replace',
+			'#layout_css_ul_' . $this->curr_layout,
+			$content
+		];
 	}
 
 
@@ -479,12 +519,18 @@ class Layout extends \gp\admin\Addon\Install{
 	public function RmGadget(){
 		global $langmessage;
 
-		//$this->page->ajaxReplace	= array();
+		//$this->page->ajaxReplace	= [];
 
 		$gadget =& $_REQUEST['gadget'];
 
 		$handlers = $this->GetAllHandlers($this->curr_layout);
-		$this->PrepContainerHandlers($handlers,'GetAllGadgets','GetAllGadgets'); //make sure GetAllGadgets is set
+
+		//make sure GetAllGadgets is set
+		$this->PrepContainerHandlers(
+			$handlers,
+			'GetAllGadgets',
+			'GetAllGadgets'
+		);
 
 		$changed = false;
 		foreach($handlers as $container => $container_info){
@@ -497,11 +543,11 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( !$changed ){
-			msg($langmessage['OOPS'].' (Not Changed)');
+			msg($langmessage['OOPS'] . ' (Not Changed)');
 			return;
 		}
 
-		$this->SaveHandlersNew($handlers,$this->curr_layout);
+		$this->SaveHandlersNew($handlers, $this->curr_layout);
 	}
 
 
@@ -511,18 +557,17 @@ class Layout extends \gp\admin\Addon\Install{
 		return $colors[$color_key];
 	}
 
-	public static function GetColors(){
 
-		return array(
+	public static function GetColors(){
+		return [
 			'#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#9900ff', '#ff00ff',
 			'#f4cccc', '#fce5cd', '#fff2cc', '#d9ead3', '#d0e0e3', '#cfe2f3', '#d9d2e9', '#ead1dc',
 			'#ea9999', '#f9cb9c', '#ffe599', '#b6d7a8', '#a2c4c9', '#9fc5e8', '#b4a7d6', '#d5a6bd',
 			'#e06666', '#f6b26b', '#ffd966', '#93c47d', '#76a5af', '#6fa8dc', '#8e7cc3', '#c27ba0',
 			'#cc0000', '#e69138', '#f1c232', '#6aa84f', '#45818e', '#3d85c6', '#674ea7', '#a64d79',
 			'#990000', '#b45f06', '#bf9000', '#38761d', '#134f5c', '#0b5394', '#351c75', '#741b47',
-		);
+		];
 	}
-
 
 
 	/**
@@ -537,10 +582,9 @@ class Layout extends \gp\admin\Addon\Install{
 		$theme_info		= $this->ThemeInfo($theme);
 
 		if( !$theme_info ){
-			msg($langmessage['OOPS'].' (Invalid Source)');
+			msg($langmessage['OOPS'] . ' (Invalid Source)');
 			return false;
 		}
-
 
 		//install addon
 		$installer						= new \gp\admin\Addon\Installer();
@@ -555,7 +599,7 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
-		$this->UpdateLayouts( $installer );
+		$this->UpdateLayouts($installer);
 	}
 
 
@@ -563,15 +607,15 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Update related layouts with new $theme_info
 	 *
 	 */
-	public function UpdateLayouts( $installer ){
+	public function UpdateLayouts($installer){
 		global $gpLayouts, $langmessage;
 
 		$theme_folder		= basename($installer->dest);
 
-		if( strpos($installer->dest,'/data/_themes') !== false ){
-			$new_layout_info = $this->AvailableTheme('/data/_themes',true, $theme_folder);
+		if( strpos($installer->dest, '/data/_themes') !== false ){
+			$new_layout_info = $this->AvailableTheme('/data/_themes', true, $theme_folder);
 		}else{
-			$new_layout_info = $this->AvailableTheme('/themes',false, $theme_folder);
+			$new_layout_info = $this->AvailableTheme('/themes', false, $theme_folder);
 		}
 
 		if( $new_layout_info === false ){
@@ -585,14 +629,20 @@ class Layout extends \gp\admin\Addon\Install{
 		// update each layout
 		foreach($gpLayouts as $layout => $layout_info){
 
-			if( !$this->SameTheme( $layout_info, $new_layout_info ) ){
+			if( !$this->SameTheme($layout_info, $new_layout_info) ){
 				continue;
 			}
 
-			unset( $layout_info['is_addon'], $layout_info['addon_id'], $layout_info['version'], $layout_info['name'], $layout_info['addon_key'] );
+			unset(
+				$layout_info['is_addon'],
+				$layout_info['addon_id'],
+				$layout_info['version'],
+				$layout_info['name'],
+				$layout_info['addon_key']
+			);
 
 			$layout_info			+= $new_layout_info;
-			$layout_info['theme']	= $theme_folder.'/'.basename($layout_info['theme']);
+			$layout_info['theme']	= $theme_folder . '/' . basename($layout_info['theme']);
 			$gpLayouts[$layout]		= $layout_info;
 		}
 
@@ -606,22 +656,24 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function SameTheme($layout_info, $new_layout_info ){
 
-
 		//if we have addon ids
-		if( isset($new_layout_info['addon_id']) && isset($layout_info['addon_id']) && $layout_info['addon_id'] == $new_layout_info['addon_id'] ){
+		if( isset($new_layout_info['addon_id']) &&
+			isset($layout_info['addon_id']) &&
+			$layout_info['addon_id'] == $new_layout_info['addon_id']
+		){
 			return true;
 		}
 
 		if( isset($layout_info['is_addon']) && $layout_info['is_addon'] ){
-			$layout_info['rel']	= '/data/_themes/'.dirname($layout_info['theme']);
+			$layout_info['rel']	= '/data/_themes/' . dirname($layout_info['theme']);
 		}else{
-			$layout_info['rel']	= '/themes/'.dirname($layout_info['theme']);
+			$layout_info['rel']	= '/themes/' . dirname($layout_info['theme']);
 		}
 
 
-		$keys	= array('is_addon'=>'','rel'=>'');
-		$testa	= array_intersect_key($layout_info,$keys);
-		$testb	= array_intersect_key($new_layout_info,$keys);
+		$keys	= ['is_addon' => '', 'rel' => ''];
+		$testa	= array_intersect_key($layout_info, $keys);
+		$testb	= array_intersect_key($new_layout_info, $keys);
 		if( $testa === $testb ){
 			return true;
 		}
@@ -636,9 +688,8 @@ class Layout extends \gp\admin\Addon\Install{
 	public function RemoteInstallConfirmed($type='themes'){
 		$installer = parent::RemoteInstallConfirmed($type);
 		$this->GetPossible();
-		$this->UpdateLayouts( $installer );
+		$this->UpdateLayouts($installer);
 	}
-
 
 
 	/**
@@ -655,8 +706,8 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$label = self::NewLabel($gpLayouts[$layout]['label']);
 
-		echo '<h2>'.$langmessage['new_layout'].'</h2>';
-		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
+		echo '<h2>' . $langmessage['new_layout'] . '</h2>';
+		echo '<form action="' . \gp\tool::GetUrl('Admin_Theme_Content') . '" method="post">';
 		echo '<table class="bordered full_width">';
 
 		echo '<tr><th colspan="2">';
@@ -666,7 +717,8 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '<tr><td>';
 		echo $langmessage['label'];
 		echo '</td><td>';
-		echo '<input type="text" name="label" value="'.htmlspecialchars($label).'" class="gpinput" />';
+		echo '<input type="text" name="label" ';
+		echo	'value="' . htmlspecialchars($label) . '" class="gpinput" />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
@@ -678,9 +730,13 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '</table>';
 
 		echo '<p>';
-		echo ' <input type="hidden" name="layout" value="'.htmlspecialchars($layout).'" />';
-		echo ' <button type="submit" name="cmd" value="CopyLayout" class="gpsubmit">'.$langmessage['save'].'</button>';
-		echo ' <input type="button" name="" value="Cancel" class="admin_box_close gpcancel"/>';
+		echo ' <input type="hidden" name="layout"';
+		echo	' value="' . htmlspecialchars($layout) . '" />';
+		echo ' <button type="submit" name="cmd" value="CopyLayout" class="gpsubmit">';
+		echo	$langmessage['save'];
+		echo '</button>';
+		echo ' <input type="button" name="" value="' . $langmessage['cancel'] . '"';
+		echo	' class="admin_box_close gpcancel" />';
 		echo '</p>';
 		echo '</form>';
 
@@ -699,7 +755,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( empty($_POST['label']) ){
-			msg($langmessage['OOPS'].'(Empty Label)');
+			msg($langmessage['OOPS'] . '(Empty Label)');
 			return;
 		}
 
@@ -709,17 +765,15 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//get new unique layout id
 		do{
-			$layout_id = rand(1000,9999);
-		}while( isset($gpLayouts[$layout_id]) );
-
+			$layout_id = rand(1000, 9999);
+		}while(isset($gpLayouts[$layout_id]));
 
 		$gpLayouts[$layout_id]	= $newLayout;
 
-		if( !\gp\tool\Files::ArrayInsert($copy_id,$layout_id,$newLayout,$gpLayouts,1) ){
-			msg($langmessage['OOPS'].'(Not Inserted)');
+		if( !\gp\tool\Files::ArrayInsert($copy_id, $layout_id, $newLayout, $gpLayouts, 1) ){
+			msg($langmessage['OOPS'] . '(Not Inserted)');
 			return;
 		}
-
 
 		//copy any css
 		$css = $this->layoutCSS($copy_id);
@@ -735,7 +789,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Save the gpLayouts data
 	 *
 	 */
-	protected function SaveLayouts($notify_user = true){
+	protected function SaveLayouts($notify_user=true){
 		global $gpLayouts;
 
 		if( \gp\admin\Tools::SavePagesPHP($notify_user, $notify_user) ){
@@ -773,7 +827,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function NewLabel($label){
 		global $gpLayouts;
-		$labels = array();
+		$labels = [];
 
 		foreach($gpLayouts as $info){
 			$labels[$info['label']] = true;
@@ -783,16 +837,15 @@ class Layout extends \gp\admin\Addon\Install{
 		if( $len > 25 ){
 			$label = substr($label,0,$len-2);
 		}
-		if( substr($label,$len-2,1) === '_' && is_numeric(substr($label,$len-1,1)) ){
-			$label = substr($label,0,$len-2);
+		if( substr($label, $len - 2, 1) === '_' && is_numeric(substr($label, $len - 1, 1)) ){
+			$label = substr($label, 0, $len - 2);
 		}
-
 
 		$int = 1;
 		do{
-			$new_label = $label.'_'.$int;
+			$new_label = $label . '_' . $int;
 			$int++;
-		}while( isset($labels[$new_label]) );
+		}while(isset($labels[$new_label]));
 
 		return $new_label;
 	}
@@ -889,7 +942,6 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$this->page->non_admin_content = ob_get_clean();
 
-
 		// boostrap content
 		ob_start();
 
@@ -952,7 +1004,6 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '</div>'; // /.row
 
-
 		echo '<div class="row">';
 
 		echo '<div class="col-sm-6">';
@@ -1002,26 +1053,26 @@ class Layout extends \gp\admin\Addon\Install{
 		echo '<div class="gpclear"></div>';
 
 		$this->page->non_admin_content_bootstrap = ob_get_clean();
-
 	}
-
-
 
 
 	public function ThemeInfo($theme){
 
-		$template = dirname($theme);
-		$color = basename($theme);
+		$template		= dirname($theme);
+		$color			= basename($theme);
 
-		if( !isset($this->avail_addons[$template]) || !isset($this->avail_addons[$template]['colors'][$color]) ){
+		if( !isset($this->avail_addons[$template]) ||
+			!isset($this->avail_addons[$template]['colors'][$color])
+		){
 			return false;
 		}
 
-		$theme_info = $this->avail_addons[$template];
-		$theme_info['color'] = $color;
+		$theme_info 			= $this->avail_addons[$template];
+		$theme_info['color']	= $color;
 
 		return $theme_info;
 	}
+
 
 	/**
 	 * Return an array of available themes
@@ -1030,18 +1081,16 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function GetPossible(){
 
-		$this->avail_addons		= array();
-		$this->versions			= array();
+		$this->avail_addons		= [];
+		$this->versions			= [];
 
-
-		$this->AvailableThemes('/themes',false);			//local themes
-		$this->AvailableThemes('/data/_themes',true);		//downloaded themes
-
+		$this->AvailableThemes('/themes', false);		//local themes
+		$this->AvailableThemes('/data/_themes', true);	//downloaded themes
 
 		//remove older versions
 		if( gp_unique_addons ){
 			$themes = $this->avail_addons;
-			$this->avail_addons = array();
+			$this->avail_addons = [];
 
 			foreach($themes as $index => $info){
 
@@ -1050,16 +1099,15 @@ class Layout extends \gp\admin\Addon\Install{
 					continue;
 				}
 
-				if( version_compare($this->versions[$info['id']]['version'], $info['version'],'>') ){
+				if( version_compare($this->versions[$info['id']]['version'], $info['version'], '>') ){
 					continue;
 				}
 
 				$this->avail_addons[$index] = $info;
 			}
 
-			uksort($this->avail_addons,'strnatcasecmp');
+			uksort($this->avail_addons, 'strnatcasecmp');
 		}
-
 	}
 
 
@@ -1067,11 +1115,11 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Scan the directory for available themes
 	 *
 	 */
-	private function AvailableThemes( $dir_rel, $is_addon ){
+	private function AvailableThemes($dir_rel, $is_addon){
 		global $dataDir;
 
-		$dir		= $dataDir.$dir_rel;
-		$folders	= \gp\tool\Files::readDir($dir,1);
+		$dir		= $dataDir . $dir_rel;
+		$folders	= \gp\tool\Files::readDir($dir, 1);
 
 		foreach($folders as $folder){
 
@@ -1093,7 +1141,7 @@ class Layout extends \gp\admin\Addon\Install{
 	private function AvailableTheme($dir_rel, $is_addon, $folder){
 		global $dataDir;
 
-		$full_dir	= $dataDir.'/'.$dir_rel.'/'.$folder;
+		$full_dir	= $dataDir . '/' . $dir_rel . '/' . $folder;
 		$ini_info	= $this->GetAvailInstall($full_dir);
 
 		if( $ini_info === false ){
@@ -1101,12 +1149,11 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( $is_addon ){
-			$index		= $ini_info['Addon_Name'].'(remote)';
+			$index		= $ini_info['Addon_Name'] . '(remote)';
 		}else{
-			$index		= $folder.'(local)';
+			$index		= $folder . '(local)';
 		}
 		$this->AddVersionInfo($ini_info, $index);
-
 
 		$addon					= $this->IniExtract($ini_info);
 
@@ -1131,7 +1178,7 @@ class Layout extends \gp\admin\Addon\Install{
 	 */
 	public function IniExtract($ini_info){
 
-		$extracted = array();
+		$extracted = [];
 
 		if( isset($ini_info['Addon_Unique_ID']) ){
 			$extracted['addon_id'] = $ini_info['Addon_Unique_ID'];
@@ -1143,6 +1190,10 @@ class Layout extends \gp\admin\Addon\Install{
 
 		if( isset($ini_info['Addon_Name']) ){
 			$extracted['name'] = $ini_info['Addon_Name'];
+		}
+
+		if( isset($ini_info['About']) ){
+			$extracted['name'] = $ini_info['About'];
 		}
 
 		return $extracted;
@@ -1161,9 +1212,9 @@ class Layout extends \gp\admin\Addon\Install{
 			$version	= $ini_info['Addon_Version'];
 
 			if( !isset($this->versions[$addon_id]) ){
-				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
-			}elseif( version_compare($this->versions[$addon_id]['version'],$version,'<') ){
-				$this->versions[$addon_id] = array('version'=>$version,'index'=>$index);
+				$this->versions[$addon_id] = ['version' => $version, 'index' => $index];
+			}elseif( version_compare($this->versions[$addon_id]['version'], $version, '<') ){
+				$this->versions[$addon_id] = ['version' => $version, 'index' => $index];
 			}
 		}
 	}
@@ -1171,14 +1222,14 @@ class Layout extends \gp\admin\Addon\Install{
 
 	/**
 	 * Return ini info if the addon is installable
-	 *
 	 * @return false|array
+	 *
 	 */
 	public function GetAvailInstall($dir){
 		global $langmessage;
 
-		$iniFile		= $dir.'/Addon.ini';
-		$template_file	= $dir.'/template.php';
+		$iniFile		= $dir . '/Addon.ini';
+		$template_file	= $dir . '/template.php';
 		$dirname		= basename($dir);
 
 		if( !is_readable($dir) ){
@@ -1192,15 +1243,15 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( !file_exists($iniFile) ){
-			return array();
+			return [];
 		}
 
 		$array = \gp\tool\Ini::ParseFile($iniFile);
 		if( $array === false ){
-			return array();
+			return [];
 		}
 
-		$array += array('Addon_Version'=>'');
+		$array += ['Addon_Version' => ''];
 
 		return $array;
 	}
@@ -1211,16 +1262,17 @@ class Layout extends \gp\admin\Addon\Install{
 	 *
 	 */
 	public function GetThemeColors($dir){
-		$subdirs = \gp\tool\Files::readDir($dir,1);
-		$colors = array();
-		asort($subdirs);
-		foreach($subdirs as $subdir){
+		$subdirs	= \gp\tool\Files::readDir($dir, 1);
+		$colors		= [];
 
-			if( \gp\tool\Output::IsLayoutDir($dir.'/'.$subdir) !== false ){
+		asort($subdirs);
+
+		foreach($subdirs as $subdir){
+			if( \gp\tool\Output::IsLayoutDir($dir . '/' . $subdir) !== false ){
 				$colors[$subdir] = $subdir;
 			}
-
 		}
+
 		return $colors;
 	}
 
@@ -1248,28 +1300,30 @@ class Layout extends \gp\admin\Addon\Install{
 	public function LayoutLabel(){
 		global $gpLayouts, $langmessage;
 
-		$this->page->ajaxReplace	= array();
+		$this->page->ajaxReplace = [];
 
 		$layout = $this->ReqLayout();
 		if( $layout === false ){
 			return;
 		}
 
-		if( !empty($_POST['color']) && (strlen($_POST['color']) == 7) && $_POST['color'][0] == '#' ){
-			$gpLayouts[$layout]['color'] = $_POST['color'];
+		if( !empty($_POST['color']) &&
+			(strlen($_POST['color']) == 7) &&
+			$_POST['color'][0] == '#'
+		){
+			$gpLayouts[$layout]['color'] = htmlspecialchars($_POST['color']);
 		}
 
 		$gpLayouts[$layout]['label'] = htmlspecialchars($_POST['layout_label']);
-
 
 		if( !$this->SaveLayouts(false) ){
 			return;
 		}
 
 		//send new label
-		$layout_info				= \gp\tool::LayoutInfo($layout,false);
+		$layout_info				= \gp\tool::LayoutInfo($layout, false);
 		$replace					= $this->GetLayoutLabel($layout, $layout_info);
-		$this->page->ajaxReplace[]	= array( 'replace', '.layout_label_'.$layout, $replace);
+		$this->page->ajaxReplace[]	= ['replace', '.layout_label_' . $layout, $replace];
 	}
 
 
@@ -1278,47 +1332,50 @@ class Layout extends \gp\admin\Addon\Install{
 	 * @param string $layout The layout being edited
 	 *
 	 */
-	public function ColorSelector($layout = false){
+	public function ColorSelector($layout=false){
+		global $langmessage;
 
 		$colors = self::GetColors();
 		echo '<div id="layout_ident" class="gp_floating_area">';
 		echo '<div>';
 
-		if( $layout === false ){
-			echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
-		}else{
-			echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content/Edit/'.$layout).'" method="post">';
-		}
+		$form_action = ($layout === false) ?
+			\gp\tool::GetUrl('Admin_Theme_Content') :
+			\gp\tool::GetUrl('Admin_Theme_Content/Edit/' . $layout);
+
+		echo '<form action="' . $form_action . '" method="post">';
+
 		echo '<input type="hidden" name="layout" value="" />';
 		echo '<input type="hidden" name="color" value="" />';
 		echo '<input type="hidden" name="cmd" value="LayoutLabel" />';
 
 		echo '<table>';
 
-
 		echo '<tr><td>';
 		echo ' <a class="layout_color_id" id="current_color"></a> ';
-		echo '<input type="text" name="layout_label" value="" maxlength="25"/>';
+		echo '<input type="text" name="layout_label" value="" maxlength="25" />';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
 		echo '<div class="colors">';
 		foreach($colors as $color){
-			echo '<a class="color" style="background-color:'.$color.'" title="'.$color.'" data-arg="'.$color.'"></a>';
+			echo '<a class="color" style="background-color:' . $color . '"';
+			echo	' title="' . $color . '" data-arg="' . $color . '">';
+			echo '</a>';
 		}
 		echo '</div>';
 		echo '</td></tr>';
 
 		echo '<tr><td>';
 		echo ' <input type="submit" name="" value="Ok" class="gpajax close_color_dialog gpsubmit" />';
-		echo ' <input type="button" class="close_color_dialog gpcancel" name="" value="Cancel" />';
+		echo ' <input type="button" class="close_color_dialog gpcancel"';
+		echo	' name="" value="' . $langmessage['cancel'] . '" />';
 		echo '</td></tr>';
 
 		echo '</table>';
 		echo '</form>';
 		echo '</div>';
 		echo '</div>';
-
 	}
 
 
@@ -1326,38 +1383,37 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Display layout label and options
 	 *
 	 */
-	public function LayoutDiv($layout,$info){
+	public function LayoutDiv($layout, $info){
 		global $langmessage;
 
-		$layout_info = \gp\tool::LayoutInfo($layout,false);
+		$layout_info = \gp\tool::LayoutInfo($layout, false);
 
-
-		echo '<div class="panelgroup" id="panelgroup_'.md5($layout).'">';
+		echo '<div class="panelgroup" id="panelgroup_' . md5($layout) . '">';
 		echo $this->GetLayoutLabel($layout, $info);
-
 
 		echo '<div class="panelgroup2">';
 		echo '<ul class="submenu">';
 
 		echo '<li>';
-		echo \gp\tool::Link('Admin_Theme_Content/Edit/'.rawurlencode($layout),$langmessage['edit_this_layout'],'',' title="'.htmlspecialchars($langmessage['Arrange Content']).'" ');
+		echo \gp\tool::Link(
+				'Admin_Theme_Content/Edit/' . rawurlencode($layout),
+				$langmessage['edit_this_layout'],
+				'',
+				['title' => htmlspecialchars($langmessage['Arrange Content']) ]
+			);
 		echo '</li>';
-
-
 
 		//layout options
 		echo '<li class="expand_child_click">';
-		echo '<a>'.$langmessage['Layout Options'].'</a>';
+		echo '<a>' . $langmessage['Layout Options'] . '</a>';
 		echo '<ul>';
-		$this->LayoutOptions($layout,$layout_info);
+		$this->LayoutOptions($layout, $layout_info);
 		echo '</ul>';
-
-
 
 		//css options
 		echo '<li class="expand_child_click">';
 		echo '<a>CSS</a>';
-		echo $this->CSSPreferenceForm($layout,$layout_info);
+		echo $this->CSSPreferenceForm($layout, $layout_info);
 		echo '</li>';
 
 		$this->LayoutDivAddon($layout_info);
@@ -1368,29 +1424,47 @@ class Layout extends \gp\admin\Addon\Install{
 			$version =& $layout_info['version'];
 
 			//local or already downloaded
-			if( isset($this->versions[$addon_id]) && version_compare($this->versions[$addon_id]['version'],$version,'>') ){
+			if( isset($this->versions[$addon_id]) &&
+				version_compare($this->versions[$addon_id]['version'], $version, '>')
+			){
 				$version_info = $this->versions[$addon_id];
-				$label = $langmessage['upgrade'].' &nbsp; '.$version_info['version'];
-				$source = $version_info['index'].'/'.$layout_info['theme_color']; //could be different folder
-				echo '<div class="gp_notice">';
-				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=UpgradeTheme&source='.$source,array('data-cmd'=>'creq'));
-				echo '</div>';
+				$label = $langmessage['upgrade'] . ' &nbsp; ' . $version_info['version'];
+				$source = $version_info['index'] . '/' . $layout_info['theme_color']; //could be different folder
 
+				echo '<div class="gp_notice">';
+				echo \gp\tool::Link(
+						'Admin_Theme_Content',
+						$label,
+						'cmd=UpgradeTheme&source=' . $source,
+						['data-cmd' => 'creq']
+					);
+				echo '</div>';
 
 			//remote version
-			}elseif( gp_remote_themes && isset(\gp\admin\Tools::$new_versions[$addon_id]) && version_compare(\gp\admin\Tools::$new_versions[$addon_id]['version'],$version,'>') ){
+			}elseif( gp_remote_themes &&
+				isset(\gp\admin\Tools::$new_versions[$addon_id]) &&
+				version_compare(\gp\admin\Tools::$new_versions[$addon_id]['version'], $version, '>')
+			){
 				$version_info = \gp\admin\Tools::$new_versions[$addon_id];
-				$label = $langmessage['new_version'].' &nbsp; '.$version_info['version'].' &nbsp; (' . \CMS_READABLE_DOMAIN . ')';
+				$label = $langmessage['new_version'] .
+					' &nbsp; ' . $version_info['version'] .
+					' &nbsp; (' . \CMS_READABLE_DOMAIN . ')';
 				echo '<div class="gp_notice">';
-				echo \gp\tool::Link('Admin_Theme_Content',$label,'cmd=RemoteInstall&id='.$addon_id.'&name='.rawurlencode($version_info['name']).'&layout='.$layout);
+
+				$remote_install_id = $addon_id;
+				$remote_install_id .= '&name=' . rawurlencode($version_info['name']);
+				$remote_install_id .= '&layout=' . $layout;
+
+				echo \gp\tool::Link(
+						'Admin_Theme_Content',
+						$label,
+						'cmd=RemoteInstall&id=' . $remote_install_id
+					);
 				echo '</div>';
 			}
-
 		}
 
-
 		echo '</ul>';
-
 		echo '</div>';
 		echo '</div>';
 	}
@@ -1410,39 +1484,45 @@ class Layout extends \gp\admin\Addon\Install{
 			$addon_key = $layout_info['addon_key'];
 			$addon_config = \gp\tool\Plugins::GetAddonConfig($addon_key);
 			echo '<li>';
-			echo \gp\tool::link('Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),'<i class="fa fa-plug"></i> '.$addon_config['name']);
+			echo \gp\tool::Link(
+					'Admin/Addons/'.\gp\admin\Tools::encode64($addon_key),
+					'<i class="fa fa-plug"></i> ' . $addon_config['name']
+				);
 			echo '</li>';
 
 			//hooks
-			$this->AddonPanelGroup($addon_key, false );
+			$this->AddonPanelGroup($addon_key, false);
 		}
-
 
 		//version
 		if( !empty($layout_info['version']) ){
-			echo '<li><a>'.$langmessage['Your_version'].' '.$layout_info['version']. '</a></li>';
+			echo '<li><a>' . $langmessage['Your_version'] . ' ' . $layout_info['version'] . '</a></li>';
 		}elseif( $addon_config && !empty($addon_config['version']) ){
-			echo '<li><a>'.$langmessage['Your_version'].' '.$addon_config['version']. '</a></li>';
+			echo '<li><a>' . $langmessage['Your_version'] . ' ' . $addon_config['version'] . '</a></li>';
 		}
 
 		//upgrade
 		if( $addon_config !== false ){
 			echo '<li>';
 			if( $layout_info['is_addon'] ){
-				$source = $layout_info['name'].'(remote)/'.$layout_info['theme_color'];
+				$source = $layout_info['name'] . '(remote)/' . $layout_info['theme_color'];
 			}else{
-				$source = $layout_info['theme_name'].'(local)/'.$layout_info['theme_color'];
+				$source = $layout_info['theme_name'] . '(local)/' . $layout_info['theme_color'];
 			}
-			echo \gp\tool::Link('Admin_Theme_Content',$langmessage['upgrade'],'cmd=UpgradeTheme&source='.rawurlencode($source),array('data-cmd'=>'creq'));
+			echo \gp\tool::Link(
+					'Admin_Theme_Content',
+					$langmessage['upgrade'],
+					'cmd=UpgradeTheme&source=' . rawurlencode($source),
+					['data-cmd' => 'creq']
+				);
 			echo '</li>';
 		}
-
 
 		$options = ob_get_clean();
 
 		if( !empty($options) ){
 			echo '<li class="expand_child_click">';
-			echo '<a>'.$langmessage['options'].'</a>';
+			echo '<a>' . $langmessage['options'] . '</a>';
 			echo '<ul>';
 
 			echo $options;
@@ -1456,20 +1536,21 @@ class Layout extends \gp\admin\Addon\Install{
 	 * Return the layout name and id color
 	 *
 	 */
-	public function GetLayoutLabel( $layout, $layout_info ){
+	public function GetLayoutLabel($layout, $layout_info){
 		global $config, $langmessage, $config;
 
 		ob_start();
-		echo '<span class="layout_label_'.$layout.' layout_label">';
-		echo '<a data-cmd="layout_id" data-arg="'.$layout_info['color'].'">';
-		echo '<input type="hidden" name="layout" value="'.htmlspecialchars($layout).'"  /> ';
-		echo '<input type="hidden" name="layout_label" value="'.$layout_info['label'].'"  /> ';
-		echo '<span class="layout_color_id" title="'.$layout_info['color'].'" style="background-color:'.$layout_info['color'].';"></span> ';
+		echo '<span class="layout_label_' . $layout . ' layout_label">';
+		echo '<a data-cmd="layout_id" data-arg="' . $layout_info['color'] . '">';
+		echo '<input type="hidden" name="layout" value="' . htmlspecialchars($layout) . '" /> ';
+		echo '<input type="hidden" name="layout_label" value="' . $layout_info['label'] . '" /> ';
+		echo '<span class="layout_color_id" title="' . $layout_info['color'] . '"';
+		echo	' style="background-color:' . $layout_info['color'] . ';"></span> ';
 		if( $config['gpLayout'] == $layout ){
-			echo ' <span class="layout_default"> ('.$langmessage['default'].')</span>';
+			echo ' <span class="layout_default"> (' . $langmessage['default'] . ')</span>';
 			echo '&nbsp;';
 		}
-		echo '<span title="'.$layout_info['label'].'">'.$layout_info['label'].'</span>';
+		echo '<span title="' . $layout_info['label'] . '">' . $layout_info['label'] . '</span>';
 
 		echo '</a>';
 		echo '</span>';
@@ -1477,32 +1558,30 @@ class Layout extends \gp\admin\Addon\Install{
 	}
 
 
-
 	/**
 	 * Return form for name based menu classes and ordered menu classes
 	 *
 	 */
-	public function CSSPreferenceForm($layout,$layout_info){
+	public function CSSPreferenceForm($layout, $layout_info){
 		global $langmessage;
 
 		ob_start();
-		echo '<ul id="layout_css_ul_'.$layout.'">';
-
+		echo '<ul id="layout_css_ul_' . $layout . '">';
 
 		// name based menu classes
 		echo '<li>';
-		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
-		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
+		echo '<form action="' . \gp\tool::GetUrl('Admin_Theme_Content') . '" method="post">';
+		echo '<input type="hidden" name="layout" value="' . $layout . '" />';
 		echo '<input type="hidden" name="cmd" value="CSSPreferences" />';
 		$checked = '';
 		$value = 'on';
 		if( !isset($layout_info['menu_css_ordered']) ){
-			$checked = 'checked="checked"';
+			$checked = ' checked="checked"';
 			$value = 'off';
 		}
-		echo '<input type="hidden" name="menu_css_ordered" value="'.$value.'" />';
+		echo '<input type="hidden" name="menu_css_ordered" value="' . $value . '" />';
 		echo '<label>';
-		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" /> ';
+		echo '<input type="checkbox" name="none" value="" class="gpajax"' . $checked . ' /> ';
 		echo $langmessage['Name Based Menu Classes'];
 		echo '</label>';
 		echo '</form>';
@@ -1510,18 +1589,18 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//ordered menu classes
 		echo '<li>';
-		echo '<form action="'.\gp\tool::GetUrl('Admin_Theme_Content').'" method="post">';
-		echo '<input type="hidden" name="layout" value="'.$layout.'" />';
+		echo '<form action="' . \gp\tool::GetUrl('Admin_Theme_Content') . '" method="post">';
+		echo '<input type="hidden" name="layout" value="' . $layout . '" />';
 		echo '<input type="hidden" name="cmd" value="CSSPreferences" />';
 		$checked = '';
 		$value = 'on';
 		if( !isset($layout_info['menu_css_indexed']) ){
-			$checked = 'checked="checked"';
+			$checked = ' checked="checked"';
 			$value = 'off';
 		}
-		echo '<input type="hidden" name="menu_css_indexed" value="'.$value.'" />';
+		echo '<input type="hidden" name="menu_css_indexed" value="' . $value . '" />';
 		echo '<label>';
-		echo '<input type="checkbox" name="none" value="" '.$checked.' class="gpajax" /> ';
+		echo '<input type="checkbox" name="none" value="" class="gpajax"' . $checked . ' /> ';
 		echo $langmessage['Ordered Menu Classes'];
 		echo '</label>';
 		echo '</form>';
@@ -1530,16 +1609,16 @@ class Layout extends \gp\admin\Addon\Install{
 		return ob_get_clean();
 	}
 
+
 	public function ThemeLabel($theme_color){
 
 		$theme = $theme_color;
 		$color = false;
-		if( strpos($theme_color,'/') ){
-			list($theme,$color) = explode('/',$theme_color);
+		if( strpos($theme_color, '/') ){
+			list($theme,$color) = explode('/', $theme_color);
 		}
 
 		foreach($this->avail_addons as $info){
-
 			if( $info['folder'] == $theme ){
 				$theme = $info['name'];
 				break;
@@ -1547,14 +1626,15 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( $color ){
-			return $theme.'/'.$color;
+			return $theme . '/' . $color;
 		}
 		return $theme;
 	}
 
+
 	public function TitlesCount($layout){
 		$titles_count = 0;
-		foreach( $this->LayoutArray as $layout_comparison ){
+		foreach($this->LayoutArray as $layout_comparison){
 			if( $layout == $layout_comparison ){
 				$titles_count++;
 			}
@@ -1562,14 +1642,16 @@ class Layout extends \gp\admin\Addon\Install{
 		return $titles_count;
 	}
 
+
 	/**
 	 * Restore a layout to it's default content arrangement
 	 */
 	public function RestoreLayout(){
-		$this->SaveHandlersNew(array(),$this->curr_layout);
+		$this->SaveHandlersNew([], $this->curr_layout);
 	}
 
-	public function SaveHandlersNew($handlers,$layout=false){
+
+	public function SaveHandlersNew($handlers, $layout=false){
 		global $config, $langmessage, $gpLayouts;
 
 		//make sure the keys are sequential
@@ -1583,7 +1665,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$layout = $this->curr_layout;
 		}
 
-		if( !isset( $gpLayouts[$layout] )  ){
+		if( !isset($gpLayouts[$layout]) ){
 			msg($langmessage['OOPS']);
 			return false;
 		}
@@ -1609,20 +1691,20 @@ class Layout extends \gp\admin\Addon\Install{
 
 		if( !is_array($handlers) || count($handlers) < 1 ){
 			$gpLayouts[$layout]['hander_v'] = '2';
-			$handlers = array();
+			$handlers = [];
 		}
 
 		//clean : characters for backwards compat
 		foreach($handlers as $container => $container_info){
 			if( is_string($container_info) ){
-				$handlers[$container] = trim($container_info,':');
+				$handlers[$container] = trim($container_info, ':');
 				continue;
 			}
 			if( !is_array($container_info) ){
 				continue;
 			}
 			foreach($container_info as $key => $gpOutCmd){
-				$handlers[$container][$key] = trim($gpOutCmd,':');
+				$handlers[$container][$key] = trim($gpOutCmd, ':');
 			}
 		}
 
@@ -1631,30 +1713,27 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	//set default values if not set
-	public function PrepContainerHandlers(&$handlers,$container,$gpOutCmd){
+	public function PrepContainerHandlers(&$handlers, $container, $gpOutCmd){
 		if( isset($handlers[$container]) && is_array($handlers[$container]) ){
 			return;
 		}
-		$handlers[$container] = $this->GetDefaultList($container,$gpOutCmd);
+		$handlers[$container] = $this->GetDefaultList($container, $gpOutCmd);
 	}
 
 
-
-	public function GetDefaultList($container,$gpOutCmd){
+	public function GetDefaultList($container, $gpOutCmd){
 		global $config;
 
 		if( $container !== 'GetAllGadgets' ){
-
 			//Just a container that doesn't have content by default
-			// ex: 		\gp\tool\Output::Get('AfterContent');
+			// ex:	\gp\tool\Output::Get('AfterContent');
 			if( empty($gpOutCmd) ){
-				return array();
+				return [];
 			}
-
-			return array($gpOutCmd);
+			return [$gpOutCmd];
 		}
 
-		$result = array();
+		$result = [];
 		if( isset($config['gadgets']) && is_array($config['gadgets']) ){
 			foreach($config['gadgets'] as $gadget => $info){
 				if( isset($info['addon']) ){
@@ -1662,6 +1741,7 @@ class Layout extends \gp\admin\Addon\Install{
 				}
 			}
 		}
+
 		return $result;
 	}
 
@@ -1669,27 +1749,24 @@ class Layout extends \gp\admin\Addon\Install{
 	public function ReturnHeader(){
 		global $page;
 
-		$page->ajaxReplace		= array();
-		$page->ajaxReplace[]	= array('reload');
+		$page->ajaxReplace		= [];
+		$page->ajaxReplace[]	= ['reload'];
 	}
-
 
 
 	public function SetLayoutArray(){
 		global $gp_menu, $gp_titles, $gp_index, $config;
 
-
-		$titleThemes	= array();
-		$customThemes	= array();
+		$titleThemes	= [];
+		$customThemes	= [];
 		$max_level		= 5;
-
 
 		foreach($gp_menu as $id => $info){
 
 			$level = $info['level'];
 
 			//reset theme inheritance
-			$max_level = max($max_level,$level);
+			$max_level = max($max_level, $level);
 			for( $i = $level; $i <= $max_level; $i++){
 				if( isset($customThemes[$i]) ){
 					$customThemes[$i] = false;
@@ -1697,7 +1774,9 @@ class Layout extends \gp\admin\Addon\Install{
 			}
 
 			if( !empty($gp_titles[$id]['gpLayout']) ){
+
 				$titleThemes[$id] = $gp_titles[$id]['gpLayout'];
+
 			}else{
 
 				$parent_layout = false;
@@ -1718,7 +1797,6 @@ class Layout extends \gp\admin\Addon\Install{
 			$customThemes[$level] = $titleThemes[$id];
 		}
 
-
 		foreach($gp_index as $title => $id){
 			$titleInfo = $gp_titles[$id];
 
@@ -1731,12 +1809,9 @@ class Layout extends \gp\admin\Addon\Install{
 			}else{
 				$titleThemes[$id] = $config['gpLayout'];
 			}
-
 		}
 
-
 		$this->LayoutArray = $titleThemes;
-
 	}
 
 
@@ -1749,7 +1824,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$layout =& $_POST['layout'];
 		if( !isset($gpLayouts[$layout]) ){
-			msg($langmessage['OOPS'].' (Layout not set)');
+			msg($langmessage['OOPS'] . ' (Layout not set)');
 			return false;
 		}
 
@@ -1766,7 +1841,6 @@ class Layout extends \gp\admin\Addon\Install{
 		global $gp_titles, $gpLayouts, $langmessage;
 
 		$this->RmLayoutPrep($layout);
-
 
 		//determine if code in /data/_theme should be removed
 		$rm_addon			= $this->RemoveAddonCode($layout);
@@ -1841,20 +1915,22 @@ class Layout extends \gp\admin\Addon\Install{
 	}
 
 
-	public function LayoutUrl($layout,&$query=''){
+	public function LayoutUrl($layout, &$query=''){
 		$url = 'Admin_Theme_Content';
 		if( $this->layout_request ){
-			$url = 'Admin_Theme_Content/Edit/'.rawurlencode($layout);
+			$url = 'Admin_Theme_Content/Edit/' . rawurlencode($layout);
 		}else{
-			$query .= '&layout='.rawurlencode($layout);
+			$query .= '&layout=' . rawurlencode($layout);
 		}
 		return $url;
 	}
 
-	public function LayoutLink($layout,$label,$query,$attr){
-		$url = $this->LayoutUrl($layout,$query);
-		return \gp\tool::Link($url,$label,$query,$attr);
+
+	public function LayoutLink($layout, $label, $query, $attr){
+		$url = $this->LayoutUrl($layout, $query);
+		return \gp\tool::Link($url, $label, $query, $attr);
 	}
+
 
 	/**
 	 * Get the requested layout
@@ -1864,7 +1940,7 @@ class Layout extends \gp\admin\Addon\Install{
 		global $langmessage, $gpLayouts;
 
 		if( !isset($_REQUEST['layout']) || !isset($gpLayouts[$_REQUEST['layout']]) ){
-			msg($langmessage['OOPS'].'(Invalid layout)');
+			msg($langmessage['OOPS'] . '(Invalid layout)');
 			return;
 		}
 

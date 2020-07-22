@@ -43,7 +43,7 @@ body .messages > div {
 }
 
 body .messages ul {
-	margin: -24px 0 0 0;
+	margin: 0;
 	padding: 4px 15px;
 }
 
@@ -66,23 +66,39 @@ body .messages li li {
 	margin-left: 2em;
 }
 
-body .messages a.close_message {
+body .messages .msg_controls {
+	display: block;
 	position: absolute;
 	position: sticky;
 	top: 1px;
 	right: 1px;
+	margin: 0 0 0 auto !important;
+	z-index: 2;
+}
+
+body .messages a.close_message,
+body .messages a.copy_message {
+	position: absolute;
+	top: 0;
 	text-decoration: none !important;
 	font-weight: bold !important;
 	color: #666 !important;
 	font-size: 17px !important;
 	display: none;
 	border: 0 none !important;
-	margin: 0 0 0 auto !important;
 	height: 24px;
 	width: 24px;
-	background: url('../imgs/cancel.png') 50% 50% no-repeat;
 	box-sizing: border-box;
-	z-index: 2;
+}
+
+body .messages a.close_message {
+	right: 0;
+	background: url('../imgs/cancel.png') 50% 50% no-repeat;
+}
+
+body .messages a.copy_message {
+	right: 24px;
+	background: url('../imgs/copy.png') 50% 50% no-repeat;
 }
 
 body .messages a {

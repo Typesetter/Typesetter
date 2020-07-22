@@ -1,6 +1,6 @@
 //"use strict";
 
-var gplinks={},gpinputs={},gpresponse={};
+var gplinks={}, gpinputs={}, gpresponse={};
 
 /**
  * $gp object
@@ -18,11 +18,11 @@ var $gp = {
 	 * Handler for loading json content
 	 *
 	 */
-	jGoTo : function(a,this_context){
+	jGoTo : function(a, this_context){
 		$gp.loading();
 		a = $gp.jPrep(a);
-		$.getJSON(a,function(data,textStatus,jqXHR){
-			$gp.Response.call(this_context,data,textStatus,jqXHR);
+		$.getJSON(a,function(data, textStatus, jqXHR){
+			$gp.Response.call(this_context, data, textStatus, jqXHR);
 		});
 	},
 
@@ -38,7 +38,7 @@ var $gp = {
 		var query	= a.search;
 		var nonce	= $link.data('nonce');
 		if( nonce ){
-			query	+= '&verified='+encodeURIComponent(nonce);
+			query	+= '&verified=' + encodeURIComponent(nonce);
 		}
 
 		$gp.SetCookieCmd(query);
@@ -46,7 +46,7 @@ var $gp = {
 		if( samepage ){
 			$gp.Reload();
 		}else{
-			window.location = strip_from(strip_from(a.href,'#'),'?');
+			window.location = strip_from(strip_from(a.href, '#'), '?');
 		}
 
 	},
@@ -56,26 +56,26 @@ var $gp = {
 	 * Post request to server
 	 *
 	 */
-	post : function(this_context,data){
+	post : function(this_context, data){
 		$gp.loading();
 		var frm = $(this_context).closest('form');
 
-		var b = frm.serialize() + '&verified='+encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
+		var b = frm.serialize() + '&verified=' + encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
 		if( this_context.nodeName === 'INPUT' || this_context.nodeName === 'BUTTON' ){
-			b += '&'+encodeURIComponent(this_context.name)+'='+encodeURIComponent(this_context.value);
+			b += '&' + encodeURIComponent(this_context.name) + '=' + encodeURIComponent(this_context.value);
 		}
 		if( data ){
-			b += '&'+data;
+			b += '&' + data;
 		}
 
 		$.post(
 			$gp.jPrep(frm.attr('action')),
 			b,
-			function(data,textStatus,jqXHR){
-				$gp.Response.call(this_context,data,textStatus,jqXHR);
+			function(data, textStatus, jqXHR){
+				$gp.Response.call(this_context, data,textStatus, jqXHR);
 			},
 			'json'
-			);
+		);
 		return false;
 	},
 
@@ -87,18 +87,17 @@ var $gp = {
 	post_link : function(lnk){
 		$gp.loading();
 		var $lnk = $(lnk);
-		var data = strip_to(lnk.search,'?')
-				+ '&gpreq=json&jsoncallback=?'
-				+ '&verified='+encodeURIComponent($lnk.data('nonce'))
-				;
+		var data = strip_to(lnk.search, '?') +
+			'&gpreq=json&jsoncallback=?' +
+			'&verified=' + encodeURIComponent($lnk.data('nonce'));
 		$.post(
-			strip_from(lnk.href,'?'),
+			strip_from(lnk.href, '?'),
 			data,
-			function(data,textStatus,jqXHR){
-				$gp.Response.call(lnk,data,textStatus,jqXHR);
+			function(data, textStatus, jqXHR){
+				$gp.Response.call(lnk, data, textStatus, jqXHR);
 			},
 			'json'
-			);
+		);
 	},
 
 	/**
@@ -106,7 +105,7 @@ var $gp = {
 	 * Arguments order is same as jQuery's $.post()
 	 *
 	 */
-	postC : function(url,data,callback,datatype,this_context){
+	postC : function(url, data, callback, datatype, this_context){
 		callback = callback || $gp.Response;
 		datatype = datatype || 'json';
 
@@ -114,19 +113,19 @@ var $gp = {
 			data = $.param(data);
 		}
 
-		data += '&verified='+encodeURIComponent(post_nonce);
+		data += '&verified=' + encodeURIComponent(post_nonce);
 		if( datatype === 'json' ){
 			data += '&gpreq=json&jsoncallback=?';
 		}
 
 		$.post(
-			strip_from(url,'?'),
+			strip_from(url, '?'),
 			data,
-			function(data,textStatus,jqXHR){
-				callback.call(this_context,data,textStatus,jqXHR);
+			function(data, textStatus, jqXHR){
+				callback.call(this_context, data, textStatus, jqXHR);
 			},
 			datatype
-			);
+		);
 	},
 
 
@@ -135,35 +134,43 @@ var $gp = {
 	 *
 	 */
 	cboxSettings : function(options){
-		options			= options||{};
+		options	= options || {};
 
 		if( typeof(colorbox_lang) != 'object' ){
-			colorbox_lang	= {};
+			colorbox_lang = {};
 		}
-		return $.extend(colorbox_lang,{opacity:0.75,maxWidth:'90%',maxHeight:'90%'},options);
+		return $.extend(
+			colorbox_lang,
+			{
+				opacity		: 0.75,
+				maxWidth	: '90%',
+				maxHeight	: '90%'
+			},
+			options
+		);
 	},
 
 	/**
 	 * Simple method for creating/erasing cookies
 	 *
 	 */
-	Cookie : function(name,value,days) {
-		var expires = "";
-		if (days) {
+	Cookie : function(name, value, days){
+		var expires = '';
+		if( days ){
 			var date = new Date();
-			date.setTime(date.getTime()+(days*24*60*60*1000));
-			expires = "; expires="+date.toGMTString();
+			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			expires = '; expires=' + date.toGMTString();
 		}
-		document.cookie = name+"="+value+expires+"; path=/";
+		document.cookie = name + '=' + value+expires + '; path=/';
 	},
+
 
 	/**
 	 * Remove cookie command
 	 *
 	 */
 	SetCookieCmd : function(query){
-
-		$gp.Cookie('cookie_cmd',encodeURIComponent(query),1);
+		$gp.Cookie('cookie_cmd', encodeURIComponent(query), 1);
 		$gp.cookie_cmd = true;
 	},
 
@@ -172,9 +179,9 @@ var $gp = {
 	 * Prepare a query for an ajax request
 	 *
 	 */
-	jPrep : function(query,args){
+	jPrep : function(query, args){
 		args	= typeof(args) === 'undefined' ? 'gpreq=json&jsoncallback=?' : args;
-		query	= strip_from(query,'#');
+		query	= strip_from(query, '#');
 
 		if( query.indexOf('?') === -1 ){
 			query += '?';
@@ -190,7 +197,7 @@ var $gp = {
 	 * Handle ajax responses
 	 *
 	 */
-	Response : function(data,textStatus,jqXHR){
+	Response : function(data, textStatus, jqXHR){
 
 		try{
 			if( typeof(gp_editing) == 'undefined' ){
@@ -202,31 +209,29 @@ var $gp = {
 			$.fn.colorbox.close();
 		} catch(a){}
 
-
 		var this_context = this;
 
-		$.each(data,function(i,obj){
+		$.each(data,function(i, obj){
 
 			if( typeof($gp.response[obj.DO]) === 'function' ){
-				$gp.response[obj.DO].call(this_context,obj,textStatus,jqXHR);
+				$gp.response[obj.DO].call(this_context, obj, textStatus, jqXHR);
 				return;
 			}
 
 			if( typeof(gpresponse[obj.DO]) === 'function' ){
 				console.log('gpresponse is deprecated as of 3.6');
-				gpresponse[obj.DO].call(this_context,obj,textStatus,jqXHR);
+				gpresponse[obj.DO].call(this_context, obj, textStatus, jqXHR);
 				return;
 			}
 
-
 			switch(obj.DO){
 				case 'replace':
-					CallFunc( obj.SELECTOR, 'replaceWith', obj.CONTENT);
-				break;
+					CallFunc(obj.SELECTOR, 'replaceWith', obj.CONTENT);
+					break;
 
 				case 'inner':
-					CallFunc( obj.SELECTOR, 'html', obj.CONTENT);
-				break;
+					CallFunc(obj.SELECTOR, 'html', obj.CONTENT);
+					break;
 
 				case 'gpabox':
 				case 'admin_box_data': // @deprecated 5.2
@@ -234,22 +239,22 @@ var $gp = {
 					if( $(this_context).closest('#gp_admin_box') ){ // replace the content of the currently open admin box if the link the user clicked on was in the admin box
 						opts.replaceBox = true;
 					}
-					$gp.AdminBoxC(obj.CONTENT,opts);
-				break;
+					$gp.AdminBoxC(obj.CONTENT, opts);
+					break;
 
 				case 'messages':
 					$('.messages').detach();
-					$(obj.CONTENT).appendTo('body').show().css({'top':0});
-				break;
+					$(obj.CONTENT).appendTo('body').show().css({ 'top' : 0 });
+					break;
 
 				case 'reload':
 					$gp.Reload();
-				break;
+					break;
 
 				//standard functions
 				default:
 					CallFunc(obj.SELECTOR, obj.DO, obj.CONTENT);
-				break;
+					break;
 			}
 		});
 
@@ -263,7 +268,7 @@ var $gp = {
 			if( typeof($selected[func]) == 'function' ){
 				$selected[func](arg);
 			}else{
-				console.log('func not found for sel',sel,'func',func);
+				console.log('func not found for sel=', sel, ' ,func=', func);
 			}
 		}
 
@@ -279,10 +284,14 @@ var $gp = {
 
 		var $loading = $('#loading1');
 		if( $loading.length == 0 ){
-			$loading = $('<div id="loading1"><i class="fa fa-spinner fa-pulse fa-3x"></i></div>').appendTo('body');
+			$loading = $('<div id="loading1"></div>')
+				.append('<i class="fa fa-spinner fa-pulse fa-3x"></i>')
+				.appendTo('body');
 		}
 
-		$loading.css('zIndex',99000).fadeIn();
+		$loading
+			.css({'z-index' : 99000})
+			.fadeIn();
 	},
 
 
@@ -299,11 +308,11 @@ var $gp = {
 	 * Assign values to the form based on hidden input elements
 	 *
 	 */
-	CopyVals : function(selector,lnk){
+	CopyVals : function(selector, lnk){
 
 		var c = $(selector).find('form').get(0);
 		if( c ){
-			$(lnk).find('input').each(function(i,j){
+			$(lnk).find('input').each(function(i, j){
 				if( c[j.name] ){
 					c[j.name].value = j.value;
 				}
@@ -314,16 +323,18 @@ var $gp = {
 
 	/**
 	 * Reload the current page
-	 * Use window.location.reload(true) to prevent the browser from using the cached page unless it was a post request
+	 * Use window.location.reload(true) to prevent the browser
+	 * from using the cached page unless it was a post request
 	 *
 	 */
 	Reload : function(){
 		if( typeof(req_type) && req_type == 'post' ){
-			window.location.href = strip_from(window.location.href,'#');
+			window.location.href = strip_from(window.location.href, '#');
 		}else{
 			window.location.reload(true);
 		}
 	},
+
 
 	/**
 	 * Link handlers
@@ -335,7 +346,7 @@ var $gp = {
 		 * Use colorbox
 		 *
 		 */
-		gallery : function(evt,selector){
+		gallery : function(evt, selector){
 
 			evt.preventDefault();
 
@@ -344,9 +355,9 @@ var $gp = {
 			if( selector === '' ){
 				selector = this;
 			}else if( rel ){
-				selector = 'a[rel="'+rel+'"]';
+				selector = 'a[rel="' + rel + '"]';
 			}else{
-				selector = 'a.'+selector;
+				selector = 'a.' + selector;
 			}
 
 			var settings = {
@@ -354,10 +365,10 @@ var $gp = {
 				title	: function(){
 					var a = $(this);
 					var caption =
-						a.closest('li').find('.caption').data("originalContent")
-						|| a.closest('li').find('.caption').text()
-						|| a.attr('title') // backwards compat
-						|| '';
+						a.closest('li').find('.caption').data("originalContent") ||
+						a.closest('li').find('.caption').text() ||
+						a.attr('title') || // backwards compat
+						'';
 					return caption;
 				}
 			};
@@ -376,20 +387,15 @@ var $gp = {
 
 	}
 
-
 }
 
 
 //erase cookie_cmd as soon as possible
-$gp.Cookie('cookie_cmd','',-1);
-
-
-
+$gp.Cookie('cookie_cmd', '', -1);
 
 
 /**
  * Onload
- *
  *
  */
 $(function(){
@@ -406,9 +412,9 @@ $(function(){
 	 * Prevents a cookie_cmd from another browser tab being sent along with a request in the current tab
 	 *
 	 */
-	$(window).on('beforeunload', function(evt) {
+	$(window).on('beforeunload', function(evt){
 		if( !$gp.cookie_cmd ){
-			$gp.Cookie('cookie_cmd','',-1);
+			$gp.Cookie('cookie_cmd', '', -1);
 		}
 	});
 
@@ -440,8 +446,8 @@ $(function(){
 		};
 
 		// add error details
-		var detail_keys = ['name','message','fileName','lineNumber','columnNumber','stack'];
-		for(var i = 0;i < detail_keys.length;i++){
+		var detail_keys = ['name', 'message', 'fileName', 'lineNumber', 'columnNumber', 'stack'];
+		for(var i = 0; i < detail_keys.length; i++){
 			if( thrownError.hasOwnProperty(detail_keys[i]) ){
 				debug_info[detail_keys[i]] = thrownError[detail_keys[i]];
 			}
@@ -452,9 +458,9 @@ $(function(){
 			var num					= thrownError.lineNumber;
 			var lines				= XMLHttpRequest.responseText.split('\n');
 
-			debug_info['Line-'+(num-1)]	= lines[num-2];
-			debug_info['Line-'+num]		= lines[num-1];
-			debug_info['Line-'+(num+1)]	= lines[num];
+			debug_info['Line-' + (num-1)]	= lines[num - 2];
+			debug_info['Line-' + num]		= lines[num - 1];
+			debug_info['Line-' + (num+1)]	= lines[num];
 		}
 
 		debug_info.responseStatus	= XMLHttpRequest.status;
@@ -465,12 +471,12 @@ $(function(){
 		debug_info.responseText		= XMLHttpRequest.responseText;
 
 		if( ajaxOptions.data ){
-			debug_info.ajaxdata		= ajaxOptions.data.substr(0,100);
+			debug_info.ajaxdata		= ajaxOptions.data.substr(0, 100);
 		}
 
 		// log everything if possible
 		if( window.console && console.log ){
-			console.log( debug_info );
+			console.log(debug_info);
 		}
 
 		// send to Typesetter bug tracker
@@ -482,11 +488,11 @@ $(function(){
 
 			debug_info.cmd = 'javascript_error';
 			$.ajax({
-				type: 'POST',
-				url: 'https://www.typesettercms.com/Resources',
-				data: debug_info,
-				success: function(){},
-				error: function(){}
+				type	: 'POST',
+				url		: 'https://www.typesettercms.com/Resources',
+				data	: debug_info,
+				success	: function(){},
+				error	: function(){}
 			});
 		}
 
@@ -496,10 +502,13 @@ $(function(){
 
 			var _debug	= JSON.stringify(debug_info);
 			_debug		= b64Encode(_debug);
-			_debug		= _debug.replace(/\=/g,'');
-			_debug		= _debug.replace(/\+/g,'-').replace(/\//g,'_');
-			var url		= 'http://www.typesettercms.com/index.php/Debug?data='+_debug;
-			$gp.AdminBoxC('<div class="inline_box"><h3>Error</h3><p>'+$gp.error+'</p><a href="'+url+'" target="_blank">More Info<?a></div>');
+			_debug		= _debug.replace(/\=/g, '');
+			_debug		= _debug.replace(/\+/g, '-').replace(/\//g, '_');
+			var url		= 'http://www.typesettercms.com/index.php/Debug?data=' + _debug;
+			$gp.AdminBoxC(
+				'<div class="inline_box"><h3>Error</h3><p>' + $gp.error + '</p>' +
+				'<a href="' + url + '" target="_blank">More Info<?a></div>'
+			);
 		}else{
 			alert($gp.error);
 		}
@@ -511,10 +520,15 @@ $(function(){
 	 * Unicode safe base64 encode
 	 *
 	 */
-	function b64Encode(str) {
-		return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-			return String.fromCharCode('0x' + p1);
-		}));
+	function b64Encode(str){
+		return btoa(
+			encodeURIComponent(str).replace(
+				/%([0-9A-F]{2})/g,
+				function(match, p1){
+					return String.fromCharCode('0x' + p1);
+				}
+			)
+		);
 	}
 
 
@@ -522,16 +536,22 @@ $(function(){
 	 * Handle clicks on forms
 	 *
 	 */
-	$document.on('click', 'input,button',function(evt){
+	$document.on('click', 'input,button', function(evt){
 
 		var $this = $(this);
 
 		//add a unique verifiable string to confirm posts are
-		$(this.form).filter('[method=post]').filter(':not(:has(input[type=hidden][name=verified]))').append('<input type="hidden" name="verified" value="'+post_nonce+'" />');
+		$(this.form)
+			.filter('[method=post]')
+			.filter(':not(:has(input[type=hidden][name=verified]))')
+			.append('<input type="hidden" name="verified" value="' + post_nonce + '" />');
 
 
 		//html5 validation
-		if( $this.hasClass('gpvalidate') && typeof(this.form.checkValidity) == 'function' && !this.form.checkValidity() ){
+		if( $this.hasClass('gpvalidate') &&
+			typeof(this.form.checkValidity) == 'function' &&
+			!this.form.checkValidity()
+		){
 			return;
 		}
 
@@ -541,28 +561,26 @@ $(function(){
 			return;
 		}
 
-
 		//get the first class
 		var cmd = $this.data('cmd');
 		if( !cmd ){
-			cmd = strip_from( $this.attr('class'), ' ' ); //deprecated
+			cmd = strip_from($this.attr('class'), ' '); //deprecated
 		}
 
 		if( typeof($gp.inputs[cmd]) === 'function' ){
-			return $gp.inputs[cmd].call(this,evt);
+			return $gp.inputs[cmd].call(this, evt);
 		}
 
 		if( typeof(gpinputs[cmd]) === 'function' ){
 			console.log('gpinputs is deprecated as of 3.6');
-			return gpinputs[cmd].call(this,evt,evt);//evt twice so the same function can be used for gplinks and gpinputs
+			return gpinputs[cmd].call(this, evt, evt); //evt twice so the same function can be used for gplinks and gpinputs
 		}
-
 
 		switch(cmd){
 			case 'gppost':
 			case 'gpajax':
-			evt.preventDefault();
-			return $gp.post(this);
+				evt.preventDefault();
+				return $gp.post(this);
 		}
 
 		return true;
@@ -587,7 +605,6 @@ $(function(){
 	 */
 	$document.on('click', 'a', function(evt){
 
-
 		var $this = $(this);
 		var cmd = $this.data('cmd');
 		var arg = $this.data('arg');
@@ -603,107 +620,121 @@ $(function(){
 		}
 
 		if( typeof($gp.links[cmd]) === 'function' ){
-			return $gp.links[cmd].call(this,evt,arg);
+			return $gp.links[cmd].call(this, evt, arg);
 		}
 
 		// @deprecated 3.6
 		if( typeof(gplinks[cmd]) === 'function' ){
 			console.log('gplinks is deprecated as of 3.6');
-			return gplinks[cmd].call(this,arg,evt);
+			return gplinks[cmd].call(this, arg, evt);
 		}
 
 		switch(cmd){
 
 			case 'toggle_show':
 				$(arg).toggle();
-			break;
+				break;
 
 			case 'inline_box':
 				$gp.CopyVals(arg,this);
 				$(this).colorbox(
-					$gp.cboxSettings({inline:true, href:arg, open:true})
+					$gp.cboxSettings({
+						inline	: true,
+						href	: arg,
+						open	: true
+					})
 				);
-			break;
+				break;
 
 			case 'postlink':
 				$gp.post_link(this);
-			break;
+				break;
 
 			case 'gpajax':
-				$gp.jGoTo(this.href,this);
-			break;
+				$gp.jGoTo(this.href, this);
+				break;
 
 			case 'creq':
-				$gp.cGoTo(this,true);
-			break;
+				$gp.cGoTo(this, true);
+				break;
 
 			case 'cnreq':
-				$gp.cGoTo(this,false);
-			break;
+				$gp.cGoTo(this, false);
+				break;
 
 			case 'close_message':
 				$this.closest('div').slideUp();
-			break;
+				break;
+
+			case 'copy_message':
+				var msg_text = $this.closest('div').find('ul')
+					.get(0).innerText; // innerText preserves line breaks
+				var $tmp = $('<textarea>')
+					.appendTo($this.closest('div'))
+					.val(msg_text);
+				$tmp.get(0).select();
+				$tmp.get(0).setSelectionRange(0, 99999);
+				document.execCommand('copy');
+				$tmp.remove();
+				break;
 
 			case 'hide_ui':
 				$gp.HideAdminUI.toggle(true);
-			break;
+				break;
 
 			default:
-			return true;
+				return true;
 		}
 
 		evt.preventDefault();
 		return false;
 	});
 
-
 });
 
 
-
-
-
-function strip_to(a,b){
+function strip_to(a, b){
 	if( !a ){
 		return a;
 	}
 	var pos = a.indexOf(b);
 	if( pos > -1 ){
-		return a.substr(pos+1);
+		return a.substr(pos + 1);
 	}
 	return a;
 }
 
-function strip_from(a,b){
+
+function strip_from(a, b){
 	if( !a ){
 		return a;
 	}
 	var p = a.indexOf(b);
 	if( p > -1 ){
-		a = a.substr(0,p);
+		a = a.substr(0, p);
 	}
 	return a;
 }
 
 
-
-
-
-
 /**
  * @deprecated 3.6
  */
-function jPrep(a,b){
-	return $gp.jPrep(a,b);
+function jPrep(a, b){
+	return $gp.jPrep(a, b);
 }
 
-function ajaxResponse(data,textStatus,jqXHR){
-	return $gp.Response(data,textStatus,jqXHR);
+
+function ajaxResponse(data, textStatus, jqXHR){
+	return $gp.Response(data, textStatus, jqXHR);
 }
+
+
 function loading(){
 	$gp.loading();
 }
+
+
 function loaded(){
 	$gp.loaded();
 }

@@ -452,7 +452,14 @@ function GetMessages($wrap=true){
 
 		$result .=	'<div class="messages gp-fixed-adjust">';
 		$result .=		'<div>';
-		$result .=			'<a href="#close-message" class="req_script close_message" data-cmd="close_message"></a>';
+		$result .=			'<span class="msg_controls">';
+		$result .=				'<a href="#close-message" class="req_script close_message" data-cmd="close_message"></a>';
+		if( \gp\tool::LoggedIn() ){
+			// add copy to clipboard icon only for for admins
+			$result .=			'<a href="#copy-message" title="' . $langmessage['Copy to Clipboard'] . '" ';
+			$result .=				'class="req_script copy_message" data-cmd="copy_message"></a>';
+		}
+		$result .=			'</span>';
 		$result .=			'<ul>';
 		$result .=				implode('', $wbMessageBuffer);
 		$result .=			'</ul>';

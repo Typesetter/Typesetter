@@ -4,17 +4,15 @@ namespace gp\tool\Output;
 
 class Assets{
 
-
 	/**
 	 * Combine the files in $files into a combine.php request
 	 * If $page->head_force_inline is true, resources will be
 	 * included inline in the document
-	 *
 	 * @param array $files Array of files relative to $dataDir
 	 * @param string $type The type of resource being combined
 	 *
 	 */
-	public static function CombineFiles($files,$type,$combine){
+	public static function CombineFiles($files, $type, $combine){
 		global $page;
 
 		// allow arrays of scripts
@@ -33,22 +31,21 @@ class Assets{
 
 			// multiple scripts
 			}else{
-				foreach( $val as $subkey => $file ){
+				foreach($val as $subkey => $file){
 					$files_flat[$key . '-' . $subkey] = is_array($file) ? $file['file'] : $file;
 				}
 			}
 		}
 
 		$files_flat = array_unique($files_flat);
-		$files_flat = array_filter($files_flat);//remove empty elements
+		$files_flat = array_filter($files_flat); //remove empty elements
 
 		// Force resources to be included inline
 		// CheckFile will fix the $file path if needed
 		if( $page->head_force_inline ){
-			self::Inline($type, $files_flat );
+			self::Inline($type, $files_flat);
 			return;
 		}
-
 
 		//files not combined except for script components
 		if( !$combine || (isset($_REQUEST['no_combine']) && \gp\tool::LoggedIn()) ){
@@ -64,14 +61,13 @@ class Assets{
 			return;
 		}
 
-
 		//create combine request
-		$combined_file = \gp\tool\Output\Combine::GenerateFile($files_flat,$type);
+		$combined_file = \gp\tool\Output\Combine::GenerateFile($files_flat, $type);
 		if( $combined_file === false ){
 			return;
 		}
 
-		echo self::FormatAsset($type, \gp\tool::GetDir($combined_file, true) );
+		echo self::FormatAsset($type, \gp\tool::GetDir($combined_file, true));
 	}
 
 
@@ -112,7 +108,7 @@ class Assets{
 				}
 			}
 
-			foreach( $files as $ext => $files_same_ext ){
+			foreach($files as $ext => $files_same_ext){
 
 				//less and scss
 				if( $ext == 'less' || $ext == 'scss' ){
@@ -125,6 +121,7 @@ class Assets{
 		return array_merge($scripts,$to_add);
 	}
 
+
 	/**
 	 * Format <script> and <link> tags for asset urls
 	 *
@@ -133,7 +130,7 @@ class Assets{
 		if( $type == 'css' ){
 			return "\n" . '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
 		}else{
-			return "\n" .'<script type="text/javascript" src="' . $url . '"></script>';
+			return "\n" . '<script type="text/javascript" src="' . $url . '"></script>';
 		}
 	}
 
@@ -144,22 +141,24 @@ class Assets{
 	 */
 	public static function Inline($type, $files_flat){
 
-		 if( $type == 'css' ){
-			 echo '<style type="text/css">';
-		 }else{
-			 echo '<script type="text/javascript">';
-		 }
-		 foreach($files_flat as $file_key => $file){
-			 $full_path = \gp\tool\Output\Combine::CheckFile($file);
-			 if( $full_path === false ) continue;
-			 readfile($full_path);
-			 echo ";\n";
-		 }
-		 if( $type == 'css' ){
-			 echo '</style>';
-		 }else{
-			 echo '</script>';
-		 }
+		if( $type == 'css' ){
+			echo '<style type="text/css">';
+		}else{
+			echo '<script type="text/javascript">';
+		}
+		foreach($files_flat as $file_key => $file){
+			$full_path = \gp\tool\Output\Combine::CheckFile($file);
+			if( $full_path === false ){
+				continue;
+			}
+			readfile($full_path);
+			echo ";\n";
+		}
+		if( $type == 'css' ){
+			echo '</style>';
+		}else{
+			echo '</script>';
+		}
 	 }
 
 
@@ -170,20 +169,16 @@ class Assets{
 	public static function LayoutStyleFiles(){
 		global $page, $dataDir;
 
-
-		$files			= array();
+		$files			= [];
 		$dir			= $page->theme_dir . '/' . $page->theme_color;
 		$style_type		= \gp\tool\Output::StyleType($dir);
 
-
 		//css file
 		if( $style_type == 'css' ){
-
 			$files[]		= rawurldecode($page->theme_path) . '/style.css';
 			$files			= self::AddCustomStyleFiles($files, $style_type);
 			return $files;
 		}
-
 
 		//less or scss file
 		$var_file	= $dir .'/variables.' . $style_type;
@@ -191,19 +186,16 @@ class Assets{
 			$files[] = $var_file;
 		}
 
-
 		if( $style_type == 'scss' ){
-
 			$files			= self::AddCustomStyleFiles($files, 'scss');
 			$files[]		= $dir . '/style.scss';
-			return array( \gp\tool\Output\Css::Cache($files) );
+			return [\gp\tool\Output\Css::Cache($files)];
 		}
 
 		$files			= self::AddCustomStyleFiles($files, 'css');
-
 		array_unshift($files, $dir . '/style.less');
 
-		return array( \gp\tool\Output\Css::Cache($files, 'less') );
+		return [\gp\tool\Output\Css::Cache($files, 'less')];
 	}
 
 
@@ -211,16 +203,15 @@ class Assets{
 	 * Add paths for custom css/scss/less files
 	 *
 	 */
-	public static function AddCustomStyleFiles($files, $file_ext = 'css'){
+	public static function AddCustomStyleFiles($files, $file_ext='css'){
 		global $dataDir, $page;
 
 		if( $page->gpLayout === false ){
 			return $files;
 		}
 
-		$customizer_style_file 		= '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
-		$layout_editor_style_file 	= '/data/_layouts/' . $page->gpLayout . '/custom.' . $file_ext;
-
+		$customizer_style_file		= '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
+		$layout_editor_style_file	= '/data/_layouts/' . $page->gpLayout . '/custom.' . $file_ext;
 
 		if( file_exists($dataDir . $customizer_style_file) ){
 			$files[] = $customizer_style_file;

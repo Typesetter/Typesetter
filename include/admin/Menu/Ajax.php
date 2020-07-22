@@ -402,7 +402,7 @@ class Ajax extends \gp\admin\Menu{
 		echo '<div class="inline_box">';
 
 			//tabs
-			echo '<div class="layout_links">';
+			echo '<div class="gp_tabs">';
 			echo   '<a href="#gp_Insert_Copy" data-cmd="tabs" class="selected">' . $langmessage['Copy'] . '</a> ';
 			echo   '<a href="#gp_Insert_New" data-cmd="tabs">' . $langmessage['new_file'] . '</a> ';
 			echo   '<a href="#gp_Insert_Hidden" data-cmd="tabs">' . $langmessage['Available'] . '</a> ';

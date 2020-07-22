@@ -129,6 +129,7 @@ namespace gp\admin{
 			echo '</div>';
 		}
 
+
 		/**
 		 * Tabs
 		 * Output tabs to navigate between notifications
@@ -136,7 +137,7 @@ namespace gp\admin{
 		 *
 		 */
 		public function Tabs($filter_list_by){
-			echo '<div class="layout_links">';
+			echo '<div class="gp_tabs">';
 			foreach( $this->notifications as $type => $notification ){
 
 				$class = '';
@@ -144,7 +145,6 @@ namespace gp\admin{
 				if( $filter_list_by && $type == $filter_list_by ){
 					$class = 'selected';
 				}
-
 
 				echo \gp\tool::Link(
 					'Admin/Notifications',
@@ -157,7 +157,6 @@ namespace gp\admin{
 						'data-cmd'	=> 'gpabox',
 					)
 				);
-
 
 			}
 			echo '</div>';

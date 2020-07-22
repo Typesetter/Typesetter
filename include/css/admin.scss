@@ -1745,7 +1745,7 @@ body #addon_about {
 /**
  * tabs
  */
-.layout_links {
+.gp_tabs {
 	margin: 0 0 12px 0;
 	/*
 	text-align: justify;
@@ -1760,8 +1760,8 @@ body #addon_about {
  	*/
 }
 
-.layout_links a,
-#gp_admin_html .layout_links a {
+.gp_tabs a,
+#gp_admin_html .gp_tabs a {
 	display: inline-block;
 	text-decoration: none;
 	font-weight: bold;
@@ -1779,8 +1779,8 @@ body #addon_about {
 	text-overflow: ellipsis;
 }
 
-.layout_links a.selected,
-#gp_admin_html .layout_links a.selected {
+.gp_tabs a.selected,
+#gp_admin_html .gp_tabs a.selected {
 	border: 1px solid #444;
 	background-color: #777;
 	color: #fff;

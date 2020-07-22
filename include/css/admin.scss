@@ -1964,11 +1964,12 @@ body #addon_about {
 .dd_menu > a:after {
 	position: absolute;
 	right: 0;
-	padding: 0 4px;
+	padding: 0 8px 0 0;
 	border-radius: 2px;
-	font-size: 10px;
+	font-size: 14px;
 	color: #666;
-	content: "\25BC";
+	font-family: FontAwesome;
+	content: "\f0d7";
 	padding-left: 5px;
 	background: #fff;
 }
@@ -1980,6 +1981,8 @@ body #addon_about {
 	border-radius: 5px;
 	border: 1px solid #ccc;
 	top: 100%;
+	left: 0;
+	right: 0;
 	margin-top: -1px;
 	z-index: 11020; /* place over messages */
 	overflow: hidden;

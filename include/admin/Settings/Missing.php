@@ -75,11 +75,11 @@ class Missing extends \gp\special\Missing{
 		global $langmessage;
 
 		if( !\gp\tool\Files::SaveData($this->datafile,'error_data',$this->error_data) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
-		message($langmessage['SAVED']);
+		msg($langmessage['SAVED']);
 		return true;
 	}
 
@@ -356,7 +356,7 @@ class Missing extends \gp\special\Missing{
 
 		$source = \gp\admin\Tools::PostedSlug( $_REQUEST['source'] );
 		if( !isset($this->error_data['redirects'][$source]) ){
-			message($langmessage['OOPS'].' (Invalid Redirect)');
+			msg($langmessage['OOPS'].' (Invalid Redirect)');
 			return false;
 		}
 
@@ -447,17 +447,17 @@ class Missing extends \gp\special\Missing{
 		global $langmessage;
 
 		if( empty($_POST['source']) ){
-			message($langmessage['OOPS'].' (Empty Source)');
+			msg($langmessage['OOPS'].' (Empty Source)');
 			return false;
 		}
 
 		if( $_POST['source'] == $_POST['target'] ){
-			message($langmessage['OOPS'].' (Infinite Loop)');
+			msg($langmessage['OOPS'].' (Infinite Loop)');
 			return false;
 		}
 
 		if( \gp\admin\Tools::PostedSlug($_POST['source']) == \gp\admin\Tools::PostedSlug($_POST['target']) ){
-			message($langmessage['OOPS'].' (Infinite Loop)');
+			msg($langmessage['OOPS'].' (Infinite Loop)');
 			return false;
 		}
 
@@ -484,7 +484,7 @@ class Missing extends \gp\special\Missing{
 		$source			= \gp\admin\Tools::PostedSlug( $orig_source );
 
 		if( !isset($this->error_data['redirects'][$orig_source]) ){
-			message($langmessage['OOPS'].' (Entry not found)');
+			msg($langmessage['OOPS'].' (Entry not found)');
 			return false;
 		}
 
@@ -494,7 +494,7 @@ class Missing extends \gp\special\Missing{
 		$data['raw_source']		= $_POST['source'];
 
 		if( !\gp\tool\Files::ArrayReplace($orig_source,$source,$data,$this->error_data['redirects']) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -516,7 +516,7 @@ class Missing extends \gp\special\Missing{
 		$source = \gp\admin\Tools::PostedSlug( $_POST['source'] );
 
 		if( isset($this->error_data['redirects'][$source]) ){
-			message($langmessage['OOPS'].' (Redirect Already Set)');
+			msg($langmessage['OOPS'].' (Redirect Already Set)');
 			return false;
 		}
 
@@ -541,7 +541,7 @@ class Missing extends \gp\special\Missing{
 
 		$link =& $_POST['link'];
 		if( !isset($this->error_data['redirects'][$link]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 

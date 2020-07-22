@@ -89,7 +89,7 @@ class Text extends \gp\admin\Layout{
 		global $config, $langmessage;
 
 		if( !isset($_GET['key']) ){
-			message($langmessage['OOPS'].' (0)');
+			msg($langmessage['OOPS'].' (0)');
 			return;
 		}
 
@@ -140,11 +140,11 @@ class Text extends \gp\admin\Layout{
 		global $config, $langmessage;
 
 		if( !isset($_POST['key']) ){
-			message($langmessage['OOPS'].' (0)');
+			msg($langmessage['OOPS'].' (0)');
 			return;
 		}
 		if( !isset($_POST['value']) ){
-			message($langmessage['OOPS'].' (1)');
+			msg($langmessage['OOPS'].' (1)');
 			return;
 		}
 
@@ -170,7 +170,7 @@ class Text extends \gp\admin\Layout{
 		$texts = $this->GetAddonTexts($addon);
 		//not set up correctly
 		if( $texts === false ){
-			message($langmessage['OOPS'].' (0)');
+			msg($langmessage['OOPS'].' (0)');
 			return;
 		}
 

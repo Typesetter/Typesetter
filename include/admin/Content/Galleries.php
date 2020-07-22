@@ -151,7 +151,7 @@ class Galleries extends \gp\special\Galleries{
 			}
 
 			if( !\gp\tool\Files::ArrayInsert($next,$dragging,$info,$this->galleries) ){
-				message($langmessage['OOPS'].' (Insert Failed)');
+				msg($langmessage['OOPS'].' (Insert Failed)');
 				return false;
 			}
 
@@ -162,7 +162,7 @@ class Galleries extends \gp\special\Galleries{
 
 		//save it
 		if( !self::SaveIndex($this->galleries) ){
-			message($langmessage['OOPS'].' (Not Saved)');
+			msg($langmessage['OOPS'].' (Not Saved)');
 			return false;
 		}
 

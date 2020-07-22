@@ -70,7 +70,7 @@ class Users extends \gp\special\Base{
 
 		$username =& $_REQUEST['username'];
 		if( !isset($this->users[$username]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -130,7 +130,7 @@ class Users extends \gp\special\Base{
 
 		$username =& $_REQUEST['username'];
 		if( !isset($this->users[$username]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -191,13 +191,13 @@ class Users extends \gp\special\Base{
 		$username = $_POST['username'];
 
 		if( !isset($this->users[$username]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
 		//don't allow deleting self
 		if( $username == $gpAdmin['username'] ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 		return $username;
@@ -210,7 +210,7 @@ class Users extends \gp\special\Base{
 		$_POST += array('grant'=>'');
 
 		if( ($_POST['password']=="") || ($_POST['password'] !== $_POST['password1'])  ){
-			message($langmessage['invalid_password']);
+			msg($langmessage['invalid_password']);
 			return false;
 		}
 
@@ -218,12 +218,12 @@ class Users extends \gp\special\Base{
 		$newname = $_POST['username'];
 		$test = str_replace( array('.','_'), array(''), $newname );
 		if( empty($test) || !ctype_alnum($test) ){
-			message($langmessage['invalid_username']);
+			msg($langmessage['invalid_username']);
 			return false;
 		}
 
 		if( isset($this->users[$newname]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -326,14 +326,14 @@ class Users extends \gp\special\Base{
 		global $langmessage;
 
 		if( !\gp\tool\Files::SaveData('_site/users','users',$this->users) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
 		if( $refresh && isset($_GET['gpreq']) && $_GET['gpreq'] == 'json' ){
-			message($langmessage['SAVED'].' '.$langmessage['REFRESH']);
+			msg($langmessage['SAVED'].' '.$langmessage['REFRESH']);
 		}else{
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 		}
 		return true;
 	}
@@ -663,7 +663,7 @@ class Users extends \gp\special\Base{
 
 		$username =& $_REQUEST['username'];
 		if( !isset($this->users[$username]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 
@@ -713,7 +713,7 @@ class Users extends \gp\special\Base{
 
 		$username = $_POST['username'];
 		if( !isset($this->users[$username]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -732,7 +732,7 @@ class Users extends \gp\special\Base{
 
 		//see also Admin/Users for password checking
 		if( ($_POST['password']=="") || ($_POST['password'] !== $_POST['password1'])  ){
-			message($langmessage['invalid_password']);
+			msg($langmessage['invalid_password']);
 			return false;
 		}
 		return true;
@@ -762,7 +762,7 @@ class Users extends \gp\special\Base{
 		$indexes		= explode(',',$_REQUEST['index']);
 
 		if( empty($indexes) ){
-			message($langmessage['OOPS'].' Invalid Title (1)');
+			msg($langmessage['OOPS'].' Invalid Title (1)');
 			return;
 		}
 
@@ -775,7 +775,7 @@ class Users extends \gp\special\Base{
 		}
 
 		if( empty($cleaned) ){
-			message($langmessage['OOPS'].' Invalid Title (2)');
+			msg($langmessage['OOPS'].' Invalid Title (2)');
 			return;
 		}
 

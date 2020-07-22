@@ -196,7 +196,7 @@ class Port{
 			}
 		}
 		if( $which_exported === 0 ){
-			message($langmessage['OOPS'].'(1)');
+			msg($langmessage['OOPS'].'(1)');
 			return false;
 		}
 
@@ -240,7 +240,7 @@ class Port{
 			$tar_object->compress();
 
 		}catch( \Exception $e){
-			message($langmessage['OOPS'].' (Archive couldn\'t be created)');
+			msg($langmessage['OOPS'].' (Archive couldn\'t be created)');
 			return false;
 		}
 
@@ -256,7 +256,7 @@ class Port{
 		global $langmessage;
 
 		if( !\gp\tool\Files::CheckDir($this->export_dir) ){
-			message($langmessage['OOPS'].'(Export Dir)');
+			msg($langmessage['OOPS'].'(Export Dir)');
 			return false;
 		}
 
@@ -325,12 +325,12 @@ class Port{
 
 		$this->import_info = $this->ExtractIni();
 		if( $this->import_info === false ){
-			message($langmessage['OOPS'].' (No import info)');
+			msg($langmessage['OOPS'].' (No import info)');
 			return false;
 		}
 
 		if( !$this->CanRevert($this->import_info['Export_Which']) ){
-			message($langmessage['OOPS'].' (Not Compatible)');
+			msg($langmessage['OOPS'].' (Not Compatible)');
 			return false;
 		}
 
@@ -398,7 +398,7 @@ class Port{
 			$this->import_object->extractTo($temp_file);
 
 		}catch( \Exception $e){
-			message($langmessage['OOPS'].' (Archive couldn\'t be extracted)');
+			msg($langmessage['OOPS'].' (Archive couldn\'t be extracted)');
 			return false;
 		}
 
@@ -425,7 +425,7 @@ class Port{
 		$replaced = $this->FileSystem->ReplaceDirs( $this->replace_dirs, $this->extra_dirs );
 
 		if( $replaced !== true ){
-			message($langmessage['revert_failed'].$replaced);
+			msg($langmessage['revert_failed'].$replaced);
 			return false;
 		}
 
@@ -458,7 +458,7 @@ class Port{
 		// otherwise ReplaceDirs() will fail when we try to replace the data directory
 		$new_relative	= \gp\tool\FileSystem::TempFile( '/themes' );
 		if( !$this->FileSystem->RelRename($rel_path, $new_relative) ){
-			message($langmessage['revert_failed'].' (AddReplaceDir Failed)');
+			msg($langmessage['revert_failed'].' (AddReplaceDir Failed)');
 			return false;
 		}
 
@@ -467,7 +467,7 @@ class Port{
 			$source		= $dataDir.'/data/';
 			$new_full	= $dataDir.$new_relative;
 			if( !$this->CopyAll( $source, $new_full ) ){
-				message($langmessage['OOPS'].' Session file not copied (0)');
+				msg($langmessage['OOPS'].' Session file not copied (0)');
 			}
 		}
 
@@ -587,7 +587,7 @@ class Port{
 		$this->FileSystem	= \gp\tool\FileSystem::init($dataDir);
 
 		if( is_null($this->FileSystem) ){
-			message($langmessage['OOPS'] .' (No filesystem)');
+			msg($langmessage['OOPS'] .' (No filesystem)');
 			return false;
 		}
 		return true;
@@ -675,13 +675,13 @@ class Port{
 		global $langmessage;
 
 		if( empty($archive) || !isset($this->exported[$archive]) ){
-			message($langmessage['OOPS'].' (Invalid Archive)');
+			msg($langmessage['OOPS'].' (Invalid Archive)');
 			return false;
 		}
 
 		$full_path = $this->export_dir.'/'.$archive;
 		if( !file_exists($full_path) ){
-			message($langmessage['OOPS'].' (Archive non-existant)');
+			msg($langmessage['OOPS'].' (Archive non-existant)');
 			return false;
 		}
 
@@ -691,7 +691,7 @@ class Port{
 			$this->import_object = new \gp\tool\Archive($full_path);
 
 		}catch( \Exception $e){
-			message($langmessage['OOPS'].' (Archive couldn\'t be opened)');
+			msg($langmessage['OOPS'].' (Archive couldn\'t be opened)');
 			return false;
 		}
 
@@ -723,7 +723,7 @@ class Port{
 
 		$file =& $_POST['file'];
 		if( !isset($this->exported[$file]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return;
 		}
 

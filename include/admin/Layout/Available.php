@@ -332,7 +332,7 @@ class Available extends \gp\admin\Layout{
 		$theme =& $_REQUEST['theme'];
 		$theme_info = $this->ThemeInfo($theme);
 		if( $theme_info === false ){
-			message($langmessage['OOPS'].' (Invalid Theme)');
+			msg($langmessage['OOPS'].' (Invalid Theme)');
 			return false;
 		}
 
@@ -533,7 +533,7 @@ class Available extends \gp\admin\Layout{
 		$theme_folder_name	=& $_POST['folder'];
 
 		if( empty($theme_folder_name) || !ctype_alnum($theme_folder_name) ){
-			message($langmessage['OOPS'].' (Invalid Request)');
+			msg($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}
 
@@ -543,7 +543,7 @@ class Available extends \gp\admin\Layout{
 		}
 
 		if( !$this->CanDeleteTheme($theme_folder_name,$message) ){
-			message($message);
+			msg($message);
 			return false;
 		}
 
@@ -585,11 +585,11 @@ class Available extends \gp\admin\Layout{
 			if( !\gp\admin\Tools::SaveAllConfig() ){
 				$config = $config_before;
 				$gpLayouts = $gpLayoutsBefore;
-				message($langmessage['OOPS'].' (s1)');
+				msg($langmessage['OOPS'].' (s1)');
 				return false;
 			}
 
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 			if( $order ){
 				$img_path = \gp\tool::IdUrl('ci');
 				\gp\tool::IdReq($img_path);

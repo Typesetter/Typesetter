@@ -284,7 +284,7 @@ namespace gp\admin\Content{
 				$dir = $dataDir.'/data/_uploaded'.$prev_piece;
 
 				if( !\gp\tool\Files::CheckDir($dir) ){
-					message($langmessage['OOPS']);
+					msg($langmessage['OOPS']);
 					$dir = \gp\tool::DirName($dir);
 					$dir_piece = \gp\tool::DirName($prev_piece);
 				}
@@ -758,7 +758,7 @@ namespace gp\admin\Content{
 
 
 			if( !\gp\tool\Files::RmAll($full_path) ){
-				message($langmessage['OOPS']);
+				msg($langmessage['OOPS']);
 				return;
 			}
 
@@ -777,7 +777,7 @@ namespace gp\admin\Content{
 			global $langmessage;
 
 			if( empty($_REQUEST['file']) ){
-				if( $warn ) message($langmessage['OOPS'].'(2)');
+				if( $warn ) msg($langmessage['OOPS'].'(2)');
 				return false;
 			}
 
@@ -787,17 +787,17 @@ namespace gp\admin\Content{
 		public function CheckFileName($file,$warn){
 			global $langmessage;
 			if( (strpos($file,'/') !== false ) || (strpos($file,'\\') !== false) ){
-				if( $warn ) message($langmessage['OOPS'].'(3)');
+				if( $warn ) msg($langmessage['OOPS'].'(3)');
 				return false;
 			}
 			$fullPath = $this->currentDir.'/'.$file;
 			if( !file_exists($fullPath) ){
-				if( $warn ) message($langmessage['OOPS'].'(4)');
+				if( $warn ) msg($langmessage['OOPS'].'(4)');
 				return false;
 			}
 
 			if( strpos($fullPath,$this->baseDir) === false ){
-				if( $warn ) message($langmessage['OOPS'].' (5)');
+				if( $warn ) msg($langmessage['OOPS'].' (5)');
 				return false;
 			}
 			return $file;

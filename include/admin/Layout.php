@@ -88,7 +88,7 @@ class Layout extends \gp\admin\Addon\Install{
 			$this->curr_layout = $_REQUEST['layout'];
 		}
 		if( !array_key_exists($this->curr_layout,$gpLayouts) ){
-			message($langmessage['OOPS'].' (Invalid Layout)');
+			msg($langmessage['OOPS'].' (Invalid Layout)');
 			$cmd = '';
 		}
 
@@ -377,7 +377,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		//save if not empt
 		if( !\gp\tool\Files::Save($custom_file,$css) ){
-			message($langmessage['OOPS'].' (CSS not saved)');
+			msg($langmessage['OOPS'].' (CSS not saved)');
 			return false;
 		}
 
@@ -497,7 +497,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( !$changed ){
-			message($langmessage['OOPS'].' (Not Changed)');
+			msg($langmessage['OOPS'].' (Not Changed)');
 			return;
 		}
 
@@ -537,7 +537,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$theme_info		= $this->ThemeInfo($theme);
 
 		if( !$theme_info ){
-			message($langmessage['OOPS'].' (Invalid Source)');
+			msg($langmessage['OOPS'].' (Invalid Source)');
 			return false;
 		}
 
@@ -699,7 +699,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( empty($_POST['label']) ){
-			message($langmessage['OOPS'].'(Empty Label)');
+			msg($langmessage['OOPS'].'(Empty Label)');
 			return;
 		}
 
@@ -716,7 +716,7 @@ class Layout extends \gp\admin\Addon\Install{
 		$gpLayouts[$layout_id]	= $newLayout;
 
 		if( !\gp\tool\Files::ArrayInsert($copy_id,$layout_id,$newLayout,$gpLayouts,1) ){
-			message($langmessage['OOPS'].'(Not Inserted)');
+			msg($langmessage['OOPS'].'(Not Inserted)');
 			return;
 		}
 
@@ -1584,7 +1584,7 @@ class Layout extends \gp\admin\Addon\Install{
 		}
 
 		if( !isset( $gpLayouts[$layout] )  ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -1749,7 +1749,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$layout =& $_POST['layout'];
 		if( !isset($gpLayouts[$layout]) ){
-			message($langmessage['OOPS'].' (Layout not set)');
+			msg($langmessage['OOPS'].' (Layout not set)');
 			return false;
 		}
 
@@ -1864,7 +1864,7 @@ class Layout extends \gp\admin\Addon\Install{
 		global $langmessage, $gpLayouts;
 
 		if( !isset($_REQUEST['layout']) || !isset($gpLayouts[$_REQUEST['layout']]) ){
-			message($langmessage['OOPS'].'(Invalid layout)');
+			msg($langmessage['OOPS'].'(Invalid layout)');
 			return;
 		}
 

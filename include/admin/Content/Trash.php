@@ -262,7 +262,7 @@ class Trash extends \gp\special\Base{
 		global $langmessage,$gp_titles,$gp_index;
 
 		if( empty($_POST['titles']) || !is_array($_POST['titles']) ){
-			message($langmessage['OOPS'].' (No Titles)');
+			msg($langmessage['OOPS'].' (No Titles)');
 			return;
 		}
 
@@ -270,7 +270,7 @@ class Trash extends \gp\special\Base{
 		self::RestoreTitles($titles);
 
 		if( !$titles ){
-			message($langmessage['OOPS'].' (R1)');
+			msg($langmessage['OOPS'].' (R1)');
 			return false;
 		}
 
@@ -290,7 +290,7 @@ class Trash extends \gp\special\Base{
 		$link		= \gp\tool::GetUrl('Admin/Menu');
 		$message	= sprintf($langmessage['file_restored'],$title_string,$link);
 
-		message($message);
+		msg($message);
 	}
 
 
@@ -566,7 +566,7 @@ class Trash extends \gp\special\Base{
 		global $dataDir,$langmessage;
 
 		if( empty($_POST['titles']) || !is_array($_POST['titles']) ){
-			message($langmessage['OOPS'].' (No Titles)');
+			msg($langmessage['OOPS'].' (No Titles)');
 			return;
 		}
 
@@ -596,7 +596,7 @@ class Trash extends \gp\special\Base{
 
 
 		if( $incomplete ){
-			message($langmessage['delete_incomplete']);
+			msg($langmessage['delete_incomplete']);
 		}
 	}
 

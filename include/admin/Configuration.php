@@ -160,9 +160,9 @@ class Configuration extends \gp\special\Base{
 
 
 		if( isset($_GET['gpreq']) && $_GET['gpreq'] == 'json' ){
-			message($langmessage['SAVED'].' '.$langmessage['REFRESH']);
+			msg($langmessage['SAVED'].' '.$langmessage['REFRESH']);
 		}else{
-			message($langmessage['SAVED']);
+			msg($langmessage['SAVED']);
 		}
 
 		//resize thumbnails

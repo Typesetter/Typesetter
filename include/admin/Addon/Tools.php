@@ -301,7 +301,7 @@ class Tools extends \gp\special\Base{
 			$message .= '<ul>';
 			$message .= '<li>' . implode('</li><li>', $this->messages) . '</li>';
 			$message .= '</ul>';
-			message($message);
+			msg($message);
 			$this->ShowRatingText = false;
 			return false;
 		}
@@ -396,7 +396,7 @@ class Tools extends \gp\special\Base{
 		}
 
 		if( !is_numeric($_POST['rating']) || ($_POST['rating'] < 1) || ($_POST['rating'] > 5 ) ){
-			message($langmessage['OOPS'] . ' (Invalid Rating)');
+			msg($langmessage['OOPS'] . ' (Invalid Rating)');
 			return false;
 		}
 
@@ -410,7 +410,7 @@ class Tools extends \gp\special\Base{
 			if( ($_POST['rating'] == $this->addonReviews[$id]['rating'])
 				&& ($_POST['review'] == $this->addonReviews[$id]['review']) ){
 					$this->ShowRatingText = false;
-					message('Your review has been saved and will be posted pending approval.');
+					msg('Your review has been saved and will be posted pending approval.');
 					return true;
 			}
 		}
@@ -440,7 +440,7 @@ class Tools extends \gp\special\Base{
 		$this->SaveAddonData();
 
 		$this->ShowRatingText = false;
-		message('Your review has been saved and will be posted pending approval.');
+		msg('Your review has been saved and will be posted pending approval.');
 		return true;
 	}
 
@@ -459,7 +459,7 @@ class Tools extends \gp\special\Base{
 	public function RatingResponse($contents){
 		global $langmessage;
 		if( empty($contents) ){
-			message($langmessage['OOPS'] . ' (empty rating)');
+			msg($langmessage['OOPS'] . ' (empty rating)');
 			return false;
 		}
 
@@ -474,12 +474,12 @@ class Tools extends \gp\special\Base{
 		//invalid_rating_request
 		switch($detail){
 			case 'no_addon';
-				message('The supplied addon id was invalid.');
+				msg('The supplied addon id was invalid.');
 			break;
 
 			default:
-				message($langmessage['OOPS'] . ' (Detail:' . htmlspecialchars($detail) . ')');
-				//message($contents);
+				msg($langmessage['OOPS'] . ' (Detail:' . htmlspecialchars($detail) . ')');
+				//msg($contents);
 			break;
 		}
 		return false;
@@ -569,7 +569,7 @@ class Tools extends \gp\special\Base{
 				if( !isset($keep_hooks[$hook_name]) ){
 					unset($config['hooks'][$hook_name][$hook_dir]);
 					unset($gp_hooks[$hook_name][$hook_dir]);
-					//message('remove this hook: ' . $hook_name);
+					//msg('remove this hook: ' . $hook_name);
 				}
 			}
 		}

@@ -56,7 +56,7 @@ class Uninstall{
 		$this->DirPermission = 0777; //0755;
 		$this->FilePermission = 0666; //0644; //0600 is too restrictive
 		$this->chmoddir($chmodDir);
-		message('The file permissions have been updated.');
+		msg('The file permissions have been updated.');
 	}
 
 	private function uninstall(){
@@ -67,7 +67,7 @@ class Uninstall{
 		$this->FilePermission = 0777; //0666;
 		$this->chmoddir($chmodDir);
 
-		message('The file permissions have been updated.');
+		msg('The file permissions have been updated.');
 	}
 
 	private function chmoddir($dir){

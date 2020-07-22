@@ -199,7 +199,7 @@ class Login extends \gp\Page{
 		$username	= $_POST['username'];
 
 		if( !isset($users[$username]) ){
-			message($langmessage['OOPS']);
+			msg($langmessage['OOPS']);
 			return false;
 		}
 
@@ -208,7 +208,7 @@ class Login extends \gp\Page{
 
 
 		if( empty($userinfo['email']) ){
-			message($langmessage['no_email_provided']);
+			msg($langmessage['no_email_provided']);
 			return false;
 		}
 

@@ -172,7 +172,7 @@ class Addons extends \gp\admin\Addon\Install{
 		$gadget = $_GET['gadget'];
 
 		if( !isset($config['gadgets']) || !is_array($config['gadgets']) || !isset($config['gadgets'][$gadget]) ){
-			message($langmessage['OOPS'].' (Invalid Gadget)');
+			msg($langmessage['OOPS'].' (Invalid Gadget)');
 			return;
 		}
 
@@ -299,7 +299,7 @@ class Addons extends \gp\admin\Addon\Install{
 		$addon_key	= \gp\admin\Tools::decode64($encoded_key);
 
 		if( !isset($config['addons'][$addon_key]) ){
-			message($langmessage['OOPS'].'(Addon Not Found)');
+			msg($langmessage['OOPS'].'(Addon Not Found)');
 			$this->Select();
 			return;
 		}
@@ -352,7 +352,7 @@ class Addons extends \gp\admin\Addon\Install{
 		$addonPath			= $dataDir.'/addons';
 
 		if( !file_exists($addonPath) ){
-			message('Warning: The /addons folder "<em>'.$addonPath.'</em>" does not exist on your server.');
+			msg('Warning: The /addons folder "<em>'.$addonPath.'</em>" does not exist on your server.');
 			return array();
 		}
 
@@ -645,7 +645,7 @@ class Addons extends \gp\admin\Addon\Install{
 		$_REQUEST				+= array('source'=>'');
 
 		if( !isset($this->avail_addons[$_REQUEST['source']]) ){
-			message($langmessage['OOPS'].' (Invalid Request)');
+			msg($langmessage['OOPS'].' (Invalid Request)');
 			return false;
 		}
 

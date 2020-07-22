@@ -377,16 +377,18 @@ function fix_magic_quotes(&$arr){
 
 
 /**
- * Store a user message in the buffer
+ * @deprecated 5.2
+ * Wrapper for msg()
  *
  */
 function message(){
-	$args = func_get_args(); //for php previous to 5.3
-	call_user_func_array('msg', $args);
+	// trigger_error('Deprecated function message(). Use msg() instead');
+	call_user_func_array('msg', func_get_args());
 }
 
 
 /**
+ * Store a user message in the buffer
  * @since 4.0
  *
  */
@@ -409,6 +411,11 @@ function msg(){
 }
 
 
+/**
+ * add message only if admin user is logged in 
+ * @since 5.2
+ *
+ */
 function debug(){
 	if( \gp\tool::LoggedIn() ){
 		call_user_func_array('msg', func_get_args());

@@ -760,4 +760,5 @@ $langmessage = array (
 	'Hide on selected pages'          => 'Cacher sur les pages sélectionnées',
 	'Show on this page'               => 'Afficher sur cette page',
 	'Hide on this page'               => 'Cacher sur cette page',
+	'Customizer'                      => 'Customizer',
 );

@@ -437,6 +437,7 @@ namespace gp\tool{
 		public static function GpOutLabel($info){
 			global $langmessage;
 
+			$info += ['arg' => '']; // suppress warning with older themes TODO: check the cause
 			$label = $info['arg'];
 			if( empty($label) ){
 				$label = $info['gpOutCmd'];

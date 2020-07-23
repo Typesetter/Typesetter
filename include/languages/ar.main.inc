@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Auto Redirect Percent',
 	'restore_defaults'                => 'استرجع الافتراضيات',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'افتراضي',
 	'see_also'                        => 'شاهد أيضا',
 	'general_settings'                => 'الإعدادات العامة',

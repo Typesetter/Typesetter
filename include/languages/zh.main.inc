@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => '自動轉址百分比',
 	'restore_defaults'                => '還原為預設值',
 	'Add your LESS and CSS here'      => '在此新增您的 LESS 與 CSS 程式碼',
+	'Add X here'                      => '在此处添加%s',
 	'default'                         => '預設值',
 	'see_also'                        => '請見：',
 	'general_settings'                => '一般設定',

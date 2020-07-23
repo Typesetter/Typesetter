@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Ποσοστό Αυτόματης Ανακατεύθυνσης',
 	'restore_defaults'                => 'Επαναφορά Προεπιλογών',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'Προκαθορισμένο',
 	'see_also'                        => 'Δείτε Επίσης:',
 	'general_settings'                => 'Γενικές Ρυθμίσεις',

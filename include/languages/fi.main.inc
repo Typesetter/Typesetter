@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Automaattisen uudelleenohjauksen prosentti',
 	'restore_defaults'                => 'Palauta oletusasetukset',
 	'Add your LESS and CSS here'      => 'Lisää LESS- ja CSS-tyylisi tähän',
+	'Add X here'                      => 'Lisää %s tähän',
 	'default'                         => 'Oletusarvo',
 	'see_also'                        => 'Katso myös:',
 	'general_settings'                => 'Yleiset asetukset',

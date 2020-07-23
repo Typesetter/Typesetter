@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Automatikus átirányítás százalékos érték',
 	'restore_defaults'                => 'Alapértelmezett visszaállítása',
 	'Add your LESS and CSS here'      => 'Adja meg a LESS és a CSS adatokat itt',
+	'Add X here'                      => 'Írja ide a %s',
 	'default'                         => 'Alapértelmezett',
 	'see_also'                        => 'Lásd még:',
 	'general_settings'                => 'Általános beállítások',

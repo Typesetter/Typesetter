@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Procentaj auto-redirecţionare',
 	'restore_defaults'                => 'Restaurează valorile implicite',
 	'Add your LESS and CSS here'      => 'Adăugaţi LESS şi CSS aici',
+	'Add X here'                      => 'Adaugă %s aici',
 	'default'                         => 'Implicit',
 	'see_also'                        => 'Vedeţi deasemeni:',
 	'general_settings'                => 'Setări generale',

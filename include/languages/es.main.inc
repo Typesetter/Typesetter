@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Porcentage de Redirección Automática',
 	'restore_defaults'                => 'Restorar por defecto',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'por defecto',
 	'see_also'                        => 'Ver también:',
 	'general_settings'                => 'Configuración general.',

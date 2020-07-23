@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Automatinio nukreipimo procentas',
 	'restore_defaults'                => 'Atstatyti į numatytus',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'Numatytasis',
 	'see_also'                        => 'Taip pat  žiūrėkite:',
 	'general_settings'                => 'Pagrindiniai parametrai',

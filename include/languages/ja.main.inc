@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => '自動リダイレクト割合（パーセント）',
 	'restore_defaults'                => 'デフォルトを復元',
 	'Add your LESS and CSS here'      => 'LESS, CSS をここに追加します。',
+	'Add X here'                      => '%s をここに追加します。',
 	'default'                         => 'デフォルト',
 	'see_also'                        => '関連する設定:',
 	'general_settings'                => '全般設定',

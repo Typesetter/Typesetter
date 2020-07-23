@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Automatisk omdirigering Procent',
 	'restore_defaults'                => 'Gendan standarder',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'Standard',
 	'see_also'                        => 'Se også:',
 	'general_settings'                => 'Generelle Indstillinger',

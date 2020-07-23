@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Odstotek avtomatičnih preusmeritev',
 	'restore_defaults'                => 'Ponastavi privzeto',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'Privzeto',
 	'see_also'                        => 'Oglejte si tudi',
 	'general_settings'                => 'Nastavitve',

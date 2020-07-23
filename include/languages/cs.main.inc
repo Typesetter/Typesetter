@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Procento pro automatický přesměrování',
 	'restore_defaults'                => 'Obnovit výchozí',
 	'Add your LESS and CSS here'      => 'Přidejte sem váš LESS a CSS',
+	'Add X here'                      => 'Přidejte sem váš %s',
 	'default'                         => 'Standardní',
 	'see_also'                        => 'Viz také:',
 	'general_settings'                => 'Obecná nastavení',

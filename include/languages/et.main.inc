@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Automaatse ümbersuunamise määr',
 	'restore_defaults'                => 'Taasta vaikeväärtused',
 	'Add your LESS and CSS here'      => 'Lisa oma LESS ja CSS siia',
+	'Add X here'                      => 'Lisage siia oma %s',
 	'default'                         => 'Vaikeväärtus',
 	'see_also'                        => 'Vaata ka: ',
 	'general_settings'                => 'Üldised seaded',

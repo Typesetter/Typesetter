@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Prósentuhlutfall sjálfvirkrar endurbeiningar',
 	'restore_defaults'                => 'Endurheimta sjálfgefið',
 	'Add your LESS and CSS here'      => 'Bættu hér við þínu eigin LESS og CSS',
+	'Add X here'                      => 'Bættu við %s hér',
 	'default'                         => 'Sjálfgefið',
 	'see_also'                        => 'Sjá einnig:',
 	'general_settings'                => 'Almennar stillingar',

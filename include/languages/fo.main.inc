@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Sjálvvirkandi flytingar prosent',
 	'restore_defaults'                => 'Endurger standardir',
 	'Add your LESS and CSS here'      => 'Innset LESS og CSS her',
+	'Add X here'                      => 'Innset %s her',
 	'default'                         => 'Standard',
 	'see_also'                        => 'Sí eisni:',
 	'general_settings'                => 'Generellar Stillingar',

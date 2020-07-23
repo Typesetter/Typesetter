@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Automatisch doorverwijs percentage',
 	'restore_defaults'                => 'Standaard instellingen terugplaatsen',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'Standaard',
 	'see_also'                        => 'Tevens:',
 	'general_settings'                => 'Algemene Instellingen',

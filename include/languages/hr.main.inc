@@ -268,6 +268,7 @@ $langmessage = array (
 	'auto_redir'                      => 'Auto Preusmjeravanje Postotak',
 	'restore_defaults'                => 'Vrati zadano',
 	'Add your LESS and CSS here'      => 'Add your LESS and CSS here',
+	'Add X here'                      => 'Add your %s here',
 	'default'                         => 'Zadano',
 	'see_also'                        => 'Vidi također:',
 	'general_settings'                => 'Opće postavke',

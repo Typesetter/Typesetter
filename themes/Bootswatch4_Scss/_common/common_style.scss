@@ -67,7 +67,7 @@ footer.main-footer {
 
 // Align menu right, fix dropdown alignment
 .navbar-right {
-  > .GPAREA {
+  > .GPAREA:first-child {
     margin-left: auto;
   }
   .dropdown-menu {

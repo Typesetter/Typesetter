@@ -1,7 +1,7 @@
 $gp_teal:						#329880;
 $gp_red:						#C44830;
-$gp_blue:						#226699;
-$gp_green:						#6AA84F;
+$gp_blue:						#0091e6;
+$gp_green:						rgb(122, 199, 22);
 
 $gp_gray_darkest:				#222;
 $gp_gray_darker:				#2b2b2b;
@@ -30,7 +30,7 @@ $gp_controls_bg:				4px;
 
 // Colors
 $link-color:					$gp_blue;
-$link-hover-color:				$gp_red;
+$link-hover-color:				darken($link-color, 20%);
 
 $brand-success:					$gp_green;
 
@@ -50,10 +50,10 @@ $gp_nav_link_padding_x:			15px;
 $gp_nav_link_padding_y:			8px;
 $gp_nav_height:					$gp_nav_font_size + $gp_nav_link_padding_y + $gp_nav_link_padding_y;
 
-$gp_bread_bg:					#ededed;	//matches elfinder
+$gp_bread_bg:					#ededed; //matches elfinder
 $gp_bread_font_size:			$font-size-base;
 $gp_bread_link_color:			#777;
-$gp_bread_link_color_hover: 	#2b2b2b;
+$gp_bread_link_color_hover:		#2b2b2b;
 $gp_bread_link_padding_x:		2px;
 $gp_bread_link_padding_y:		4px;
 

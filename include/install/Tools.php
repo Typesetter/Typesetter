@@ -203,18 +203,18 @@ class Tools{
 		}
 
 		//set config variables
-		$gpLayouts = [];
 
+		$gpLayouts = [];
 		//use bootswatch theme if server has enough memory
-		$gpLayouts['default']['theme'] = 'Bootswatch_Scss/Flatly';
-		$gpLayouts['default']['label'] = 'Bootswatch_Scss/Flatly';
-		$gpLayouts['default']['color'] = '#93c47d';
+		$gpLayouts['default']['theme'] = 'Bootstrap4/footer';
+		$gpLayouts['default']['label'] = 'Bootstrap4/footer';
+		$gpLayouts['default']['color'] = '#444a50';
 
 		$_config							= [];
 		$_config['toemail']					= $_POST['email'];
 		$_config['gpLayout']				= 'default';
 		$_config['title']					= self::Install_Title();
-		$_config['keywords']				= CMS_NAME . ' , Easy CMS, Content Management, PHP, Free CMS, Website builder, Open Source';
+		$_config['keywords']				= '';
 		$_config['desc']					= 'A new ' . CMS_NAME . ' installation. You can change your site\'s description in the configuration.';
 		$_config['timeoffset']				= '0';
 		$_config['langeditor']				= 'inherit';
@@ -240,7 +240,6 @@ class Tools{
 		// \gp\tool\Files::CheckDir($destination.'/data/_uploaded/flash');
 		\gp\tool\Files::CheckDir($destination.'/data/_sessions');
 
-
 		// gp_index
 		$new_index = [];
 		$new_index['Home']			= 'a';
@@ -253,7 +252,6 @@ class Tools{
 		$new_index['Galleries']		= 'special_galleries';
 		$new_index['Missing']		= 'special_missing';
 		$new_index['Search']		= 'special_gpsearch';
-
 
 		//	gpmenu
 		$new_menu = [];
@@ -316,8 +314,6 @@ class Tools{
 		echo sprintf($langmessage['_SAVED'], 'pages.php');
 		echo '</span>';
 		echo '</li>';
-
-
 
 		// Home
 		$content = '<h2>Welcome to Your ' . CMS_NAME . ' Powered Site!</h2>

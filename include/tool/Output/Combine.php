@@ -485,7 +485,7 @@ class Combine{
 		'bootstrap4-js' => [
 			'file'			=> '/include/thirdparty/Bootstrap4/js/bootstrap.bundle.min.js',
 			'package'		=> 'bootstrap4',
-			'exclude'		=> 'popper,bootstrap4-alert,bootstrap4-button,bootstrap4-carousel,bootstrap4-collapse,' .
+			'exclude'		=> 'bootstrap4-alert,bootstrap4-button,bootstrap4-carousel,bootstrap4-collapse,' .
 								'bootstrap4-dropdown,bootstrap4-modal,bootstrap4-popover,bootstrap4-scrollspy,' .
 								'bootstrap4-tab,bootstrap4-toast,bootstrap4-tooltip,bootstrap4-util',
 		],

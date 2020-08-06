@@ -57,7 +57,7 @@ class Edit extends \gp\admin\Layout{
 		$this->page->SetTheme($layout);
 
 		if( !$this->page->gpLayout ){
-			msg($langmessage['OOPS'] . ' (Theme Not Found)');
+			message($langmessage['OOPS'] . ' (Theme Not Found)');
 			parent::RunScript();
 			return false;
 		}
@@ -208,24 +208,21 @@ class Edit extends \gp\admin\Layout{
 		echo '</div>';
 		echo '</div></div>';
 
+		//css textarea
 		echo '</div>';
 		echo '<div class="separator"></div>';
-		echo '</td></tr>';
 
-		echo '<tr><td class="full_height">';
-
-		//editor/customizer tabs
-		echo '<div class="gp_tabs">';
-
-		echo	'<a class="selected" href="' . $style_type_info['link'] . '" target="_blank">';
-		echo		$style_type_info['name'];
-		echo	'</a>';
-
+		//syntax links
+		echo '<div style="text-align:right">';
+		echo 'Syntax: ';
+		echo '<a href="' . $style_type_info['link'] . '" target="_blank">';
+		echo $style_type_info['name'];
+		echo '</a>';
 		echo '</div>';
 
+		echo '</td></tr><tr><td class="full_height">';
 
-		//css editor area
-		echo '<div class="full_height css_editor_area">';
+		echo '<div class="full_height">';
 
 		if( empty($css) ){
 			$var_file = $dir . '/variables.' . $style_type;
@@ -236,30 +233,26 @@ class Edit extends \gp\admin\Layout{
 
 		//editor mode
 		echo '<textarea name="css" id="gp_layout_css" class="gptextarea" ';
-		echo	'placeholder="' . htmlspecialchars($langmessage['Add your LESS and CSS here']) . '" ';
-		echo	'wrap="off" data-mode="' . htmlspecialchars($style_type) . '">';
+		echo 'placeholder="' . htmlspecialchars($langmessage['Add your LESS and CSS here']) . '" ';
+		echo 'wrap="off" data-mode="' . htmlspecialchars($style_type) . '">';
 		echo htmlspecialchars($css);
 		echo '</textarea>';
 
-		echo '</div>';// /.css editor area
-
-		echo '</td></tr>';
-
-		echo '<tr><td>';
+		echo '</div></td></tr><tr><td>';
 
 		echo '<div class="css_buttons">';
 
 		// preview
 		echo '<button name="cmd" type="submit" value="PreviewCSS" ';
-		echo	'class="gpsubmit gpdisabled" disabled="disabled" ';
-		echo	'data-cmd="preview_css">';
+		echo 'class="gpsubmit gpdisabled" disabled="disabled" ';
+		echo 'data-cmd="preview_css">';
 		echo $langmessage['preview'];
 		echo '</button>';
 
 		// save
 		echo '<button name="cmd" type="submit" value="SaveCSS" ';
-		echo	'class="gpsubmit gpdisabled" disabled="disabled" ';
-		echo	'data-cmd="save_css">';
+		echo 'class="gpsubmit gpdisabled" disabled="disabled" ';
+		echo 'data-cmd="save_css">';
 		echo $langmessage['save'];
 		echo '</button>';
 
@@ -372,12 +365,12 @@ class Edit extends \gp\admin\Layout{
 		// variables.less
 		$var_file = $dir . '/variables.less';
 		if( file_exists($var_file) ){
-			$style_files[]			= $var_file;
+			$style_files[] = $var_file;
 		}
 
 		$temp = trim($_REQUEST['css']);
 		if( !empty($temp) ){
-			$style_files[]			= $_REQUEST['css'] . "\n"; //make sure this is seen as code and not a filename
+			$style_files[] = $_REQUEST['css'] . "\n"; //make sure this is seen as code and not a filename
 		}
 
 		if( count($style_files) ){
@@ -386,7 +379,7 @@ class Edit extends \gp\admin\Layout{
 			$compiled				= $parsed_data[0];
 
 			if( $compiled === false ){
-				msg($langmessage['OOPS'] . ' (Invalid LESS)');
+				message($langmessage['OOPS'] . ' (Invalid LESS)');
 				return false;
 			}
 
@@ -411,13 +404,13 @@ class Edit extends \gp\admin\Layout{
 		// variables.scss
 		$var_file = $dir . '/variables.scss';
 		if( file_exists($var_file) ){
-			$style_files[]		= $var_file;
+			$style_files[] = $var_file;
 		}
 
 		//custom
 		$temp = trim($_REQUEST['css']);
 		if( !empty($temp) ){
-			$style_files[]		= $_REQUEST['css'] . "\n"; //make sure this is seen as code and not a filename
+			$style_files[] = $_REQUEST['css'] . "\n"; //make sure this is seen as code and not a filename
 		}
 
 		$style_files[]			= $dir . '/style.scss';
@@ -426,7 +419,7 @@ class Edit extends \gp\admin\Layout{
 		$compiled				= $parsed_data[0];
 
 		if( $compiled === false ){
-			msg($langmessage['OOPS'] . ' (Invalid SCSS)');
+			message($langmessage['OOPS'] . ' (Invalid SCSS)');
 			return false;
 		}
 
@@ -454,7 +447,7 @@ class Edit extends \gp\admin\Layout{
 
 		//remove from from_container
 		if( !isset($handlers[$from_container]) || !is_array($handlers[$from_container]) ){
-			msg($langmessage['OOPS'] . ' (2)');
+			message($langmessage['OOPS'] . ' (2)');
 			return;
 		}
 
@@ -498,7 +491,7 @@ class Edit extends \gp\admin\Layout{
 		global $langmessage, $config;
 
 		if( !isset($_GET['param']) ){
-			msg($langmessage['OOPS'] . ' (Param not set)');
+			message($langmessage['OOPS'] . ' (Param not set)');
 			return;
 		}
 		$param = $_GET['param'];
@@ -507,7 +500,7 @@ class Edit extends \gp\admin\Layout{
 		$count_gadgets = (isset($config['gadgets']) && is_array($config['gadgets'])) ? count($config['gadgets']) : false;
 		echo '<div class="inline_box">';
 
-		echo '<div class="gp_tabs">';
+		echo '<div class="layout_links">';
 		echo '<a href="#layout_extra_content" class="selected" data-cmd="tabs">';
 		echo 	$langmessage['theme_content'] . '</a>';
 		if( $count_gadgets > 0 ){
@@ -681,7 +674,7 @@ class Edit extends \gp\admin\Layout{
 		$this->page->ajaxReplace = [];
 
 		if( !isset($_REQUEST['where']) ){
-			msg($langmessage['OOPS']);
+			message($langmessage['OOPS']);
 			return false;
 		}
 
@@ -698,7 +691,7 @@ class Edit extends \gp\admin\Layout{
 			case 'new_extra':
 				$extra_name = $this->NewExtraArea();
 				if( $extra_name === false ){
-					msg($langmessage['OOPS'] . ' (2)');
+					message($langmessage['OOPS'] . ' (2)');
 					return false;
 				}
 				$insert = 'Extra:' . $extra_name;
@@ -718,14 +711,14 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		if( !$insert ){
-			msg($langmessage['OOPS'] . ' (Nothing to insert)');
+			message($langmessage['OOPS'] . ' (Nothing to insert)');
 			return false;
 		}
 
 		//new info
 		$new_gpOutInfo = \gp\tool\Output::GetgpOutInfo($insert);
 		if( !$new_gpOutInfo ){
-			msg($langmessage['OOPS'] . ' (Nothing to insert)');
+			message($langmessage['OOPS'] . ' (Nothing to insert)');
 			return false;
 		}
 		$new_gpOutCmd = rtrim($new_gpOutInfo['key'] . ':' . $new_gpOutInfo['arg'], ':');
@@ -827,7 +820,7 @@ class Edit extends \gp\admin\Layout{
 		global $langmessage, $gpLayouts;
 
 		if( !$this->ParseHandlerInfo($_GET['handle'], $curr_info) ){
-			msg($langmessage['00PS']);
+			message($langmessage['00PS']);
 			return;
 		}
 
@@ -840,7 +833,7 @@ class Edit extends \gp\admin\Layout{
 
 		echo '<div class="inline_box">';
 
-		echo '<div class="gp_tabs">';
+		echo '<div class="layout_links">';
 		if( $showCustom ){
 			echo ' <a href="#layout_menus" data-cmd="tabs">';
 			echo	$langmessage['Link_Menus'];
@@ -927,7 +920,7 @@ class Edit extends \gp\admin\Layout{
 		global $langmessage, $gpLayouts;
 
 		if( !$this->ParseHandlerInfo($_POST['handle'], $curr_info) ){
-			msg($langmessage['OOPS'] . ' (0)');
+			message($langmessage['OOPS'] . ' (0)');
 			return;
 		}
 
@@ -938,7 +931,7 @@ class Edit extends \gp\admin\Layout{
 		}
 
 		if( $new_gpOutCmd === false ){
-			msg($langmessage['OOPS'] . ' (1)');
+			message($langmessage['OOPS'] . ' (1)');
 			return;
 		}
 
@@ -999,7 +992,7 @@ class Edit extends \gp\admin\Layout{
 		global $langmessage;
 
 		if( substr_count($arg, '|') !== 1 ){
-			msg($langmessage['OOPS'] . ' (Invalid argument)');
+			message($langmessage['OOPS'] . ' (Invalid argument)');
 			return false;
 		}
 
@@ -1013,7 +1006,7 @@ class Edit extends \gp\admin\Layout{
 
 		//add to to_container in front of $to_gpOutCmd
 		if( !is_array($container_info) ){
-			msg($langmessage['OOPS'] . ' (a1)');
+			message($langmessage['OOPS'] . ' (a1)');
 			return false;
 		}
 
@@ -1021,7 +1014,7 @@ class Edit extends \gp\admin\Layout{
 		//can't have two identical outputs in the same container
 		$check = $this->ContainerWhere($new_gpOutCmd, $container_info, false);
 		if( $check !== false ){
-			msg($langmessage['OOPS'] . ' (Area already in container)');
+			message($langmessage['OOPS'] . ' (Area already in container)');
 			return false;
 		}
 

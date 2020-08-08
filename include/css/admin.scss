@@ -931,20 +931,45 @@ table.configuration td:first-child {
 }
 
 
-table.tablesorter th.gp_header {
-	cursor: pointer;
-}
-table.tablesorter th.gp_header:before {
-	content: "\21C5";
-	float: right;
-}
-table.tablesorter th.gp_header_asc:before {
-	content: "\2193";
-}
-table.tablesorter th.gp_header_desc:before {
-	content: "\2191";
-}
+/**
+ * tablesorter
+ */
+table.tablesorter {
+	th.gp_header {
+		cursor: pointer;
 
+		&:before {
+			display: block;
+			border-left: 1px solid rgba(0, 0, 0, 0.125);
+			float: left;
+			margin: -7px 0.5rem -7px 0;
+			padding: 7px 0 7px 0.33rem;
+			font-family: FontAwesome;
+			font-size: 14px;
+			content: '\f0dc'; // .fa-sort
+			color: #aaa;
+		}
+
+		&:first-child:before {
+			border-left: 0 none;
+		}
+
+		&_asc:before {
+			content: '\f0d8'; // '\f0d8' = fa-caret-up, '\f0de' = .fa-sort-asc
+			color: #333;
+		}
+
+		&_desc:before {
+			content: '\f0d7'; // '\f0d7' = fa-caret-down, '\f0dd' = .fa-sort-desc
+			color: #333;
+		}
+
+		.tablesorter-header-inner {
+			padding-right: 1.5rem;
+		}
+
+	}
+}
 
 
 /**

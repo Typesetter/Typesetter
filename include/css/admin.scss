@@ -156,6 +156,17 @@
 	margin: 1em 0;
 }
 
+#gp_admin_html select {
+	box-shadow: none;
+}
+
+#gp_admin_html .gpcheck,
+#gp_admin_html checkbox {
+	&:before,
+	&:after {
+		content: none;
+	}
+}
 
 #gp_admin_html .gpselect,
 #gp_admin_html .gpcheckbox,

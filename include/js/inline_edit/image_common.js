@@ -66,18 +66,18 @@ if( typeof(gp_Image_Common) == 'undefined' ){
 		 * Add folder to images
 		 *
 		 */
-		$gp.inputs.gp_gallery_folder_add = function(rel,evt){
+		$gp.inputs.gp_gallery_folder_add = function(evt){
 			evt.preventDefault();
 			var frm = this.form;
 			var dir = frm.dir.value;
-			var newdir = dir+'/'+frm.newdir.value
-			LoadImages(newdir,gp_editor);
+			var newdir = dir + '/' + frm.newdir.value;
+			LoadImages(newdir, gp_editor);
 		}
 
 		this.LoadImages = function(directory){
-			var edit_path = strip_from(gp_editor.save_path,'?');
+			var edit_path = strip_from(gp_editor.save_path, '?');
 			if( directory ){
-				edit_path += '?cmd=gallery_folder&dir='+encodeURIComponent(directory);
+				edit_path += '?cmd=gallery_folder&dir=' + encodeURIComponent(directory);
 			}else{
 				edit_path += '?cmd=gallery_images';
 			}

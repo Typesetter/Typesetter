@@ -162,6 +162,10 @@
 
 #gp_admin_html .gpcheck,
 #gp_admin_html checkbox {
+	-webkit-appearance: checkbox;
+	-moz-appearance: checkbox;
+	appearance: checkbox;
+	border: initial;
 	&:before,
 	&:after {
 		content: none;

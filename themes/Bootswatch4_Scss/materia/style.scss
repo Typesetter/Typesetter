@@ -272,277 +272,280 @@ h6, .h6 {
   }
 }
 
-textarea,
-textarea.form-control,
-input.form-control,
-input[type=text],
-input[type=password],
-input[type=email],
-input[type=number],
-[type=text].form-control,
-[type=password].form-control,
-[type=email].form-control,
-[type=tel].form-control,
-[contenteditable].form-control {
-  padding: 0;
-  border: none;
-  appearance: none;
-  box-shadow: inset 0 -1px 0 #ddd;
-  font-size: 16px;
-  transition: all 0.2s;
+.GPAREA { // prevent unusual form styles from spoiling the admin UI
+  textarea,
+  textarea.form-control,
+  input.form-control,
+  input[type=text],
+  input[type=password],
+  input[type=email],
+  input[type=number],
+  [type=text].form-control,
+  [type=password].form-control,
+  [type=email].form-control,
+  [type=tel].form-control,
+  [contenteditable].form-control {
+    padding: 0;
+    border: none;
+    appearance: none;
+    box-shadow: inset 0 -1px 0 #ddd;
+    font-size: 16px;
+    transition: all 0.2s;
 
-  &:focus {
-    box-shadow: inset 0 -2px 0 $primary;
-  }
-
-  &[disabled],
-  &[readonly] {
-    box-shadow: none;
-    border-bottom: 1px dotted #ddd;
-  }
-
-  &:not(textarea) {
-    height: $input-height;
-  }
-
-  &.form-control {
-    &-sm {
-      height: $input-height-sm;
-      font-size: $font-size-sm;
+    &:focus {
+      box-shadow: inset 0 -2px 0 $primary;
     }
 
-    &-lg {
-      height: $input-height-lg;
-      font-size: $font-size-lg;
-    }
-  }
-
-  &::-ms-clear {
-    display: none;
-  }
-}
-
-select,
-select.form-control {
-  border: 0;
-  border-radius: 0;
-  appearance: none;
-  padding-left: 0;
-  padding-right: 0\9; // remove padding for < ie9 since default arrow can't be removed
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAJ1BMVEVmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmaP/QSjAAAADHRSTlMAAgMJC0uWpKa6wMxMdjkoAAAANUlEQVR4AeXJyQEAERAAsNl7Hf3X6xt0QL6JpZWq30pdvdadme+0PMdzvHm8YThHcT1H7K0BtOMDniZhWOgAAAAASUVORK5CYII=);
-  background-size: 13px;
-  background-repeat: no-repeat;
-  background-position: right center;
-  box-shadow: inset 0 -1px 0 #ddd;
-  font-size: 16px;
-  line-height: 1.5;
-
-  &::-ms-expand {
-    display: none;
-  }
-
-  &.input {
-    &-sm {
-      font-size: $font-size-sm;
+    &[disabled],
+    &[readonly] {
+      box-shadow: none;
+      border-bottom: 1px dotted #ddd;
     }
 
-    &-lg {
-      font-size: $font-size-lg;
+    &:not(textarea) {
+      height: $input-height;
+    }
+
+    &.form-control {
+      &-sm {
+        height: $input-height-sm;
+        font-size: $font-size-sm;
+      }
+
+      &-lg {
+        height: $input-height-lg;
+        font-size: $font-size-lg;
+      }
+    }
+
+    &::-ms-clear {
+      display: none;
     }
   }
 
-  &:focus {
-    box-shadow: inset 0 -2px 0 $primary;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAJ1BMVEUhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISF8S9ewAAAADHRSTlMAAgMJC0uWpKa6wMxMdjkoAAAANUlEQVR4AeXJyQEAERAAsNl7Hf3X6xt0QL6JpZWq30pdvdadme+0PMdzvHm8YThHcT1H7K0BtOMDniZhWOgAAAAASUVORK5CYII=);
+  select,
+  select.form-control {
+    border: 0;
+    border-radius: 0;
+    appearance: none;
+    padding-left: 0;
+    padding-right: 0\9; // remove padding for < ie9 since default arrow can't be removed
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAJ1BMVEVmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmZmaP/QSjAAAADHRSTlMAAgMJC0uWpKa6wMxMdjkoAAAANUlEQVR4AeXJyQEAERAAsNl7Hf3X6xt0QL6JpZWq30pdvdadme+0PMdzvHm8YThHcT1H7K0BtOMDniZhWOgAAAAASUVORK5CYII=);
+    background-size: 13px;
+    background-repeat: no-repeat;
+    background-position: right center;
+    box-shadow: inset 0 -1px 0 #ddd;
+    font-size: 16px;
+    line-height: 1.5;
+
+    &::-ms-expand {
+      display: none;
+    }
+
+    &.input {
+      &-sm {
+        font-size: $font-size-sm;
+      }
+
+      &-lg {
+        font-size: $font-size-lg;
+      }
+    }
+
+    &:focus {
+      box-shadow: inset 0 -2px 0 $primary;
+      background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAJ1BMVEUhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISF8S9ewAAAADHRSTlMAAgMJC0uWpKa6wMxMdjkoAAAANUlEQVR4AeXJyQEAERAAsNl7Hf3X6xt0QL6JpZWq30pdvdadme+0PMdzvHm8YThHcT1H7K0BtOMDniZhWOgAAAAASUVORK5CYII=);
+    }
+
+    &[multiple] {
+      background: none;
+    }
   }
 
-  &[multiple] {
-    background: none;
-  }
-}
+  .radio,
+  .radio-inline,
+  .checkbox,
+  .checkbox-inline {
+    label {
+      padding-left: 25px;
+    }
 
-.radio,
-.radio-inline,
-.checkbox,
-.checkbox-inline {
-  label {
-    padding-left: 25px;
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-left: -25px;
+    }
   }
 
   input[type="radio"],
-  input[type="checkbox"] {
-    margin-left: -25px;
-  }
-}
-
-input[type="radio"],
-.radio input[type="radio"],
-.radio-inline input[type="radio"] {
-  position: relative;
-  margin-right: 4px;
-  vertical-align: top;
-  border: none;
-  background-color: transparent;
-  appearance: none;
-  cursor: pointer;
-
-  &:focus {
-    outline: none;
-  }
-
-  &:before,
-  &:after {
-    content: "";
-    display: block;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    transition: 240ms;
-  }
-
-  &:before {
-    position: absolute;
-    left: 0;
-    top: -2px;
-    background-color: $primary;
-    transform: scale(0);
-  }
-
-  &:after {
+  .radio input[type="radio"],
+  .radio-inline input[type="radio"] {
     position: relative;
-    top: -2px;
-    border: 2px solid $gray-500;
+    margin-right: 4px;
+    vertical-align: top;
+    border: none;
+    background-color: transparent;
+    appearance: none;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:before,
+    &:after {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      transition: 240ms;
+    }
+
+    &:before {
+      position: absolute;
+      left: 0;
+      top: -2px;
+      background-color: $primary;
+      transform: scale(0);
+    }
+
+    &:after {
+      position: relative;
+      top: -2px;
+      border: 2px solid $gray-500;
+    }
+
+    &:checked:before {
+      transform: scale(0.5);
+    }
+
+    &:disabled:checked:before {
+      background-color: $gray-300;
+    }
+
+    &:checked:after {
+      border-color: $primary;
+    }
+
+    &:disabled:after,
+    &:disabled:checked:after {
+      border-color: $gray-300;
+    }
   }
 
-  &:checked:before {
-    transform: scale(0.5);
+  input[type="checkbox"],
+  .checkbox input[type="checkbox"],
+  .checkbox-inline input[type="checkbox"] {
+    position: relative;
+    border: none;
+    margin-bottom: -4px;
+    appearance: none;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus:after {
+      border-color: $primary;
+    }
+
+    &:after {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+      border: 2px solid $gray-500;
+      border-radius: 2px;
+      transition: 240ms;
+    }
+
+    &:checked:before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 6px;
+      display: table;
+      width: 6px;
+      height: 12px;
+      border: 2px solid #fff;
+      border-top-width: 0;
+      border-left-width: 0;
+      transform: rotate(45deg);
+    }
+
+    &:checked:after {
+      background-color: $primary;
+      border-color: $primary;
+    }
+
+    &:disabled:after {
+      border-color: $gray-300;
+    }
+
+    &:disabled:checked:after {
+      background-color: $gray-300;
+      border-color: transparent;
+    }
   }
 
-  &:disabled:checked:before {
-    background-color: $gray-300;
+  .has-warning {
+    input:not([type=checkbox]),
+    .form-control,
+    input.form-control[readonly],
+    input[type=text][readonly],
+    [type=text].form-control[readonly],
+    input:not([type=checkbox]):focus,
+    .form-control:focus {
+      border-bottom: none;
+      box-shadow: inset 0 -2px 0 $warning;
+    }
   }
 
-  &:checked:after {
-    border-color: $primary;
+  .has-danger {
+    input:not([type=checkbox]),
+    .form-control,
+    input.form-control[readonly],
+    input[type=text][readonly],
+    [type=text].form-control[readonly],
+    input:not([type=checkbox]):focus,
+    .form-control:focus {
+      border-bottom: none;
+      box-shadow: inset 0 -2px 0 $danger;
+    }
   }
 
-  &:disabled:after,
-  &:disabled:checked:after {
-    border-color: $gray-300;
-  }
-}
-
-input[type="checkbox"],
-.checkbox input[type="checkbox"],
-.checkbox-inline input[type="checkbox"] {
-  position: relative;
-  border: none;
-  margin-bottom: -4px;
-  appearance: none;
-  cursor: pointer;
-
-  &:focus {
-    outline: none;
+  .has-success {
+    input:not([type=checkbox]),
+    .form-control,
+    input.form-control[readonly],
+    input[type=text][readonly],
+    [type=text].form-control[readonly],
+    input:not([type=checkbox]):focus,
+    .form-control:focus {
+      border-bottom: none;
+      box-shadow: inset 0 -2px 0 $success;
+    }
   }
 
-  &:focus:after {
-    border-color: $primary;
+  // Remove the Bootstrap feedback styles for input addons
+  .input-group-addon {
+    .has-warning &, .has-danger &, .has-success & {
+      color: $input-color;
+      border-color: $input-group-addon-border-color;
+      background-color: $input-group-addon-bg;
+    }
   }
 
-  &:after {
-    content: "";
-    display: block;
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-    border: 2px solid $gray-500;
-    border-radius: 2px;
-    transition: 240ms;
+  .form-group-lg {
+    select,
+    select.form-control {
+      line-height: 1.5;
+    }
   }
 
-  &:checked:before {
-    content: "";
-    position: absolute;
-    top: 2px;
-    left: 6px;
-    display: table;
-    width: 6px;
-    height: 12px;
-    border: 2px solid #fff;
-    border-top-width: 0;
-    border-left-width: 0;
-    transform: rotate(45deg);
-  }
-
-  &:checked:after {
-    background-color: $primary;
-    border-color: $primary;
-  }
-
-  &:disabled:after {
-    border-color: $gray-300;
-  }
-
-  &:disabled:checked:after {
-    background-color: $gray-300;
-    border-color: transparent;
-  }
-}
-
-.has-warning {
-  input:not([type=checkbox]),
-  .form-control,
-  input.form-control[readonly],
-  input[type=text][readonly],
-  [type=text].form-control[readonly],
-  input:not([type=checkbox]):focus,
-  .form-control:focus {
-    border-bottom: none;
-    box-shadow: inset 0 -2px 0 $warning;
-  }
-}
-
-.has-danger {
-  input:not([type=checkbox]),
-  .form-control,
-  input.form-control[readonly],
-  input[type=text][readonly],
-  [type=text].form-control[readonly],
-  input:not([type=checkbox]):focus,
-  .form-control:focus {
-    border-bottom: none;
-    box-shadow: inset 0 -2px 0 $danger;
-  }
-}
-
-.has-success {
-  input:not([type=checkbox]),
-  .form-control,
-  input.form-control[readonly],
-  input[type=text][readonly],
-  [type=text].form-control[readonly],
-  input:not([type=checkbox]):focus,
-  .form-control:focus {
-    border-bottom: none;
-    box-shadow: inset 0 -2px 0 $success;
-  }
-}
-
-// Remove the Bootstrap feedback styles for input addons
-.input-group-addon {
-  .has-warning &, .has-danger &, .has-success & {
-    color: $input-color;
-    border-color: $input-group-addon-border-color;
-    background-color: $input-group-addon-bg;
-  }
-}
-
-.form-group-lg {
-  select,
-  select.form-control {
-    line-height: 1.5;
-  }
-}
+} // /.GPAREA
 
 // Navs ========================================================================
 .nav-tabs {

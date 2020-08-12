@@ -1,6 +1,6 @@
 ### Typesetter CMS ###
 
-## All Current Buildin Gadgets ##
+## All Current Built-in Gadgets ##
 
 * GetAdminLink($messages=true)  
 			Outputs the sitemap link, admin login/logout link, powered by link and messages

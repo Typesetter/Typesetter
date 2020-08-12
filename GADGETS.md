@@ -3,7 +3,8 @@
 ## All Current Buildin Gadgets ##
 
 * GetAdminLink($messages=true)
-	Outputs the sitemap link, admin login/logout link, powered by link and messages
+
+			Outputs the sitemap link, admin login/logout link, powered by link and messages
 
 
 * GetSitemapLink()

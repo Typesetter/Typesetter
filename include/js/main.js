@@ -21,7 +21,7 @@ var $gp = {
 	jGoTo : function(a, this_context){
 		$gp.loading();
 		a = $gp.jPrep(a);
-		$.getJSON(a,function(data, textStatus, jqXHR){
+		$.getJSON(a, function(data, textStatus, jqXHR){
 			$gp.Response.call(this_context, data, textStatus, jqXHR);
 		});
 	},
@@ -60,9 +60,13 @@ var $gp = {
 		$gp.loading();
 		var frm = $(this_context).closest('form');
 
-		var b = frm.serialize() + '&verified=' + encodeURIComponent(post_nonce); //needed when $gp.post is called without an input click
+		//needed when $gp.post is called without an input click
+		var b = frm.serialize() + 
+			'&verified=' + encodeURIComponent(post_nonce);
+
 		if( this_context.nodeName === 'INPUT' || this_context.nodeName === 'BUTTON' ){
-			b += '&' + encodeURIComponent(this_context.name) + '=' + encodeURIComponent(this_context.value);
+			b += '&' + encodeURIComponent(this_context.name) + 
+				'=' + encodeURIComponent(this_context.value);
 		}
 		if( data ){
 			b += '&' + data;
@@ -236,7 +240,9 @@ var $gp = {
 				case 'gpabox':
 				case 'admin_box_data': // @deprecated 5.2
 					var opts = {};
-					if( $(this_context).closest('#gp_admin_box') ){ // replace the content of the currently open admin box if the link the user clicked on was in the admin box
+					if( $(this_context).closest('#gp_admin_box') ){
+						// replace the content of the currently open 
+						// admin box if the link the user clicked on was in the admin box
 						opts.replaceBox = true;
 					}
 					$gp.AdminBoxC(obj.CONTENT, opts);

@@ -47,6 +47,9 @@
 		box-sizing: border-box;
 		display: table;
 		background: rgba(136, 136, 136, 0.4);
+		opacity: 0;
+		-webkit-transition: opacity 0.6s;
+		transition: opacity 0.3s;
 	}
 
 	.draggable_element:hover {
@@ -69,14 +72,14 @@
 		opacity: 0;
 		@include transition(all .3s ease-out);
 		overflow: hidden;
-		}
+	}
 	.draggable_element:hover > .gp_inner_links > div {
 		max-height: 100px;
 		opacity: 1;
-		}
+	}
 
 	.target {
-		background:#ffaaaa;
+		background: #ffaaaa;
 		padding: 6px;
 		margin-top: -6px;
 		margin-left: -6px;
@@ -138,6 +141,10 @@
 			color: #555;
 		}
 	}
+}
+
+body:hover #theme_content_drop .draggable_element {
+		opacity: 1;
 }
 
 
@@ -226,11 +233,12 @@ a.add_layout {
 	min-width: 100px;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	}
+}
 
 #gp_avail_themes {
 	margin-right: -30px;
-	}
+}
+
 #gp_avail_themes > div {
 	display: inline-block;
 	vertical-align: top;

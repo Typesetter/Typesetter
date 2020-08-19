@@ -954,8 +954,6 @@ namespace gp\tool{
 		 *
 		 */
 		public static function RmDir($dir){
-			global $config;
-
 			return @rmdir($dir);
 		}
 

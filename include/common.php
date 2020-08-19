@@ -33,7 +33,7 @@ gp_defined('gp_remote_themes',			gp_remote_addons);
 gp_defined('gp_remote_update',			gp_remote_addons);
 gp_defined('gp_unique_addons',			false);
 gp_defined('gp_data_type',				'.php');
-gp_defined('gp_default_theme',			'Bootswatch_Scss/Flatly');
+gp_defined('gp_default_theme',			'Bootstrap4/footer');
 gp_defined('gp_allowed_fatal_errors',	10 );	// number of fatal errors to allow before disabling a component
 gp_defined('gp_prefix_urls',			false);	// not yet implemented
 gp_defined('create_css_sourcemaps',		false);	// Since 5.2
@@ -455,7 +455,7 @@ function GetMessages($wrap=true){
 		$result .=			'<span class="msg_controls">';
 		$result .=				'<a href="#close-message" class="req_script close_message" data-cmd="close_message"></a>';
 		if( \gp\tool::LoggedIn() ){
-			// add copy to clipboard icon only for for admins
+			// add copy to clipboard icon, only for admins
 			$result .=			'<a href="#copy-message" title="' . $langmessage['Copy to Clipboard'] . '" ';
 			$result .=				'class="req_script copy_message" data-cmd="copy_message"></a>';
 		}

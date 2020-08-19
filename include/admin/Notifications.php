@@ -11,7 +11,6 @@ namespace gp\admin{
 		private 		$debug			= false;
 		private static	$singleton;
 
-
 		public function __construct(){
 			global $gpAdmin;
 

@@ -126,16 +126,16 @@ class Css{
 	public static function ParseScss(&$scss_files){
 		global $dataDir, $dirPrefix;
 
-		$first_file 	= current($scss_files);
-		$relative		= self::GetRelPath($first_file);
+		$first_file 			= current($scss_files);
+		$relative				= self::GetRelPath($first_file);
 
-		$compiler		= new \gp\tool\Output\Scss();
-		$compiler->url_root = \gp\tool::GetDir(dirname($relative));
-		$compiled		= false;
-		$combined		= [];
+		$compiler				= new \gp\tool\Output\Scss();
+		$compiler->url_root		= \gp\tool::GetDir(dirname($relative));
+		$compiled				= false;
+		$combined				= [];
 
 		//add variables for url paths
-		$combined[]		= '$icon-font-path: "../../include/thirdparty/Bootstrap3/fonts/";';
+		$combined[]				= '$icon-font-path: "../../include/thirdparty/Bootstrap3/fonts/";';
 
  		try{
 			foreach($scss_files as $file){
@@ -147,7 +147,7 @@ class Css{
 				}
 
 				// handle relative and absolute paths
-				if( !empty($dataDir) && strpos($file,$dataDir) === false ){
+				if( !empty($dataDir) && strpos($file, $dataDir) === false ){
 					$file = $dataDir . '/' . ltrim($file, '/');
 				}
 
@@ -155,10 +155,12 @@ class Css{
 			}
 
 			$compiler->addImportPath($dataDir);
+
 			// set 'compressed' format for compiled css
 			$compiler->setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
 
 			$temp_sourcemap_name = false;
+
 			// create sourcemaps, see gpconfig.php to enable it
 			if( \create_css_sourcemaps ){
 
@@ -189,7 +191,9 @@ class Css{
 
 			}
 
-			$compiled = $compiler->compile(implode("\n", $combined));
+			$compiled	= $compiler->compile(implode("\n", $combined));
+			// debug('$compiler = ' . pre(get_object_vars($compiler))); /* TODO: remove */
+			// $variables	= $compiler->getVariables(); debug('Scss variables = ' . pre($variables)); /* TODO: remove */
 
 		}catch( \Exception $e){
 			if( \gp\tool::LoggedIn() ){
@@ -241,7 +245,7 @@ class Css{
 		// create sourcemaps, see gpconfig.php to enable it
 		if( \create_css_sourcemaps ){
 			\gp\tool\Files::CheckDir($dataDir . '/data/_cache');
-			$temp_sourcemap_name 			= 'tmp_' . \gp\tool::RandomString(12) . '.map';  // will be renamed later
+			$temp_sourcemap_name 			= 'tmp_' . \gp\tool::RandomString(12) . '.map'; // will be renamed later
 			$options['sourceMap'] 			= true;
 			$options['sourceMapWriteTo']	= $dataDir . '/data/_cache/' . $temp_sourcemap_name;
 			$options['sourceMapURL']		= $dirPrefix . '/data/_cache/' . $temp_sourcemap_name;

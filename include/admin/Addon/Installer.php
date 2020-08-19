@@ -712,7 +712,10 @@ class Installer extends \gp\admin\Addon\Tools{
 	 *
 	 */
 	public function CheckFile(){
-		$check_file = $this->source.'/Install_Check.php';
+
+		// debug('Installer obj = ' . pre(get_object_vars($this))); // TODO remove
+
+		$check_file = $this->source . '/Install_Check.php';
 		if( !file_exists($check_file) ){
 			return true;
 		}

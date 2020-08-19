@@ -267,7 +267,6 @@ class Layout extends \gp\admin\Addon\Install{
 		echo	'</span>';
 		echo '</li>';
 
-
 		//default
 		echo '<li>';
 		if( $config['gpLayout'] == $layout ){
@@ -382,15 +381,115 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	/**
-	 * Get the custom css for a layout if it exists
+	 * Get the layout customizer array if customizer.php exists
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return array layout customizer
+	 */
+	public function GetLayoutCustomizer($layout){
+
+		$layout_info		= \gp\tool::LayoutInfo($layout, false);
+		$dir				= $layout_info['dir'] . '/' . $layout_info['theme_color'];
+		$customizer_file	= $dir . '/customizer.php';
+
+		if( file_exists($customizer_file) ){
+			return \gp\tool\Files::Get($customizer_file, 'customizer');
+		}
+
+		return [];
+	}
+
+
+	/**
+	 * Get the custom config for a layout if it exists
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return array layout configuration
 	 *
 	 */
+	public function GetLayoutConfig($layout){
+
+		$config_file = \gp\tool\Output::LayoutConfigFile($layout);
+
+		if( file_exists($config_file) ){
+			$config = \gp\tool\Files::Get($config_file, 'config');
+			if( !empty($config) ){
+				return $config;
+			}
+		}
+
+		// not yet saved? - get the defaults from customizer
+		return $this->GetLayoutDefaultConfig($layout);
+	}
+
+
+	/**
+	 * Extract default config values from customizer definition file
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return array default config
+	 *
+	 */
+	public function GetLayoutDefaultConfig($layout){
+
+		$customizer_data = $this->GetLayoutCustomizer($layout);
+		if( empty($customizer_data) ){
+			return [];
+		}
+
+		$default_config = [];
+
+		foreach( $customizer_data as $area => $area_info ){
+			foreach( $area_info['items'] as $var_name => $var_data ){
+				$default_config[$var_name] = [];
+				$default_config[$var_name]['value'] = $var_data['default_value'];
+				if( !empty($var_data['default_units']) ){
+					$default_config[$var_name]['units'] = $var_data['default_units'];
+				}
+			}
+		}
+
+		return $default_config;
+	}
+
+
+	/**
+	 * Get the path of the customizer css file
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return string
+	 *
+	 */
+	public function GetCustomizerCSSFile($layout){
+
+		$layout_info		= \gp\tool::LayoutInfo($layout, false);
+		$dir				= $layout_info['dir'] . '/' . $layout_info['theme_color'];
+		$style_type			= \gp\tool\Output::StyleType($dir);
+
+		return \gp\tool\Output::CustomizerStyleFile($layout, $style_type);
+	}
+
+
+	/**
+	 * @deprecated 5.2
+	 * use GetLayoutCSS instead
+	 */
 	public function LayoutCSS($layout){
+		return $this->GetLayoutCSS($layout);
+	}
 
-		$custom_file = $this->LayoutCSSFile($layout);
+	/**
+	 * Get the custom css for a layout if it exists
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return string CSS, SCSS or LESS
+	 */
+	public function GetLayoutCSS($layout){
 
-		if( file_exists($custom_file) ){
-			return file_get_contents($custom_file);
+		$custom_css_file = $this->GetLayoutCSSFile($layout);
+
+		if( file_exists($custom_css_file) ){
+			return file_get_contents($custom_css_file);
 		}
 
 		return '';
@@ -398,20 +497,32 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	/**
-	 * Save the custom.css or custom.scss file
-	 *
+	 * @deprecated 5.2
+	 * use SaveCustomCSS instead
 	 */
 	public function SaveCustom($layout, $css){
+		$this->SaveCustomCSS($layout, $css);
+	}
+
+	/**
+	 * Save the custom.css / .less / .scss file
+	 * @since 5.2
+	 * @param string the layout id
+	 * @param string CSS, SCSS or LESS
+	 * @return bool success
+	 *
+	 */
+	public function SaveCustomCSS($layout, $css){
 		global $langmessage;
 
-		$custom_file		= $this->LayoutCSSFile($layout);
+		$custom_file = $this->GetLayoutCSSFile($layout);
 
 		//delete css file if empty
 		if( empty($css) ){
 			return $this->RemoveCSS($layout, $custom_file);
 		}
 
-		//save if not empt
+		//save if not empty
 		if( !\gp\tool\Files::Save($custom_file, $css) ){
 			msg($langmessage['OOPS'] . ' (CSS not saved)');
 			return false;
@@ -422,10 +533,111 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	/**
-	 * Get the path of the custom css file
-	 * @return string
+	 * Save the data posted by customizer
+	 * @since 5.2
+	 * @param string the layout id
+	 * @param array customizer results
+	 * @return bool success
+	 *
+	 */
+	public function SaveCustomizerResults($layout, $customizer_results){
+
+		$success = true;
+
+		// customizer css
+		$customizer_css = '';
+		if( !empty($customizer_results['scssless_vars']) ){
+			$customizer_css .= $customizer_results['scssless_vars'];
+		}
+		if( !empty($customizer_results['css_vars']) ){
+			$customizer_css .= $customizer_results['css_vars'];
+		}
+		$success = $success && $this->SaveCustomizerCSS($layout, $customizer_css);
+
+		// layout config
+		$layout_config = !empty($customizer_results['layout_config']) ?
+			$customizer_results['layout_config'] :
+			[];
+
+		$success = $success && $this->SaveLayoutConfig($layout, $layout_config);
+
+		return $success;
+	}
+
+
+	/**
+	 * Save the layout config from customizer
+	 * @since 5.2
+	 * @param string the layout id
+	 * @param array layout config
+	 * @return bool success
+	 *
+	 */
+	public function SaveLayoutConfig($layout, $layout_config){
+		global $langmessage;
+
+		$success = true;
+
+		$layout_config_file = \gp\tool\Output::LayoutConfigFile($layout);
+
+		if( empty($layout_config) ){
+			// delete layout config file if empty
+			$success = $success && $this->RemoveLayoutConfig($layout);
+			// save it otherwise
+		}elseif( !\gp\tool\Files::SaveData($layout_config_file, 'config', $layout_config) ){
+			msg($langmessage['OOPS'] . ' (Layout config not saved)');
+			$success = false;
+		}
+
+		return $success;
+	}
+
+
+	/**
+	 * Save the customizer css
+	 * @since 5.2
+	 * @param string the layout id
+	 * @param array customizer results
+	 * @return bool success
+	 *
+	 */
+	public function SaveCustomizerCSS($layout, $customizer_css){
+		global $langmessage;
+
+		$success = true;
+
+		$customizer_css_file = $this->GetCustomizerCSSFile($layout);
+
+		if( empty($customizer_css) ){
+			// delete css file if empty
+			$success = $success && $this->RemoveCustomizerCSS($layout, $customizer_css_file);
+			// save it otherwise
+		}elseif( !\gp\tool\Files::Save($customizer_css_file, $customizer_css) ){
+			msg($langmessage['OOPS'] . ' (Customizer stylesheet not saved)');
+			$success = false;
+		}
+
+		return $success;
+	}
+
+
+	/**
+	 * @deprecated 5.2
+	 * use GetLayoutCSSFile instead
 	 */
 	public function LayoutCSSFile($layout){
+		return $this->GetLayoutCSSFile();
+	}
+
+
+	/**
+	 * Get the path of the custom css file
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return string
+	 *
+	 */
+	public function GetLayoutCSSFile($layout){
 
 		$layout_info		= \gp\tool::LayoutInfo($layout, false);
 		$dir				= $layout_info['dir'] . '/' . $layout_info['theme_color'];
@@ -436,8 +648,10 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	/**
-	 * Remove the custom css file for a layout
-	 *
+	 * Remove the custom css file and unset the 'css' key from a layout
+	 * @param string the layout id
+	 * @param string custom file abspath
+	 * @return bool success
 	 */
 	public function RemoveCSS($layout, $custom_file){
 		global $gpLayouts;
@@ -446,20 +660,104 @@ class Layout extends \gp\admin\Addon\Install{
 			unlink($custom_file);
 		}
 
-		$dir	= dirname($custom_file);
-		$path	= $dir . '/index.html';
-
-		if( file_exists($path) ){
-			unlink($path);
-		}
-
-		if( file_exists($dir) ){
-			\gp\tool\Files::RmDir($dir);
-		}
-
 		if( isset($gpLayouts[$layout]['css']) ){
 			unset($gpLayouts[$layout]['css']);
 		}
+
+		return true;
+	}
+
+
+	/**
+	 * Remove the customizer.scss/less/css file for a layout
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return bool success
+	 *
+	 */
+	public function RemoveCustomizerCSS($layout){
+		global $gpLayouts;
+
+		$customizer_css_file = $this->GetCustomizerCSSFile($layout);
+
+		if( file_exists($customizer_css_file) ){
+			unlink($customizer_css_file);
+		}
+
+		if( isset($gpLayouts[$layout]['customizer_css']) ){
+			unset($gpLayouts[$layout]['customizer_css']);
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Remove the custom config.php file for a layout
+	 * @since 5.2
+	 * @param string the layout id
+	 * @return bool success
+	 *
+	 */
+	public function RemoveLayoutConfig($layout){
+		global $gpLayouts;
+
+		$config_file = \gp\tool\Output::LayoutConfigFile($layout);
+
+		if( file_exists($config_file) ){
+			unlink($config_file);
+		}
+
+		if( isset($gpLayouts[$layout]['config']) ){
+			unset($gpLayouts[$layout]['config']);
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Entirely remove the custom layout data direcory and its content
+	 * @since 5.2
+	 * @param string the layout directory
+	 * @return bool success
+	 *
+	 */
+	public function RemoveCustomDir($layout){
+		global $langmessage, $dataDir;
+
+		$dir = $dataDir . '/data/_layouts/' . $layout;
+
+		if( !file_exists($dir) ){
+			return false;
+		}
+
+		$remove_files = [
+			$dir . '/custom.css',
+			$dir . '/custom.less',
+			$dir . '/custom.scss',
+			$dir . '/customizer.css',
+			$dir . '/customizer.less',
+			$dir . '/customizer.scss',
+			$dir . '/config.php',
+			$dir . '/index.html',
+		];
+
+		foreach($remove_files as $path){
+			if( file_exists($path) ){
+				@unlink($path);
+			}
+		}
+
+		if( !\gp\tool\Files::RmDir($dir) ){
+			msg(
+				$langmessage['OOPS'] .
+				' Cannot remove /data/_layouts/' .
+				htmlspecialchars($layout) .
+				'. Directory is not empty.'
+			);
+			return false;
+		};
 
 		return true;
 	}
@@ -670,7 +968,6 @@ class Layout extends \gp\admin\Addon\Install{
 			$layout_info['rel']	= '/themes/' . dirname($layout_info['theme']);
 		}
 
-
 		$keys	= ['is_addon' => '', 'rel' => ''];
 		$testa	= array_intersect_key($layout_info, $keys);
 		$testb	= array_intersect_key($new_layout_info, $keys);
@@ -775,10 +1072,24 @@ class Layout extends \gp\admin\Addon\Install{
 			return;
 		}
 
+		$success = true;
+
 		//copy any css
-		$css = $this->layoutCSS($copy_id);
+		$css = $this->GetLayoutCSS($copy_id);
 		if( !$this->SaveCustom($layout_id, $css) ){
-			return false;
+			$success = false;
+		}
+
+		//copy possible customizer css
+		$customizer_css = $this->GetCustomizerCSS($copy_id);
+		if( !empty($customizer_css) && !$this->SaveCustomizerCSS($layout_id, $customizer_css) ){
+			$success = false;
+		}
+
+		//copy possible layout config
+		$layout_config = $this->GetLayoutConfig($copy_id);
+		if( !empty($layout_config) && !$this->SaveLayoutConfig($layout_id, $layout_config) ){
+			$success = false;
 		}
 
 		$this->SaveLayouts();
@@ -805,7 +1116,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 	/**
 	 * Save the config setting
-	 *
+	 * NOTE: This is not layout config but global system config!
 	 */
 	protected function SaveConfig(){
 		global $config;
@@ -864,7 +1175,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '<h2>H2 Lorem Ipsum Heading</h2>';
 
-		echo '<p>Paragraph: Excepteur sint <em>emphazize</em> cupidatat non <strong>strong</strong> proident, sunt in ';
+		echo '<p>Paragraph: Excepteur sint <em>emphasize</em> cupidatat non <strong>strong</strong> proident, sunt in ';
 		echo '<em><strong>emphasized strong</strong></em> culpa qui officia <a href="#">anchor</a> ';
 		echo 'deserunt <u>underline</u> mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate ';
 		echo 'velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui ';
@@ -953,28 +1264,29 @@ class Layout extends \gp\admin\Addon\Install{
 
 		echo '<h2>H2 Lorem Ipsum Heading <small>+ small</small></h2>';
 
-		echo '<p>Default paragraph: Excepteur sint <em>emphazize</em> cupidatat non <strong>strong</strong> proident, sunt in ';
+		echo '<p>Default paragraph: Excepteur sint <em>emphasize</em> cupidatat non <strong>strong</strong> proident, sunt in ';
 		echo '<em><strong>emphasized strong</strong></em> culpa qui officia <a href="#">anchor</a> ';
 		echo 'deserunt <u>underline</u> mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate ';
 		echo 'velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint <kbd>kbd</kbd> occaecat cupidatat non proident, sunt in culpa qui ';
 		echo '<abbr title="abbreviation">abbr</abbr> officia deserunt mollit <mark>mark</mark> anim id est <code>code</code> laborum. </p>';
 
 		echo '<p>';
-		echo   '<span class="text-muted">text-muted</span> &nbsp;|&nbsp; ';
-		echo   '<span class="text-primary">text-primary</span> &nbsp;|&nbsp; ';
-		echo   '<span class="text-success">text-success</span> &nbsp;|&nbsp; ';
-		echo   '<span class="text-info">text-info</span> &nbsp;|&nbsp; ';
-		echo   '<span class="text-warning">text-warning</span> &nbsp;|&nbsp; ';
-		echo   '<span class="text-danger">text-danger</span> &nbsp;|&nbsp;  ';
-		echo   '<span class="badge">badge</span></a> &nbsp;|&nbsp; ';
-		echo   '<span class="label label-default">label label-default</span></a>';
+		echo   '<span class="text-muted">text-muted</span>&nbsp; &nbsp;';
+		echo   '<span class="text-primary">text-primary</span>&nbsp; &nbsp;';
+		echo   '<span class="text-secondary">text-secondary</span>&nbsp; &nbsp;';
+		echo   '<span class="text-success">text-success</span>&nbsp; &nbsp;';
+		echo   '<span class="text-info">text-info</span>&nbsp; &nbsp;';
+		echo   '<span class="text-warning">text-warning</span>&nbsp; &nbsp;';
+		echo   '<span class="text-danger">text-danger</span>&nbsp; &nbsp;';
+		echo   '<span class="badge badge-secondary">badge</span></a>';
+		// echo   '&nbsp; &nbsp; <span class="label label-default">label label-default</span></a>';
 		echo '</p>';
 
 		echo  '<blockquote>Blockquote: Lorem ipsum dolor sit amet, consectetur adipisicing elit.</blockquote>';
 
 		echo '<div class="row">';
 
-		echo '<div class="col-sm-4">';
+		echo '<div class="col-md-4">';
 		echo   '<h4>Unordered list</h4>';
 		echo   '<ul>';
 		echo     '<li>Lorem Ipsum unordered list item</li>';
@@ -982,9 +1294,9 @@ class Layout extends \gp\admin\Addon\Install{
 		echo     '<li>Lorem Ipsum unordered list item</li>';
 		echo     '<li>Lorem Ipsum unordered list item</li>';
 		echo   '</ul>';
-		echo '</div>'; // /.col-sm-4
+		echo '</div>'; // /.col-md-4
 
-		echo '<div class="col-sm-4">';
+		echo '<div class="col-md-4">';
 		echo   '<h4>Ordered list</h4>';
 		echo   '<ol>';
 		echo     '<li>Lorem Ipsum ordered list item</li>';
@@ -992,38 +1304,60 @@ class Layout extends \gp\admin\Addon\Install{
 		echo     '<li>Lorem Ipsum ordered list item</li>';
 		echo     '<li>Lorem Ipsum ordered list item</li>';
 		echo   '</ol>';
-		echo '</div>'; // /.col-sm-4
+		echo '</div>'; // /.col-md-4
 
-		echo '<div class="col-sm-4">';
+		echo '<div class="col-md-4">';
 		echo   '<h4>Description list</h4>';
 		echo   '<dl>';
 		echo     '<dt>Lorem Ipsum term</dt><dd>Lorem Ipsum description</dd>';
 		echo     '<dt>Lorem Ipsum term</dt><dd>Lorem Ipsum description</dd>';
 		echo   '</dl>';
-		echo '</div>'; // /.col-sm-4
+		echo '</div>'; // /.col-md-4
 
 		echo '</div>'; // /.row
 
 		echo '<div class="row">';
 
-		echo '<div class="col-sm-6">';
+		echo '<div class="col-md-6">';
 		echo   '<h3>H3 Lorem Ipsum Heading <small>+ small</small></h3>';
 		echo   '<h4>H4 Lorem Ipsum Heading <small>+ small</small></h4>';
 		echo   '<h5>H5 Lorem Ipsum Heading <small>+ small</small></h5>';
 		echo   '<h6>H6 Lorem Ipsum Heading <small>+ small</small></h6>';
 		echo   '<p class="small">Small text paragraph: Excepteur sint cupidatat non proident, sunt in ';
-		echo   'culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit ';
-		echo   'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat ';
-		echo   'non proident. </p>';
-		echo '</div>'; // /.col-sm-6
+		echo     'culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit ';
+		echo     'in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat ';
+		echo     'non proident. ';
+		echo   '</p>';
+		echo   '<hr/>';
+		echo   '<p>';
+		echo     '<a href="#" class="btn btn-primary">btn-primary</a> &nbsp; ';
+		echo     '<a href="#" class="btn btn-secondary">btn-secondary</a> &nbsp; ';
+		echo     '<a href="#" class="btn btn-success">btn-success</a>';
+		echo   '</p>';
+		echo   '<div></div>';
+		echo   '<p>';
+		echo     '<a href="#" class="btn btn-info">btn-info</a> &nbsp; ';
+		echo     '<a href="#" class="btn btn-warning">btn-warning</a> &nbsp; ';
+		echo     '<a href="#" class="btn btn-danger">btn-danger</a>';
+		echo   '</p>';
+		echo     '<div></div>';
+		echo   '<p>';
+		echo     '<a href="#" class="btn btn-default">btn-default</a> &nbsp; ';
+		echo     '<a href="#" class="btn btn-link">btn-link</a>';
+		echo   '</p>';
+		echo   '<hr/>';
+		echo '</div>'; // /.col-md-6
 
-		echo '<div class="col-sm-6">';
-		echo   '<table class="table table-bordered table-striped table-hover">';
+		echo '<div class="col-md-6">';
+		echo   '<table class="table table-bordered table-striped table-hover" style="table-layout:fixed;">';
 		echo     '<thead>';
 		echo       '<tr>';
 		echo          '<th>Table Heading</th>';
-		echo          '<th colspan="2"><span class="text-muted" style="font-weight:normal;">';
-		echo             'class=&quot;table table-bordered table-striped table-hover&quot;</span></th>';
+		echo          '<th colspan="2">';
+		echo            '<span class="text-muted" style="font-weight:normal;">';
+		echo            '&lt;table class=&quot;table table-bordered table-striped table-hover&quot;&gt;';
+		echo            '</span>';
+		echo          '</th>';
 		echo       '</tr>';
 		echo     '</thead>';
 		echo     '<tbody>';
@@ -1032,23 +1366,13 @@ class Layout extends \gp\admin\Addon\Install{
 		echo       '<tr><td>Row&nbsp;3, Cell&nbsp;1</td><td>Row&nbsp;3, Cell&nbsp;2</td><td>Row&nbsp;3, Cell&nbsp;3</td></tr>';
 		echo       '<tr><td>Row&nbsp;4, Cell&nbsp;1</td><td>Row&nbsp;4, Cell&nbsp;2</td><td>Row&nbsp;4, Cell&nbsp;3</td></tr>';
 		echo       '<tr><td>Row&nbsp;5, Cell&nbsp;1</td><td>Row&nbsp;5, Cell&nbsp;2</td><td>Row&nbsp;5, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;6, Cell&nbsp;1</td><td>Row&nbsp;6, Cell&nbsp;2</td><td>Row&nbsp;6, Cell&nbsp;3</td></tr>';
+		echo       '<tr><td>Row&nbsp;7, Cell&nbsp;1</td><td>Row&nbsp;7, Cell&nbsp;2</td><td>Row&nbsp;7, Cell&nbsp;3</td></tr>';
 		echo     '</tbody>';
 		echo   '</table>';
-		echo '</div>'; // /.col-sm-6
+		echo '</div>'; // /.col-md-6
 
 		echo '</div>'; // /.row
-
-		echo '<hr/>';
-
-		echo '<p>';
-		echo   '<a href="#" class="btn btn-default">btn btn-default</a> &nbsp;&nbsp; ';
-		echo   '<a href="#" class="btn btn-link">btn btn-link</a> &nbsp;&nbsp; ';
-		echo   '<a href="#" class="btn btn-primary">btn btn-primary</a> &nbsp;&nbsp; ';
-		echo   '<a href="#" class="btn btn-success">btn btn-success</a> &nbsp;&nbsp; ';
-		echo   '<a href="#" class="btn btn-info">btn btn-info</a> &nbsp;&nbsp; ';
-		echo   '<a href="#" class="btn btn-warning">btn btn-warning</a> &nbsp;&nbsp; ';
-		echo   '<a href="#" class="btn btn-danger">btn btn-danger</a>';
-		echo '</p>';
 
 		echo '<div class="gpclear"></div>';
 
@@ -1816,7 +2140,7 @@ class Layout extends \gp\admin\Addon\Install{
 
 
 	/**
-	 * Remote a layout
+	 * Remove a layout
 	 *
 	 */
 	public function DeleteLayout(){
@@ -1842,9 +2166,8 @@ class Layout extends \gp\admin\Addon\Install{
 
 		$this->RmLayoutPrep($layout);
 
-		//determine if code in /data/_theme should be removed
+		//determine if code in /data/_themes/$layout/ should be removed
 		$rm_addon			= $this->RemoveAddonCode($layout);
-		$custom_file		= $this->LayoutCSSFile($layout); // get custom_file path before deleting from $gpLayouts
 
 		unset($gpLayouts[$layout]);
 
@@ -1862,13 +2185,13 @@ class Layout extends \gp\admin\Addon\Install{
 			return false;
 		}
 
-		//remove custom css
-		$this->RemoveCSS($layout, $custom_file);
+		//remove custom layout files and its directory
+		$this->RemoveCustomDir($layout);
 	}
 
 
 	/**
-	 * Determine if the code in /data/_theme should be removed
+	 * Determine if the code in /data/_themes/$layout/ should be removed
 	 *
 	 */
 	public function RemoveAddonCode($layout){
@@ -1886,7 +2209,7 @@ class Layout extends \gp\admin\Addon\Install{
 			if( $layout_id == $layout ){
 				continue;
 			}
-			if( !array_key_exists('addon_key',$info) ){
+			if( !array_key_exists('addon_key', $info) ){
 				continue;
 			}
 			if( $info['addon_key'] == $rm_addon ){

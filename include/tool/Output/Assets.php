@@ -210,15 +210,15 @@ class Assets{
 			return $files;
 		}
 
-		$customizer_style_file		= '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
 		$layout_editor_style_file	= '/data/_layouts/' . $page->gpLayout . '/custom.' . $file_ext;
-
-		if( file_exists($dataDir . $customizer_style_file) ){
-			$files[] = $customizer_style_file;
-		}
+		$customizer_style_file		= '/data/_layouts/' . $page->gpLayout . '/customizer.' . $file_ext;
 
 		if( file_exists($dataDir . $layout_editor_style_file) ){
 			$files[] = $layout_editor_style_file;
+		}
+		
+		if( file_exists($dataDir . $customizer_style_file) ){
+			$files[] = $customizer_style_file;
 		}
 
 		return $files;

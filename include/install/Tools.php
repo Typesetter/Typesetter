@@ -204,11 +204,25 @@ class Tools{
 
 		//set config variables
 
-		$gpLayouts = [];
-		//use bootswatch theme if server has enough memory
-		$gpLayouts['default']['theme'] = 'Bootstrap4/footer';
-		$gpLayouts['default']['label'] = 'Bootstrap4/footer';
-		$gpLayouts['default']['color'] = '#444a50';
+		//use Bootstrap 4 theme if server has enough memory
+		$gpLayouts							= [];
+		$gpLayouts['default']['theme']		= 'Bootstrap4/footer';
+		$gpLayouts['default']['label']		= 'Bootstrap 4/footer';
+		$gpLayouts['default']['color']		= '#5A26A6';
+
+		$gpLayouts['default']['framework']	= ['name' => 'Bootstrap', 'version' => 4];
+		$gpLayouts['default']['js_vars']	= "\n" . 'var layout_config = {' . 
+												'"header_fixed":{"value":false},' . 
+												'"navbar_expand_breakpoint":{"value":"lg"}' .
+												'}';
+		$gpLayouts['default']['config']		= [
+			'header_brand_logo'			=> ['value' => ''], // /themes/Bootstrap4/images/typesetter-logo.svg
+			'header_fixed'				=> ['value' => false],
+			'header_use_container'		=> ['value' => false],
+			'navbar_expand_breakpoint'	=> ['value' => 'lg'],
+			'content_use_container'		=> ['value' => true],
+			'footer_use_container'		=> ['value' => true],
+		];
 
 		$_config							= [];
 		$_config['toemail']					= $_POST['email'];

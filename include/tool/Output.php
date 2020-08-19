@@ -243,12 +243,114 @@ namespace gp\tool{
 
 
 		/**
+		 * Get default values from customizer if it exists
+		 * return empty array otherwise
+		 *
+		 * Layout installer will pass a customizer file path
+		 *
+		 * @static
+		 * @since 5.2
+		 * @param string $used_in
+		 * @param string $customizer_file
+		 * @return array
+		 *
+		 */
+		public static function GetCustomizerDefaults($used_in='', $customizer_file=''){
+			global $page;
+
+			if( empty($customizer_file) ){
+				$layout_dir			= $page->theme_dir . '/' . $page->theme_color;
+				$customizer_file	= $layout_dir . '/customizer.php';
+			}
+
+			if( !file_exists($customizer_file) ){
+				// msg('customizer file ' . htmlspecialchars($customizer_file) . ' does not exist'); // TODO remove
+				return [];
+			};
+
+			$customizer = \gp\tool\Files::Get($customizer_file, 'customizer');
+			// debug('$customizer = ' . pre($customizer));
+			$defaults		= [];
+
+			foreach($customizer as $section => $section_data){
+
+				foreach($section_data['items'] as $item_name => $item_data){
+					if( !empty($used_in) &&
+						isset($item_data['control']['used_in']) &&
+						is_array($item_data['control']['used_in']) &&
+						!in_array($used_in, $item_data['control']['used_in'])
+					){
+						continue;
+					}
+
+					$defaults[$item_name]['value'] = $item_data['default_value'];
+					if( !empty($item_data['default_units']) ){
+						$defaults[$item_name]['units'] = $item_data['default_units'];
+					}
+				}
+			}
+
+			return $defaults;
+		}
+
+
+		/**
+		 * Get javascript values from the layout
+		 * if the layout has no stored js_vals, try to get customizer defaults
+		 * otherwise return empty string
+		 *
+		 * @static
+		 * @since 5.2
+		 * @return string js expression like 'var layout_config = JSON;'
+		 *
+		 */
+		public static function GetLayoutJsVars(){
+			global $page, $gpLayouts;
+
+			if( $page->gpLayout ){
+				$layout_info = $gpLayouts[$page->gpLayout];
+				if( isset($layout_info['js_vars']) ){
+					return $layout_info['js_vars'];
+				}
+			}
+			
+			$js_vars = self::GetCustomizerDefaults('js');
+			return "\n" . 'var layout_config = ' . json_encode($js_vars) . ';' . "\n";
+		}
+
+
+		/**
+		 * Get configuration array from the layout
+		 * if the layout has no stored config, try to get customizer defaults
+		 * otherwise return empty array
+		 *
+		 * @static
+		 * @since 5.2
+		 * @return array layout configuration
+		 *
+		 */
+		public static function GetLayoutConfig(){
+			global $page, $gpLayouts;
+
+			if( $page->gpLayout ){
+				$layout_info = $gpLayouts[$page->gpLayout];
+				if( isset($layout_info['config']) ){
+					return $layout_info['config'];
+				}
+			}
+			
+			return self::GetCustomizerDefaults('php');
+		}
+
+
+		/**
 		 * Send all content according to the current layout
 		 * @static
 		 *
 		 */
 		public static function Template(){
-			global $page, $GP_ARRANGE, $GP_STYLES, $get_all_gadgets_called;
+			global $page, $gpLayouts, $layout_config;
+			global $GP_ARRANGE, $GP_STYLES, $get_all_gadgets_called;
 			global $addon_current_id, $GP_MENU_LINKS, $GP_MENU_CLASS;
 			global $GP_MENU_CLASSES, $GP_MENU_ELEMENTS;
 
@@ -262,13 +364,22 @@ namespace gp\tool{
 
 			self::StandardHeaders();
 
+			if( !empty($page->preview_layout_config) ){
+				// only exists in Layout Editor preview mode
+				$layout_config = $page->preview_layout_config;
+			}elseif( empty($layout_config) ){
+				$layout_config = self::GetLayoutConfig();
+			}
+			// debug('$layout_config = ' . pre($layout_config));
+
 			$path = $page->theme_dir . '/template.php';
 
 			$return = IncludeScript(
 				$path,
 				'require',
 				[
-					'page',	'GP_ARRANGE',
+					'page', 'layout_config',
+					'GP_ARRANGE',
 					'GP_MENU_LINKS', 'GP_MENU_CLASS',
 					'GP_MENU_CLASSES', 'GP_MENU_ELEMENTS'
 				]
@@ -1543,31 +1654,39 @@ namespace gp\tool{
 		 * @static
 		 */
 		public static function GetHead_InlineJS(){
-			global $page, $linkPrefix, $gp_titles;
+			global $page, $gp_titles;
+
+			if( isset($page->gp_index) &&
+				isset($gp_titles[$page->gp_index]['vis']) &&
+				$gp_titles[$page->gp_index]['vis'] == 'private'
+			){
+				$page->jQueryCode .= '$("html").addClass("isPrivate");' . "\n";
+			}
+
+			if( \gp\tool::LoggedIn() && $page->pagetype !== 'admin_display' ){
+				$page->jQueryCode .= '$gp.HideAdminUI.init();' . "\n";
+			}
+
+			// get customizer js vars
+			$layout_js_vars = self::GetLayoutJsVars();
+			// debug('$layout_js_vars = <em>' . $layout_js_vars . '</em>');
 
 			ob_start();
-			echo $page->head_script;
+
+			echo $layout_js_vars;
+
+			echo $page->head_script . "\n";
 
 			if( !empty($page->jQueryCode) ){
-				echo '$(function(){';
-				if( isset($page->gp_index) &&
-					isset($gp_titles[$page->gp_index]['vis']) &&
-					$gp_titles[$page->gp_index]['vis'] == 'private'
-				){
-					echo "\n" . '$("html").addClass("isPrivate");' . "\n";
-				}
-				if( \gp\tool::LoggedIn() && $page->pagetype !== 'admin_display' ){
-					echo "\n" . '$gp.HideAdminUI.init();' . "\n";
-				}
-				echo $page->jQueryCode;
+				echo '$(function(){' . "\n";
+				echo $page->jQueryCode . "\n";
 				echo '});';
 			}
 
 			$inline = ob_get_clean();
 			$inline = ltrim($inline);
-			if( !empty($inline) ){
-				echo "\n" . '<script type="text/javascript">' . "\n" . $inline . "\n" . '</script>' . "\n";
-			}
+
+			echo "\n" . '<script type="text/javascript">' . "\n" . $inline . "\n" . '</script>' . "\n";
 		}
 
 
@@ -1701,8 +1820,6 @@ namespace gp\tool{
 		/**
 		 * Get the path for the custom css/scss/less file
 		 *
-		 * @deprecated as of 5.1.1+
-		 * kept for backwards compatibility in case any addons use it
 		 */
 		public static function CustomStyleFile($layout, $style_type){
 			global $dataDir;
@@ -1712,6 +1829,34 @@ namespace gp\tool{
 			}
 
 			return $dataDir . '/data/_layouts/' . $layout . '/custom.css';
+		}
+
+
+		/**
+		 * Get the path for the customizer css/scss/less file
+		 *
+		 * @since 5.2
+		 */
+		public static function CustomizerStyleFile($layout, $style_type){
+			global $dataDir;
+
+			if( $style_type == 'scss' ){
+				return $dataDir . '/data/_layouts/' . $layout . '/customizer.scss';
+			}
+
+			return $dataDir . '/data/_layouts/' . $layout . '/customizer.css';
+		}
+
+
+		/**
+		 * Get the path for the custom layout config file
+		 *
+		 * @since 5.2
+		 */
+		public static function LayoutConfigFile($layout){
+			global $dataDir;
+
+			return $dataDir . '/data/_layouts/' . $layout . '/config.php';
 		}
 
 
@@ -1806,8 +1951,7 @@ namespace gp\tool{
 			$placeholder = '<!-- jquery_placeholder ' . \gp_random . ' -->';
 			$replacement = '';
 			if( !empty(self::$head_js) || stripos($buffer, '<script') !== false ){
-				//$replacement = Output\Assets::FormatAsset('js',\gp\tool::GetDir('/include/thirdparty/js/jquery.js')); // TODO: restore this line
-				$replacement = Output\Assets::FormatAsset('js',\gp\tool::GetDir('/include/thirdparty/js/jquery-3.4.1/jquery.js'));
+				$replacement = Output\Assets::FormatAsset('js',\gp\tool::GetDir('/include/thirdparty/js/jquery.js')); // TODO: restore this line
 			}
 
 			$replacements[$placeholder]	= $replacement;

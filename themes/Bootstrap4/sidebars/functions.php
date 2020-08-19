@@ -57,13 +57,6 @@ if( !empty($layout_config['header_brand_logo']['value']) ){
   $brand_logo = '<img class="brand-logo" src="' . $layout_config['header_brand_logo']['value'] . '" />';
 }
 
-$breadcrumb_nav = '';
-if( !empty($layout_config['show_breadcrumb_nav']['value']) ){
-  ob_start();
-  gpOutput::Get('BreadcrumbNav');
-  $breadcrumb_nav = ob_get_clean();
-}
-
 
 /**
  * Function to reformat the main menu elements

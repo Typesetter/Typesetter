@@ -109,7 +109,10 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
             gpOutput::Get(); // empty 'area slot' e.g. to add a breadcrumb nav via Layout Editor
 
-            echo $breadcrumb_nav;
+            if( !empty($layout_config['show_breadcrumb_nav']['value']) ){
+              // gpOutput::BreadcrumbNav();
+              gpOutput::Get('Breadcrumbs');
+            }
 
             $page->GetContent(); // get the page content
           ?>

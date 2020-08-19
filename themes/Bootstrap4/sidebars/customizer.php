@@ -192,7 +192,7 @@ $customizer = [
 
 				'control' => [
 					'label'				=> 'Show Breadcrumb Navigation',
-					'description'		=> 'Adds a Home &raquo; Heading Page &raquo; Child Page ' .
+					'description'		=> 'Adds a Home » Heading Page » Child Page ' .
 						'type navigation at the top of the main content',
 
 					'type'				=> 'checkbox',

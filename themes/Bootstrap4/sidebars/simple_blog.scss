@@ -1,0 +1,55 @@
+// Simple Blog special style for the sidebar layout
+// see also ../_common/simple_blog_common.scss
+
+#gpx_content > .blog_post,
+#gpx_content > p.blog_nav_links,
+#gpx_content > p.blog_nav_links:empty ~ p, // that's the post-install message
+#gpx_content > .category_container,
+#gpx_content > .comment_container,
+#gpx_content > h2, // assuming this is the categories selection page and no one else will write a h2 directly to #gpx_content
+#gpx_content > h2 + ul {
+  padding-left: ($grid-gutter-width / 2);
+  padding-right: ($grid-gutter-width / 2);
+  @include media-breakpoint-up(lg) {
+    padding-left: ($grid-gutter-width * 2);
+    padding-right: ($grid-gutter-width * 2);
+  }
+  @include media-breakpoint-up(xl) {
+    padding-left: ($grid-gutter-width * 3);
+    padding-right: ($grid-gutter-width * 3);
+  }
+}
+
+// ### Gadgets in the sidebars ###
+
+aside.sidebar {
+
+  .gpArea_Simple_Blog,
+  .gpArea_Simple-Blog-Gadget {
+    font-size: $font-size-sm;
+    line-height: 1.35;
+    h3 {
+      margin-bottom: ($spacer / 4);
+    }
+    b.simple_blog_title {
+      font-size: $font-size-base;
+    }
+    .simple_blog_abbrev {
+      margin-bottom: ($spacer / 2);
+      // Read More link
+    }
+  }
+
+  .gpArea_Simple-Blog-Archives-Gadget,
+  .gpArea_Simple_Blog_Archives,
+  .gpArea_Simple-Blog-Categories-Gadget,
+  .gpArea_Simple_Blog_Categories {
+    margin-bottom: 0;
+
+    .simple_blog_gadget {
+      font-size: $font-size-sm;
+      line-height: 1.35;
+    }
+  }
+
+}

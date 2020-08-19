@@ -1,0 +1,35 @@
+// Simple Blog special style for the footer layout
+// see also ../_common/simple_blog_common.scss
+
+footer.main-footer {
+
+  .gpArea_Simple_Blog,
+  .gpArea_Simple-Blog-Gadget {
+    text-align: left;
+    margin-bottom: ($spacer / 2);
+    h3 {
+      font-size: $h4-font-size;
+      margin-bottom: ($spacer * 0.75);
+    }
+    b.simple_blog_title {
+      font-size: $font-size-base;
+    }
+    .simple_blog_abbrev {
+      margin-bottom: ($spacer / 2);
+      // Read More link
+    }
+  }
+
+  .gpArea_Simple-Blog-Archives-Gadget,
+  .gpArea_Simple_Blog_Archives,
+  .gpArea_Simple-Blog-Categories-Gadget,
+  .gpArea_Simple_Blog_Categories {
+
+    .simple_blog_gadget {
+      .simple_blog_gadget_label {
+        font-size: $font-size-sm;
+      }
+    }
+  }
+
+}

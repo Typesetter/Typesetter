@@ -1,0 +1,55 @@
+.footer-nav,
+.footer-nav ul {
+  list-style: none;
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+.footer-nav {
+  margin: -($spacer / 4) 0 $spacer 0; // top: conpensate <a> padding
+  text-align: left;
+
+  li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    hr {
+      margin-top: ($spacer / 3);
+      margin-bottom: ($spacer / 3);
+    }
+  }
+
+  a:not(.btn) {
+    display: block;
+  }
+  a {
+    line-height: 1.75;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+    &.btn {
+      font-size: 0.875rem;
+      padding-top: ($spacer / 3);
+      padding-bottom: ($spacer / 3);
+      margin-top: ($spacer / 3);
+      margin-bottom: ($spacer / 3);
+    }
+  }
+
+  ul {
+    margin: 0;
+  }
+
+  // 2nd level links
+  > li > ul > li > a {
+    text-indent: ($spacer / 2);
+  }
+
+  // 3rd level links
+  > li > ul > li > ul > li > a {
+    text-indent: $spacer;
+  }
+
+}
+

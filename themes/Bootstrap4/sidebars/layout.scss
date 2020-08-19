@@ -1,0 +1,85 @@
+
+$sidebar-width: 232px !default;
+$sidebar-expand-breakpoint: lg !default;
+
+.main-body {
+	@include vp-flex-dir(column);
+}
+
+@include media-breakpoint-up($sidebar-expand-breakpoint) {
+	.main-body {
+		@include vp-flex-dir(row);
+	}
+	.main-content {
+		@include vp-order(2);
+		@include vp-flex-dir(row);
+		@include vp-flex-wrap(nowrap);
+	}
+	.sidebar {
+		width: $sidebar-width;
+		@include vp-flex-shrink(0);
+		@include vp-flex-grow(0);
+		@include vp-order(2);
+	}
+	.sidebar-left {
+		@include vp-order(1);
+		border-top: none;
+		border-right: $border-width solid $border-color;
+		.sidebar-container {
+			left: 0;
+		}
+	}
+	.sidebar-right {
+		border-top: none;
+		border-left: $border-width solid $border-color;
+		.sidebar-container {
+			right: 0;
+		}
+	}
+	.sidebar-sticky {
+		.sidebar-container {
+			position: -webkit-sticky;
+			position: sticky;
+			top: 0;
+			bottom: 0;
+			width: $sidebar-width;
+		}
+	}
+}
+
+// html/body flex layout
+html, body {
+	height: 100%;
+}
+
+// sticky sidebar container
+html.gpAdmin:not(.override_admin_style):not(.edit_layout) {
+	height: calc(100% - 30px);
+	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+		.sidebar-sticky {
+			.sidebar-container {
+				top: 30px;
+			}
+		}
+	}
+}
+
+html.header-fixed {
+	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+		.sidebar-sticky {
+			.sidebar-container {
+				top: 72px; // customizer.scss will overrule
+			}
+		}
+	}
+}
+
+html.header-fixed.gpAdmin:not(.override_admin_style):not(.edit_layout) {
+	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+		.sidebar-sticky {
+			.sidebar-container {
+				top: 102px; // customizer.scss will overrule
+			}
+		}
+	}
+}

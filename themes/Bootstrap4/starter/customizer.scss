@@ -1,0 +1,142 @@
+//
+// Bootstrap 4 - Typesetter CMS theme
+//
+// 'starter' layout
+// process customizer variables
+//
+
+
+// Variable default values
+// Do not change or remove them here
+// Use customizer in Layout Editor instead
+//
+// for theme developers: all non-bootstrap variables
+// need to have defined !default values.
+
+$header_height:				72px !default;
+$header_bg:					#343a40 !default;
+$header_color:				#ffffff !default;
+$header_brand_color:		#ffffff !default;
+$header_fixed:				off !default;
+
+$navbar_expand_breakpoint:	lg !default;
+
+$content_bg:				#ffffff !default;
+$content_color:				#212529 !default;
+$content_headings_color:	#212529 !default;
+$content_link_color:		#007bff !default;
+
+
+// css variable defaults
+// we use the html scope here
+// customizer will use the global :root scope
+// which has a higher specificity than html
+html {
+	--header_height:			$header_height;
+	--header_bg:				$header_bg;
+	--header_color:				$header_color;
+	--header_brand_color:		$header_brand_color;
+
+	--navbar_expand_breakpoint:	$navbar_expand_breakpoint;
+
+	--content_bg:				$content_bg;
+	--content_color:			$content_color;
+	--content_headings_color:	$content_headings_color;
+	--content_link_color:		$content_link_color;
+}
+
+
+
+header.main-header {
+	background: $header_bg !important;
+	color: $header_color;
+	nav.main-nav {
+		min-height: $header_height;
+
+		.GPAREA a:not(.dropdown-item):not(.btn) {
+			color: rgba($header_color, 0.667);
+			&:hover,
+			&:focus{
+				color: $header_color;
+			}
+			.navbar-nav {
+				.show > .nav-link,
+				.active > .nav-link,
+				.nav-link.show,
+				.nav-link.active {
+					color: $header_color;
+				}
+			}
+		}
+		.navbar-brand {
+			color: $header_brand_color;
+			.GPAREA {
+				color: $header_brand_color;
+				a {
+					color: $header_brand_color;
+					&:hover,
+					&:focus {
+						color: $header_brand_color;
+					}
+				}
+			}
+			.brand-logo {
+				// brand logo has a max height
+				position: relative;
+				margin-top: -$navbar-brand-padding-y;
+				margin-bottom: -$navbar-brand-padding-y;
+				display: block;
+				max-width: 256px;
+				max-height: calc(#{$header_height} - (#{$navbar-padding-y} * 2));
+				height: auto !important;
+				width: auto !important;
+			}
+		}
+	}
+}
+
+// @if $header_fixed == on {
+//	.main-body {
+//		margin-top: $header_height;
+//	}
+//}
+
+html.header-fixed .main-body {
+	margin-top: $header_height;
+}
+
+
+main.main-content {
+	color: $content_color;
+	background-color: $content_bg;
+
+	a:not(.btn) {
+		color: $content_link_color;
+		&:hover,
+		&:focus {
+			color: darken($content_link_color, 10%);
+		}
+	}
+
+	h1, .h1,
+	h2, .h2,
+	h3, .h3,
+	h4, .h4,
+	h5, .h5,
+	h6, .h6,
+	.simple_blog_gadget_label {
+		color: $content_headings_color;
+	}
+
+	[class*="text-"] {
+		h1, .h1,
+		h2, .h2,
+		h3, .h3,
+		h4, .h4,
+		h5, .h5,
+		h6, .h6,
+		.simple_blog_gadget_label {
+			color: inherit;
+		}
+	}
+}

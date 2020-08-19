@@ -1,0 +1,79 @@
+// Theme Bootstrap 4
+// Layout stylesheet
+//
+// Instead of Autoprefixer we use vendor-prefix mixins,
+// see https://github.com/Typesetter/Typesetter/blob/master/include/thirdparty/Bootstrap4/VP-MIXINS.md
+//
+
+
+// ### Import Bootstrap Scss ###
+@import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
+
+// ### Commmon imports ###
+@import '../_common/common_style.scss';
+
+// ### Imports ###
+@import 'layout.scss';
+@import 'sidebars.scss';
+@import 'sidebar_nav.scss';
+@import 'simple_blog.scss';
+
+// ### Customizer ###
+@import 'customizer.scss';
+
+
+// ### Content sections ###
+
+// partly overrules of common_style.scss
+.main-content {
+  > .no-container {
+    // > .GPAREA:not(:empty),
+    > #gpx_content > .GPAREA {
+      padding-left: ($grid-gutter-width / 2);
+      padding-right: ($grid-gutter-width / 2);
+      @include media-breakpoint-up(lg) {
+        padding-left: ($grid-gutter-width * 2);
+        padding-right: ($grid-gutter-width * 2);
+
+        &:first-child {
+          padding-top: ($grid-gutter-width * 1.5);
+        }
+      }
+      @include media-breakpoint-up(xl) {
+        padding-left: ($grid-gutter-width * 3);
+        padding-right: ($grid-gutter-width * 3);
+      }
+    }
+
+    > .gpArea_Breadcrumbs .breadcrumb {
+      margin-bottom: 0;
+      font-size: 0.875rem;
+      border-radius: 0;
+      background-color: transparent;
+      .breadcrumb-item {
+        a,
+        a:hover,
+        a.focus {
+          text-decoration: none;
+          color: $gray-700;
+        }
+      }
+    }
+
+  }
+}
+
+// overrule default Bootstrap .container
+.container {
+  // max-width: calc(100% - #{$grid-gutter-width}) !important;
+  max-width: 100%;
+  @include media-breakpoint-up(md) {
+    max-width: calc(100% - #{$grid-gutter-width}) !important;
+  }
+  @include media-breakpoint-up(lg) {
+    max-width: calc(100% - #{$grid-gutter-width * 3}) !important;
+  }
+  @include media-breakpoint-up(xl) {
+    max-width: calc(100% - #{$grid-gutter-width * 5}) !important;
+  }
+}

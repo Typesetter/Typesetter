@@ -1,0 +1,246 @@
+// Simple Blog is rather old and, as of 3.0.4, it seriously lacks
+// some CSS classes and div wrappers to be styled in a modern way.
+// So the following feels a bit like crypto and in't easy to hack. Sorry for that.
+
+#gpx_content > .blog_post,
+#gpx_content > p.blog_nav_links,
+#gpx_content > p.blog_nav_links:empty ~ p, // that's the post-install message
+#gpx_content > .category_container,
+#gpx_content > .comment_container,
+#gpx_content > h2, // assuming this is the categories selection page and no one else will write a h2 directly to #gpx_content
+#gpx_content > h2 + ul {
+  padding: ($grid-gutter-width / 4) 0;
+  &:first-of-type {
+    padding-top: ($grid-gutter-width / 2);
+  }
+  @include media-breakpoint-up(md) {
+    padding-top: $grid-gutter-width / 2;
+    padding-bottom: ($grid-gutter-width / 4);
+    &:first-of-type {
+      padding-top: $grid-gutter-width;
+    }
+  }
+}
+
+// .blog_nav_links only appears once per page 
+// so we need to overrule the :first-of-type
+#gpx_content > p.blog_nav_links:first-of-type {
+  padding-top: ($grid-gutter-width / 4) !important;
+  @include media-breakpoint-up(md) {
+    padding-top: ($grid-gutter-width / 2) !important;
+  }
+}
+
+#gpx_content > .blog_post + .category_container {
+  padding-top: 0;
+  margin-top: ($spacer * -1);
+}
+
+#gpx_content > .blog_nav_links,
+#gpx_content > .category_container {
+  clear: both;
+  a {
+    &:before {
+      display: inline-block;
+      margin-right: ($spacer / 2);
+      font-family: FontAwesome;
+    }
+  }
+}
+
+// 'buttonize' the blog nav links
+#gpx_content > .blog_nav_links {
+  @extend .btn-group, .btn-group-sm;
+  > a {
+    @extend .btn, .btn-primary;
+    + a {
+      margin-left: -0.3em !important; // remove the gap
+    }
+  }
+  > .editable_area { // admin
+    @extend .btn, .btn-primary;
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    + .editable_area,
+    + a {
+      margin-left: -0.3em !important; // remove the gap
+    }
+  }
+}
+
+#gpx_content > .blog_nav_links {
+  a:before { content: '\f102'; } // that's the blog home linke
+  a.blog_older:before { content: '\f105'; }
+  a.blog_newer:before { content: '\f104'; }
+  a.blog_post_new:before { content: '\f055'; }
+}
+
+#gpx_content > .category_container {
+  font-size: $font-size-sm;
+  a:before {
+    content: '\f02b';
+    margin-left: ($spacer / 4);
+    margin-right: ($spacer / 4);
+  }
+}
+
+.blog-item-count {
+  @extend .badge, .badge-light;
+}
+
+/*
+.blog_post .simple_blog_info,
+.category_container,
+.blog_nav_links {
+  font-size: 87.5%;
+  color: $gray-700;
+}
+
+.blog_nav_links > * {
+  margin-right: 0.5em;
+}
+*/
+
+.blog_post {
+  @extend .clearfix;
+  > .twysiwygr {
+    margin-bottom: 1rem;
+  }
+  .twysiwygr > *:last-child {
+    margin-bottom: 0;
+  }
+  + br {
+    display: none;
+  }
+  ~ .clear {
+    padding: 0;
+  }
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  img.img-thumbnail {
+    float: left;
+    margin: 0 $spacer ($spacer / 2) 0;
+    max-width: 25% !important;
+  }
+  &.single_blog_item { // we don't need to link to ourselves here
+    > *[id ^= "blog_post_"] {
+      a,
+      a:hover,
+      a:focus {
+        color: inherit;
+        pointer-events: none;
+        cursor: default;
+      }
+    }
+  }
+}
+
+
+// ### Comments ###
+
+// .comment_container {}
+
+.comment_area {
+  background-color: $light;
+  padding: $alert-padding-y $alert-padding-x;
+  margin-bottom: $spacer;
+  border: $border-width solid $border-color;
+  .comment {
+    margin-bottom: 0;
+  }
+}
+
+// 'Bootstrapify the comment form
+.comment_container  > form {
+  max-width: 100%;
+  ul {
+    max-width: 400px;
+  }
+  li {
+    label {
+      float: none;
+      display: block;
+      width: auto;
+    }
+
+    br {
+      display: none;
+    }
+
+    input,
+    select,
+    textarea {
+      float: none;
+      width: 100%;
+      @extend .form-control;
+    }
+
+    textarea {
+      margin-bottom: 0.6em;
+    }
+
+    input.submit {
+      width: auto;
+      @extend .btn, .btn-primary;
+    }
+
+  }
+}
+
+
+
+// ### Gadgets and Areas ###
+
+.gpArea_Simple_Blog,
+.gpArea_Simple-Blog-Gadget {
+  h3 {
+    margin-bottom: $spacer;
+  }
+  b.simple_blog_title {
+    display: block;
+    clear: both;
+    font-weight: 600;
+  }
+
+  .simple_blog_info {
+    font-weight: 600;
+  }
+
+  .simple_blog_abbrev {
+    position: relative;
+    @extend .clearfix;
+    margin-bottom: $spacer;
+    // Read More link
+    > a {
+      display: block;
+      float: right;
+      white-space: nowrap;
+      text-decoration: none !important;
+      @extend .stretched-link;
+    }
+  }
+}
+
+.gpArea_Simple-Blog-Archives-Gadget,
+.gpArea_Simple_Blog_Archives,
+.gpArea_Simple-Blog-Categories-Gadget,
+.gpArea_Simple_Blog_Categories {
+  margin-bottom: $spacer;
+}
+
+.simple_blog_gadget_label {
+  font-size: 0.872rem;
+  font-weight: bolder;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  color: $gray-700;
+}
+
+.simple_blog_gadget ul {
+  list-style: none;
+  padding-left: ($spacer / 2);
+}

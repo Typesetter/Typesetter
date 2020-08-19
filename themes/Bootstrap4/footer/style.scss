@@ -1,0 +1,21 @@
+// Theme Bootstrap 4
+// Layout stylesheet
+//
+// Instead of Autoprefixer we use vendor-prefix mixins,
+// see https://github.com/Typesetter/Typesetter/blob/master/include/thirdparty/Bootstrap4/VP-MIXINS.md
+//
+
+// ### Import Bootstrap Scss ###
+@import 'include/thirdparty/Bootstrap4/scss/_bootstrap.scss';
+
+// ### Commmon imports ###
+@import '../_common/common_style.scss';
+
+// ### Imports ###
+@import 'layout.scss';
+@import 'footer.scss';
+@import 'footer_nav.scss';
+@import 'simple_blog.scss';
+
+// ### Customizer ###
+@import 'customizer.scss';

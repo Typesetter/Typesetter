@@ -1,0 +1,7 @@
+// html/body flex layout
+html, body {
+  height: 100%;
+}
+html.gpAdmin:not(.override_admin_style) {
+  height: calc(100% - 29px);
+}

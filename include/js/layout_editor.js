@@ -90,8 +90,12 @@ $gp.EditLayout = {
 	updateButtons : function(){
 		$gp.EditLayout.checkDirty();
 
-		$('button[data-cmd="preview_changes"], ' +
-			'button[data-cmd="save_changes"], ' +
+		// always keep the preview button enabled
+		$('button[data-cmd="preview_changes"]')
+			.toggleClass('gpdisabled', false)
+			.prop('disabled', false);
+		
+		$('button[data-cmd="save_changes"], ' +
 			'button[data-cmd="reset_changes"]')
 			.toggleClass('gpdisabled', !$gp.EditLayout.isDirty)
 			.prop('disabled', !$gp.EditLayout.isDirty);

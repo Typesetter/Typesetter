@@ -54,7 +54,7 @@ if( !empty($layout_config['header_use_container']['value']) ){
 
 $brand_logo = '';
 if( !empty($layout_config['header_brand_logo']['value']) ){
-  $brand_logo = '<img class="brand-logo" src="' . $layout_config['header_brand_logo']['value'] . '" />';
+  $brand_logo = '<img alt="logo" class="brand-logo" src="' . $layout_config['header_brand_logo']['value'] . '" />';
 }
 
 

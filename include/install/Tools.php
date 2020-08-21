@@ -437,6 +437,22 @@ class Tools{
 		$content	= '<p>&copy; $currentYear My Company</p>';
 		self::NewExtra($file, $content);
 
+		//Header Contact
+		$file		= $destination . '/data/_extra/Header_Contact/page.php';
+		$content	= '<span><i class="fa fa-envelope">&zwnj;</i>&nbsp;<a href="mailto:hello@mydomain.com">hello@mydomain.com</a></span>
+		<span><i class="fa fa-phone">&zwnj;</i>&nbsp;+1 2345 6789 0</span>';
+		self::NewExtra($file, $content);
+
+		//Header Social Media
+		$file		= $destination . '/data/_extra/Header_SocialMedia/page.php';
+		$content	= '<a title="Twitter" class="fa fa-twitter" target="blank" href="https://twitter.com">&zwnj;</a>
+		<a title="facebook" class="fa fa-facebook" target="blank" href="https://www.facebook.com">&zwnj;</a>
+		<a title="Instagram" class="fa fa-instagram" target="blank" href="https://www.instagram.com">&zwnj;</a>
+		<a title="LinkedIn" class="fa fa-linkedin-square" target="blank" href="https://www.linkedin.com">&zwnj;</a>
+		<a title="YouTube" class="fa fa-youtube" target="blank" href="https://www.youtube.com">&zwnj;</a>
+		<a title="Skype" class="fa fa-skype" target="blank" href="https://www.skype.com">&zwnj;</a>';
+		self::NewExtra($file, $content);
+
 		//Side_Menu
 		$file		= $destination . '/data/_extra/Side_Menu/page.php';
 		$content	= '<h3>Join the ' . CMS_NAME . ' Community</h3>

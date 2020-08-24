@@ -817,6 +817,10 @@ class Ajax extends \gp\admin\Menu{
 	public function SaveClasses(){
 		global $langmessage;
 
+		if( isset($_POST['key']) && substr($_POST['key'], 0, 6) == '_extra'){
+			$_POST['classes_a'] = '';
+		}
+
 		if( !isset($_POST['key']) || !isset($_POST['classes_li']) || !isset($_POST['classes_a']) || !isset($_POST['classes_child_ul']) ){
 			msg($langmessage['OOPS'] . ' (Invalid request)');
 			return;

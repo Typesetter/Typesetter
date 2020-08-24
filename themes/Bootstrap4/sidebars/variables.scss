@@ -317,32 +317,6 @@ $form-feedback-valid-color: $success;
 $form-feedback-invalid-color: $danger;
 
 
-// ### Dropdown ###
-$dropdown-min-width: 10rem;
-$dropdown-padding-y: 0.5rem;
-$dropdown-spacer: 0.125rem;
-$dropdown-bg: $white;
-
-$dropdown-border-color: rgba($black, 0.15);
-$dropdown-border-width: $border-width;
-
-$dropdown-divider-bg: $gray-200;
-
-$dropdown-box-shadow: 0 0.5rem 1rem rgba($black, 0.175);
-
-$dropdown-link-color: $gray-900;
-$dropdown-link-hover-color: darken($gray-900, 5%);
-$dropdown-link-hover-bg: $gray-100;
-$dropdown-link-active-color: $component-active-color;
-$dropdown-link-active-bg: $component-active-bg;
-$dropdown-link-disabled-color: $gray-600;
-
-$dropdown-item-padding-y: 0.25rem;
-$dropdown-item-padding-x: 1.5rem;
-
-$dropdown-header-color: $gray-600;
-
-
 // ### Navs ###
 $nav-link-padding-y: 0.5rem;
 $nav-link-padding-x: 1rem;
@@ -359,6 +333,37 @@ $nav-tabs-link-active-border-color: #ddd;
 $nav-pills-border-radius: $border-radius;
 $nav-pills-link-active-color: $component-active-color;
 $nav-pills-link-active-bg: $component-active-bg;
+
+$nav-divider-color: $gray-200;
+$nav-divider-margin-y: $spacer / 2;
+
+
+// ### Dropdown ###
+$dropdown-min-width: 10rem;
+$dropdown-padding-y: 0.5rem;
+$dropdown-spacer: 0.125rem;
+$dropdown-bg: $white;
+
+$dropdown-border-color: rgba($black, 0.15);
+$dropdown-border-width: $border-width;
+
+$dropdown-divider-margin-y: $nav-divider-margin-y;
+$dropdown-divider-bg: $gray-200;
+
+$dropdown-box-shadow: 0 0.5rem 1rem rgba($black, 0.175);
+
+$dropdown-link-color: $gray-900;
+$dropdown-link-hover-color: darken($gray-900, 5%);
+$dropdown-link-hover-bg: $gray-100;
+$dropdown-link-active-color: $component-active-color;
+$dropdown-link-active-bg: $component-active-bg;
+$dropdown-link-disabled-color: $gray-600;
+
+$dropdown-item-padding-y: 0.25rem;
+$dropdown-item-padding-x: 1.5rem;
+
+$dropdown-header-color: $gray-600;
+
 
 // ### Navbar ###
 $navbar-padding-y: ($spacer / 2);

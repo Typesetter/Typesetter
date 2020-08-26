@@ -1,7 +1,7 @@
 // html/body flex layout
 html, body {
-  min-height: 100%;
+  height: 100%;
 }
 html.gpAdmin:not(.override_admin_style) {
-  min-height: calc(100% - 29px);
+  height: calc(100% - 29px);
 }

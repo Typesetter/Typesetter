@@ -13,43 +13,85 @@
 // for theme developers: all non-bootstrap variables
 // need to have defined !default values.
 
-$header_height:				72px !default;
-$header_bg:					#343a40 !default;
-$header_color:				#ffffff !default;
-$header_brand_color:		#ffffff !default;
-$header_fixed:				off !default;
+$complementary_header_show:		off !default;
+$complementary_header_fixed:	off !default;
+$complementary_header_height:	46px !default;
+$complementary_header_color:	#ffffff !default;
+$complementary_header_bg:		#212529 !default;
 
-$navbar_expand_breakpoint:	lg !default;
+$header_sticky:					off !default;
+$header_height:					72px !default;
+$header_color:					#ffffff !default;
+$header_bg:						#343a40 !default;
+$header_brand_color:			#ffffff !default;
 
-$content_bg:				#ffffff !default;
-$content_color:				#212529 !default;
-$content_headings_color:	#212529 !default;
-$content_link_color:		#007bff !default;
+$navbar_expand_breakpoint:		lg !default;
 
+$content_color:					#212529 !default;
+$content_bg:					#ffffff !default;
+$content_headings_color:		#212529 !default;
+$content_link_color:			#007bff !default;
 
 // css variable defaults
 // we use the html scope here
 // customizer will use the global :root scope
 // which has a higher specificity than html
 html {
+	--complementary_header_show:	$complementary_header_show;
+	--complementary_header_fixed:	$complementary_header_fixed;
+	--complementary_header_height:	$complementary_header_height;
+	--complementary_header_color:	$complementary_header_color;
+	--complementary_header_bg:		$complementary_header_bg;
+
+	--header_sticky:			$header_sticky;
 	--header_height:			$header_height;
-	--header_bg:				$header_bg;
 	--header_color:				$header_color;
+	--header_bg:				$header_bg;
 	--header_brand_color:		$header_brand_color;
 
 	--navbar_expand_breakpoint:	$navbar_expand_breakpoint;
 
-	--content_bg:				$content_bg;
 	--content_color:			$content_color;
+	--content_bg:				$content_bg;
 	--content_headings_color:	$content_headings_color;
 	--content_link_color:		$content_link_color;
 }
 
 
+// headers display rulesets
+@import '../_common/headers.scss';
+
+
+header.complementary-header {
+	color: $complementary_header_color !important;
+	background-color: $complementary_header_bg !important;
+
+	&.bg-dark,
+	&.bg-light {
+		background-color: $complementary_header_bg !important;
+	}
+
+	.complementary-nav {
+		min-height: $complementary_header_height;
+
+		.GPAREA {
+			color: $complementary_header_color;
+			a:not(.dropdown-item):not(.btn) {
+				color: rgba($complementary_header_color, 0.667);
+				&:hover,
+				&:focus{
+					color: $complementary_header_color;
+				}
+			}
+		}
+	}
+}
+
 
 header.main-header {
-	background: $header_bg !important;
 	color: $header_color;
+	background: $header_bg !important; // overrule .bg-dark
+
 	nav.main-nav {
 		min-height: $header_height;
 
@@ -68,6 +110,7 @@ header.main-header {
 				}
 			}
 		}
+
 		.navbar-brand {
 			color: $header_brand_color;
 			.GPAREA {
@@ -80,6 +123,7 @@ header.main-header {
 					}
 				}
 			}
+
 			.brand-logo {
 				// brand logo has a max height
 				position: relative;
@@ -87,22 +131,12 @@ header.main-header {
 				margin-bottom: -$navbar-brand-padding-y;
 				display: block;
 				max-width: 256px;
-				max-height: calc(#{$header_height} - (#{$navbar-padding-y} * 2));
+				max-height: ($header_height - $navbar-padding-y * 2);
 				height: auto !important;
 				width: auto !important;
 			}
 		}
 	}
-}
-
-// @if $header_fixed == on {
-//	.main-body {
-//		margin-top: $header_height;
-//	}
-//}
-
-html.header-fixed .main-body {
-	margin-top: $header_height;
 }
 
 

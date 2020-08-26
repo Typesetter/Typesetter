@@ -57,6 +57,14 @@
 
 
 // ### Navbar ###
+.navbar {
+  .fa {
+    font-size: 14px;
+    line-height: inherit;
+  }
+}
+
+
 
 // navbar areas and their <a> tags inherit the bootstrap style
 .navbar-light {
@@ -122,7 +130,15 @@
   }
 }
 
+.complementary-nav {
+  min-height: 46px; // default, will be overruled by customizer
+  > .no-container {
+    width: 100%;
+  }
+}
+
 .main-nav {
+  min-height: 72px; // default, will be overruled by customizer
   // search gadget
   .gpArea_Search,
   .gpArea_Search-Gadget {
@@ -179,41 +195,6 @@
 }
 
 
-// ### Anchors and fixed main navbar ###
-
-// prevent targeted anchors hiding behind fixed navbar
-html.header-fixed {
-  .GPAREA {
-    a[name]:not([href]):target,
-    [id]:not(.GPAREA):target {
-      &::before {
-        content: '';
-        display: block;
-        visibility: hidden;
-        padding-top: 80px; // IE fallback
-        margin-top: -80px; // IE fallback
-        padding-top: calc( var(--navbar-height) + $spacer );
-        margin-top: calc( ( var(--navbar-height) + $spacer ) * -1 );
-      }
-    }
-  }
-}
-// when logged-in and admin UI not hidden
-html.header-fixed.gpAdmin:not(.override_admin_style) {
-  .GPAREA {
-    a[name]:not([href]):target,
-    [id]:not(.GPAREA):target {
-      &::before {
-        padding-top: 119px; // IE fallback
-        margin-top: -119px; // IE fallback
-        padding-top: calc( var(--navbar-height) + $spacer + 29px);
-        margin-top: calc( ( var(--navbar-height) + $spacer + 29px ) * -1 );
-      }
-    }
-  }
-}
-
-
 // ### Native smooth scrolling ###
 
 // see https://caniuse.com/#feat=css-scroll-behavior
@@ -223,6 +204,36 @@ html {
   scroll-behavior: smooth;
   @media (prefers-reduced-motion) {
     scroll-behavior: auto;
+  }
+}
+
+
+// ### Complementary Header ###
+header.complementary-header {
+  &.bg-dark {
+    // background-color: darken($dark, 7%) !important;
+    background-color: $gray-900 !important; // Customizer
+  }
+
+  &.bg-light {
+    // background-color: darken($white, 7%) !important;
+    background-color: $gray-100 !important;
+  }
+
+  .gpArea_Extra_Header_Contact > span,
+  .gpArea_Extra_Header_Contact > .GPAREA > span, // when editing
+  .gpArea_Extra_Header_SocialMedia > a,
+  .gpArea_Extra_Header_SocialMedia > .GPAREA > a {
+    display: inline-block;
+    padding: 0 4px;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
   }
 }
 

@@ -49,12 +49,12 @@ $sidebar-expand-breakpoint: lg !default;
 
 // html/body flex layout
 html, body {
-	height: 100%;
+	min-height: 100%;
 }
 
 // sticky sidebar container
 html.gpAdmin:not(.override_admin_style):not(.edit_layout) {
-	height: calc(100% - 30px);
+	min-height: calc(100% - 30px);
 	@include media-breakpoint-up($sidebar-expand-breakpoint) {
 		.sidebar-sticky {
 			.sidebar-container {

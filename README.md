@@ -4,7 +4,9 @@ Open source CMS written in PHP focused on ease of use with true WYSIWYG editing 
 * [Typesetter Home](https://www.typesettercms.com)
 * [Typesetter Download](https://www.typesettercms.com/Download)
 * [Typesetter Demo](https://www.typesettercms.com/Demo)
+* [Typesetter Documentation](https://www.typesettercms.com/Docs)
 * [Typesetter Forum](https://www.typesettercms.com/Forum)
+* [Typesetter Wiki](https://github.com/Typesetter/Typesetter/wiki)
 
 
 ## Requirements ##

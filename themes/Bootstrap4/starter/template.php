@@ -102,9 +102,8 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 						</div><!--/.ml-auto -->
 
 						<?php
-							gpOutput::Get(); // empty 'area slot' to add extra content via Layout Editor
+							// gpOutput::Get(); // empty 'area slot' to add extra content via Layout Editor
 							gpOutput::GetArea('Search-Gadget','');
-							// ThemeFunctions::getNavSearch(); // comment this line to remove the search field from the navbar
 						?>
 
 					</div><!--/.collapse -->

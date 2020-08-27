@@ -119,7 +119,7 @@ $customizer = [
 			],
 
 			'header_use_container'	=>	[
-				'default_value'	=> false,
+				'default_value'	=> true,
 				'default_units'	=> '',
 
 				'control' => [
@@ -173,7 +173,7 @@ $customizer = [
 		'items'			=> [
 
 			'complementary_header_show'	=>	[
-				'default_value'	=> 'never',
+				'default_value'	=> 'md',
 				'default_units'	=> '',
 
 				'control' => [
@@ -216,7 +216,7 @@ $customizer = [
 			],
 
 			'complementary_header_use_container'	=>	[
-				'default_value'	=> false,
+				'default_value'	=> true,
 				'default_units'	=> '',
 
 				'control' => [

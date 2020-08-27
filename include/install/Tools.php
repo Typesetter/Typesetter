@@ -219,14 +219,15 @@ class Tools{
 			'}';
 
 		$gpLayouts['default']['config']		= [
-			'header_brand_logo'				=> ['value' => ''], // /themes/Bootstrap4/images/typesetter-logo.svg
-			'header_fixed'					=> ['value' => false],
-			'complementary_header_fixed'	=> ['value' => false],
-			'complementary_header_show'		=> ['value' => 'md'],
-			'header_use_container'			=> ['value' => false],
-			'navbar_expand_breakpoint'		=> ['value' => 'lg'],
-			'content_use_container'			=> ['value' => true],
-			'footer_use_container'			=> ['value' => true],
+			'header_brand_logo'						=> ['value' => ''], // /themes/Bootstrap4/images/typesetter-logo.svg
+			'header_fixed'							=> ['value' => false],
+			'complementary_header_fixed'			=> ['value' => false],
+			'complementary_header_show'				=> ['value' => 'md'],
+			'complementary_header_use_container'	=> ['value' => true],
+			'header_use_container'					=> ['value' => true],
+			'navbar_expand_breakpoint'				=> ['value' => 'lg'],
+			'content_use_container'					=> ['value' => true],
+			'footer_use_container'					=> ['value' => true],
 		];
 
 		$_config							= [];

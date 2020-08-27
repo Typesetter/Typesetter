@@ -1362,7 +1362,6 @@ namespace gp{
 
 		/**
 		 * Include the main.inc language file for $language
-		 * Language files were renamed to main.inc for version 2.0.2
 		 *
 		 */
 		public static function GetLangFile($file='main.inc', $language=false){
@@ -1372,10 +1371,39 @@ namespace gp{
 			$path		= $dataDir.'/include/languages/' . $language . '.main.inc';
 
 			if( !file_exists($path) ){
-				$path	= $dataDir . '/include/languages/en.main.inc'; //default to en
+				include($dataDir . '/include/languages/en.main.inc'); //default to en
+				return false;
 			}
 
 			include($path);
+			return true;
+		}
+
+
+		/**
+		 * Get translation of a $langmessage key
+		 * @since 5.2
+		 * @param string key to be found in the $langmessage array
+		 * @param string optional language code (de, fr, …) of the language to be loaded.
+		 *					if omitted the current CMS language will be used.
+		 * @return string the translation if it exists, otherwise the passed term
+		 *
+		 */
+		public static function Translate($term, $lang=false){
+			global $dataDir;
+
+			if( empty($lang) ){
+				// use CMS language
+				global $langmessage;
+			}else{
+				$path = $dataDir . '/include/languages/' . $lang . '.main.inc';
+				if( !file_exists($path) ){
+					return $term;
+				}
+				include($path);
+			}
+
+			return isset($langmessage[$term]) ? $langmessage[$term] : $term;
 		}
 
 

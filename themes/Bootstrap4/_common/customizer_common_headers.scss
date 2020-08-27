@@ -46,7 +46,7 @@ $sidebar-expand-breakpoint: lg !default; // required here to avoid scss errors
 	}
 
 	&.gpAdmin:not(.override_admin_style):not(.edit_layout) {
-		@include media-breakpoint-up(sm) {
+		@include media-breakpoint-up($breakpoint) {
 			header.complementary-header.#{$ch_class} {
 				top: $abh;
 				~ div.main-body {

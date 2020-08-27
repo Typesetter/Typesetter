@@ -38,8 +38,8 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
 		<?php
 			// render the complementary header?
-			if( !empty($layout_config['complementary_header_show']['value']) &&
-				$layout_config['complementary_header_show']['value'] != 'off'
+			if( isset($layout_config['complementary_header_show']['value']) &&
+				$layout_config['complementary_header_show']['value'] !== false
 			):
 		?>
 			<header role="complementary"

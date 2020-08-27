@@ -132,7 +132,7 @@ header.main-header {
 				margin-bottom: -$navbar-brand-padding-y;
 				display: block;
 				max-width: 256px;
-				max-height: ($header_height - $navbar-padding-y * 2);
+				max-height: calc( #{$header_height} - #{$navbar-padding-y} * 2 );
 				height: auto !important;
 				width: auto !important;
 			}

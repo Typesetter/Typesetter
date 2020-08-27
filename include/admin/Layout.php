@@ -64,9 +64,11 @@ class Layout extends \gp\admin\Addon\Install{
 		$this->gpLayouts_before		= $gpLayouts;
 		$this->config_before		= $config;
 
-		$this->page->head_js[]		= '/include/js/theme_content.js';
-		$this->page->head_js[]		= '/include/js/dragdrop.js';
-		$this->page->css_admin[]	= '/include/css/theme_content.scss';
+		if( $this->page ){
+			$this->page->head_js[]		= '/include/js/theme_content.js';
+			$this->page->head_js[]		= '/include/js/dragdrop.js';
+			$this->page->css_admin[]	= '/include/css/theme_content.scss';
+		}
 
 		\gp\tool::LoadComponents('resizable');
 

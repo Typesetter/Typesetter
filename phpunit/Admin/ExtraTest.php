@@ -107,6 +107,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 		$content	= \gp\tool\Output\Extra::GetExtra('Header');
 
+
 		// assert the homepage does not contain extra content
 		$response	= $this->GetRequest('');
 		$body		= $response->GetBody();
@@ -135,7 +136,7 @@ class ExtraTest extends \gptest_bootstrap{
 
 		// add Header
 		// /Admin_Theme_Content/Edit/default?cmd=addcontent&where=QWZ0ZXJDb250ZW50Og_0%7C&insert=Extra%3AHeader
-		preg_match('#href="([^"]*)?([^"]*cmd=addcontent[^"]*Header[^"]*)"#',$body,$match);
+		preg_match('#href="([^"]*)\?([^"]*cmd=addcontent[^"]*insert[^"]*Header[^"]*)"#',$body,$match);
 		$page		= rawurldecode($match[1]);
 		$query		= rawurldecode($match[2]);
 		$response	= $this->GetRequest($page,$query);

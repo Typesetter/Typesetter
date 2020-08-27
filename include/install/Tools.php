@@ -212,7 +212,7 @@ class Tools{
 
 		$gpLayouts['default']['framework']	= ['name' => 'Bootstrap', 'version' => 4];
 		$gpLayouts['default']['js_vars']	= "\n" . 'var layout_config = {' .
-			'"header_fixed":{"value":false},' .
+			'"header_sticky":{"value":true},' .
 			'"complementary_header_show":{"value":"md"},' .
 			'"complementary_header_fixed":{"value":false},' .
 			'"navbar_expand_breakpoint":{"value":"lg"}' .
@@ -220,7 +220,7 @@ class Tools{
 
 		$gpLayouts['default']['config']		= [
 			'header_brand_logo'						=> ['value' => ''], // /themes/Bootstrap4/images/typesetter-logo.svg
-			'header_fixed'							=> ['value' => false],
+			'header_sticky'							=> ['value' => true],
 			'complementary_header_fixed'			=> ['value' => false],
 			'complementary_header_show'				=> ['value' => 'md'],
 			'complementary_header_use_container'	=> ['value' => true],

@@ -102,7 +102,7 @@ $customizer = [
 			],
 
 			'header_sticky'	=>	[
-				'default_value'	=> false,
+				'default_value'	=> true,
 				'default_units'	=> '',
 
 				'control' => [

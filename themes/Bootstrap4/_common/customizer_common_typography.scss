@@ -1,0 +1,113 @@
+// Theme Bootstrap 4
+//
+// common stylesheet for typography
+// will only work when imported by customizer.scss
+//
+
+$sans_web_font:			false !default;
+$custom_font_sans:		-apple-system, BlinkMacSystemFont,
+						'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+						'Noto Sans', sans-serif,
+						'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+						'Noto Color Emoji' !default;
+
+$serif_web_font:		false !default;
+$custom_font_serif:		Georgia, 'Times New Roman', Times, serif !default;
+
+$text_use_font:			'' !default;
+$headings_use_font:		'' !default;
+
+
+$web_font_names: (
+	'default':			'',
+	'source_sans_pro':	'Source Sans Pro',
+	'open_sans':		'Open Sans',
+	'roboto':			'Roboto',
+	'fira_sans':		'Fira Sans',
+	'alegreya_sans':	'Alegreya Sans',
+	'inter':			'Inter',
+	'ubuntu':			'Ubuntu',
+	'montserrat':		'Montserrat',
+	'raleway':			'Raleway',
+	'work_sans':		'Work Sans',
+
+	'bitter':			'Bitter',
+	'merriweather':		'Merriweather',
+	'playfair_display':	'Playfair Display',
+	'lora':				'Lora',
+	'eb_garamond':		'EB Garamond',
+	'alegreya':			'Alegreya',
+	'zilla_slab':		'Zilla Slab',
+	'roboto_slab':		'Roboto Slab'
+);
+
+$web_font_urls: (
+	'default':			'',
+	'source_sans_pro':	'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap',
+	'open_sans':		'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap',
+	'roboto':			'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap',
+	'fira_sans':		'https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+	'alegreya_sans':	'https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,300;1,400;1,500;1,700;1,800;1,900&display=swap',
+	'inter':			'https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap',
+	'ubuntu':			'https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap',
+	'montserrat':		'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+	'raleway':			'https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+	'work_sans':		'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+
+	'bitter':			'https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+	'merriweather':		'https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap',
+	'playfair_display':	'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+	'lora':				'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap',
+	'eb_garamond':		'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap',
+	'alegreya':			'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400;1,500;1,700;1,800;1,900&display=swap',
+	'zilla_slab':		'https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap',
+	'roboto_slab':		'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200;300;400;500;600;700;800;900&display=swap'
+);
+
+
+@if $sans_web_font {
+
+	$sans_web_font_path:	map_get($web_font_urls, $sans_web_font);
+	@import					url($sans_web_font_path);
+	$custom_font_sans:		quote(map_get($web_font_names, $sans_web_font)), $custom_font_sans;
+
+	@if $text_use_font == sans_web_font {
+		body,
+		.popover,
+		.tooltip {
+			font-family: $custom_font_sans;
+		}
+	}
+
+	@if $headings_use_font == sans_web_font {
+		h1, h2, h3, h4, h5, h6,
+		.h1, .h2, .h3, .h4, .h5, .h6 {
+			font-family: $custom_font_sans;
+		}
+	}
+
+}
+
+
+@if $serif_web_font {
+
+	$serif_web_font_path:	map_get($web_font_urls, $serif_web_font);
+	@import 				url($serif_web_font_path);
+	$custom_font_serif: 	quote(map_get($web_font_names, $serif_web_font)), $custom_font_serif;
+
+	@if $text_use_font == serif_web_font {
+		body,
+		.popover,
+		.tooltip {
+			font-family: $custom_font_serif;
+		}
+	}
+
+	@if $headings_use_font == serif_web_font {
+		h1, h2, h3, h4, h5, h6,
+		.h1, .h2, .h3, .h4, .h5, .h6 {
+			font-family: $custom_font_serif;
+		}
+	}
+
+}

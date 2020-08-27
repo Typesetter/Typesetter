@@ -43,23 +43,27 @@ html {
 	--complementary_header_color:	$complementary_header_color;
 	--complementary_header_bg:		$complementary_header_bg;
 
-	--header_sticky:			$header_sticky;
-	--header_height:			$header_height;
-	--header_color:				$header_color;
-	--header_bg:				$header_bg;
-	--header_brand_color:		$header_brand_color;
+	--header_sticky:				$header_sticky;
+	--header_height:				$header_height;
+	--header_color:					$header_color;
+	--header_bg:					$header_bg;
+	--header_brand_color:			$header_brand_color;
 
 	--navbar_expand_breakpoint:	$navbar_expand_breakpoint;
 
-	--content_color:			$content_color;
-	--content_bg:				$content_bg;
-	--content_headings_color:	$content_headings_color;
-	--content_link_color:		$content_link_color;
+	--content_color:				$content_color;
+	--content_bg:					$content_bg;
+	--content_headings_color:		$content_headings_color;
+	--content_link_color:			$content_link_color;
 }
 
 
-// headers display rulesets
-@import '../_common/headers.scss';
+// typography
+@import '../_common/customizer_common_typography.scss';
+
+
+// headers
+@import '../_common/customizer_common_headers.scss';
 
 
 header.complementary-header {

@@ -19,18 +19,18 @@ $complementary_header_height:	46px !default;
 $complementary_header_color:	#ffffff !default;
 $complementary_header_bg:		#212529 !default;
 
-$header_sticky:				off !default;
-$header_height:				72px !default;
-$header_color:				#ffffff !default;
-$header_bg:					#343a40 !default;
-$header_brand_color:		#ffffff !default;
+$header_sticky:					off !default;
+$header_height:					72px !default;
+$header_color:					#ffffff !default;
+$header_bg:						#343a40 !default;
+$header_brand_color:			#ffffff !default;
 
-$navbar_expand_breakpoint:	lg !default;
+$navbar_expand_breakpoint:		lg !default;
 
-$content_color:				#212529 !default;
-$content_bg:				#ffffff !default;
-$content_headings_color:	#212529 !default;
-$content_link_color:		#007bff !default;
+$content_color:					#212529 !default;
+$content_bg:					#ffffff !default;
+$content_headings_color:		#212529 !default;
+$content_link_color:			#007bff !default;
 
 // css variable defaults
 // we use the html scope here
@@ -43,23 +43,27 @@ html {
 	--complementary_header_color:	$complementary_header_color;
 	--complementary_header_bg:		$complementary_header_bg;
 
-	--header_sticky:			$header_sticky;
-	--header_height:			$header_height;
-	--header_bg:				$header_bg;
-	--header_color:				$header_color;
-	--header_brand_color:		$header_brand_color;
+	--header_sticky:				$header_sticky;
+	--header_height:				$header_height;
+	--header_bg:					$header_bg;
+	--header_color:					$header_color;
+	--header_brand_color:			$header_brand_color;
 
 	--navbar_expand_breakpoint:	$navbar_expand_breakpoint;
 
-	--content_color:			$content_color;
-	--content_bg:				$content_bg;
-	--content_headings_color:	$content_headings_color;
-	--content_link_color:		$content_link_color;
+	--content_color:				$content_color;
+	--content_bg:					$content_bg;
+	--content_headings_color:		$content_headings_color;
+	--content_link_color:			$content_link_color;
 }
 
 
-// headers display rulesets
-@import '../_common/headers.scss';
+// typography
+@import '../_common/customizer_common_typography.scss';
+
+
+// headers
+@import '../_common/customizer_common_headers.scss';
 
 
 header.complementary-header {

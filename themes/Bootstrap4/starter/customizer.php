@@ -408,4 +408,139 @@ $customizer = [
 		], // end of items
 	], // end of collapsible UI area
 
+
+	'typography'	=> [
+		'label'			=> 'Typography',
+		'collapsed'		=> true,
+		'items'			=> [
+
+			'sans_web_font'	=>	[
+				'default_value'	=> '',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Sans-Serif Font Family',
+					'description'		=> '',
+
+					'type'				=> 'select',
+					'possible_values'	=> [
+											'Default'			=> '',
+											'Source Sans Pro'	=> 'source_sans_pro',
+											'Open Sans'			=> 'open_sans',
+											'Roboto'			=> 'roboto',
+											'Fira Sans'			=> 'fira_sans',
+											'Alegreya Sans'		=> 'alegreya_sans',
+											'Inter'				=> 'inter',
+											'Ubuntu'			=> 'ubuntu',
+											'Montserrat'		=> 'montserrat',
+											'Raleway'			=> 'raleway',
+											'Work Sans'			=> 'work_sans',
+											],
+					'used_in'			=> ['scssless'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
+
+			'serif_web_font'	=>	[
+				'default_value'	=> '',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Serif Font Family',
+					'description'		=> '',
+
+					'type'				=> 'select',
+					'possible_values'	=> [
+											'Default'			=> '',
+											'Bitter'			=> 'bitter',
+											'Merriweather'		=> 'merriweather',
+											'Playfair Display'	=> 'playfair_display',
+											'Lora'				=> 'lora',
+											'EB Garamond'		=> 'eb_garamond',
+											'Alegreya Serif'	=> 'alegreya',
+											'Zilla Slab'		=> 'zilla_slab',
+											'Roboto Slab'		=> 'roboto_slab',
+											],
+					'used_in'			=> ['scssless'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
+
+			'text_use_font'	=>	[
+				'default_value'	=> '',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Text Font',
+					'description'		=> 'select which font family to use for regular text',
+
+					'type'				=> 'select',
+					'possible_values'	=> [
+											'Default'					=> '',
+											'Sans-Serif Font Family'	=> 'sans_web_font',
+											'Serif Font Family'			=> 'serif_web_font',
+											],
+					'used_in'			=> ['scssless'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
+
+			'headings_use_font'	=>	[
+				'default_value'	=> '',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Headings Font',
+					'description'		=> 'select which font family to use for headings',
+
+					'type'				=> 'select',
+					'possible_values'	=> [
+											'Default'					=> '',
+											'Sans-Serif Font Family'	=> 'sans_web_font',
+											'Serif Font Family'			=> 'serif_web_font',
+											],
+					'used_in'			=> ['scssless'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
+
+			/*
+			// THIS WILL OVERWITE THE BOOSTRAP VARIABLE!
+			// discarded
+			//
+			'font-size-base'	=>	[ 
+				'default_value'	=> '1rem',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Base Font Size',
+					'description'		=> 'The initial font size of your website, ' .
+						'from which all other font sizes are derived. For larger sizes ' .
+						'the header heights may need to be adjusted accordingly.',
+
+					'type'				=> 'select',
+					'possible_values'	=> [
+											'Small'			=> '0.875rem',		// ~14px
+											'Default'		=> '1rem',			// ~16px 
+											'Large'			=> '1.125rem',		// ~18px
+											'Extra Large'	=> '1.25rem',		// ~20px
+											'Very Large'	=> '1.5rem',		// ~24px
+											],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+			*/
+
+		], // end of items
+	], // end of collapsible UI area
 ];

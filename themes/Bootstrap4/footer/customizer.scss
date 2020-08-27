@@ -37,6 +37,7 @@ $footer_color:					#212529 !default;
 $footer_headings_color:			#343a40 !default;
 $footer_link_color:				#007bff !default;
 
+
 // css variable defaults
 // we use the html scope here
 // customizer will use the global :root scope
@@ -68,8 +69,12 @@ html {
 }
 
 
-// headers display rulesets
-@import '../_common/headers.scss';
+// typography
+@import '../_common/customizer_common_typography.scss';
+
+
+// headers
+@import '../_common/customizer_common_headers.scss';
 
 
 header.complementary-header {

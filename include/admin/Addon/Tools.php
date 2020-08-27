@@ -29,12 +29,14 @@ class Tools extends \gp\special\Base{
 	/*
 	 *
 	 * Rating
-	 * 
+	 *
 	 */
 
 	public function InitRating(){
 
-		$this->page->head_js[] = '/include/js/rate.js';
+		if( $this->page ){
+			$this->page->head_js[] = '/include/js/rate.js';
+		}
 
 		//clear the data file ...
 		$this->GetAddonData();
@@ -103,8 +105,8 @@ class Tools extends \gp\special\Base{
 			}
 
 			echo \gp\tool::Link(
-				$this->scriptUrl, 
-				'', 
+				$this->scriptUrl,
+				'',
 				'cmd=ReviewAddonForm&rating=' . $i . '&arg=' . rawurlencode($arg),
 				$attrs
 			);

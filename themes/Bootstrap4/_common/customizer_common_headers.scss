@@ -23,9 +23,11 @@ $sidebar-expand-breakpoint: lg !default; // required here to avoid scss errors
 	@include media-breakpoint-up($breakpoint) {
 		header.complementary-header.#{$ch_class} {
 			~ header.main-header {
-				margin-top: $chh;
+				top: $chh;
 			}
-			 ~ div.main-body {
+			~ div.main-body {
+				margin-top: $chh;
+
 				.sidebar {
 					.sidebar-container {
 						@include media-breakpoint-up($sidebar-expand-breakpoint) {
@@ -198,7 +200,13 @@ html.complementary-header-fixed {
 	}
 
 	header.main-header {
-		margin-top: $chh;
+		// margin-top: $chh;
+	}
+
+	header.complementary-header.d-none {
+		~ header.main-header {
+			margin-top: 0;
+		}
 	}
 
 	.sidebar {

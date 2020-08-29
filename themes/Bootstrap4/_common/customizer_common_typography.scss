@@ -79,13 +79,13 @@ $web_font_urls: (
 		}
 	}
 
-	@if $headings_use_font == sans_web_font {
-		h1, h2, h3, h4, h5, h6,
-		.h1, .h2, .h3, .h4, .h5, .h6 {
-			font-family: $custom_font_sans;
-		}
-	}
+}
 
+@if $headings_use_font == sans_web_font {
+	h1, h2, h3, h4, h5, h6,
+	.h1, .h2, .h3, .h4, .h5, .h6 {
+		font-family: $custom_font_sans;
+	}
 }
 
 
@@ -103,11 +103,12 @@ $web_font_urls: (
 		}
 	}
 
-	@if $headings_use_font == serif_web_font {
-		h1, h2, h3, h4, h5, h6,
-		.h1, .h2, .h3, .h4, .h5, .h6 {
-			font-family: $custom_font_serif;
-		}
-	}
-
 }
+
+@if $headings_use_font == serif_web_font {
+	h1, h2, h3, h4, h5, h6,
+	.h1, .h2, .h3, .h4, .h5, .h6 {
+		font-family: $custom_font_serif;
+	}
+}
+

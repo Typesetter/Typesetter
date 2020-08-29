@@ -1931,7 +1931,7 @@ class Edit extends \gp\admin\Layout{
 
 		$this->MenuSelect($current_menu);
 
-		echo '<tr><th colspan="2">';
+		echo '<tr>';
 		echo 	'<th colspan="2">';
 		echo		$langmessage['Menu Output'];
 		echo	'</th>';

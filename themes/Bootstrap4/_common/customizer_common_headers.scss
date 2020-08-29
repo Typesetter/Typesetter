@@ -6,7 +6,7 @@
 
 $abh:	30px;			// admin bar height
 $hh:	$header_height; // header height, defaults to 72px;
-$chh:	0;				// complementary header height, 0 if ihdden
+$chh:	0;				// complementary header height, defaults to 46px, 0 if hidden
 
 @if ( $complementary_header_show != off ) {
 	$chh:	$complementary_header_height; // if visible defaults to 46px;
@@ -29,11 +29,11 @@ $sidebar-expand-breakpoint: lg !default; // required here to avoid scss errors
 				margin-top: $chh;
 
 				.sidebar {
-					.sidebar-container {
-						@include media-breakpoint-up($sidebar-expand-breakpoint) {
-							// margin-top: $chh;
-						}
-					}
+					//.sidebar-container {
+					//	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+					//		 margin-top: $chh;
+					//	}
+					//}
 				&.sidebar-sticky {
 						.sidebar-container {
 							@include media-breakpoint-up($sidebar-expand-breakpoint) {
@@ -53,12 +53,12 @@ $sidebar-expand-breakpoint: lg !default; // required here to avoid scss errors
 				top: $abh;
 				~ div.main-body {
 					.sidebar {
-						.sidebar-container {
-							@include media-breakpoint-up($sidebar-expand-breakpoint) {
-								// margin-top: calc( #{$abh} + #{$chh} );
-							}
-						}
-					&.sidebar-sticky {
+						//.sidebar-container {
+						//	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+						//		margin-top: calc( #{$abh} + #{$chh} );
+						//	}
+						//}
+						&.sidebar-sticky {
 							.sidebar-container {
 								@include media-breakpoint-up($sidebar-expand-breakpoint) {
 									margin-top: 0;
@@ -81,11 +81,11 @@ $sidebar-expand-breakpoint: lg !default; // required here to avoid scss errors
 				}
 				~ div.main-body {
 					.sidebar {
-						.sidebar-container {
-							@include media-breakpoint-up($sidebar-expand-breakpoint) {
-								//margin-top: calc( #{$chh} + #{$hh} );
-							}
-						}
+						//.sidebar-container {
+						//	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+						//		margin-top: calc( #{$chh} + #{$hh} );
+						//	}
+						//}
 						&.sidebar-sticky {
 							.sidebar-container {
 								@include media-breakpoint-up($sidebar-expand-breakpoint) {
@@ -107,11 +107,11 @@ $sidebar-expand-breakpoint: lg !default; // required here to avoid scss errors
 					}
 					~ div.main-body {
 						.sidebar {
-							.sidebar-container {
-								@include media-breakpoint-up($sidebar-expand-breakpoint) {
-									// margin-top: calc( #{$abh} + #{$chh} + #{$hh} );
-								}
-							}
+							//.sidebar-container {
+							//	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+							//		margin-top: calc( #{$abh} + #{$chh} + #{$hh} );
+							//	}
+							//}
 							&.sidebar-sticky {
 								.sidebar-container {
 									@include media-breakpoint-up($sidebar-expand-breakpoint) {
@@ -151,11 +151,11 @@ html.header-sticky {
 	}
 
 	.sidebar {
-		.sidebar-container {
-			@include media-breakpoint-up($sidebar-expand-breakpoint) {
-				// margin-top: $hh;
-			}
-		}
+		//.sidebar-container {
+		//	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+		//		margin-top: $hh;
+		//	}
+		//}
 		&.sidebar-sticky {
 			.sidebar-container {
 				@include media-breakpoint-up($sidebar-expand-breakpoint) {
@@ -172,11 +172,11 @@ html.header-sticky {
 		}
  
 		.sidebar {
-			.sidebar-container {
-				@include media-breakpoint-up($sidebar-expand-breakpoint) {
-					// margin-top: calc( #{$abh} + #{$hh} );
-				}
-			}
+			//.sidebar-container {
+			//	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+			//		margin-top: calc( #{$abh} + #{$hh} );
+			//	}
+			//}
 			&.sidebar-sticky {
 				.sidebar-container {
 					@include media-breakpoint-up($sidebar-expand-breakpoint) {
@@ -199,9 +199,9 @@ html.complementary-header-fixed {
 		z-index: 2002;
 	}
 
-	header.main-header {
-		// margin-top: $chh;
-	}
+	//header.main-header {
+	//	margin-top: $chh;
+	//}
 
 	header.complementary-header.d-none {
 		~ header.main-header {
@@ -210,11 +210,11 @@ html.complementary-header-fixed {
 	}
 
 	.sidebar {
-		.sidebar-container {
-			@include media-breakpoint-up($sidebar-expand-breakpoint) {
-				// margin-top: $chh;
-			}
-		}
+		//.sidebar-container {
+		//	@include media-breakpoint-up($sidebar-expand-breakpoint) {
+		//		margin-top: $chh;
+		//	}
+		//}
 		&.sidebar-sticky {
 			.sidebar-container {
 				@include media-breakpoint-up($sidebar-expand-breakpoint) {

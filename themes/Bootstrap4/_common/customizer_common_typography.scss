@@ -68,7 +68,7 @@ $web_font_urls: (
 @if $sans_web_font {
 
 	$sans_web_font_path:	map_get($web_font_urls, $sans_web_font);  
-	@import					url($sans_web_font_path);
+	@import					url(quote($sans_web_font_path));
 	$custom_font_sans:		quote(map_get($web_font_names, $sans_web_font)), $custom_font_sans;
 
 	@if $text_use_font == sans_web_font {
@@ -92,7 +92,7 @@ $web_font_urls: (
 @if $serif_web_font {
 
 	$serif_web_font_path:	map_get($web_font_urls, $serif_web_font);
-	@import 				url($serif_web_font_path);
+	@import 				url(quote($serif_web_font_path));
 	$custom_font_serif: 	quote(map_get($web_font_names, $serif_web_font)), $custom_font_serif;
 
 	@if $text_use_font == serif_web_font {

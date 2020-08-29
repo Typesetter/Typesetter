@@ -200,12 +200,12 @@
 // see https://caniuse.com/#feat=css-scroll-behavior
 //     https://developer.mozilla.org/docs/Web/CSS/scroll-behavior
 //     https://developer.mozilla.org/docs/Web/CSS/@media/prefers-reduced-motion
-// html {
-//  scroll-behavior: smooth;
-//  @media (prefers-reduced-motion) {
-//    scroll-behavior: auto;
-//  }
-//}
+html {
+  scroll-behavior: smooth;
+  @media (prefers-reduced-motion) {
+    scroll-behavior: auto;
+  }
+}
 
 
 // ### Complementary Header ###

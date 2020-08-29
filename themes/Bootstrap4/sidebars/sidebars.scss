@@ -2,66 +2,66 @@
 // not a default Bootstrap menu type
 
 aside.sidebar {
-  position: relative;
-  border-top: $border-width solid $border-color;
-  color: $gray-700;
+	position: relative;
+	border-top: $border-width solid $border-color;
+	color: $gray-700;
 
-  h1, .h1,
-  h2, .h2,
-  h3, .h3,
-  h4, .h4,
-  h5, .h5,
-  h6, .h6 {
-    font-weight: normal;
-    color: $gray-900;
-    line-height: 1.1;
-    margin-bottom: ($spacer / 3);
-  }
-  h1, .h1 { font-size: 1.8rem; }
-  h2, .h2 { font-size: 1.6rem; }
-  h3, .h3 { font-size: 1.4rem; }
-  h4, .h4 { font-size: 1.2rem; }
-  h5, .h5 { font-size: 1rem; }
-  h6, .h6 { font-size: 0.8rem; font-weight: bold; }
+	h1, .h1,
+	h2, .h2,
+	h3, .h3,
+	h4, .h4,
+	h5, .h5,
+	h6, .h6 {
+		font-weight: normal;
+		color: $gray-900;
+		line-height: 1.1;
+		margin-bottom: ($spacer / 3);
+	}
+	h1, .h1 { font-size: 1.8rem; }
+	h2, .h2 { font-size: 1.6rem; }
+	h3, .h3 { font-size: 1.4rem; }
+	h4, .h4 { font-size: 1.2rem; }
+	h5, .h5 { font-size: 1rem; }
+	h6, .h6 { font-size: 0.8rem; font-weight: bold; }
 
-  form {
-    margin: 0;
-  }
+	form {
+		margin: 0;
+	}
 
-  ul, ol {
-    padding-left: 1.5rem;
-  }
+	ul, ol {
+		padding-left: 1.5rem;
+	}
 
-  .sidebar-container {
-    > .GPAREA:not(:empty) {
-      padding: $spacer;
-      border-bottom: $border-width solid $border-color;
-    }
+	.sidebar-container {
+		> .GPAREA:not(:empty) {
+			padding: $spacer;
+			border-bottom: $border-width solid $border-color;
+		}
 
-    > .GPAREA.gpMenu {
-      padding: 0;
-      border-bottom: none;
-    }
+		> .GPAREA.gpMenu {
+			padding: 0;
+			border-bottom: none;
+		}
 
-    > .gpArea_Search,
-    > .gpArea_Search-Gadget {
-      h3,
-      input.submit {
-        display: none;
-      }
-      input.text {
-        @extend .form-control;
-      }
-    }
+		> .gpArea_Search,
+		> .gpArea_Search-Gadget {
+			h3,
+			input.submit {
+				display: none;
+			}
+			input.text {
+				@extend .form-control;
+			}
+		}
 
-    > .gpArea_Admin-Link-Area,
-    > .gpArea_Admin_Link {
-      font-size: 87.5%;
-      span,
-      span + span {
-        display: block;
-        margin: 0 0 ($spacer / 6) 0;
-      }
-    }
-  }
+		> .gpArea_Admin-Link-Area,
+		> .gpArea_Admin_Link {
+			font-size: 87.5%;
+			span,
+			span + span {
+				display: block;
+				margin: 0 0 ($spacer / 6) 0;
+			}
+		}
+	}
 }

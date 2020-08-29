@@ -1,46 +1,46 @@
 .footer-nav,
 .footer-nav ul {
-  list-style: none;
-  padding: 0;
+	list-style: none;
+	padding: 0;
 }
 
 .footer-nav {
-  margin-top: -0.25rem; // conpensate <a> padding
-  text-align: left;
+	margin-top: -0.25rem; // conpensate <a> padding
+	text-align: left;
 
-  li {
-    display: block;
-    margin: 0;
-    padding: 0;
-  }
+	li {
+		display: block;
+		margin: 0;
+		padding: 0;
+	}
 
-  a:not(.btn) {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0.25rem 0;
+	a:not(.btn) {
+		display: block;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding: 0.25rem 0;
 
-    &.active,
-    &:hover,
-    &:focus {
-      text-decoration: none;
-      color: $link-hover-color;
-    }
-  }
+		&.active,
+		&:hover,
+		&:focus {
+			text-decoration: none;
+			color: $link-hover-color;
+		}
+	}
 
-  ul {
-    margin: 0;
-  }
+	ul {
+		margin: 0;
+	}
 
-  // 2nd level links
-  > li > ul > li > a {
-    text-indent: 0.5em;
-  }
+	// 2nd level links
+	> li > ul > li > a {
+		text-indent: 0.5em;
+	}
 
-  // 3rd level links
-  > li > ul > li > ul > li > a {
-    text-indent: 1em;
-  }
+	// 3rd level links
+	> li > ul > li > ul > li > a {
+		text-indent: 1em;
+	}
 
 }

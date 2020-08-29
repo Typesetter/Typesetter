@@ -31,6 +31,7 @@
 		> #gpx_content > .GPAREA {
 			padding-left: ($grid-gutter-width / 2);
 			padding-right: ($grid-gutter-width / 2);
+
 			@include media-breakpoint-up(lg) {
 				padding-left: ($grid-gutter-width * 2);
 				padding-right: ($grid-gutter-width * 2);
@@ -42,6 +43,16 @@
 			@include media-breakpoint-up(xl) {
 				padding-left: ($grid-gutter-width * 3);
 				padding-right: ($grid-gutter-width * 3);
+			}
+		}
+
+		> #gpx_content > .row,
+		> #gpx_content > .gpRow {
+			@include media-breakpoint-down(md) {
+				padding-left: 0;
+				padding-right: 0;
+				margin-left: 0;
+				margin-right: 0;
 			}
 		}
 

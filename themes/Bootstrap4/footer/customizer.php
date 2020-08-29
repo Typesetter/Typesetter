@@ -558,7 +558,7 @@ $customizer = [
 
 				'control' => [
 					'label'				=> 'Sans-Serif Font Family',
-					'description'		=> '',
+					'description'		=> 'load a custom sans-serif web font family from Google Fonts',
 
 					'type'				=> 'select',
 					'possible_values'	=> [
@@ -587,7 +587,7 @@ $customizer = [
 
 				'control' => [
 					'label'				=> 'Serif Font Family',
-					'description'		=> '',
+					'description'		=> 'load a custom serif web font family from Google Fonts',
 
 					'type'				=> 'select',
 					'possible_values'	=> [

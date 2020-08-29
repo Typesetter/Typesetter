@@ -67,6 +67,41 @@ $customizer = [
 				],
 			],
 
+			'header_border_bottom_width'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'px',
+
+				'control' => [
+					'label'				=> 'Header Bottom Border Width',
+					'description'		=> 'set a width for the bottom border of the header, use 0 if you don\'t want a border',
+
+					'type'				=> 'number',
+					'min'				=> '0',
+					'max'				=> false,
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['px', 'rem'],
+					'pattern'			=> 'number',
+				],
+			],
+
+			'header_border_bottom_color'	=>	[
+				'default_value'	=> 'rgba(0, 0, 0, 0)',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Header Border Bottom Color',
+					'description'		=> 'pick a color for the header\'s bottom border',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
 			'header_brand_logo'	=>	[
 				'default_value'	=> '',
 				'default_units'	=> '',
@@ -285,6 +320,41 @@ $customizer = [
 				],
 			],
 
+			'complementary_header_border_bottom_width'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'px',
+
+				'control' => [
+					'label'				=> 'Complementary Header Bottom Border Width',
+					'description'		=> 'set a width for the bottom border of the complementary header, use 0 if you don\'t want a border',
+
+					'type'				=> 'number',
+					'min'				=> '0',
+					'max'				=> false,
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['px', 'rem'],
+					'pattern'			=> 'number',
+				],
+			],
+
+			'complementary_header_border_bottom_color'	=>	[
+				'default_value'	=> 'rgba(0, 0, 0, 0)',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Complementary Header Border Bottom Color',
+					'description'		=> 'pick a color for the complementary header\'s bottom border',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
 		], // end of items
 	], // end of collapsible UI area
 
@@ -404,7 +474,6 @@ $customizer = [
 					'pattern'			=> 'onoff',
 				],
 			],
-
 
 			'footer_bg'	=>	[
 				'default_value'	=> '#e9ecef', // = $gray-200

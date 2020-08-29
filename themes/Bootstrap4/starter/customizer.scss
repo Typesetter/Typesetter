@@ -13,48 +13,58 @@
 // for theme developers: all non-bootstrap variables
 // need to have defined !default values.
 
-$complementary_header_show:		off !default;
-$complementary_header_fixed:	off !default;
-$complementary_header_height:	46px !default;
-$complementary_header_color:	#ffffff !default;
-$complementary_header_bg:		#212529 !default;
+$complementary_header_show:					off !default;
+$complementary_header_fixed:				off !default;
+$complementary_header_height:				46px !default;
+$complementary_header_color:				#ffffff !default;
+$complementary_header_bg:					#212529 !default;
+$complementary_header_border_bottom_width:	0px !default;
+$complementary_header_border_bottom_color:	rgba(0, 0, 0, 0) !default;
 
-$header_sticky:					off !default;
-$header_height:					72px !default;
-$header_color:					#ffffff !default;
-$header_bg:						#343a40 !default;
-$header_brand_color:			#ffffff !default;
+$header_sticky:								off !default;
+$header_height:								72px !default;
+$header_color:								#ffffff !default;
+$header_bg:									#343a40 !default;
+$header_border_bottom_width:				0px !default;
+$header_border_bottom_color:				rgba(0, 0, 0, 0) !default;
 
-$navbar_expand_breakpoint:		lg !default;
+$header_brand_color:						#ffffff !default;
 
-$content_color:					#212529 !default;
-$content_bg:					#ffffff !default;
-$content_headings_color:		#212529 !default;
-$content_link_color:			#007bff !default;
+$navbar_expand_breakpoint:					lg !default;
+
+$content_color:								#212529 !default;
+$content_bg:								#ffffff !default;
+$content_headings_color:					#212529 !default;
+$content_link_color:						#007bff !default;
 
 // css variable defaults
 // we use the html scope here
 // customizer will use the global :root scope
 // which has a higher specificity than html
 html {
-	--complementary_header_show:	$complementary_header_show;
-	--complementary_header_fixed:	$complementary_header_fixed;
-	--complementary_header_height:	$complementary_header_height;
-	--complementary_header_color:	$complementary_header_color;
-	--complementary_header_bg:		$complementary_header_bg;
+	--complementary_header_show:				$complementary_header_show;
+	--complementary_header_fixed:				$complementary_header_fixed;
+	--complementary_header_height:				$complementary_header_height;
+	--complementary_header_color:				$complementary_header_color;
+	--complementary_header_bg:					$complementary_header_bg;
+	--complementary_header_border_bottom_width:	$complementary_header_border_bottom_width;
+	--complementary_header_border_bottom_color:	$complementary_header_border_bottom_color;
+	--header_border_bottom_width:				$header_border_bottom_width;
+	--header_border_bottom_color:				$header_border_bottom_color;
 
-	--header_sticky:				$header_sticky;
-	--header_height:				$header_height;
-	--header_color:					$header_color;
-	--header_bg:					$header_bg;
-	--header_brand_color:			$header_brand_color;
+	--header_sticky:							$header_sticky;
+	--header_height:							$header_height;
+	--header_color:								$header_color;
+	--header_bg:								$header_bg;
 
-	--navbar_expand_breakpoint:	$navbar_expand_breakpoint;
+	--header_brand_color:						$header_brand_color;
 
-	--content_color:				$content_color;
-	--content_bg:					$content_bg;
-	--content_headings_color:		$content_headings_color;
-	--content_link_color:			$content_link_color;
+	--navbar_expand_breakpoint:					$navbar_expand_breakpoint;
+
+	--content_color:							$content_color;
+	--content_bg:								$content_bg;
+	--content_headings_color:					$content_headings_color;
+	--content_link_color:						$content_link_color;
 }
 
 
@@ -69,6 +79,7 @@ html {
 header.complementary-header {
 	color: $complementary_header_color !important;
 	background-color: $complementary_header_bg !important;
+	border-bottom: $complementary_header_border_bottom_width solid $complementary_header_border_bottom_color;
 
 	&.bg-dark,
 	&.bg-light {
@@ -94,7 +105,8 @@ header.complementary-header {
 
 header.main-header {
 	color: $header_color;
-	background: $header_bg !important; // overrule .bg-dark
+	background-color: $header_bg !important; // overrule .bg-dark
+	border-bottom: $header_border_bottom_width solid $header_border_bottom_color;
 
 	nav.main-nav {
 		min-height: $header_height;

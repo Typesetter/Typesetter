@@ -297,12 +297,23 @@ header.complementary-header {
 	@include vp-justify-content(space-between);
 }
 
-.main-content > .no-container > .GPAREA,
-.main-content > .no-container > #gpx_content > .GPAREA,
-.main-content > .no-container > #gpAfterContent > .GPAREA {
-	padding-left: ($grid-gutter-width / 2);
-	padding-right: ($grid-gutter-width / 2);
+.main-content > .no-container {
+	> .GPAREA,
+	> #gpx_content > .GPAREA,
+	> #gpAfterContent > .GPAREA {
+		padding-left: ($grid-gutter-width / 2);
+		padding-right: ($grid-gutter-width / 2);
+	}
+	
+	> #gpx_content > .row,
+	> #gpx_content > .gpRow {
+		padding-left: 0;
+		padding-right: 0;
+		margin-left: 0;
+		margin-right: 0;
+	}
 }
+
 .main-footer > .no-container > .row {
 	margin: 0;
 }

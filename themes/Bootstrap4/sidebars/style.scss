@@ -46,16 +46,6 @@
 			}
 		}
 
-		> #gpx_content > .row,
-		> #gpx_content > .gpRow {
-			@include media-breakpoint-down(md) {
-				padding-left: 0;
-				padding-right: 0;
-				margin-left: 0;
-				margin-right: 0;
-			}
-		}
-
 		> .gpArea_Breadcrumbs .breadcrumb {
 			margin-bottom: 0;
 			font-size: 0.875rem;

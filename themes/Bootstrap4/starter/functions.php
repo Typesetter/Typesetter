@@ -128,7 +128,7 @@ function MainNavElements($node, $attributes, $level, $menu_id, $item_position){
 
 		if( in_array('dropdown-toggle', $attributes['class']) ){
 			$format =	'<a {$attr} data-toggle="dropdown" href="{$href_text}">{$label} ';
-			$format .=	 '<span class="caret"></span>';
+			// $format .=	 '<span class="caret"></span>';
 			$format .= '</a>';
 		}else{
 			$format = '<a {$attr} href="{$href_text}">{$label}</a>';

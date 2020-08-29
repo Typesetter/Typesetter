@@ -130,12 +130,39 @@
 	}
 }
 
+
+// multi-level navbar caret rotation
+.dropdown-toggle {
+	&.dropdown-active {
+		+ .dropdown-menu {
+			top: 0;
+			left: calc(100% - 4px);
+			min-width: 0;
+		}
+		&:after { // = caret
+			@include vp-transform(rotate(-90deg));
+		}
+	}
+}
+.dropdown-menu-right {
+	.dropdown-toggle {
+		&.dropdown-active {
+			+ .dropdown-menu {
+				left: auto;
+				right: calc(100% - 4px);
+			}
+		}
+	}
+}
+
+
 .complementary-nav {
 	min-height: 46px; // default, will be overruled by customizer
 	> .no-container {
 		width: 100%;
 	}
 }
+
 
 .main-nav {
 	min-height: 72px; // default, will be overruled by customizer

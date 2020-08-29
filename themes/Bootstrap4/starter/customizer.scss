@@ -127,6 +127,13 @@ header.main-header {
 			}
 		}
 
+		// multi-level navbar caret rotation
+		@include media-breakpoint-up($navbar_expand_breakpoint) {
+			.dropdown-menu-right .dropdown-toggle.dropdown-active:after { // = caret
+				@include vp-transform(rotate(90deg));
+			}
+		}
+
 		.navbar-brand {
 			color: $header_brand_color;
 			.GPAREA {

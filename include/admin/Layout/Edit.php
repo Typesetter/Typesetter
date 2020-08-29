@@ -473,10 +473,10 @@ class Edit extends \gp\admin\Layout{
 
 		switch($control['type']){
 			case 'number':
-				if( !empty($control['min'])){
+				if( isset($control['min'])){
 					$minmax_attr .=' min="' . $control['min'] . '"';
 				}
-				if( !empty($control['max'])){
+				if( isset($control['max'])){
 					$minmax_attr .=' max="' . $control['max'] . '"';
 				}
 			case 'text':

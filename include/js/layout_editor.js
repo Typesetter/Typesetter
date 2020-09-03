@@ -198,6 +198,16 @@ $gp.EditLayout.customizer = {
 							.toggleClass('collapsed');
 					}
 				);
+			// collapse others
+			$this.closest('.customizer_area')
+				.find('.customizer_section:not(.collapsed) .customizer_controls')
+					.slideUp(
+						300,
+						function(){
+							$(this).closest('.customizer_section')
+								.addClass('collapsed');
+						}
+					);
 		};
 
 

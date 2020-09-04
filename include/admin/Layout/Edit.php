@@ -468,16 +468,18 @@ class Edit extends \gp\admin\Layout{
 		$placeholder	= !empty($control['placeholder']) ?
 			htmlspecialchars($control['placeholder']) :
 			$langmessage['default'];
-		$minmax_attr	= '';
-
+		$minmax_attrs	= '';
 
 		switch($control['type']){
 			case 'number':
-				if( isset($control['min'])){
-					$minmax_attr .=' min="' . $control['min'] . '"';
+				if( isset($control['min']) && $control['min'] !== false ){
+					$minmax_attrs .= ' min="' . $control['min'] . '"';
 				}
-				if( isset($control['max'])){
-					$minmax_attr .=' max="' . $control['max'] . '"';
+				if( isset($control['max']) && $control['max'] !== false ){
+					$minmax_attrs .= ' max="' . $control['max'] . '"';
+				}
+				if( !empty($control['step']) ){
+					$minmax_attrs .= ' step="' . $control['step'] . '"';
 				}
 			case 'text':
 			case 'url':
@@ -488,12 +490,12 @@ class Edit extends \gp\admin\Layout{
 				}
 				echo '<div class="customizer_input_group">';
 				echo '<input';
-				echo ' name="' . $name_attr . '[value]"';
-				echo ' type="' . htmlspecialchars($control['type']) . '"';
-				echo ' value="' . $current_value . '"';
-				echo $minmax_attr;
-				echo ' placeholder="' . $placeholder . '"';
-				echo '/>';
+				echo	' name="' . $name_attr . '[value]"';
+				echo	' type="' . htmlspecialchars($control['type']) . '"';
+				echo	' value="' . $current_value . '"';
+				echo	$minmax_attrs;
+				echo	' placeholder="' . $placeholder . '"';
+				echo ' />';
 				if( !empty($control['units']) && is_array($control['units']) ){
 					echo '<select class="units"';
 					echo ' name="' . $name_attr . '[units]"';
@@ -518,7 +520,7 @@ class Edit extends \gp\admin\Layout{
 				}
 				echo '<div class="customizer_input_group">';
 				echo '<select';
-				echo ' name="' . $name_attr . '[value]"';
+				echo	' name="' . $name_attr . '[value]"';
 				echo '>';
 				foreach( $control['possible_values'] as $key => $value ){
 					$option_text = !is_numeric($key) ? $key : $value;

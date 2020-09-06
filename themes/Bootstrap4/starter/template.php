@@ -45,7 +45,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 			):
 		?>
 			<header role="complementary"
-				class="complementary-header bg-dark <?php echo $complementary_header_classes; ?>">
+				class="complementary-header <?php echo $complementary_header_classes; ?>">
 				<nav class="complementary-nav navbar navbar-dark">
 					<div class="<?php echo $complementary_header_container_class; ?> d-flex justify-content-between">
 						<?php 

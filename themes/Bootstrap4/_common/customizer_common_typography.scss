@@ -1,114 +1,388 @@
 // Theme Bootstrap 4
 //
 // common stylesheet for typography
-// will only work when imported by customizer.scss
+// this file needs to be imported by customizer.scss
 //
 
-$sans_web_font:			false !default;
-$custom_font_sans:		-apple-system, BlinkMacSystemFont,
-						'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-						'Noto Sans', sans-serif,
-						'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-						'Noto Color Emoji' !default;
+$default_font_sans:					$font-family-base !default; // Bootstrap default, see variables.scss
+$default_font_serif:				Georgia, 'Times New Roman', Times, serif !default;
 
-$serif_web_font:		false !default;
-$custom_font_serif:		Georgia, 'Times New Roman', Times, serif !default;
+$header_brand_font_family:			default_sans !default;
+$header_brand_font_size:			1.25rem !default;
+$header_brand_font_weight:			400 !default;
+$header_brand_uppercase:			off !default;
 
-$text_use_font:			'' !default;
-$headings_use_font:		'' !default;
+$main_menu_font_family:				default_sans !default;
+$main_menu_font_size:				1rem !default;
+$main_menu_font_weight:				400 !default;
+$main_menu_uppercase:				off !default;
+
+$complementary_header_font_family:	default_sans !default;
+$complementary_header_font_size:	1rem !default;
+$complementary_header_font_weight:	400 !default;
+
+$content_font_family:				default_sans !default;
+$content_font_size:					1rem !default;
+$content_font_weight:				400 !default;
+
+$sidebar_font_family:				default_sans !default;
+$sidebar_font_size:					1rem !default;
+$sidebar_font_weight:				400 !default;
+
+$sidebar_headings_font_family:		default_sans !default;
+$sidebar_headings_font_weight:		500 !default;
+$sidebar_headings_uppercase:		off !default;
+
+$footer_font_family:				default_sans !default;
+$footer_font_size:					1rem !default;
+$footer_font_weight:				400 !default;
+
+$footer_headings_font_family:		default_sans !default;
+$footer_headings_font_weight:		500 !default;
+$footer_headings_uppercase:			off !default;
+
+$h1_font_size:						2.5rem !default;
+$h1_font_family:					default_sans !default;
+$h1_font_weight:					500 !default;
+$h1_uppercase:						off !default;
+
+$h2_font_size:						2rem !default;
+$h2_font_family:					default_sans !default;
+$h2_font_weight:					500 !default;
+$h2_uppercase:						off !default;
+
+$h3_font_size:						1.75rem !default;
+$h3_font_family:					default_sans !default;
+$h3_font_weight:					500 !default;
+$h3_uppercase:						off !default;
+
+$h4_font_size:						1.5rem !default;
+$h4_font_family:					default_sans !default;
+$h4_font_weight:					500 !default;
+$h4_uppercase:						off !default;
+
+$h5_font_size:						1.25rem !default;
+$h5_font_family:					default_sans !default;
+$h5_font_weight:					500 !default;
+$h5_uppercase:						off !default;
+
+$h6_font_size:						1rem !default;
+$h6_font_family:					default_sans !default;
+$h6_font_weight:					500 !default;
+$h6_uppercase:						off !default;
 
 
 $web_font_names: (
-	'default':			'',
-	'source_sans_pro':	'Source Sans Pro',
-	'open_sans':		'Open Sans',
-	'roboto':			'Roboto',
-	'fira_sans':		'Fira Sans',
+	// sans-serif
 	'alegreya_sans':	'Alegreya Sans',
+	'fira_sans':		'Fira Sans',
 	'inter':			'Inter',
-	'ubuntu':			'Ubuntu',
 	'montserrat':		'Montserrat',
+	'nunito':			'Nunito',
+	'open_sans':		'Open Sans',
 	'raleway':			'Raleway',
+	'roboto':			'Roboto',
+	'source_sans_pro':	'Source Sans Pro',
+	'ubuntu':			'Ubuntu',
 	'work_sans':		'Work Sans',
 
+	// serif
+	'alegreya':			'Alegreya',
 	'bitter':			'Bitter',
+	'eb_garamond':		'EB Garamond',
+	'lora':				'Lora',
 	'merriweather':		'Merriweather',
 	'playfair_display':	'Playfair Display',
-	'lora':				'Lora',
-	'eb_garamond':		'EB Garamond',
-	'alegreya':			'Alegreya',
-	'zilla_slab':		'Zilla Slab',
-	'roboto_slab':		'Roboto Slab'
+	'roboto_slab':		'Roboto Slab',
+	'zilla_slab':		'Zilla Slab'
 );
 
-$web_font_urls: (
-	'default':			'',
-	'source_sans_pro':	'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,900&display=swap',
-	'open_sans':		'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300%3b0,400%3b0,600%3b0,700%3b0,800%3b1,300%3b1,400%3b1,600%3b1,700%3b1,800&display=swap',
-	'roboto':			'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100%3b0,300%3b0,400%3b0,500%3b0,700%3b0,900%3b1,100%3b1,300%3b1,400%3b1,500%3b1,700%3b1,900&display=swap',
-	'fira_sans':		'https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'alegreya_sans':	'https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,300%3b0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,300%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
-	'inter':			'https://fonts.googleapis.com/css2?family=Inter:wght@200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
-	'ubuntu':			'https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300%3b0,400%3b0,500%3b0,700%3b1,300%3b1,400%3b1,500%3b1,700&display=swap',
-	'montserrat':		'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'raleway':			'https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'work_sans':		'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+$web_font_type: (
+	// sans-serif
+	'alegreya_sans':	'sans',
+	'fira_sans':		'sans',
+	'inter':			'sans',
+	'montserrat':		'sans',
+	'nunito':			'sans',
+	'open_sans':		'sans',
+	'raleway':			'sans',
+	'roboto':			'sans',
+	'source_sans_pro':	'sans',
+	'ubuntu':			'sans',
+	'work_sans':		'sans',
 
-	'bitter':			'https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	// serif
+	'alegreya':			'serif',
+	'bitter':			'serif',
+	'eb_garamond':		'serif',
+	'lora':				'serif',
+	'merriweather':		'serif',
+	'playfair_display':	'serif',
+	'roboto_slab':		'serif',
+	'zilla_slab':		'serif'
+);
+
+// in urls replace all occurences of ; with %3b
+$web_font_urls: (
+	// sans-serif
+	'alegreya_sans':	'https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,100%3b0,300%3b0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,300%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
+	'fira_sans':		'https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'inter':			'https://fonts.googleapis.com/css2?family=Inter:wght@100%3b0200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
+	'nunito':			'https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'open_sans':		'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300%3b0,400%3b0,600%3b0,700%3b0,800%3b1,300%3b1,400%3b1,600%3b1,700%3b1,800&display=swap',
+	'montserrat':		'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100%3b0,,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'raleway':			'https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100%3b0,,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'roboto':			'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100%3b0,300%3b0,400%3b0,500%3b0,700%3b0,900%3b1,100%3b1,300%3b1,400%3b1,500%3b1,700%3b1,900&display=swap',
+	'source_sans_pro':	'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,900&display=swap',
+	'ubuntu':			'https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300%3b0,400%3b0,500%3b0,700%3b1,300%3b1,400%3b1,500%3b1,700&display=swap',
+	'work_sans':		'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100%3b0,,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+
+	// serif
+	'alegreya':			'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
+	'bitter':			'https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'eb_garamond':		'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800&display=swap',
+	'lora':				'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b1,400%3b1,500%3b1,600%3b1,700&display=swap',
 	'merriweather':		'https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300%3b0,400%3b0,700%3b0,900%3b1,300%3b1,400%3b1,700%3b1,900&display=swap',
 	'playfair_display':	'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'lora':				'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b1,400%3b1,500%3b1,600%3b1,700&display=swap',
-	'eb_garamond':		'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800&display=swap',
-	'alegreya':			'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
-	'zilla_slab':		'https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700&display=swap',
-	'roboto_slab':		'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap'
+	'roboto_slab':		'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100%3b200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
+	'zilla_slab':		'https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700&display=swap'
 );
 
 
-@if $sans_web_font {
+/// Remove the unit of a length
+/// from https://css-tricks.com/snippets/sass/strip-unit-function/
+/// @param {Number} $number - Number to remove unit from
+/// @return {Number} - Unitless number
+@function strip-unit($number) {
+	@if type-of($number) == 'number' and not unitless($number) {
+	  @return $number / ($number * 0 + 1);
+	}
 
-	$sans_web_font_path:	map_get($web_font_urls, $sans_web_font);  
-	@import					url(quote($sans_web_font_path));
-	$custom_font_sans:		quote(map_get($web_font_names, $sans_web_font)), $custom_font_sans;
+	@return $number;
+}
 
-	@if $text_use_font == sans_web_font {
-		body,
-		.popover,
-		.tooltip {
-			font-family: $custom_font_sans;
+
+/// from https://hugogiraudel.com/2013/10/09/advanced-sass-list-functions-again/
+@function remove-duplicates($list, $recursive: false) {
+	$result: ();
+
+	@each $item in $list {
+		@if not index($result, $item) {
+			@if length($item) > 1 and $recursive {
+				$result: append($result, remove-duplicates($item, $recursive));
+			} @else {
+				$result: append($result, $item);
+			}
 		}
 	}
-
+	@return $result;
 }
 
-@if $headings_use_font == sans_web_font {
-	h1, h2, h3, h4, h5, h6,
-	.h1, .h2, .h3, .h4, .h5, .h6 {
-		font-family: $custom_font_sans;
+// create font stack from name
+@function get-font-stack($font_family) {
+	@if ( $font_family == 'default_sans' ) {
+		@return $default_font_sans;
 	}
+
+	@if ( $font_family == 'default_serif' ) {
+		@return $default_font_serif;
+	}
+
+	@if ( map_get($web_font_type, $font_family) == 'sans' ) {
+		$append_font_stack: $default_font_sans;
+	} @else {
+		$append_font_stack: $default_font_serif;
+	}
+
+	@return quote(map_get($web_font_names, $font_family)), $append_font_stack;
 }
 
 
-@if $serif_web_font {
+$font_list:
+	$header_brand_font_family, $main_menu_font_family,
+	$complementary_header_font_family,
+	$content_font_family,
+	$sidebar_font_family, $sidebar_headings_font_family,
+	$footer_font_family, $footer_headings_font_family,
+	$h1_font_family, $h2_font_family, $h3_font_family,
+	$h4_font_family, $h5_font_family, $h6_font_family;
 
-	$serif_web_font_path:	map_get($web_font_urls, $serif_web_font);
-	@import 				url(quote($serif_web_font_path));
-	$custom_font_serif: 	quote(map_get($web_font_names, $serif_web_font)), $custom_font_serif;
 
-	@if $text_use_font == serif_web_font {
-		body,
-		.popover,
-		.tooltip {
-			font-family: $custom_font_serif;
+// make list items uinque
+$font_list_unique: remove-duplicates($font_list);
+
+
+// import web fonts
+@each $font_family in $font_list_unique {
+	@if ( $font_family != 'default_sans' and $font_family != 'default_serif' ) {
+		$web_font_path:	quote(map_get($web_font_urls, $font_family));
+		@if ( $web_font_path != 'null' ) { // dunno why this happens
+			@import url("#{$web_font_path}");
 		}
 	}
-
 }
 
-@if $headings_use_font == serif_web_font {
-	h1, h2, h3, h4, h5, h6,
-	.h1, .h2, .h3, .h4, .h5, .h6 {
-		font-family: $custom_font_serif;
+// branding
+.navbar-brand {
+	font-family: get-font-stack($header_brand_font_family);
+	font-size: $header_brand_font_size;
+	font-weight: $header_brand_font_weight;
+	@if $header_brand_uppercase == on {
+		text-transform: uppercase;
 	}
 }
 
+// main menu
+.navbar-nav > li > a {
+	font-family: get-font-stack($main_menu_font_family);
+	font-size: $main_menu_font_size;
+	font-weight: $main_menu_font_weight;
+	@if $main_menu_uppercase == on {
+		text-transform: uppercase;
+	}
+}
+
+// complementary header
+.complementary-header {
+	font-family: get-font-stack($complementary_header_font_family);
+	font-size: $complementary_header_font_size;
+	font-weight: $complementary_header_font_weight;
+}
+
+// content
+.main-content {
+	font-family: get-font-stack($content_font_family);
+	font-size: $content_font_size;
+	font-weight: $content_font_weight;
+}
+
+// headings
+h1, .h1 {
+	font-family: get-font-stack($h1_font_family);
+	font-size: $h1_font_size;
+	font-weight: $h1_font_weight;
+	@if $h1_uppercase == on {
+		text-transform: uppercase;
+	}
+}
+
+h2, .h2 {
+	font-family: get-font-stack($h2_font_family);
+	font-size: $h2_font_size;
+	font-weight: $h2_font_weight;
+	@if $h2_uppercase == on {
+		text-transform: uppercase;
+	}
+}
+
+h3, .h3 {
+	font-family: get-font-stack($h3_font_family);
+	font-size: $h3_font_size;
+	font-weight: $h3_font_weight;
+	@if $h3_uppercase == on {
+		text-transform: uppercase;
+	}
+}
+
+h4, .h4 {
+	font-family: get-font-stack($h4_font_family);
+	font-size: $h4_font_size;
+	font-weight: $h4_font_weight;
+	@if $h4_uppercase == on {
+		text-transform: uppercase;
+	}
+}
+
+h5, .h5 {
+	font-family: get-font-stack($h5_font_family);
+	font-size: $h5_font_size;
+	font-weight: $h5_font_weight;
+	@if $h5_uppercase == on {
+		text-transform: uppercase;
+	}
+}
+
+h6, .h6 {
+	font-family: get-font-stack($h6_font_family);
+	font-size: $h6_font_size;
+	font-weight: $h6_font_weight;
+	@if $h6_uppercase == on {
+		text-transform: uppercase;
+	}
+}
+
+// sidebars
+.sidebar {
+	font-family: get-font-stack($sidebar_font_family);
+	font-size: $sidebar_font_size;
+	font-weight: $sidebar_font_weight;
+	h1, .h1,
+	h2, .h2,
+	h3, .h3,
+	h4, .h4,
+	h5, .h5,
+	h6, .h6 {
+		font-family: get-font-stack($sidebar_headings_font_family);
+		font-weight: $sidebar_headings_font_weight;
+		@if $sidebar_headings_uppercase == on {
+			text-transform: uppercase;
+		}
+	}
+	$sidebar_font_size_multiplier: strip-unit($sidebar_font_size);
+	h1, .h1 {
+		font-size: $h1_font_size * $sidebar_font_size_multiplier;
+	}
+	h2, .h2 {
+		font-size: $h2_font_size * $sidebar_font_size_multiplier;
+	}
+	h3, .h3 {
+		font-size: $h3_font_size * $sidebar_font_size_multiplier;
+	}
+	h4, .h4 {
+		font-size: $h4_font_size * $sidebar_font_size_multiplier;
+	}
+	h5, .h5 {
+		font-size: $h5_font_size * $sidebar_font_size_multiplier;
+	}
+	h6, .h6 {
+		font-size: $h6_font_size * $sidebar_font_size_multiplier;
+	}
+}
+
+// footer
+.main-footer {
+	font-family: get-font-stack($footer_font_family);
+	font-size: $footer_font_size;
+	font-weight: $footer_font_weight;
+	h1, .h1,
+	h2, .h2,
+	h3, .h3,
+	h4, .h4,
+	h5, .h5,
+	h6, .h6 {
+		font-family: get-font-stack($footer_headings_font_family);
+		font-weight: $footer_headings_font_weight;
+		@if $footer_headings_uppercase == on {
+			text-transform: uppercase;
+		}
+	}
+	$footer_font_size_multiplier: strip-unit($footer_font_size);
+	h1, .h1 {
+		font-size: $h1_font_size * $footer_font_size_multiplier;
+	}
+	h2, .h2 {
+		font-size: $h2_font_size * $footer_font_size_multiplier;
+	}
+	h3, .h3 {
+		font-size: $h3_font_size * $footer_font_size_multiplier;
+	}
+	h4, .h4 {
+		font-size: $h4_font_size * $footer_font_size_multiplier;
+	}
+	h5, .h5 {
+		font-size: $h5_font_size * $footer_font_size_multiplier;
+	}
+	h6, .h6 {
+		font-size: $h6_font_size * $footer_font_size_multiplier;
+	}
+}

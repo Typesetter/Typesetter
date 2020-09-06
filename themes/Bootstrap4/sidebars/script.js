@@ -57,7 +57,7 @@ var SidebarMenu = {
 };
 
 
-// init sidebar menu on domready
+// init menus on domready
 $(function(){
   SidebarMenu.init();
 });

@@ -13,34 +13,25 @@
 // for theme developers: all non-bootstrap variables
 // need to have defined !default values.
 
-$complementary_header_show:					off !default;
-$complementary_header_fixed:				off !default;
-$complementary_header_height:				46px !default;
-$complementary_header_color:				#ffffff !default;
-$complementary_header_bg:					#212529 !default;
-$complementary_header_border_bottom_width:	0px !default;
-$complementary_header_border_bottom_color:	rgba(0, 0, 0, 0) !default;
-
-$header_sticky:								off !default;
-$header_height:								72px !default;
-$header_color:								#ffffff !default;
-$header_bg:									#343a40 !default;
-$header_border_bottom_width:				0px !default;
-$header_border_bottom_color:				rgba(0, 0, 0, 0) !default;
-
-$header_brand_color:						#ffffff !default;
-
 $navbar_expand_breakpoint:					lg !default;
 
 $content_color:								#212529 !default;
 $content_bg:								#ffffff !default;
-$content_headings_color:					#212529 !default;
 $content_link_color:						#007bff !default;
+
+$h1_color:									#212529 !default;
+$h2_color:									#212529 !default;
+$h3_color:									#212529 !default;
+$h4_color:									#212529 !default;
+$h5_color:									#212529 !default;
+$h6_color:									#212529 !default;
 
 $footer_bg:									#e9ecef !default;
 $footer_color:								#212529 !default;
 $footer_headings_color:						#343a40 !default;
 $footer_link_color:							#007bff !default;
+$footer_border_top_width:					1px !default;
+$footer_border_top_color:					rgba(127, 127, 127, 0.25) !default;
 
 
 // css variable defaults
@@ -48,34 +39,25 @@ $footer_link_color:							#007bff !default;
 // customizer will use the global :root scope
 // which has a higher specificity than html
 html {
-	--complementary_header_show:				$complementary_header_show;
-	--complementary_header_fixed:				$complementary_header_fixed;
-	--complementary_header_height:				$complementary_header_height;
-	--complementary_header_color:				$complementary_header_color;
-	--complementary_header_bg:					$complementary_header_bg;
-	--complementary_header_border_bottom_width:	$complementary_header_border_bottom_width;
-	--complementary_header_border_bottom_color:	$complementary_header_border_bottom_color;
+	--navbar_expand_breakpoint:				#{$navbar_expand_breakpoint};
 
-	--header_sticky:							$header_sticky;
-	--header_height:							$header_height;
-	--header_color:								$header_color;
-	--header_bg:								$header_bg;
-	--header_border_bottom_width:				$header_border_bottom_width;
-	--header_border_bottom_color:				$header_border_bottom_color;
+	--content_color:						#{$content_color};
+	--content_bg:							#{$content_bg};
+	--content_link_color:					#{$content_link_color};
 
-	--header_brand_color:						$header_brand_color;
+	--h1_color:								#{$h1_color};
+	--h2_color:								#{$h2_color};
+	--h3_color:								#{$h3_color};
+	--h4_color:								#{$h4_color};
+	--h5_color:								#{$h5_color};
+	--h6_color:								#{$h6_color};
 
-	--navbar_expand_breakpoint:					$navbar_expand_breakpoint;
-
-	--content_color:							$content_color;
-	--content_bg:								$content_bg;
-	--content_headings_color:					$content_headings_color;
-	--content_link_color:						$content_link_color;
-
-	--footer_color:								$footer_color;
-	--footer_bg:								$footer_bg;
-	--footer_headings_color:					$footer_headings_color;
-	--footer_link_color:						$footer_link_color;
+	--footer_color:							#{$footer_color};
+	--footer_bg:							#{$footer_bg};
+	--footer_headings_color:				#{$footer_headings_color};
+	--footer_link_color:					#{$footer_link_color};
+	--footer_border_top_width:				#{$footer_border_top_width};
+	--footer_border_top_width:				#{$footer_border_top_color};
 }
 
 
@@ -87,93 +69,7 @@ html {
 @import '../_common/customizer_common_headers.scss';
 
 
-header.complementary-header {
-	color: $complementary_header_color !important;
-	background-color: $complementary_header_bg !important;
-	border-bottom: $complementary_header_border_bottom_width solid $complementary_header_border_bottom_color;
-
-	&.bg-dark,
-	&.bg-light {
-		background-color: $complementary_header_bg !important;
-	}
-
-	.complementary-nav {
-		min-height: $complementary_header_height;
-
-		.GPAREA {
-			color: $complementary_header_color;
-			a:not(.dropdown-item):not(.btn) {
-				color: rgba($complementary_header_color, 0.667);
-				&:hover,
-				&:focus{
-					color: $complementary_header_color;
-				}
-			}
-		}
-	}
-}
-
-
-header.main-header {
-	color: $header_color;
-	background-color: $header_bg !important; // overrule .bg-dark
-	border-bottom: $header_border_bottom_width solid $header_border_bottom_color;
-
-	nav.main-nav {
-		min-height: $header_height;
-
-		.GPAREA a:not(.dropdown-item):not(.btn) {
-			color: rgba($header_color, 0.667);
-			&:hover,
-			&:focus{
-				color: $header_color;
-			}
-			.navbar-nav {
-				.show > .nav-link,
-				.active > .nav-link,
-				.nav-link.show,
-				.nav-link.active {
-					color: $header_color;
-				}
-			}
-		}
-
-		// multi-level navbar caret rotation
-		@include media-breakpoint-up($navbar_expand_breakpoint) {
-			.dropdown-menu-right .dropdown-toggle.dropdown-active:after { // = caret
-				@include vp-transform(rotate(90deg));
-			}
-		}
-
-		.navbar-brand {
-			color: $header_brand_color;
-			.GPAREA {
-				color: $header_brand_color;
-				a {
-					color: $header_brand_color;
-					&:hover,
-					&:focus {
-						color: $header_brand_color;
-					}
-				}
-			}
-
-			.brand-logo {
-				// brand logo has a max height
-				position: relative;
-				margin-top: -$navbar-brand-padding-y;
-				margin-bottom: -$navbar-brand-padding-y;
-				display: block;
-				max-width: 256px;
-				max-height: calc( #{$header_height} - #{$navbar-padding-y} * 2 );
-				height: auto !important;
-				width: auto !important;
-			}
-		}
-	}
-}
-
-
+// main content
 main.main-content {
 	color: $content_color;
 	background-color: $content_bg;
@@ -186,14 +82,13 @@ main.main-content {
 		}
 	}
 
-	h1, .h1,
-	h2, .h2,
-	h3, .h3,
-	h4, .h4,
-	h5, .h5,
-	h6, .h6 {
-		color: $content_headings_color;
-	}
+	h1, .h1 { color: $h1_color;	}
+	h2, .h2 { color: $h2_color;	}
+	h3, .h3 { color: $h3_color;	}
+	h4, .h4 { color: $h4_color;	}
+	h5, .h5 { color: $h5_color;	}
+	h6, .h6 { color: $h6_color;	}
+
 
 	[class*="text-"] {
 		h1, .h1,
@@ -209,9 +104,12 @@ main.main-content {
 }
 
 
+// main footer
 footer.main-footer {
 	color: $footer_color !important; // overrule .text-muted
 	background-color: $footer_bg !important; // overrule .bg-light
+	border-top: $footer_border_top_width solid $footer_border_top_color;
+
 	h1, .h1,
 	h2, .h2,
 	h3, .h3,

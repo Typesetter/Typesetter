@@ -14,11 +14,12 @@
 }
 
 // ### Other Common Imports ###
-// Note:	Since this file (common_style.scss) is imported itself, 
-//				we must also precede the following paths with '../_common_style/',
+// Note:	Because this file (common_style.scss) is imported itself by the layout's style.scss,
+//				we must also prefix the following paths with '../_common_style/',
 //				even though the files to be imported are right here in this directory
 @import '../_common/contact_form.scss';
 @import '../_common/search.scss';
+@import '../_common/more_backgrounds.scss';
 @import '../_common/simple_blog_common.scss';
 
 
@@ -59,12 +60,10 @@
 // ### Navbar ###
 .navbar {
 	.fa {
-		font-size: 14px;
+		font-size: 14px; // this is FontAwesome's pixel-perfect size
 		line-height: inherit;
 	}
 }
-
-
 
 // navbar areas and their <a> tags inherit the bootstrap style
 .navbar-light {
@@ -350,4 +349,12 @@ header.complementary-header {
 // even when they are at the very right edge
 html.edit_layout .collapse .GPAREA.gp_output_area {
 	min-width: 124px;
+}
+
+
+
+// ### General Typography ###
+
+.lead {
+	font-size: 1.25em; // make relative: rem -> em
 }

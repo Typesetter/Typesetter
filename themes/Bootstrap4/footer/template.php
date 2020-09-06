@@ -6,6 +6,7 @@
 
 // debug('$page = ' . pre(get_object_vars($page)) );
 // debug('$layout_config = ' . pre($layout_config) );
+// global $gpLayouts; debug('$gpLayouts = ' . pre($gpLayouts) );
 
 // Include current layout functions.php
 include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
@@ -43,7 +44,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 			):
 		?>
 			<header role="complementary"
-				class="complementary-header bg-dark <?php echo $complementary_header_classes; ?>">
+				class="complementary-header <?php echo $complementary_header_classes; ?>">
 				<nav class="complementary-nav navbar navbar-dark">
 					<div class="<?php echo $complementary_header_container_class; ?> d-flex justify-content-between">
 						<?php 
@@ -123,7 +124,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 		</div><!-- /.main-body -->
 
 
-		<footer class="main-footer text-muted bg-light border-top mt-auto pt-3 pb-3 pt-md-5 pb-md-5">
+		<footer class="main-footer mt-auto pt-3 pb-3 pt-md-5 pb-md-5">
 
 			<?php
 				// assign footer nav classes for possible footer menus (e.g. added via Layout Editor)
@@ -147,8 +148,8 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 				<div class="row">
 					<div class="col-12 col-md-4 footer-column footer-column-1">
 						<?php
+							gpOutput::Get('Extra', 'Footer_Column_1');
 							gpOutput::Get('Extra', 'Copyright_Notice');
-							// gpOutput::Get('Extra', 'Footer_Column_1');
 
 							// Simple Blog Categories Gadget, if installed
 							if( gpOutput::GadgetExists('Simple_Blog_Categories') ){
@@ -163,17 +164,17 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
 					<div class="col-12 col-md-4 text-center footer-column footer-column-2">
 						<?php
+							gpOutput::Get('Extra', 'Footer_Column_2');
 							// Simple Blog List Gadget, if installed
 							if( gpOutput::GadgetExists('Simple_Blog') ){
 								gpOutput::GetArea('Simple-Blog-Gadget', ''); // as defined in settings.php
 							}
-							// gpOutput::Get('Extra', 'Footer_Column_2');
 						?>
 					</div>
 
 					<div class="col-12 col-md-4 text-md-right footer-column footer-column-3">
 						<?php
-							// gpOutput::Get('Extra', 'Footer_Column_3');
+							gpOutput::Get('Extra', 'Footer_Column_3');
 							gpOutput::GetArea('Admin-Link-Area', ''); // as defined in theme settings.php
 						?>
 					</div>

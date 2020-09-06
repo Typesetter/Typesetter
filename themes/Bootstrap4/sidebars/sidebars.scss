@@ -1,5 +1,5 @@
-// Sidebar Menu
-// not a default Bootstrap menu type
+// Sidebars
+// not a default Bootstrap element
 
 aside.sidebar {
 	position: relative;
@@ -12,17 +12,8 @@ aside.sidebar {
 	h4, .h4,
 	h5, .h5,
 	h6, .h6 {
-		font-weight: normal;
-		color: $gray-900;
-		line-height: 1.1;
 		margin-bottom: ($spacer / 3);
 	}
-	h1, .h1 { font-size: 1.8rem; }
-	h2, .h2 { font-size: 1.6rem; }
-	h3, .h3 { font-size: 1.4rem; }
-	h4, .h4 { font-size: 1.2rem; }
-	h5, .h5 { font-size: 1rem; }
-	h6, .h6 { font-size: 0.8rem; font-weight: bold; }
 
 	form {
 		margin: 0;

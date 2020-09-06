@@ -1,9 +1,19 @@
 
-$sidebar-width: 232px !default;
-$sidebar-expand-breakpoint: lg !default;
+$sidebar_left_width:			232px !default; // customizer overrules
+$sidebar_right_width:			232px !default; // customizer overrules
+$sidebar-expand-breakpoint:		lg !default;
 
 .main-body {
 	@include vp-flex-dir(column);
+}
+
+.sidebar-left {
+	border-top: $border-width solid $border-color; // customizer overrules
+	background-color: $gray-300; // customizer overrules
+}
+
+.sidebar-right {
+	border-top: $border-width solid $border-color; // customizer overrules
 }
 
 @include media-breakpoint-up($sidebar-expand-breakpoint) {
@@ -16,22 +26,23 @@ $sidebar-expand-breakpoint: lg !default;
 		@include vp-flex-wrap(nowrap);
 	}
 	.sidebar {
-		width: $sidebar-width;
 		@include vp-flex-shrink(0);
 		@include vp-flex-grow(0);
 		@include vp-order(2);
 	}
 	.sidebar-left {
+		width: $sidebar_left_width; // customizer overrules
 		@include vp-order(1);
 		border-top: none;
-		border-right: $border-width solid $border-color;
+		border-right: $border-width solid $border-color; // customizer overrules
 		.sidebar-container {
 			left: 0;
 		}
 	}
 	.sidebar-right {
+		width: $sidebar_right_width; // customizer overrules
 		border-top: none;
-		border-left: $border-width solid $border-color;
+		border-left: $border-width solid $border-color; // customizer overrules
 		.sidebar-container {
 			right: 0;
 		}
@@ -42,7 +53,12 @@ $sidebar-expand-breakpoint: lg !default;
 			position: sticky;
 			top: 0;
 			bottom: 0;
-			width: $sidebar-width;
+		}
+		&.sidebar-left .sidebar-container {
+			width: $sidebar_left_width; // customizer overrules
+		}
+		&.sidebar-right .sidebar-container {
+			width: $sidebar_right_width; // customizer overrules
 		}
 	}
 }
@@ -53,7 +69,7 @@ html, body {
 }
 html.gpAdmin:not(.override_admin_style),
 html.gpAdmin:not(.override_admin_style) body {
-	min-height: calc(100vh - 29px);
+	min-height: calc(100vh - 30px);
 }
 
 

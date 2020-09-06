@@ -4,6 +4,50 @@
 // will be imported by customizer.scss
 //
 
+
+//defaults
+$complementary_header_show:					off !default;
+$complementary_header_fixed:				off !default;
+$complementary_header_height:				46px !default;
+$complementary_header_color:				#ffffff !default;
+$complementary_header_bg:					#212529 !default;
+$complementary_header_border_bottom_width:	0px !default;
+$complementary_header_border_bottom_color:	rgba(0, 0, 0, 0) !default;
+
+$header_sticky:								off !default;
+$header_height:								72px !default;
+$header_color:								#ffffff !default;
+$header_bg:									#343a40 !default;
+$header_border_bottom_width:				0px !default;
+$header_border_bottom_color:				rgba(0, 0, 0, 0) !default;
+
+$header_brand_color:						#ffffff !default;
+$header_brand_logo_height:					75% !default;
+
+
+// css vars/properties
+html {
+	--complementary_header_show:				#{$complementary_header_show};
+	--complementary_header_fixed:				#{$complementary_header_fixed};
+	--complementary_header_height:				#{$complementary_header_height};
+	--complementary_header_color:				#{$complementary_header_color};
+	--complementary_header_bg:					#{$complementary_header_bg};
+	--complementary_header_border_bottom_width:	#{$complementary_header_border_bottom_width};
+	--complementary_header_border_bottom_color:	#{$complementary_header_border_bottom_color};
+
+	--header_sticky:							#{$header_sticky};
+	--header_height:							#{$header_height};
+	--header_color:								#{$header_color};
+	--header_bg:								#{$header_bg};
+	--header_border_bottom_width:				#{$header_border_bottom_width};
+	--header_border_bottom_color:				#{$header_border_bottom_color};
+
+	--header_brand_color:						#{$header_brand_color};
+	--header_brand_logo_height:					#{$header_brand_logo_height};
+}
+
+
+// calculations
 $abh:	30px;			// admin bar height
 $hh:	$header_height; // header height, defaults to 72px;
 $chh:	0;				// complementary header height, defaults to 46px, 0 if hidden
@@ -256,6 +300,84 @@ html.header-sticky {
 					padding-top: calc( #{$abh} + #{$hh} + #{$chh} + #{$spacer} );
 					margin-top: calc( ( #{$abh} + #{$hh} + #{$chh} + #{$spacer} ) * -1 );
 				}
+			}
+		}
+	}
+}
+
+
+// colors and borders
+header.complementary-header {
+	color: $complementary_header_color !important;
+	background-color: $complementary_header_bg !important;
+	border-bottom: $complementary_header_border_bottom_width solid $complementary_header_border_bottom_color;
+
+	.complementary-nav {
+		min-height: $complementary_header_height;
+
+		.GPAREA {
+			color: $complementary_header_color;
+			a:not(.dropdown-item):not(.btn) {
+				color: rgba($complementary_header_color, 0.667);
+				&:hover,
+				&:focus{
+					color: $complementary_header_color;
+				}
+			}
+		}
+	}
+}
+
+header.main-header {
+	color: $header_color;
+	background-color: $header_bg !important; // overrule .bg-dark
+	border-bottom: $header_border_bottom_width solid $header_border_bottom_color;
+
+	nav.main-nav {
+		min-height: $header_height;
+
+		.GPAREA a:not(.dropdown-item):not(.btn) {
+			color: rgba($header_color, 0.667);
+			&:hover,
+			&:focus{
+				color: $header_color;
+			}
+			.navbar-nav {
+				.show > .nav-link,
+				.active > .nav-link,
+				.nav-link.show,
+				.nav-link.active {
+					color: $header_color;
+				}
+			}
+		}
+
+		// multi-level navbar caret rotation
+		@include media-breakpoint-up($navbar_expand_breakpoint) {
+			.dropdown-menu-right .dropdown-toggle.dropdown-active:after { // = caret
+				@include vp-transform(rotate(90deg));
+			}
+		}
+
+		.navbar-brand {
+			color: $header_brand_color;
+			height: calc( #{$header_height} - ( #{$navbar-padding-y} + #{$navbar-brand-padding-y} ) * 2 );
+			.GPAREA {
+				color: $header_brand_color;
+				a {
+					color: $header_brand_color;
+					&:hover,
+					&:focus {
+						color: $header_brand_color;
+					}
+				}
+			}
+
+			.brand-logo {
+				position: relative;
+				display: block;
+				height: $header_brand_logo_height;
+				width: auto;
 			}
 		}
 	}

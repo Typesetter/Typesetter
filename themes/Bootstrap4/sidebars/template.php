@@ -44,7 +44,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 			):
 		?>
 			<header role="complementary"
-				class="complementary-header bg-dark <?php echo $complementary_header_classes; ?>">
+				class="complementary-header <?php echo $complementary_header_classes; ?>">
 				<nav class="complementary-nav navbar navbar-dark">
 					<div class="no-container d-flex justify-content-between">
 						<?php 
@@ -158,7 +158,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
 
 			<?php if( !empty($layout_config['show_left_sidebar']['value']) ): ?>
-				<aside class="sidebar sidebar-left sidebar-sticky bg-light">
+				<aside class="sidebar sidebar-left sidebar-sticky">
 					<div class="sidebar-container">
 						<?php
 							gpOutput::GetArea('Search-Gadget', ''); // as defined in settings.php
@@ -180,7 +180,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
 
 			<?php if( !empty($layout_config['show_right_sidebar']['value']) ): ?>
-				<aside class="sidebar sidebar-right bg-white">
+				<aside class="sidebar sidebar-right">
 					<div class="sidebar-container">
 						<?php
 							gpOutput::Get('Extra', 'Side_Menu');

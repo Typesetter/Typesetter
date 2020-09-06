@@ -250,7 +250,25 @@ class Tools{
 		$_config['etag_headers']			= self::BooleanValue('etag_headers', true);
 		$_config['gallery_legacy_style']	= false;
 		$_config['language']				= 'en';
-		$_config['addons']					= [];
+		$_config['admin_links']				= [];
+		$_config['addons']					= [
+			'Bootstrap4' => [
+				'code_folder_part' => '/themes/Bootstrap4',
+				'data_folder' => 'Bootstrap4',
+				'name' => 'Bootstrap 4',
+				'version' => '1.0',
+				'is_theme' => true,
+			],
+		];
+		$_config['hooks']					= [
+			'AvailableClasses' => [
+				'Bootstrap4' => [
+					'addon'		=> 'Bootstrap4',
+					'script'	=> '/themes/Bootstrap4/addon.php',
+					'method'	=> [ 'Theme_Bootstrap4', 'AvailableClasses' ],
+				],
+			],
+		];
 
 		$config 							+= $_config;
 

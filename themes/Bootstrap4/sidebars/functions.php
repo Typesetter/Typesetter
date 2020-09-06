@@ -39,6 +39,8 @@ $html_classes					= '';
 $complementary_header_classes	= 'd-none d-md-block';
 $navbar_classes					= 'navbar-expand-lg';
 $brand_logo_img					= '';
+$sidebar_left_class				= ' sidebar-sticky';
+$sidebar_right_class			= ' sidebar-sticky';
 
 // override default values using layout config
 if( !empty($layout_config['complementary_header_fixed']['value']) &&
@@ -73,6 +75,23 @@ if( !empty($layout_config['navbar_expand_breakpoint']['value']) &&
 ){
 	$navbar_classes = ' navbar-expand-' . $layout_config['navbar_expand_breakpoint']['value'];
 }
+
+if( isset($layout_config['sidebar_left_sticky']['value']) &&
+	!empty($layout_config['sidebar_left_sticky']['value']) 
+){
+	$sidebar_left_class = ' sidebar-sticky';
+}else{
+	$sidebar_left_class = '';
+}
+
+if( isset($layout_config['sidebar_right_sticky']['value']) &&
+	!empty($layout_config['sidebar_right_sticky']['value']) 
+){
+	$sidebar_right_class = ' sidebar-sticky';
+}else{
+	$sidebar_right_class = '';
+}
+
 
 
 /**

@@ -158,7 +158,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
 
 			<?php if( !empty($layout_config['show_left_sidebar']['value']) ): ?>
-				<aside class="sidebar sidebar-left sidebar-sticky">
+				<aside class="sidebar sidebar-left<?php echo $sidebar_left_class; ?>">
 					<div class="sidebar-container">
 						<?php
 							gpOutput::GetArea('Search-Gadget', ''); // as defined in settings.php
@@ -180,7 +180,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
 
 			<?php if( !empty($layout_config['show_right_sidebar']['value']) ): ?>
-				<aside class="sidebar sidebar-right">
+				<aside class="sidebar sidebar-right<?php echo $sidebar_right_class; ?>">
 					<div class="sidebar-container">
 						<?php
 							gpOutput::Get('Extra', 'Side_Menu');

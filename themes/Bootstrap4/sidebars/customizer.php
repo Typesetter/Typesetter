@@ -1856,6 +1856,22 @@ $customizer = [
 				],
 			],
 
+			'sidebar_left_sticky'	=>	[
+				'default_value'	=> true,
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Left Sidebar Sticky',
+					'description'		=> 'make the content of the left sidebar sticky',
+
+					'type'				=> 'checkbox',
+					'possible_values'	=> [],
+					'used_in'			=> ['php'],
+					'units'				=> [],
+					'pattern'			=> 'onoff',
+				],
+			],
+
 			'sidebar_left_width'	=>	[
 				'default_value'	=> '250',
 				'default_units'	=> 'px',
@@ -1984,6 +2000,23 @@ $customizer = [
 					'pattern'			=> 'onoff',
 				],
 			],
+
+			'sidebar_right_sticky'	=>	[
+				'default_value'	=> true,
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Right Sidebar Sticky',
+					'description'		=> 'make the content of the right sidebar sticky',
+
+					'type'				=> 'checkbox',
+					'possible_values'	=> [],
+					'used_in'			=> ['php'],
+					'units'				=> [],
+					'pattern'			=> 'onoff',
+				],
+			],
+
 
 			'sidebar_right_width'	=>	[
 				'default_value'	=> '250',

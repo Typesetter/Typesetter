@@ -809,6 +809,45 @@ $customizer = [
 				],
 			],
 
+			'search_field_idle_opacity'	=>	[
+				'default_value'	=> '0.65',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Search Field Idle Opacity',
+					'description'		=> 'set the search field\'s opacity when it\'s inactive',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> '0',
+					'max'				=> '1',
+					'step'				=> '0.05',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'number',
+				],
+			],
+
+			'search_field_active_opacity'	=>	[
+				'default_value'	=> '1',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Search Field Active Opacity',
+					'description'		=> 'set the search field\'s opacity when ' .
+						'it\'s hovered or has the focus',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> '0',
+					'max'				=> '1',
+					'step'				=> '0.05',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'number',
+				],
+			],
+
 			'search_field_border_color'	=>	[
 				'default_value'	=> '#dee2e6',
 				'default_units'	=> '',

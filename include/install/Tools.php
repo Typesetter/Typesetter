@@ -464,7 +464,7 @@ class Tools{
 
 		//Header Contact
 		$file		= $destination . '/data/_extra/Header_Contact/page.php';
-		$content	= '<span><i class="fa fa-envelope">&zwnj;</i>&nbsp;<a href="mailto:hello@mydomain.com">hello@mydomain.com</a></span>
+		$content	= '<span><i class="fa fa-envelope">&zwnj;</i>&nbsp;<a href="mailto:$email">$email</a></span>
 		<span><i class="fa fa-phone">&zwnj;</i>&nbsp;+1 2345 6789 0</span>';
 		self::NewExtra($file, $content);
 

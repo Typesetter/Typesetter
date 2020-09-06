@@ -17,6 +17,10 @@ $main_menu_font_size:				1rem !default;
 $main_menu_font_weight:				400 !default;
 $main_menu_uppercase:				off !default;
 
+$search_field_font_family:			default_sans !default;
+$search_field_font_size:			1rem !default;
+$search_field_font_weight:			400 !default;
+
 $complementary_header_font_family:	default_sans !default;
 $complementary_header_font_size:	1rem !default;
 $complementary_header_font_weight:	400 !default;
@@ -200,6 +204,7 @@ $web_font_urls: (
 
 $font_list:
 	$header_brand_font_family, $main_menu_font_family,
+	$search_field_font_family,
 	$complementary_header_font_family,
 	$content_font_family,
 	$sidebar_font_family, $sidebar_headings_font_family,
@@ -239,6 +244,16 @@ $font_list_unique: remove-duplicates($font_list);
 	font-weight: $main_menu_font_weight;
 	@if $main_menu_uppercase == on {
 		text-transform: uppercase;
+	}
+}
+
+// search field
+.gpArea_Search,
+.gpArea_Search-Gadget {
+	input.text {
+		font-family: get-font-stack($search_field_font_family) !important;
+		font-size: $search_field_font_size !important;
+		font-weight: $search_field_font_weight !important;
 	}
 }
 

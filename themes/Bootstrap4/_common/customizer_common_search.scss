@@ -1,0 +1,32 @@
+// Theme Bootstrap 4
+//
+// common stylesheet for the search field
+// will be imported by customizer.scss
+//
+
+
+//defaults
+$search_field_color:				#212529 !default;
+$search_field_bg:					#ffffff !default;
+$search_field_border_color:			#dee2e6 !default;
+
+
+// css vars/properties
+html {
+	--search_field_color:			#{$search_field_color};
+	--search_field_bg:				#{$search_field_bg};
+	--search_field_border_color:	#{$search_field_border_color};
+}
+
+.gpArea_Search,
+.gpArea_Search-Gadget {
+	input.text {
+		color: $search_field_color !important;
+		background-color: $search_field_bg !important;
+		border-color: $search_field_border_color !important;
+		&::placeholder {
+			color:	$search_field_color !important;
+			opacity: 0.667 !important;
+		}
+	}
+}

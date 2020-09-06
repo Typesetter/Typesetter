@@ -69,6 +69,10 @@ html {
 @import '../_common/customizer_common_headers.scss';
 
 
+// search
+@import '../_common/customizer_common_search.scss';
+
+
 // main content
 main.main-content {
 	color: $content_color;

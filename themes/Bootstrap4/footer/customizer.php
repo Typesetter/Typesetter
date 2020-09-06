@@ -704,6 +704,150 @@ $customizer = [
 	], // end of collapsible UI area
 
 
+	'search'	=> [
+		'label'			=> 'Search Field',
+		'collapsed'		=> true,
+		'items'			=> [
+
+			'search_field_font_family'	=>	[
+				'default_value'	=> 'default_sans',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Search Field Font Family',
+					'description'		=> 'choose a font family for the search field',
+
+					'type'				=> 'select',
+					'possible_values'	=> [
+											'Default Sans-Serif'	=> 'default_sans',
+											'Default Serif'			=> 'default_serif',
+											'Alegreya Sans'			=> 'alegreya_sans',
+											'Alegreya Serif'		=> 'alegreya',
+											'Bitter'				=> 'bitter',
+											'EB Garamond'			=> 'eb_garamond',
+											'Fira Sans'				=> 'fira_sans',
+											'Inter'					=> 'inter',
+											'Lora'					=> 'lora',
+											'Merriweather'			=> 'merriweather',
+											'Montserrat'			=> 'montserrat',
+											'Nunito'				=> 'nunito',
+											'Open Sans'				=> 'open_sans',
+											'Playfair Display'		=> 'playfair_display',
+											'Raleway'				=> 'raleway',
+											'Roboto'				=> 'roboto',
+											'Roboto Slab'			=> 'roboto_slab',
+											'Source Sans Pro'		=> 'source_sans_pro',
+											'Ubuntu'				=> 'ubuntu',
+											'Work Sans'				=> 'work_sans',
+											'Zilla Slab'			=> 'zilla_slab',
+											],
+					'used_in'			=> ['scssless'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
+			'search_field_font_size'	=>	[
+				'default_value'	=> '1',
+				'default_units'	=> 'rem',
+
+				'control' => [
+					'label'				=> 'Search Field Font Size',
+					'description'		=> 'set the font size for the search field',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> '0',
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['rem'],
+					'pattern'			=> 'number',
+				],
+			],
+
+			'search_field_font_weight'	=>	[
+				'default_value'	=> '400',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Search Field Font Weight',
+					'description'		=> 'choose the search field\'s font weight',
+
+					'type'				=> 'select',
+					'possible_values'	=> [
+											'Thin'			=> '100',
+											'Extra Light'	=> '200',
+											'Light'			=> '300',
+											'Regular'		=> '400',
+											'Medium'		=> '500',
+											'Semi Bold'		=> '600',
+											'Bold'			=> '700',
+											'Extra Bold'	=> '800',
+											'Heavy / Black' => '900',
+											],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
+			'search_field_bg'	=>	[
+				'default_value'	=> '#ffffff',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Search Field Background Color',
+					'description'		=> 'pick a background color for the search field',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'search_field_border_color'	=>	[
+				'default_value'	=> '#dee2e6',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Search Field Border Color',
+					'description'		=> 'pick a border color for the search field. ' . 
+						'Use \'transparent\' to hide the border',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'search_field_color'	=>	[
+				'default_value'		=> '#212529', // = $gray-900
+				'default_units'		=> '',
+
+				'control' => [
+					'label'				=> 'Search Field Text Color',
+					'description'		=> 'pick a text color for the search field',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+		], // end of items
+	], // end of collapsible UI area
+
+
 	'content'	=> [
 		'label'			=> 'Main Content Area',
 		'collapsed'		=> true,

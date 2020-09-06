@@ -205,7 +205,7 @@ namespace gp\tool\Output{
 		 *
 		 */
 		public static function TextContent(&$content){
-			global $dirPrefix, $linkPrefix;
+			global $dirPrefix, $linkPrefix, $config;
 
 			self::$meta += ['modified' => ''];
 
@@ -219,6 +219,7 @@ namespace gp\tool\Output{
 				'currentYear'	=> date('Y'),
 				'currentMonths'	=> date('m'),
 				'currentDay'	=> date('d'),
+				'email'			=> $config['toemail'],
 			];
 
 			$vars = \gp\tool\Plugins::Filter('ReplaceContentVars', [$vars]);

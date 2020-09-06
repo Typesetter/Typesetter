@@ -219,7 +219,7 @@ class Tools{
 			'}';
 
 		$gpLayouts['default']['config']		= [
-			'header_brand_logo'						=> ['value' => ''], // /themes/Bootstrap4/images/typesetter-logo.svg
+			'header_brand_logo'						=> ['value' => ''],
 			'header_sticky'							=> ['value' => true],
 			'complementary_header_fixed'			=> ['value' => false],
 			'complementary_header_show'				=> ['value' => 'md'],
@@ -228,6 +228,7 @@ class Tools{
 			'navbar_expand_breakpoint'				=> ['value' => 'lg'],
 			'content_use_container'					=> ['value' => true],
 			'footer_use_container'					=> ['value' => true],
+			'use_avail_classes'						=> ['value' => true],
 		];
 
 		$_config							= [];

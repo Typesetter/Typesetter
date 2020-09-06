@@ -324,6 +324,10 @@ header.complementary-header {
 					color: $complementary_header_color;
 				}
 			}
+			&:only-child {
+				margin-left: auto;
+				margin-right: auto;
+			}
 		}
 	}
 }

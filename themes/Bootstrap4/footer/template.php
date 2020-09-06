@@ -4,9 +4,8 @@
  * 'footer' layout template
  */
 
-// debug('$page = ' . pre(get_object_vars($page)) );
-// debug('$layout_config = ' . pre($layout_config) );
-// global $gpLayouts; debug('$gpLayouts = ' . pre($gpLayouts) );
+// debug('$page = ' . pre(get_object_vars($page)) ); // TODO remove
+// debug('$layout_config = ' . pre($layout_config) ); // TODO remove
 
 // Include current layout functions.php
 include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');

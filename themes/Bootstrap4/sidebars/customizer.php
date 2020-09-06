@@ -810,7 +810,7 @@ $customizer = [
 			],
 
 			'search_field_idle_opacity'	=>	[
-				'default_value'	=> '0.65',
+				'default_value'	=> '0.9',
 				'default_units'	=> '',
 
 				'control' => [

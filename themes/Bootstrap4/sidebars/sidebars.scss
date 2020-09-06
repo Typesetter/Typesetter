@@ -1,7 +1,7 @@
 // Sidebars
 // not a default Bootstrap element
 
-aside.sidebar {
+.sidebar {
 	position: relative;
 	border-top: $border-width solid $border-color;
 	color: $gray-700;
@@ -24,6 +24,8 @@ aside.sidebar {
 	}
 
 	.sidebar-container {
+		width: 100%;
+
 		> .GPAREA:not(:empty) {
 			padding: $spacer;
 			border-bottom: $border-width solid $border-color;

@@ -54,12 +54,6 @@ $sidebar-expand-breakpoint:		lg !default;
 			top: 0;
 			bottom: 0;
 		}
-		&.sidebar-left .sidebar-container {
-			width: $sidebar_left_width; // customizer overrules
-		}
-		&.sidebar-right .sidebar-container {
-			width: $sidebar_right_width; // customizer overrules
-		}
 	}
 }
 

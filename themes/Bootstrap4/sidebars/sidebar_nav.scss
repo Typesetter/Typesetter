@@ -1,7 +1,7 @@
 // Sidebar Menu
 // not a default Bootstrap menu type
 
-aside.sidebar {
+.sidebar {
 	.nav-stacked-first-level:not(.empty_menu) {
 		padding: $spacer 0;
 		border-bottom: $border-width solid $border-color;
@@ -78,7 +78,7 @@ aside.sidebar {
 } // /aside.sidebar
 
 // show a placeholder to admins for empty menus
-html.gpAdmin aside.sidebar .empty_menu {
+html.gpAdmin .sidebar .empty_menu {
 	position:relative;
 	text-align: center;
 	border-bottom: $border-width solid $border-color;

@@ -202,12 +202,6 @@ $sidebar_right_border:		$border-width solid $sidebar_right_border_color;
 			top: 0;
 			bottom: 0;
 		}
-		&.sidebar-left .sidebar-container {
-			width: $sidebar_left_width;
-		}
-		&.sidebar-right .sidebar-container {
-			width: $sidebar_right_width;
-		}
 	}
 }
 

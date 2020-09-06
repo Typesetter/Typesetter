@@ -1673,7 +1673,7 @@ $customizer = [
 
 				'control' => [
 					'label'				=> 'Use Optimized Classes',
-					'description'		=> 'when editing pages using this theme, ' .
+					'description'		=> 'when editing pages using this layout, ' .
 						'the settings specified under Admin Menu → Settings → Manage Classes ' .
 						'are replaced by a set optimized for this theme',
 

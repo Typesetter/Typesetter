@@ -216,7 +216,7 @@ class Tools{
 			'"complementary_header_show":{"value":"md"},' .
 			'"complementary_header_fixed":{"value":false},' .
 			'"navbar_expand_breakpoint":{"value":"lg"}' .
-			'}';
+			'};';
 
 		$gpLayouts['default']['config']		= [
 			'header_brand_logo'						=> ['value' => ''],

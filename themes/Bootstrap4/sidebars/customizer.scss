@@ -152,6 +152,9 @@ $sidebar_right_border:		$border-width solid $sidebar_right_border_color;
 			border-bottom: $sidebar_left_border;
 		}
 	}
+	.nav-stacked-first-level:not(.empty_menu) {
+		border-bottom: $sidebar_left_border;
+	}
 }
 
 .sidebar-right {
@@ -178,6 +181,9 @@ $sidebar_right_border:		$border-width solid $sidebar_right_border_color;
 			padding: $spacer;
 			border-bottom: $sidebar_right_border;
 		}
+	}
+	.nav-stacked-first-level:not(.empty_menu) {
+		border-bottom: $sidebar_right_border;
 	}
 }
 

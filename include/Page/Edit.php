@@ -323,11 +323,10 @@ class Edit extends \gp\Page{
 
 		$scripts[]				= ['code' => 'var section_types = ' . json_encode(ob_get_clean()) . ';'];
 
-		//selectable classes
-		$avail_classes			= \gp\admin\Settings\Classes::GetClasses();
-		$avail_classes			= \gp\tool\Plugins::Filter('AvailableClasses', [$avail_classes]);
-
-		$scripts[]				= ['code' => 'var gp_avail_classes = ' . json_encode($avail_classes) . ';'];
+		// selectable classes moved to \gp\tool\Output::GetHead_InlineJS() because we have more info there
+		// $avail_classes			= \gp\admin\Settings\Classes::GetClasses();
+		// $avail_classes			= \gp\tool\Plugins::Filter('AvailableClasses', [$avail_classes]);
+		// $scripts[]				= ['code' => 'var gp_avail_classes = ' . json_encode($avail_classes) . ';'];
 
 		$scripts[]				= ['object' => 'gp_editing', 'file' => '/include/js/inline_edit/inline_editing.js'];
 

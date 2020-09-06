@@ -1665,6 +1665,10 @@ namespace gp\tool{
 
 			if( \gp\tool::LoggedIn() && $page->pagetype !== 'admin_display' ){
 				$page->jQueryCode .= '$gp.HideAdminUI.init();' . "\n";
+				// get available classes
+				$avail_classes		= \gp\admin\Settings\Classes::GetClasses();
+				$avail_classes		= \gp\tool\Plugins::Filter('AvailableClasses', [$avail_classes]);
+				$page->head_script .= "\n" . 'var gp_avail_classes = ' . json_encode($avail_classes) . ';';
 			}
 
 			// get customizer js vars

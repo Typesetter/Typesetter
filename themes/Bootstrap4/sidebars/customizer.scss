@@ -151,6 +151,17 @@ $sidebar_right_border:		$border-width solid $sidebar_right_border_color;
 			padding: $spacer;
 			border-bottom: $sidebar_left_border;
 		}
+		.GPAREA.gpMenu {
+			padding: 0;
+			border-bottom: none;
+			a:not(.btn) {
+				color: $sidebar_left_color;
+				&:hover,
+				&:focus {
+					color: $sidebar_left_color;
+				}
+			}
+		}
 	}
 	.nav-stacked-first-level:not(.empty_menu) {
 		border-bottom: $sidebar_left_border;
@@ -180,6 +191,17 @@ $sidebar_right_border:		$border-width solid $sidebar_right_border_color;
 		> .GPAREA:not(:empty) {
 			padding: $spacer;
 			border-bottom: $sidebar_right_border;
+		}
+		.GPAREA.gpMenu {
+			padding: 0;
+			border-bottom: none;
+			a:not(.btn) {
+				color: $sidebar_right_color;
+				&:hover,
+				&:focus {
+					color: $sidebar_right_color;
+				}
+			}
 		}
 	}
 	.nav-stacked-first-level:not(.empty_menu) {

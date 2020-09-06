@@ -232,8 +232,8 @@ $customizer = [
 				'default_units'	=> '',
 
 				'control' => [
-					'label'				=> 'Main Menu Font Weight',
-					'description'		=> 'choose a font weight for the main menu',
+					'label'				=> 'Complementary Header Font Weight',
+					'description'		=> 'choose a font weight for complementary header text',
 
 					'type'				=> 'select',
 					'possible_values'	=> [

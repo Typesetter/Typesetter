@@ -188,7 +188,7 @@ class Install extends \gp\admin\Addon\Tools{
 
 		echo '<div class="gp_find_form">';
 		echo '<form action="'.\gp\tool::GetUrl($this->path_remote).'" method="get">';
-		echo '<input type="text" name="q" value="'.htmlspecialchars($_GET['q']).'" size="15" class="gpinput" /> ';
+		echo '<input type="search" name="q" value="'.htmlspecialchars($_GET['q']).'" size="15" class="gpinput" /> ';
 		echo '<input type="submit" name="" value="'.$langmessage['Search'].'" class="gpbutton" />';
 		echo '</form>';
 		echo '</div>';

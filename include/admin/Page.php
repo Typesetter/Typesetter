@@ -208,7 +208,7 @@ class Page extends \gp\Page{
 		echo '<form method="get" action="'.\gp\tool::GetUrl('special_gpsearch').'" id="panel_search" class="cf">';
 
 		echo '<span>';
-		echo '<input type="text" value="" name="q"> ';
+		echo '<input type="search" value="" name="q"> ';
 		echo '<i class="fa fa-search"></i>';
 		echo '</span>';
 

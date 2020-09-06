@@ -286,7 +286,7 @@ class Menu extends \gp\special\Base{
 		// search form
 		echo '<form action="' . \gp\tool::GetUrl('Admin/Menu') . '" method="post" id="page_search">';
 		$_REQUEST += array('q' => '');
-		echo '<input type="text" name="q" size="15" ';
+		echo '<input type="search" name="q" size="15" ';
 		echo	'value="' . htmlspecialchars($_REQUEST['q']) . '" ';
 		echo	'class="gptext gpinput title-autocomplete" /> ';
 		echo '<input type="submit" name="cmd" value="' . $langmessage['search pages'] . '" class="gpbutton" />';

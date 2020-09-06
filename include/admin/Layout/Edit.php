@@ -300,14 +300,14 @@ class Edit extends \gp\admin\Layout{
 
 		//preview
 		echo	'<button name="cmd" type="submit" value="PreviewChanges"';
-		echo		' class="gpsubmit gpdisabled" disabled="disabled"';
+		echo		' class="gpvalidate gpsubmit gpdisabled" disabled="disabled"';
 		echo		' data-cmd="preview_changes">';
 		echo		$langmessage['preview'];
 		echo	'</button>';
 
 		//save
 		echo	'<button name="cmd" type="submit" value="SaveChanges"';
-		echo		' class="gpsubmit gpdisabled" disabled="disabled"';
+		echo		' class="gpvalidate gpsubmit gpdisabled" disabled="disabled"';
 		echo		' data-cmd="save_changes">';
 		echo		$langmessage['save'];
 		echo	'</button>';

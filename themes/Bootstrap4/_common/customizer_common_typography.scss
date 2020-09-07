@@ -88,78 +88,84 @@ $h6_letter_spacing:					0em !default;
 
 $web_font_names: (
 	// sans-serif
-	'alegreya_sans':	'Alegreya Sans',
-	'fira_sans':		'Fira Sans',
-	'inter':			'Inter',
-	'montserrat':		'Montserrat',
-	'nunito':			'Nunito',
-	'open_sans':		'Open Sans',
-	'raleway':			'Raleway',
-	'roboto':			'Roboto',
-	'source_sans_pro':	'Source Sans Pro',
-	'ubuntu':			'Ubuntu',
-	'work_sans':		'Work Sans',
+	'alegreya_sans':		'Alegreya Sans',
+	'fira_sans':			'Fira Sans',
+	'inter':				'Inter',
+	'montserrat':			'Montserrat',
+	'nunito':				'Nunito',
+	'open_sans':			'Open Sans',
+	'raleway':				'Raleway',
+	'roboto':				'Roboto',
+	'source_sans_pro':		'Source Sans Pro',
+	'ubuntu':				'Ubuntu',
+	'work_sans':			'Work Sans',
 
 	// serif
-	'alegreya':			'Alegreya',
-	'bitter':			'Bitter',
-	'eb_garamond':		'EB Garamond',
-	'lora':				'Lora',
-	'merriweather':		'Merriweather',
-	'playfair_display':	'Playfair Display',
-	'roboto_slab':		'Roboto Slab',
-	'zilla_slab':		'Zilla Slab'
+	'alegreya':				'Alegreya',
+	'bitter':				'Bitter',
+	'cinzel':				'Cinzel',
+	'cinzel_decorative':	'Cinzel Decorative',
+	'eb_garamond':			'EB Garamond',
+	'lora':					'Lora',
+	'merriweather':			'Merriweather',
+	'playfair_display':		'Playfair Display',
+	'roboto_slab':			'Roboto Slab',
+	'zilla_slab':			'Zilla Slab'
 );
 
 $web_font_type: (
 	// sans-serif
-	'alegreya_sans':	'sans',
-	'fira_sans':		'sans',
-	'inter':			'sans',
-	'montserrat':		'sans',
-	'nunito':			'sans',
-	'open_sans':		'sans',
-	'raleway':			'sans',
-	'roboto':			'sans',
-	'source_sans_pro':	'sans',
-	'ubuntu':			'sans',
-	'work_sans':		'sans',
+	'alegreya_sans':		'sans',
+	'fira_sans':			'sans',
+	'inter':				'sans',
+	'montserrat':			'sans',
+	'nunito':				'sans',
+	'open_sans':			'sans',
+	'raleway':				'sans',
+	'roboto':				'sans',
+	'source_sans_pro':		'sans',
+	'ubuntu':				'sans',
+	'work_sans':			'sans',
 
 	// serif
-	'alegreya':			'serif',
-	'bitter':			'serif',
-	'eb_garamond':		'serif',
-	'lora':				'serif',
-	'merriweather':		'serif',
-	'playfair_display':	'serif',
-	'roboto_slab':		'serif',
-	'zilla_slab':		'serif'
+	'alegreya':				'serif',
+	'bitter':				'serif',
+	'cinzel':				'serif',
+	'cinzel_decorative':	'serif',
+	'eb_garamond':			'serif',
+	'lora':					'serif',
+	'merriweather':			'serif',
+	'playfair_display':		'serif',
+	'roboto_slab':			'serif',
+	'zilla_slab':			'serif'
 );
 
 // in urls replace all occurences of ; with %3b
 $web_font_urls: (
 	// sans-serif
-	'alegreya_sans':	'https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,100%3b0,300%3b0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,300%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
-	'fira_sans':		'https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'inter':			'https://fonts.googleapis.com/css2?family=Inter:wght@100%3b200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
-	'nunito':			'https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'open_sans':		'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300%3b0,400%3b0,600%3b0,700%3b0,800%3b1,300%3b1,400%3b1,600%3b1,700%3b1,800&display=swap',
-	'montserrat':		'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'raleway':			'https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'roboto':			'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100%3b0,300%3b0,400%3b0,500%3b0,700%3b0,900%3b1,100%3b1,300%3b1,400%3b1,500%3b1,700%3b1,900&display=swap',
-	'source_sans_pro':	'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,900&display=swap',
-	'ubuntu':			'https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300%3b0,400%3b0,500%3b0,700%3b1,300%3b1,400%3b1,500%3b1,700&display=swap',
-	'work_sans':		'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'alegreya_sans':		'https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,100%3b0,300%3b0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,300%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
+	'fira_sans':			'https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'inter':				'https://fonts.googleapis.com/css2?family=Inter:wght@100%3b200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
+	'nunito':				'https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'open_sans':			'https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300%3b0,400%3b0,600%3b0,700%3b0,800%3b1,300%3b1,400%3b1,600%3b1,700%3b1,800&display=swap',
+	'montserrat':			'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'raleway':				'https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'roboto':				'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100%3b0,300%3b0,400%3b0,500%3b0,700%3b0,900%3b1,100%3b1,300%3b1,400%3b1,500%3b1,700%3b1,900&display=swap',
+	'source_sans_pro':		'https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,900&display=swap',
+	'ubuntu':				'https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300%3b0,400%3b0,500%3b0,700%3b1,300%3b1,400%3b1,500%3b1,700&display=swap',
+	'work_sans':			'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
 
 	// serif
-	'alegreya':			'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
-	'bitter':			'https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'eb_garamond':		'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800&display=swap',
-	'lora':				'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b1,400%3b1,500%3b1,600%3b1,700&display=swap',
-	'merriweather':		'https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300%3b0,400%3b0,700%3b0,900%3b1,300%3b1,400%3b1,700%3b1,900&display=swap',
-	'playfair_display':	'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
-	'roboto_slab':		'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100%3b200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
-	'zilla_slab':		'https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700&display=swap'
+	'alegreya':				'https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400%3b0,500%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,700%3b1,800%3b1,900&display=swap',
+	'bitter':				'https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100%3b0,200%3b0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,200%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'cinzel':				'https://fonts.googleapis.com/css2?family=Cinzel:wght@400%3b500%3b600%3b700%3b800%3b900&display=swap',
+	'cinzel_decorative':	'https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400%3b700%3b900&display=swap',
+	'eb_garamond':			'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800&display=swap',
+	'lora':					'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b1,400%3b1,500%3b1,600%3b1,700&display=swap',
+	'merriweather':			'https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300%3b0,400%3b0,700%3b0,900%3b1,300%3b1,400%3b1,700%3b1,900&display=swap',
+	'playfair_display':		'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
+	'roboto_slab':			'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100%3b200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
+	'zilla_slab':			'https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700&display=swap'
 );
 
 

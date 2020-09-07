@@ -317,13 +317,15 @@ header.complementary-header {
 
 		.GPAREA {
 			color: $complementary_header_color;
-			a:not(.dropdown-item):not(.btn) {
+
+			&:not(.gpMenu) a:not(.btn) {
 				color: rgba($complementary_header_color, 0.667);
 				&:hover,
 				&:focus{
 					color: $complementary_header_color;
 				}
 			}
+
 			&:only-child {
 				margin-left: auto;
 				margin-right: auto;
@@ -340,19 +342,11 @@ header.main-header {
 	nav.main-nav {
 		min-height: $header_height;
 
-		.GPAREA a:not(.dropdown-item):not(.btn) {
+		.GPAREA:not(.gpMenu) a:not(.btn) {
 			color: rgba($header_color, 0.667);
 			&:hover,
 			&:focus{
 				color: $header_color;
-			}
-			.navbar-nav {
-				.show > .nav-link,
-				.active > .nav-link,
-				.nav-link.show,
-				.nav-link.active {
-					color: $header_color;
-				}
 			}
 		}
 

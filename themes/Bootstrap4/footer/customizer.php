@@ -615,6 +615,59 @@ $customizer = [
 				],
 			],
 
+			'main_menu_color'	=>	[
+				'default_value'	=> 'rgba(255,255,255,0.6)',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Main Menu Color',
+					'description'		=> 'pick the color for the main menu items',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+			
+			'main_menu_hover_color'	=>	[
+				'default_value'	=> 'rgba(255,255,255,0.8)',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Main Menu Hover Color',
+					'description'		=> 'pick the color for the ' .
+						'main menu items as you hover over them',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+			
+			'main_menu_active_color'	=>	[
+				'default_value'	=> '#ffffff',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Main Menu Active Color',
+					'description'		=> 'pick the color for the active ' .
+						'main menu item',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
 			'main_menu_font_family'	=>	[
 				'default_value'	=> 'default_sans',
 				'default_units'	=> '',

@@ -15,6 +15,10 @@
 
 $navbar_expand_breakpoint:					lg !default;
 
+$main_menu_color:							rgba(255,255,255,0.6) !default;
+$main_menu_hover_color:						rgba(255,255,255,0.8) !default;
+$main_menu_active_color:					#ffffff !default;
+
 $content_color:								#212529 !default;
 $content_bg:								#ffffff !default;
 $content_link_color:						#007bff !default;
@@ -40,6 +44,10 @@ $footer_border_top_color:					rgba(127, 127, 127, 0.25) !default;
 // which has a higher specificity than html
 html {
 	--navbar_expand_breakpoint:				#{$navbar_expand_breakpoint};
+
+	--main_menu_color:						#{$main_menu_color};
+	--main_menu_hover_color:				#{$main_menu_hover_color};
+	--main_menu_active_color:				#{$main_menu_active_color};
 
 	--content_color:						#{$content_color};
 	--content_bg:							#{$content_bg};
@@ -72,6 +80,27 @@ html {
 // search
 @import '../_common/customizer_common_search.scss';
 
+
+// main menu
+.main-nav .navbar-nav {
+	.nav-link:not(.btn) {
+		color: $main_menu_color;
+		&:hover,
+		&:focus{
+			color: $main_menu_hover_color;
+		}
+	}
+	.show > .nav-link:not(.btn),
+	.nav-link.show:not(.btn),
+	.active > .nav-link:not(.btn),
+	.nav-link.active:not(.btn) {
+		color: $main_menu_active_color;
+		&:hover,
+		&:focus{
+			color: $main_menu_active_color;
+		}
+	}
+}
 
 // main content
 main.main-content {

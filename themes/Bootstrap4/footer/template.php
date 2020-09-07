@@ -161,7 +161,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 						?>
 					</div>
 
-					<div class="col-12 col-md-4 text-center footer-column footer-column-2">
+					<div class="col-12 col-md-4 text-md-center footer-column footer-column-2">
 						<?php
 							gpOutput::Get('Extra', 'Footer_Column_2');
 							// Simple Blog List Gadget, if installed

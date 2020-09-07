@@ -451,7 +451,7 @@ $customizer = [
 
 				'control' => [
 					'label'				=> 'Brand Logo Height',
-					'description'		=> 'Adjust the height of the logo. ' .
+					'description'		=> 'adjust the height of the logo. ' .
 						'Use percent (of the available height), pixels or rem units.'.
 						'The logo width will change accordingly - make sure it is ' .
 						'no wider than ~250px so that it fits on phone screens',
@@ -690,7 +690,7 @@ $customizer = [
 
 				'control' => [
 					'label'				=> 'Main Menu Uppercase',
-					'description'		=> 'make the main menu items all uppercase',
+					'description'		=> 'make the main menu 1st level items all uppercase',
 
 					'type'				=> 'checkbox',
 					'possible_values'	=> [],
@@ -699,6 +699,27 @@ $customizer = [
 					'pattern'			=> 'onoff',
 				],
 			],
+
+			'main_menu_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Main Menu Letter Spacing',
+					'description'		=> 'adjust the tracking (space between characters) ' .
+						'of the main menu 1st level items',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
+				],
+			],
+
 
 		], // end of items
 	], // end of collapsible UI area
@@ -810,7 +831,7 @@ $customizer = [
 			],
 
 			'search_field_idle_opacity'	=>	[
-				'default_value'	=> '0.9',
+				'default_value'	=> '1',
 				'default_units'	=> '',
 
 				'control' => [
@@ -1176,6 +1197,27 @@ $customizer = [
 				],
 			],
 
+			'h1_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Content <H1> Letter Spacing',
+					'description'		=> 'adjust the tracking (space ' .
+						'between characters) of type 1 headings. ' .
+						'This settings only applies to the content area',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
+				],
+			],
+
 		], // end of items
 	], // end of collapsible UI area
 
@@ -1306,6 +1348,27 @@ $customizer = [
 					'used_in'			=> ['scssless', 'css'],
 					'units'				=> [],
 					'pattern'			=> 'onoff',
+				],
+			],
+
+			'h2_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Content <H2> Letter Spacing',
+					'description'		=> 'adjust the tracking (space ' .
+						'between characters) of type 2 headings. ' .
+						'This settings only applies to the content area',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
 				],
 			],
 
@@ -1442,6 +1505,27 @@ $customizer = [
 				],
 			],
 
+			'h3_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Content <H3> Letter Spacing',
+					'description'		=> 'adjust the tracking (space ' .
+						'between characters) of type 3 headings. ' .
+						'This settings only applies to the content area',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
+				],
+			],
+
 		], // end of items
 	], // end of collapsible UI area
 
@@ -1572,6 +1656,27 @@ $customizer = [
 					'used_in'			=> ['scssless', 'css'],
 					'units'				=> [],
 					'pattern'			=> 'onoff',
+				],
+			],
+
+			'h4_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Content <H4> Letter Spacing',
+					'description'		=> 'adjust the tracking (space ' .
+						'between characters) of type 4 headings. ' .
+						'This settings only applies to the content area',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
 				],
 			],
 
@@ -1708,6 +1813,27 @@ $customizer = [
 				],
 			],
 
+			'h5_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Content <H5> Letter Spacing',
+					'description'		=> 'adjust the tracking (space ' .
+						'between characters) of type 5 headings. ' .
+						'This settings only applies to the content area',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
+				],
+			],
+
 		], // end of items
 	], // end of collapsible UI area
 
@@ -1838,6 +1964,27 @@ $customizer = [
 					'used_in'			=> ['scssless', 'css'],
 					'units'				=> [],
 					'pattern'			=> 'onoff',
+				],
+			],
+
+			'h6_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Content <H6> Letter Spacing',
+					'description'		=> 'adjust the tracking (space ' .
+						'between characters) of type 6 headings. ' .
+						'This settings only applies to the content area',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
 				],
 			],
 
@@ -2010,6 +2157,27 @@ $customizer = [
 					'used_in'			=> ['scssless', 'css'],
 					'units'				=> [],
 					'pattern'			=> 'onoff',
+				],
+			],
+
+			'sidebar_headings_letter_spacing'	=>	[
+				'default_value'	=> '0',
+				'default_units'	=> 'em',
+
+				'control' => [
+					'label'				=> 'Sidebar Headings Letter Spacing',
+					'description'		=> 'adjust the tracking (space ' .
+						'between characters) of all headings ' .
+						'in the sidebars',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> false,
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['em'],
+					'pattern'			=> 'number',
 				],
 			],
 

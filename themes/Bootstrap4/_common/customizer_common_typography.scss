@@ -11,11 +11,13 @@ $header_brand_font_family:			default_sans !default;
 $header_brand_font_size:			1.25rem !default;
 $header_brand_font_weight:			400 !default;
 $header_brand_uppercase:			off !default;
+$header_brand_letter_spacing:		0em !default;
 
 $main_menu_font_family:				default_sans !default;
 $main_menu_font_size:				1rem !default;
 $main_menu_font_weight:				400 !default;
 $main_menu_uppercase:				off !default;
+$main_menu_letter_spacing:			0em !default;
 
 $search_field_font_family:			default_sans !default;
 $search_field_font_size:			1rem !default;
@@ -36,6 +38,7 @@ $sidebar_font_weight:				400 !default;
 $sidebar_headings_font_family:		default_sans !default;
 $sidebar_headings_font_weight:		500 !default;
 $sidebar_headings_uppercase:		off !default;
+$sidebar_headings_letter_spacing:	0em !default;
 
 $footer_font_family:				default_sans !default;
 $footer_font_size:					1rem !default;
@@ -44,36 +47,43 @@ $footer_font_weight:				400 !default;
 $footer_headings_font_family:		default_sans !default;
 $footer_headings_font_weight:		500 !default;
 $footer_headings_uppercase:			off !default;
+$footer_headings_letter_spacing:	0em !default;
 
 $h1_font_size:						2.5rem !default;
 $h1_font_family:					default_sans !default;
 $h1_font_weight:					500 !default;
 $h1_uppercase:						off !default;
+$h1_letter_spacing:					0em !default;
 
 $h2_font_size:						2rem !default;
 $h2_font_family:					default_sans !default;
 $h2_font_weight:					500 !default;
 $h2_uppercase:						off !default;
+$h2_letter_spacing:					0em !default;
 
 $h3_font_size:						1.75rem !default;
 $h3_font_family:					default_sans !default;
 $h3_font_weight:					500 !default;
 $h3_uppercase:						off !default;
+$h3_letter_spacing:					0em !default;
 
 $h4_font_size:						1.5rem !default;
 $h4_font_family:					default_sans !default;
 $h4_font_weight:					500 !default;
 $h4_uppercase:						off !default;
+$h4_letter_spacing:					0em !default;
 
 $h5_font_size:						1.25rem !default;
 $h5_font_family:					default_sans !default;
 $h5_font_weight:					500 !default;
 $h5_uppercase:						off !default;
+$h5_letter_spacing:					0em !default;
 
 $h6_font_size:						1rem !default;
 $h6_font_family:					default_sans !default;
 $h6_font_weight:					500 !default;
 $h6_uppercase:						off !default;
+$h6_letter_spacing:					0em !default;
 
 
 $web_font_names: (
@@ -232,8 +242,11 @@ $font_list_unique: remove-duplicates($font_list);
 	font-family: get-font-stack($header_brand_font_family);
 	font-size: $header_brand_font_size;
 	font-weight: $header_brand_font_weight;
-	@if $header_brand_uppercase == on {
+	@if ( $header_brand_uppercase == on ) {
 		text-transform: uppercase;
+	}
+	@if ( $header_brand_letter_spacing != 0em ) {
+		letter-spacing: $header_brand_letter_spacing;
 	}
 }
 
@@ -242,8 +255,11 @@ $font_list_unique: remove-duplicates($font_list);
 	font-family: get-font-stack($main_menu_font_family);
 	font-size: $main_menu_font_size;
 	font-weight: $main_menu_font_weight;
-	@if $main_menu_uppercase == on {
+	@if ( $main_menu_uppercase == on ) {
 		text-transform: uppercase;
+	}
+	@if ( $main_menu_letter_spacing != 0em ) {
+		letter-spacing: $main_menu_letter_spacing;
 	}
 }
 
@@ -269,60 +285,77 @@ $font_list_unique: remove-duplicates($font_list);
 	font-family: get-font-stack($content_font_family);
 	font-size: $content_font_size;
 	font-weight: $content_font_weight;
-}
 
-// headings
-h1, .h1 {
-	font-family: get-font-stack($h1_font_family);
-	font-size: $h1_font_size;
-	font-weight: $h1_font_weight;
-	@if $h1_uppercase == on {
-		text-transform: uppercase;
+	// headings
+	h1, .h1 {
+		font-family: get-font-stack($h1_font_family);
+		font-size: $h1_font_size;
+		font-weight: $h1_font_weight;
+		@if ( $h1_uppercase == on ) {
+			text-transform: uppercase;
+		}
+		@if ( $h1_letter_spacing != 0em ) {
+			letter-spacing: $h1_letter_spacing;
+		}
 	}
-}
 
-h2, .h2 {
-	font-family: get-font-stack($h2_font_family);
-	font-size: $h2_font_size;
-	font-weight: $h2_font_weight;
-	@if $h2_uppercase == on {
-		text-transform: uppercase;
+	h2, .h2 {
+		font-family: get-font-stack($h2_font_family);
+		font-size: $h2_font_size;
+		font-weight: $h2_font_weight;
+		@if ( $h2_uppercase == on ) {
+			text-transform: uppercase;
+		}
+		@if ( $h2_letter_spacing != 0em ) {
+			letter-spacing: $h2_letter_spacing;
+		}
 	}
-}
 
-h3, .h3 {
-	font-family: get-font-stack($h3_font_family);
-	font-size: $h3_font_size;
-	font-weight: $h3_font_weight;
-	@if $h3_uppercase == on {
-		text-transform: uppercase;
+	h3, .h3 {
+		font-family: get-font-stack($h3_font_family);
+		font-size: $h3_font_size;
+		font-weight: $h3_font_weight;
+		@if ( $h3_uppercase == on ) {
+			text-transform: uppercase;
+		}
+		@if ( $h3_letter_spacing != 0em ) {
+			letter-spacing: $h3_letter_spacing;
+		}
 	}
-}
 
-h4, .h4 {
-	font-family: get-font-stack($h4_font_family);
-	font-size: $h4_font_size;
-	font-weight: $h4_font_weight;
-	@if $h4_uppercase == on {
-		text-transform: uppercase;
+	h4, .h4 {
+		font-family: get-font-stack($h4_font_family);
+		font-size: $h4_font_size;
+		font-weight: $h4_font_weight;
+		@if ( $h4_uppercase == on ) {
+			text-transform: uppercase;
+		}
+		@if ( $h4_letter_spacing != 0em ) {
+			letter-spacing: $h4_letter_spacing;
+		}
 	}
-}
 
-h5, .h5 {
-	font-family: get-font-stack($h5_font_family);
-	font-size: $h5_font_size;
-	font-weight: $h5_font_weight;
-	@if $h5_uppercase == on {
-		text-transform: uppercase;
-	}
-}
+	h5, .h5 {
+		font-family: get-font-stack($h5_font_family);
+		font-size: $h5_font_size;
+		font-weight: $h5_font_weight;
+		@if ( $h5_uppercase == on ) {
+			text-transform: uppercase;
+		}
+		@if ( $h5_letter_spacing != 0em ) {
+			letter-spacing: $h5_letter_spacing;
+		}}
 
-h6, .h6 {
-	font-family: get-font-stack($h6_font_family);
-	font-size: $h6_font_size;
-	font-weight: $h6_font_weight;
-	@if $h6_uppercase == on {
-		text-transform: uppercase;
+	h6, .h6 {
+		font-family: get-font-stack($h6_font_family);
+		font-size: $h6_font_size;
+		font-weight: $h6_font_weight;
+		@if ( $h6_uppercase == on ) {
+			text-transform: uppercase;
+		}
+		@if ( $h6_letter_spacing != 0em ) {
+			letter-spacing: $h6_letter_spacing;
+		}
 	}
 }
 
@@ -339,8 +372,11 @@ h6, .h6 {
 	h6, .h6 {
 		font-family: get-font-stack($sidebar_headings_font_family);
 		font-weight: $sidebar_headings_font_weight;
-		@if $sidebar_headings_uppercase == on {
+		@if ( $sidebar_headings_uppercase == on ) {
 			text-transform: uppercase;
+		}
+		@if ( $sidebar_headings_letter_spacing != 0em ) {
+			letter-spacing: $sidebar_headings_letter_spacing;
 		}
 	}
 	$sidebar_font_size_multiplier: strip-unit($sidebar_font_size);
@@ -377,8 +413,11 @@ h6, .h6 {
 	h6, .h6 {
 		font-family: get-font-stack($footer_headings_font_family);
 		font-weight: $footer_headings_font_weight;
-		@if $footer_headings_uppercase == on {
+		@if ( $footer_headings_uppercase == on ) {
 			text-transform: uppercase;
+		}
+		@if ( $footer_headings_letter_spacing != 0em ) {
+			letter-spacing: $footer_headings_letter_spacing;
 		}
 	}
 	$footer_font_size_multiplier: strip-unit($footer_font_size);

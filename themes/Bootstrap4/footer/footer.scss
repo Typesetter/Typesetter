@@ -1,6 +1,6 @@
 .main-footer {
 	.footer-column:not(:last-child) {
-		border-bottom: $border-width solid $border-color;
+		// border-bottom: $border-width solid $border-color;
 		margin-bottom: $spacer;
 		@include media-breakpoint-up(md) {
 			border-bottom: none;

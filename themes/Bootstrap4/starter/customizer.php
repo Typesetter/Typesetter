@@ -521,6 +521,25 @@ $customizer = [
 				],
 			],
 
+			'header_brand_font_size'	=>	[
+				'default_value'	=> '1.25',
+				'default_units'	=> 'rem',
+
+				'control' => [
+					'label'				=> 'Brand Font Size',
+					'description'		=> 'set the font size of the brand / site title',
+
+					'type'				=> 'number',
+					'possible_values'	=> [],
+					'min'				=> '0',
+					'max'				=> false,
+					'step'				=> '0.005',
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> ['rem'],
+					'pattern'			=> 'number',
+				],
+			],
+
 			'header_brand_font_weight'	=>	[
 				'default_value'	=> '400',
 				'default_units'	=> '',

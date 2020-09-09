@@ -453,6 +453,24 @@ $customizer = [
 				],
 			],
 
+			'header_brand_logo_alt_text'	=>	[
+				'default_value'	=> 'Logo',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Brand Logo Alternate Text',
+					'description'		=> 'the required alt attribute for ' .
+						'the logo image. It shows if the image cannot be displayed. ' .
+						'Also important for SEO',
+
+					'type'				=> 'text',
+					'possible_values'	=> [],
+					'used_in'			=> ['php'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
 			'header_brand_logo_height'	=>	[
 				'default_value'	=> '100',
 				'default_units'	=> '%',

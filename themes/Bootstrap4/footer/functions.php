@@ -41,6 +41,7 @@ $complementary_header_container_class	= 'container';
 $header_container_class					= 'container';
 $navbar_classes							= 'navbar-expand-lg';
 $brand_logo_img							= '';
+$brand_logo_alt							= 'Logo';
 $content_container_class				= 'container';
 $footer_container_class					= 'container';
 
@@ -75,9 +76,13 @@ if( !empty($layout_config['header_sticky']['value']) ){
 	$html_classes .= ' header-sticky';
 }
 
+if( !empty($layout_config['header_brand_logo_alt_text']['value']) ){
+	$brand_logo_alt = htmlspecialchars($layout_config['header_brand_logo_alt_text']['value']);
+}
+
 if( !empty($layout_config['header_brand_logo']['value']) ){
-	$brand_logo_img = '<img alt="logo" class="brand-logo" src="' .
-		$layout_config['header_brand_logo']['value'] .
+	$brand_logo_img = '<img alt="' . $brand_logo_alt . '" class="brand-logo" ' . 
+		'src="' . $layout_config['header_brand_logo']['value'] .
 		'" />';
 }
 

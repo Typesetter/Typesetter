@@ -76,7 +76,7 @@ if( !empty($layout_config['header_sticky']['value']) ){
 	$html_classes .= ' header-sticky';
 }
 
-if( !empty($layout_config['header_brand_logo_alt_text']['value']) ){
+if( isset($layout_config['header_brand_logo_alt_text']['value']) ){
 	$brand_logo_alt = htmlspecialchars($layout_config['header_brand_logo_alt_text']['value']);
 }
 

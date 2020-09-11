@@ -604,6 +604,11 @@ class Combine{
 			'file'			=> '/include/thirdparty/bootstrap-colorpicker/bootstrap-colorpicker.min.css',
 		],
 
+		// jQuery.touch (touch gestures for jQuery 1.9 and 2.x)
+		'jquery-touch' => [
+			'file'			=> '/include/thirdparty/jquery.touch/jquery.touch.min.js',
+		],
+
 	];
 
 

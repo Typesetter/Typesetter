@@ -359,7 +359,8 @@ header.main-header {
 
 		.navbar-brand {
 			color: $header_brand_color;
-			height: calc( #{$header_height} - ( #{$navbar-padding-y} + #{$navbar-brand-padding-y} ) * 2 );
+			// height: calc( #{$header_height} - ( #{$navbar-padding-y} + #{$navbar-brand-padding-y} ) * 2 );
+			height: calc( #{$header_height} - #{$navbar-padding-y} * 2 );
 			.GPAREA {
 				color: $header_brand_color;
 				a {

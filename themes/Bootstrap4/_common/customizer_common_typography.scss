@@ -110,6 +110,7 @@ $web_font_names: (
 	'merriweather':			'Merriweather',
 	'playfair_display':		'Playfair Display',
 	'roboto_slab':			'Roboto Slab',
+	'source_serif_pro':		'Source Serif Pro',
 	'zilla_slab':			'Zilla Slab'
 );
 
@@ -137,6 +138,7 @@ $web_font_type: (
 	'merriweather':			'serif',
 	'playfair_display':		'serif',
 	'roboto_slab':			'serif',
+	'source_serif_pro':		'serif',
 	'zilla_slab':			'serif'
 );
 
@@ -165,6 +167,7 @@ $web_font_urls: (
 	'merriweather':			'https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300%3b0,400%3b0,700%3b0,900%3b1,300%3b1,400%3b1,700%3b1,900&display=swap',
 	'playfair_display':		'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400%3b0,500%3b0,600%3b0,700%3b0,800%3b0,900%3b1,400%3b1,500%3b1,600%3b1,700%3b1,800%3b1,900&display=swap',
 	'roboto_slab':			'https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100%3b200%3b300%3b400%3b500%3b600%3b700%3b800%3b900&display=swap',
+	'source_serif_pro':		'https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,200%3b0,300%3b0,400%3b0,600%3b0,700%3b0,900%3b1,200%3b1,300%3b1,400%3b1,600%3b1,700%3b1,900&display=swap',
 	'zilla_slab':			'https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300%3b0,400%3b0,500%3b0,600%3b0,700%3b1,300%3b1,400%3b1,500%3b1,600%3b1,700&display=swap'
 );
 
@@ -257,15 +260,19 @@ $font_list_unique: remove-duplicates($font_list);
 }
 
 // main menu
-.navbar-nav > li > a {
+.navbar-nav {
 	font-family: get-font-stack($main_menu_font_family);
-	font-size: $main_menu_font_size;
-	font-weight: $main_menu_font_weight;
-	@if ( $main_menu_uppercase == on ) {
-		text-transform: uppercase;
-	}
-	@if ( $main_menu_letter_spacing != 0em ) {
-		letter-spacing: $main_menu_letter_spacing;
+
+	> li > a {
+		font-family: get-font-stack($main_menu_font_family);
+		font-size: $main_menu_font_size;
+		font-weight: $main_menu_font_weight;
+		@if ( $main_menu_uppercase == on ) {
+			text-transform: uppercase;
+		}
+		@if ( $main_menu_letter_spacing != 0em ) {
+			letter-spacing: $main_menu_letter_spacing;
+		}
 	}
 }
 

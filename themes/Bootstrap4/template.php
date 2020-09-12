@@ -7,20 +7,11 @@
 
 
 /**
- * Load SmartMenus
+ * Load theme javascripts
  *
  */
-// $page->head_js[] = dirname(rawurldecode($page->theme_path)) . '/_assets/js/jquery.smartmenus.bs4.min.js';
-
-
-/**
- * Load theme javascript, if it exists
- *
- */
-$theme_js = $page->theme_dir . '/script.js';
-if( file_exists($theme_js) ){
-	$page->head_js[] = dirname(rawurldecode($page->theme_path)) . '/script.js';
-}
+$page->head_js[] = dirname(rawurldecode($page->theme_path)) . '/_common/script.js';
+$page->head_js[] = dirname(rawurldecode($page->theme_path)) . '/_common/menu.js';
 
 
 /**

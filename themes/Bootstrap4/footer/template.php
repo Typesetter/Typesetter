@@ -19,8 +19,18 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
 		<?php
+			/*
+			if( true ){
+				echo '<link rel="stylesheet" href="' . dirname($page->theme_path) .
+					'/_common/assets/thirdparty/pace/templates/pace-theme-center-simple.tmpl.css" />';
+				echo '<script src="' . dirname($page->theme_path) .
+					'/_common/assets/thirdparty/pace/pace.min.js"></script>';
+			}
+			*/
 			gpOutput::GetHead(); // get head content
 		?>
+
+
 	</head>
 
 
@@ -188,6 +198,20 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 			// flex can mess up the 'natural' z-index layering of the DOM
 			// therefore we prevent message output in the 'Admin-Link-Area' defined in theme settings.php
 			echo GetMessages();
+		?>
+
+		<div id="detect-bootstrap-breakpoints">
+			<div class="breakpoint-xs d-block d-sm-none d-md-none d-lg-none d-xl-none" data-breakpoint="xs"></div>
+			<div class="breakpoint-sm d-none d-sm-block d-md-none d-lg-none d-xl-none" data-breakpoint="sm"></div>
+			<div class="breakpoint-md d-none d-sm-none d-md-block d-lg-none d-xl-none" data-breakpoint="md"></div>
+			<div class="breakpoint-lg d-none d-sm-none d-md-none d-lg-block d-xl-none" data-breakpoint="lg"></div>
+			<div class="breakpoint-xl d-none d-sm-none d-md-none d-lg-none d-xl-block" data-breakpoint="xl"></div>
+		</div>
+		<?php
+			if( !empty($layout_config['navbar_expand_breakpoint']['value']) ){
+				$navbar_expand_breakpoint = $layout_config['navbar_expand_breakpoint']['value'];
+				echo '<div id="breakpoint-navbar-expanded" class="d-none d-' . $navbar_expand_breakpoint . '-block"></div>';
+			}
 		?>
 
 	</body>

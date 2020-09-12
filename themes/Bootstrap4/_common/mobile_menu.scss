@@ -1,0 +1,382 @@
+
+$navbar_expand_breakpoint:	lg !default; // can be changed via customizer
+
+$navbar_collapsed_map: (
+	sm: 	xs,
+	md: 	sm,
+	lg:		md,
+	xl:		lg,
+	never: 	false // this will trigger the media-breakpoint-down mixin fallback to use no @media rule - exactly what we want :)
+);
+
+$navbar_collapsed_breakpoint_down: map_get($navbar_collapsed_map, $navbar_expand_breakpoint);
+
+// replace Bootstrap's SVG toggler icon with a more flexible and animatable solution
+
+$toggler_stroke_width: 2px !default;
+$toggler_transition_duration: 0.6s !default;
+
+.navbar-light,
+.navbar-dark {
+	.navbar-toggler {
+		.navbar-toggler-icon {
+			position: relative;
+			top: -($toggler_stroke_width / 2);
+			background: none;
+			width: 1.1em;
+			height: $toggler_stroke_width;
+			margin: calc(0.55em - #{$toggler_stroke_width / 2}) 0.2em;
+			border-top: $toggler_stroke_width solid currentColor;
+			transition: border ($toggler_transition_duration / 2);
+			&:before,
+			&:after {
+				content: '';
+				display: block;
+				position: absolute;
+				left: 0;
+				right: 0;
+				height: $toggler_stroke_width;
+				border-top: $toggler_stroke_width solid currentColor;
+				transition: top ($toggler_transition_duration / 3),
+					transform $toggler_transition_duration;
+			}
+			&:before {
+				top: calc((0.45em + #{$toggler_stroke_width}) * -1);
+			}
+			&:after {
+				top: calc(0.45em - #{$toggler_stroke_width});
+			}
+		}
+		&:focus {
+			outline: none;
+		}
+	}
+}
+
+
+.navbar-light {
+	.navbar-toggler {
+		&:hover,
+		&:focus {
+			color: $navbar-light-hover-color; // customizer will overrule
+		}
+	}
+}
+
+.navbar-dark {
+	.navbar-toggler {
+		&:hover,
+		&:focus {
+			color: $navbar-dark-hover-color; // customizer will overrule
+		}
+	}
+}
+
+
+// don't use drop-down menu style in mobile menu
+@include media-breakpoint-down($navbar_collapsed_breakpoint_down) {
+	.main-nav {
+		.dropdown-menu { // = ul
+			// margin: 0.125rem 0 0;
+			margin: 0;
+			padding: 0;
+			color: inherit;
+			background-color: transparent;
+			border: none;
+			border-radius: 0;
+			.dropdown-item { // = a
+				padding-top: $nav-link-padding-y;
+				padding-bottom: $nav-link-padding-y;
+				padding-left: ($nav-link-padding-x * 0.5);
+				color: inherit;
+				&:hover,
+				&:focus {
+					color: $navbar-dark-hover-color; // customizer will overrule
+					background-color: inherit;
+				}
+				&.active,
+				&:active {
+					color: $navbar-dark-active-color; // customizer will overrule
+					background-color: inherit;
+				}
+			}
+		}
+		.dropdown-toggle { // = a
+			white-space: normal;
+			&.dropdown-active::after {
+				-webkit-transform: rotate(0deg);
+				transform: rotate(0deg);
+			}
+		}
+	}
+	// 3rd menu level
+	.main-nav .dropdown-menu .dropdown-menu .dropdown-item {
+		padding-left: $nav-link-padding-x;
+	}
+	// 4th menu level
+	.main-nav .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-item {
+		padding-left: ($nav-link-padding-x * 1.5);
+	}
+	// 5th menu level
+	.main-nav .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-item {
+		padding-left: ($nav-link-padding-x * 2);
+	}
+	// 6th menu level
+	.main-nav .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-item {
+		padding-left: ($nav-link-padding-x * 2.5);
+	}
+
+}
+
+// class to prevent scrolling the content when modal overlays are active
+html,
+body {
+	&.prevent-scrolling {
+		overflow: hidden;
+	}
+}
+
+// default for clones of the toggler in overlays, will be activated via js
+.navbar-collapse .navbar-toggler {
+	display: none;
+}
+
+
+@include media-breakpoint-down($navbar_collapsed_breakpoint_down) {
+
+	// default Bootstrap pulldown menu
+	html.mobile-menu-pulldown {
+		// .navbar-collapse {
+		//	&.collapse {}
+		//	&.collapsing {}
+		//	&.show {}
+		// }
+
+		.navbar-toggler {
+			&[aria-expanded='true'] {
+				.navbar-toggler-icon {
+					border-top-color: transparent;
+					&:before {
+						top: -$toggler_stroke_width;
+						transform: rotate(45deg) scaleX(1.25);
+					}
+					&:after {
+						top: -$toggler_stroke_width;
+						transform: rotate(-45deg) scaleX(1.25);
+					}
+				}
+			}
+		}
+	}
+
+
+	// pops up and covers the whole viewport unless closed
+	html.mobile-menu-popup {
+		.navbar-collapse {
+			background: $dark; // customizer will overrule
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			overflow-y: auto;
+			padding: calc(20vmin - 24px) calc(20vmin - 24px) 0 calc(20vmin - 24px);
+
+			&:after {
+				// add a 'scroll padding spacer' for Firefox
+				// see https://bugzilla.mozilla.org/show_bug.cgi?id=748518
+				content: '';
+				display: block;
+				height: calc(20vmin - 24px);
+			}
+
+			// &.collapse {}
+			&.collapsing {
+				-webkit-transition: none !important; // prevent bootstraps transition handling
+				transition: none !important; // prevent bootstraps transition handling
+			}
+
+			//&.collapse.show {}
+
+			.navbar-toggler { // yes, this belongs here, it's a toggler clone generated by JS
+				display: block;
+				position: fixed;
+				top: 5vmin;
+				right: 6vmin;
+
+				.navbar-toggler-icon {
+					border-top-color: transparent;
+					&:before {
+						top: -$toggler_stroke_width;
+						transform: rotate(45deg) scaleX(1.25);
+					}
+					&:after {
+						top: -$toggler_stroke_width;
+						transform: rotate(-45deg) scaleX(1.25);
+					}
+				}
+			}
+		}
+	}
+
+
+	// slides in from the (right) side and partially covers the viewport
+	html.mobile-menu-slideover {
+		.navbar-collapse {
+			background: $dark; // customizer will overrule
+			position: fixed;
+			right: 0;
+			bottom: 0;
+			left: auto;
+			height: auto !important;
+			max-width: 100vw;
+			padding-left: ($grid-gutter-width / 2);
+			padding-right: ($grid-gutter-width / 2);
+			overflow-y: auto;
+			transform: translateX(100%);
+			-webkit-transition: transform 0.3s !important; // overrule bootstrap
+			transition: transform 0.3s !important; // overrule bootstrap
+
+			&:after {
+				// add a 'scroll padding spacer' for Firefox
+				// see https://bugzilla.mozilla.org/show_bug.cgi?id=748518
+				content: '';
+				display: block;
+				height: ($grid-gutter-width / 2);
+			}
+
+			&.collapse:not(.show) {
+				display: block;
+			}
+
+			&.collapsing {
+				position: fixed; // overrule bootstrap
+				overflow-x: visible;
+				overflow-y: auto;
+				-webkit-transition: transform 0.3s !important; // overrule bootstrap
+				transition: transform 0.3s !important; // overrule bootstrap
+			}
+
+			&.collapse.show {
+				transform: translateX(0);
+			}
+
+			&.main-nav-sliding-in {
+				transform: translateX(0);
+			}
+
+			&.main-nav-sliding-out {
+				transform: translateX(100%);
+			}
+
+		}
+		.navbar-toggler {
+			&[aria-expanded='true'] {
+				.navbar-toggler-icon {
+					border-top-color: transparent;
+					&:before {
+						top: -$toggler_stroke_width;
+						transform: rotate(45deg) scaleX(1.25);
+					}
+					&:after {
+						top: -$toggler_stroke_width;
+						transform: rotate(-45deg) scaleX(1.25);
+					}
+				}
+			}
+		}
+	}
+
+
+	// menu pushes the page to the left out off the viewport (canvas)
+	html.mobile-menu-offcanvas {
+		body {
+			position: relative;
+			left: 0;
+			-webkit-transition: left 0.3s !important;
+			transition: left 0.3s !important;
+		}
+
+		.navbar-collapse {
+			background: $dark; // customizer will overrule
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: auto;
+			height: auto !important;
+			max-width: calc(100vw - 40px); // keep toggler visible
+			padding-top: calc(#{$grid-gutter-width} - #{$nav-link-padding-y});
+			padding-left: $grid-gutter-width;
+			padding-right: $grid-gutter-width;
+			overflow-y: auto;
+			transform: translateX(100%);
+			-webkit-transition: transform 0.3s !important; // overrule bootstrap
+			transition: transform 0.3s !important; // overrule bootstrap
+
+			&:after {
+				// add a 'scroll padding spacer' for Firefox
+				// see https://bugzilla.mozilla.org/show_bug.cgi?id=748518
+				content: '';
+				display: block;
+				height: $grid-gutter-width;
+			}
+
+			&.collapse:not(.show) {
+				display: block;
+			}
+
+			&.collapsing {
+				position: fixed; // overrule bootstrap
+				overflow-x: visible;
+				overflow-y: auto;
+				-webkit-transition: transform 0.3s !important; // overrule bootstrap
+				transition: transform 0.3s !important; // overrule bootstrap
+			}
+
+			&.collapse.show {
+				transform: translateX(0);
+			}
+
+			&.main-nav-canvas-on {
+				transform: translateX(0);
+			}
+
+			&.main-nav-canvas-off {
+				transform: translateX(100%);
+			}
+
+		}
+
+		.navbar-toggler {
+			transform: translateX(0);
+			transition: transform $toggler_transition_duration;
+			z-index: 100;
+
+			.navbar-toggler-icon {
+				&:before,
+				&:after {
+					transition: transform $toggler_transition_duration;
+				}
+			}
+
+			&[aria-expanded='true'] {
+				.navbar-toggler-icon {
+					&:before {
+						transform:
+							rotate(-45deg)
+							scaleX(0.72)
+							translate(-55%, -($toggler_stroke_width * 0.5 + 2px));
+					}
+					&:after {
+						transform:
+							rotate(45deg)
+							scaleX(0.72)
+							translate(-55%, ($toggler_stroke_width * 0.5 + 2px));
+					}
+				}
+			}
+		}
+	}
+
+}

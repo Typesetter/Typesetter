@@ -19,7 +19,12 @@
  *
  */
 common::LoadComponents('bootstrap4-js,fontawesome');
-
+if( isset($layout_config['mobile_menu_style']['value']) &&
+	$layout_config['mobile_menu_style']['value'] == 'offcanvas' ||
+	$layout_config['mobile_menu_style']['value'] == 'slideover'
+){
+	common::LoadComponents('jquery-touch');
+}
 
 /**
  * Load layout javascript, if it exists

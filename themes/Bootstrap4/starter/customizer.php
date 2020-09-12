@@ -69,6 +69,7 @@ $font_list = [
 	'Roboto'							=> 'roboto',
 	'Roboto Slab'						=> 'roboto_slab',
 	'Source Sans Pro'					=> 'source_sans_pro',
+	'Source Serif Pro'					=> 'source_serif_pro',
 	'Ubuntu'							=> 'ubuntu',
 	'Work Sans'							=> 'work_sans',
 	'Zilla Slab'						=> 'zilla_slab',
@@ -604,6 +605,28 @@ $customizer = [
 		'label'			=> 'Main Menu',
 		'collapsed'		=> true,
 		'items'			=> [
+
+			'mobile_menu_style'	=>	[
+				'default_value'	=> 'pulldown',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Hamburger Menu Style',
+					'description'		=> 'choose the appearance of the mobile menu ' .
+						'(when the hamburger button is clicked)',
+
+					'type'				=> 'select', 
+					'possible_values'	=> [
+												'Pull Down'			=> 'pulldown',
+												'Pop Up'			=> 'popup',
+												'Slide Over'		=> 'slideover',
+												'Off-Canvas'		=> 'offcanvas',
+											],
+					'used_in'			=> ['scssless', 'css', 'php', 'js'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
 
 			'navbar_expand_breakpoint'	=>	[
 				'default_value'	=> 'lg',

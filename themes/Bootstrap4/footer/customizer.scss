@@ -102,6 +102,11 @@ html {
 	}
 }
 
+
+// mobile menu
+@import '../_common/customizer_common_mobile_menu.scss';
+
+
 // main content
 main.main-content {
 	color: $content_color;

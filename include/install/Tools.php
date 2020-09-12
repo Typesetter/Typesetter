@@ -215,7 +215,8 @@ class Tools{
 			'"header_sticky":{"value":true},' .
 			'"complementary_header_show":{"value":"md"},' .
 			'"complementary_header_fixed":{"value":false},' .
-			'"navbar_expand_breakpoint":{"value":"lg"}' .
+			'"navbar_expand_breakpoint":{"value":"lg"},' .
+			'"mobile_menu_style":{"value":"pulldown"}' .
 			'};';
 
 		$gpLayouts['default']['config']		= [
@@ -226,6 +227,7 @@ class Tools{
 			'complementary_header_use_container'	=> ['value' => true],
 			'header_use_container'					=> ['value' => true],
 			'navbar_expand_breakpoint'				=> ['value' => 'lg'],
+			'mobile_menu_style'						=> ['value' => 'pulldown'],
 			'content_use_container'					=> ['value' => true],
 			'footer_use_container'					=> ['value' => true],
 			'use_avail_classes'						=> ['value' => true],

@@ -169,13 +169,16 @@
 	// search gadget
 	.gpArea_Search,
 	.gpArea_Search-Gadget {
-		@include vp-flex-basis(10rem);
+		@include vp-flex-basis(7rem);
+		margin-left: $spacer;
 		h3,
 		input.submit {
 			display: none;
 		}
 		input.text {
 			@extend .form-control;
+			height: auto; // overrules bootstrap defaults
+			padding: 0.15rem 0.5rem; // overrules bootstrap defaults
 		}
 	}
 }

@@ -51,7 +51,7 @@ $(function(){
 	switch( layout_config.mobile_menu_style.value ){
 
 		case 'popup':
-			console.log('Popup Menu');
+			// console.log('Popup Menu');
 			var popup_fade_duration = 300; // ms
 
 			$navbar_collapse.on('show.bs.collapse', function(evt){

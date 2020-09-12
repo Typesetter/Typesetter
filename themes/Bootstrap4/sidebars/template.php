@@ -210,12 +210,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 			<div class="breakpoint-lg d-none d-sm-none d-md-none d-lg-block d-xl-none" data-breakpoint="lg"></div>
 			<div class="breakpoint-xl d-none d-sm-none d-md-none d-lg-none d-xl-block" data-breakpoint="xl"></div>
 		</div>
-		<?php
-			if( !empty($layout_config['navbar_expand_breakpoint']['value']) ){
-				$navbar_expand_breakpoint = $layout_config['navbar_expand_breakpoint']['value'];
-				echo '<div id="breakpoint-navbar-expanded" class="d-none d-' . $navbar_expand_breakpoint . '-block"></div>';
-			}
-		?>
+		<div id="breakpoint-navbar-expanded" class="d-none d-<?php echo $navbar_expand_breakpoint; ?>-block"></div>
 
 </body>
 </html>

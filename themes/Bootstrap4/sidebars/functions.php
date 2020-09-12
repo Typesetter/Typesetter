@@ -42,6 +42,7 @@ if( file_exists($layout_js) ){
 // default values
 $html_classes					= '';
 $complementary_header_classes	= 'd-none d-md-block';
+$navbar_expand_breakpoint				= 'lg';
 $navbar_classes					= 'navbar-expand-lg';
 $brand_logo_img					= '';
 $brand_logo_alt					= 'Logo';
@@ -80,10 +81,9 @@ if( !empty($layout_config['header_brand_logo']['value']) ){
 		'" />';
 }
 
-if( !empty($layout_config['navbar_expand_breakpoint']['value']) &&
-	$layout_config['navbar_expand_breakpoint']['value'] != 'never'
-){
-	$navbar_classes = ' navbar-expand-' . $layout_config['navbar_expand_breakpoint']['value'];
+if( !empty($layout_config['navbar_expand_breakpoint']['value']) ){
+	$navbar_expand_breakpoint = $layout_config['navbar_expand_breakpoint']['value'];
+	$navbar_classes = ' navbar-expand-' . $navbar_expand_breakpoint;
 }
 
 if( isset($layout_config['sidebar_left_sticky']['value']) &&

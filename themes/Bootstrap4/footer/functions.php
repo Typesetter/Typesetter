@@ -44,6 +44,7 @@ $html_classes							= '';
 $complementary_header_classes			= 'd-none d-md-block';
 $complementary_header_container_class	= 'container';
 $header_container_class					= 'container';
+$navbar_expand_breakpoint				= 'lg';
 $navbar_classes							= 'navbar-expand-lg';
 $mobile_menu_style						= 'pulldown'; // 'pulldown' (default) | 'popup' | 'slideover' | 'offcanvas'
 $brand_logo_img							= '';
@@ -93,7 +94,8 @@ if( !empty($layout_config['header_brand_logo']['value']) ){
 }
 
 if( !empty($layout_config['navbar_expand_breakpoint']['value']) ){
-	$navbar_classes = ' navbar-expand-' . $layout_config['navbar_expand_breakpoint']['value'];
+	$navbar_expand_breakpoint = $layout_config['navbar_expand_breakpoint']['value'];
+	$navbar_classes = ' navbar-expand-' . $navbar_expand_breakpoint;
 }
 
 if( !empty($layout_config['mobile_menu_style']['value']) ){

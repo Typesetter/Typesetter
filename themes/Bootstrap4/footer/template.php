@@ -19,14 +19,6 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
 		<?php
-			/*
-			if( true ){
-				echo '<link rel="stylesheet" href="' . dirname($page->theme_path) .
-					'/_common/assets/thirdparty/pace/templates/pace-theme-center-simple.tmpl.css" />';
-				echo '<script src="' . dirname($page->theme_path) .
-					'/_common/assets/thirdparty/pace/pace.min.js"></script>';
-			}
-			*/
 			gpOutput::GetHead(); // get head content
 		?>
 

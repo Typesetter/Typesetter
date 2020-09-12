@@ -606,6 +606,27 @@ $customizer = [
 		'collapsed'		=> true,
 		'items'			=> [
 
+			'main_menu_align'	=>	[
+				'default_value'	=> 'right',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Main Menu Alignment',
+					'description'		=> 'set the horizontal position ' .
+						'of the main menu',
+
+					'type'				=> 'select', 
+					'possible_values'	=> [
+												'Left'			=> 'left',
+												'Center'		=> 'center',
+												'Right'			=> 'right',
+											],
+					'used_in'			=> ['php'],
+					'units'				=> [],
+					'pattern'			=> '',
+				],
+			],
+
 			'mobile_menu_style'	=>	[
 				'default_value'	=> 'pulldown',
 				'default_units'	=> '',

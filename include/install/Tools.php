@@ -227,6 +227,7 @@ class Tools{
 			'complementary_header_use_container'	=> ['value' => true],
 			'header_use_container'					=> ['value' => true],
 			'navbar_expand_breakpoint'				=> ['value' => 'lg'],
+			'main_menu_align'						=> ['value' => 'right'],
 			'mobile_menu_style'						=> ['value' => 'pulldown'],
 			'content_use_container'					=> ['value' => true],
 			'footer_use_container'					=> ['value' => true],

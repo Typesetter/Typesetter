@@ -79,7 +79,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 
 					<div class="collapse navbar-collapse" id="navbarResponsive">
 
-						<div class="ml-auto"><!--navbar alignment: ml-auto | mx-auto | mr-auto -->
+						<div class="<?php echo $menu_alignment_class; ?>"><!--menu alignment: ml-auto | mx-auto | mr-auto -->
 							<?php
 								// $GP_ARRANGE = false; // prevent deleting the menu via Layout Manager
 								$GP_MENU_ELEMENTS = 'MainNavElements'; // menu formatting function name, see functions.php
@@ -94,7 +94,7 @@ include_once($page->theme_dir . '/' . $page->theme_color . '/functions.php');
 									'li_title'			=> '',
 									'haschildren'		=> 'dropdown-toggle',
 									'haschildren_li'	=> 'dropdown',
-									'child_ul'			=> 'dropdown-menu dropdown-menu-right', // add 'dropdown-menu-right' with right-aligned nav (.navbar-collapse > div.ml-auto)
+									'child_ul'			=> $menu_dropdown_alignment_class, // 'dropdown-menu' | 'dropdown-menu dropdown-menu-right'
 								];
 
 								gpOutput::Get('TopTwoMenu'); // Top two level menu

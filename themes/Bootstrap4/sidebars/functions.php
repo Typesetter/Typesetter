@@ -45,6 +45,8 @@ $complementary_header_classes	= 'd-none d-md-block';
 $navbar_expand_breakpoint		= 'lg';
 $navbar_classes					= 'navbar-expand-lg';
 $mobile_menu_style				= 'pulldown'; // 'pulldown' (default) | 'popup' | 'slideover' | 'offcanvas'
+$menu_alignment_class			= 'ml-auto'; // 'ml-auto' = right | 'mx-auto' = center | 'mr-auto' = left
+$menu_dropdown_alignment_class	= 'dropdown-menu dropdown-menu-right';
 $brand_logo_img					= '';
 $brand_logo_alt					= 'Logo';
 $sidebar_left_class				= ' sidebar-sticky';
@@ -85,6 +87,23 @@ if( !empty($layout_config['header_brand_logo']['value']) ){
 if( !empty($layout_config['navbar_expand_breakpoint']['value']) ){
 	$navbar_expand_breakpoint = $layout_config['navbar_expand_breakpoint']['value'];
 	$navbar_classes = ' navbar-expand-' . $navbar_expand_breakpoint;
+}
+
+if( !empty($layout_config['main_menu_align']['value']) ){
+	switch( $layout_config['main_menu_align']['value'] ){
+		case 'left':
+			$menu_alignment_class = 'mr-auto';
+			$menu_dropdown_alignment_class = 'dropdown-menu';
+			break;
+		case 'center':
+			$menu_alignment_class = 'mx-auto';
+			$menu_dropdown_alignment_class = 'dropdown-menu';
+			break;
+		case 'right':
+			$menu_alignment_class = 'ml-auto';
+			$menu_dropdown_alignment_class = 'dropdown-menu dropdown-menu-right';
+			break;
+	}
 }
 
 if( !empty($layout_config['mobile_menu_style']['value']) ){

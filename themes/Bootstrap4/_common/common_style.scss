@@ -163,6 +163,7 @@
 	}
 }
 
+$navbar_expand_breakpoint: lg !default; // customizer overrules
 
 .main-nav {
 	min-height: 72px; // default, will be overruled by customizer
@@ -170,7 +171,10 @@
 	.gpArea_Search,
 	.gpArea_Search-Gadget {
 		@include vp-flex-basis(7rem);
-		margin-left: $spacer;
+		max-width: 10rem;
+		@include media-breakpoint-up($navbar_expand_breakpoint){
+			margin-left: $spacer;
+		}
 		h3,
 		input.submit {
 			display: none;

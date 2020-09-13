@@ -118,7 +118,7 @@ class ExtraTest extends \gptest_bootstrap{
 		// add footer extra to bottom of page
 		// get container query from theme editor
 		// look for url like http://localhost/index.php/Admin_Theme_Content/Edit/default?cmd=SelectContent&param=QWZ0ZXJDb250ZW50Og_0%7C
-		$response	= $this->GetRequest('Admin_Theme_Content/Edit/default','cmd=in_iframe');
+		$response	= $this->GetRequest('Admin_Theme_Content/Edit/default','cmd=in_ifrm');
 		$body		= $response->GetBody();
 
 		preg_match('#cmd=SelectContent&amp;param=([^"]+)#',$body,$match);

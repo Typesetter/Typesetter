@@ -92,7 +92,7 @@ class Edit extends \gp\admin\Layout{
 		$this->cmds['addcontent']		= 'ShowInIframe';
 		$this->cmds['RemoveArea']		= 'ShowInIframe';
 		$this->cmds['DragArea']			= 'ShowInIframe';
-		$this->cmds['in_iframe']		= 'ShowInIframe';
+		$this->cmds['in_ifrm']		= 'ShowInIframe';
 
 		\gp\tool\Plugins::Action('edit_layout_cmd', [$this->curr_layout]);
 
@@ -184,14 +184,14 @@ class Edit extends \gp\admin\Layout{
 
 		//Iframe
 		echo '<div id="gp_iframe_wrap">';
-		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/' . rawurlencode($layout), 'cmd=in_iframe');
+		$url = \gp\tool::GetUrl('Admin_Theme_Content/Edit/' . rawurlencode($layout), 'cmd=in_ifrm');
 		echo '<iframe src="' . $url . '" id="gp_layout_iframe" name="gp_layout_iframe"></iframe>';
 		echo '</div>';
 
 		//CSS Editing
 		ob_start();
 		$form_action = \gp\tool::GetUrl(
-			'Admin_Theme_Content/Edit/' . $this->curr_layout, 'cmd=in_iframe'
+			'Admin_Theme_Content/Edit/' . $this->curr_layout, 'cmd=in_ifrm'
 		);
 		echo '<div id="theme_editor">';
 		echo '<form id="layout_editor_form" action="' . $form_action . '" method="post" ';

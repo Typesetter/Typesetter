@@ -112,7 +112,7 @@ if( !empty($layout_config['main_menu_align']['value']) ){
 			break;
 		case 'right':
 			$menu_alignment_class = 'ml-auto';
-			$menu_dropdown_alignment_class = 'dropdown-menu-right';
+			$menu_dropdown_alignment_class = 'dropdown-menu dropdown-menu-right';
 			break;
 	}
 }

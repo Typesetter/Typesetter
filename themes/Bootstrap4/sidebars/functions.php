@@ -79,8 +79,8 @@ if( isset($layout_config['header_brand_logo_alt_text']['value']) ){
 }
 
 if( !empty($layout_config['header_brand_logo']['value']) ){
-	$brand_logo_img = '<img alt="' . $brand_logo_alt . '" class="brand-logo" ' . 
-		'src="' . $layout_config['header_brand_logo']['value'] .
+	$brand_logo_img = '<img alt="' . htmlspecialchars($brand_logo_alt) . '" class="brand-logo" ' .
+		'src="' . filter_var($layout_config['header_brand_logo']['value'], FILTER_SANITIZE_SPECIAL_CHARS) .
 		'" />';
 }
 

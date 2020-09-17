@@ -100,4 +100,61 @@ class Util
 
         return $s;
     }
+
+    /**
+     * mb_strlen() wrapper
+     *
+     * @param string $string
+     * @return false|int
+     */
+    public static function mbStrlen($string)
+    {
+        // Use the native implementation if available.
+        if (\function_exists('mb_strlen')) {
+            return mb_strlen($string, 'UTF-8');
+        }
+
+        if (\function_exists('iconv_strlen')) {
+            return @iconv_strlen($string, 'UTF-8');
+        }
+
+        return strlen($string);
+    }
+
+    /**
+     * mb_substr() wrapper
+     * @param string $string
+     * @param int $start
+     * @param null|int $length
+     * @return string
+     */
+    public static function mbSubstr($string, $start, $length = null)
+    {
+        // Use the native implementation if available.
+        if (\function_exists('mb_substr')) {
+            return mb_substr($string, $start, $length, 'UTF-8');
+        }
+
+        if (\function_exists('iconv_substr')) {
+            if ($start < 0) {
+                $start = static::mbStrlen($string) + $start;
+                if ($start < 0) {
+                    $start = 0;
+                }
+            }
+
+            if (null === $length) {
+                $length = 2147483647;
+            } elseif ($length < 0) {
+                $length = static::mbStrlen($string) + $length - $start;
+                if ($length < 0) {
+                    return '';
+                }
+            }
+
+            return (string)iconv_substr($string, $start, $length, 'UTF-8');
+        }
+
+        return substr($string, $start, $length);
+    }
 }

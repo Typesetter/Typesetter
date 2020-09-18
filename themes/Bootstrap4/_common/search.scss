@@ -1,27 +1,21 @@
-// 'Bootstrapify' Typesetter's built-in search form and -results
+// Typesetter's built-in search form and -results
 
 .filetype-special_search.search_results {
 	h2 {
 		@extend .h3;
 	}
 	form {
-		@extend .input-group;
 		max-width: 24rem;
 		margin-bottom: 1rem;
 		input.text {
-			@extend .form-control;
 			border-top-right-radius: 0;
 			border-bottom-right-radius: 0;
 			border-right: none;
 		}
 		input.submit {
-			@extend .btn, .btn-secondary;
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
 		}
-	}
-	p {
-		@extend .alert, .alert-secondary;
 	}
 	.result_list {
 		margin-bottom: 1.5rem;

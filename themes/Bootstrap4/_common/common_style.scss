@@ -180,9 +180,9 @@ $navbar_expand_breakpoint: lg !default; // customizer overrules
 			display: none;
 		}
 		input.text {
-			@extend .form-control;
 			height: auto; // overrules bootstrap defaults
 			padding: 0.15rem 0.5rem; // overrules bootstrap defaults
+			border-radius: $input-border-radius; // overrules bootstrap input-group defaults
 		}
 	}
 }

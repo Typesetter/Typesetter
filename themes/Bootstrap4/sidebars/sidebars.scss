@@ -43,7 +43,7 @@
 				display: none;
 			}
 			input.text {
-				@extend .form-control;
+				border-radius: $input-border-radius; // overrules bootstrap input-group defaults
 			}
 		}
 

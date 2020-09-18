@@ -21,7 +21,7 @@ function Install_Check(){
 	//Copyright Notice
 	if( !\gp\admin\Content\Extra::AreaExists('Copyright_Notice') ){
 		$file		= $dataDir . '/data/_extra/Copyright_Notice/page.php';
-		$content	= '<p>&copy; $currentYear My Company</p>';
+		$content	= '<p>&copy; $currentYear My ' . CMS_NAME . '</p>';
 
 		if( \gp\install\Tools::NewExtra($file, $content) ){
 			msg('<i class="fa fa-check"></i> The new Extra Content <em>Copyright Notice</em> was created.');

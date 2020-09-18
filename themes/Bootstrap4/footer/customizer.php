@@ -75,6 +75,7 @@ $font_list = [
 	'Zilla Slab'						=> 'zilla_slab',
 ];
 
+global $dirPrefix;
 
 $font_weights = [
 	'Thin'			=> '100',
@@ -438,7 +439,7 @@ $customizer = [
 		'items'			=> [
 
 			'header_brand_logo'	=>	[
-				'default_value'	=> '',
+				'default_value'	=> $dirPrefix . '/include/imgs/typesetter/ts-logo-o-color.svg',
 				'default_units'	=> '',
 
 				'control' => [

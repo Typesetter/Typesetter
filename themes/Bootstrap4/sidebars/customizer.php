@@ -47,6 +47,7 @@ defined('is_running') or die('Not an entry point...');
  *
  */
 
+global $dirPrefix;
 
 $font_list = [
 	'Default Sans-Serif'				=> 'default_sans',
@@ -438,7 +439,7 @@ $customizer = [
 		'items'			=> [
 
 			'header_brand_logo'	=>	[
-				'default_value'	=> '',
+				'default_value'	=> $dirPrefix . '/include/imgs/typesetter/ts-logo-o-color.svg',
 				'default_units'	=> '',
 
 				'control' => [

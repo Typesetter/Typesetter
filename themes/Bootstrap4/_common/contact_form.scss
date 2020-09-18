@@ -1,4 +1,4 @@
-// 'Bootstrapify' Typesetter's built-in contact form
+// Typesetter's built-in contact form
 
 form.contactform {
 	width: 100%;
@@ -8,15 +8,28 @@ form.contactform {
 		float: none;
 		clear: both;
 		margin: 0 0 0.6em 0;
-		@extend .clearfix;
-		> span {
+		> span.title {
+			display: block;
+			float: none;
+			width: auto;
 			margin: 0;
 		}
-		> input,
-		> select,
-		> textarea {
-			@extend .form-control;
+		&:after {
+			content: "";
+			display: block;
+			clear: both;
 		}
+	}
+	input, textarea {
+		float: none;
+		width: 100%;
+		margin-top: 0.5rem;
+	}
+
+	input.submit.btn {
+		float: none;
+		width: auto;
+		padding: $input-btn-padding-y $input-btn-padding-x;
 	}
 
 	> label[for="contact_message"] {
@@ -27,30 +40,11 @@ form.contactform {
 	}
 
 	> textarea#contact_message {
-		@extend .form-control;
 		margin-bottom: 0.6em;
 	}
 
-	> input.submit {
-		@extend .btn, .btn-success, .col-sm-6, .offset-sm-3;
-	}
-
-	> span.message_sent {
-		display: block;
+	> .alert {
 		text-align: center;
 		margin-top: 20px;
-		@extend .alert, .alert-info;
 	}
 }
-
-// keep the form narrow on desktop screens?
-// then uncomment the following block
-
-// @include media-breakpoint-up(md) {
-//	.filetype-special_contactform {
-//		@extend .row;
-//		form.contactform {
-//			@extend .offset-md-2, .col-md-8;
-//		}
-//	}
-// }

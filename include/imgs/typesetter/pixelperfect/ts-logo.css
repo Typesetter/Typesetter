@@ -1,0 +1,75 @@
+/*!
+ * Typesetter CMS Logo icons
+ *
+ * pixel-perfect at 14, 16, 20 and 24px font size
+ */
+
+.tscms:before,
+.tscms-o:before,
+.tscms-14:before,
+.tscms-14-o:before,
+.tscms-16:before,
+.tscms-16-o:before,
+.tscms-20:before,
+.tscms-20-o:before,
+.tscms-24-o:before,
+.tscms-24-o:before {
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	display: inline-block;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	line-height: 1;
+}
+
+.tscms:before {
+	content: url('ts-logo-48ppx.svg');
+}
+.tscms-o:before {
+	content: url('ts-logo-o-48ppx.svg');
+}
+
+.tscms-14,
+.tscms-14-o {
+	font-size: 14px;
+}
+.tscms-14:before {
+	content: url('ts-logo-14ppx.svg');
+}
+.tscms-14-o:before {
+	content: url('ts-logo-o-14ppx.svg');
+}
+
+.tscms-16,
+.tscms-16-o {
+	font-size: 16px;
+}
+.tscms-16:before {
+	content: url('ts-logo-16ppx.svg');
+}
+.tscms-16-0:before {
+	content: url('ts-logo-o-16ppx.svg');
+}
+
+.tscms-20,
+.tscms-20-o {
+	font-size: 20px;
+}
+.tscms-20:before {
+	content: url('ts-logo-20ppx.svg');
+}
+.tscms-20-0:before {
+	content: url('ts-logo-o-20ppx.svg');
+}
+
+.tscms-24,
+.tscms-24-o {
+	font-size: 24px;
+}
+.tscms-24:before {
+	content: url('ts-logo-24ppx.svg');
+}
+.tscms-24-0:before {
+	content: url('ts-logo-o-24ppx.svg');
+}

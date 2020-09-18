@@ -82,11 +82,11 @@ class Search extends \gp\special\Base{
 
 		echo '<div class="GPAREA filetype-special_search search_results">';
 		echo '<h2>' . \gp\tool\Output::GetAddonText('Search') . '</h2>';
-		echo '<form role="search" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
-		echo '<input name="q" type="search" class="text" ';
+		echo '<form role="search" class="input-group" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
+		echo '<input name="q" type="search" class="text form-control" ';
 		echo	'placeholder="' . $placeholder . '" ';
 		echo	'value="' . htmlspecialchars($_REQUEST['q']) . '"/> ';
-		$html = '<input type="submit" name="" class="submit" value="%s" />';
+		$html = '<input type="submit" name="" class="submit btn btn-secondary" value="%s" />';
 		echo \gp\tool\Output::GetAddonText('Search', $html);
 		echo '</form>';
 
@@ -129,16 +129,16 @@ class Search extends \gp\special\Base{
 		echo \gp\tool\Output::GetAddonText('Search');
 		echo '</h3>';
 		echo '<form role="search" action="' . \gp\tool::GetUrl('special_gpsearch') . '" method="get">';
-		echo '<div>';
-		echo '<input name="q" type="search" class="text" ';
-		echo 	'placeholder="' . $placeholder . '" ';
-		echo 	'value="' . htmlspecialchars($query) . '"/>';
-		echo '<input type="hidden" name="src" value="gadget" />';
+		echo	'<div class="input-group">';
+		echo		'<input name="q" type="search" class="text form-control" ';
+		echo			'placeholder="' . $placeholder . '" ';
+		echo			'value="' . htmlspecialchars($query) . '"/>';
+		echo		'<input type="hidden" name="src" value="gadget" />';
 
-		$html = '<input type="submit" class="submit" name="" value="%s" />';
+		$html = '<input type="submit" class="submit btn btn-secondary" name="" value="%s" />';
 		echo \gp\tool\Output::GetAddonText('Search', $html);
 
-		echo '</div>';
+		echo	'</div>';
 		echo '</form>';
 	}
 
@@ -162,7 +162,7 @@ class Search extends \gp\special\Base{
 
 		if( !count($this->results) ){
 			if( !empty($_REQUEST['q']) ){
-				echo '<p class="search_results">';
+				echo '<p class="search_results alert alert-secondary">';
 				echo \gp\tool\Output::GetAddonText($langmessage['search_no_results']);
 				echo '</p>';
 			}

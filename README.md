@@ -1,6 +1,9 @@
-# Typesetter CMS #
 
-Open source CMS written in PHP focused on ease of use with true WYSIWYG editing and flat-file storage.
+<p align="center"><img src="/include/imgs/typesetter/ts-logo-color-100x100px-min.png?raw=true"/></p>
+<h1 align="center">Typesetter CMS </h1>
+<p align="center">Open source CMS written in PHP focused on ease of use with true WYSIWYG editing and flat-file storage.<br/><br/></p>
+
+
 * [Typesetter Home](https://www.typesettercms.com)
 * [Typesetter Download](https://www.typesettercms.com/Download)
 * [Typesetter Demo](https://www.typesettercms.com/Demo)

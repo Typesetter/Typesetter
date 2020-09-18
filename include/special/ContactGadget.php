@@ -50,7 +50,7 @@ class ContactGadget extends \gp\special\Base{
 		$_POST += [
 			'subject'		=> '',
 			'contact_nonce'	=> '',
-			'message'		=> ''
+			'message'		=> '',
 		];
 
 		if( empty($_POST['message']) ){
@@ -146,14 +146,14 @@ class ContactGadget extends \gp\special\Base{
 
 
 	public function ShowForm(){
-		global $langmessage,$config;
+		global $langmessage, $config;
 
-		$attr = '';
+		$readonly_attr = '';
 		if( $this->sent ){
-			$attr = ' readonly="readonly" ';
+			$readonly_attr = ' readonly="readonly"';
 		}
 
-		$_GET  += [
+		$_GET += [
 			'name'		=> '',
 			'email'		=> '',
 			'subject'	=> '',
@@ -175,8 +175,8 @@ class ContactGadget extends \gp\special\Base{
 
 		//nonce fields
 		echo '<div style="display:none !important">';
-		echo	'<input type="hidden" name="contact_nonce" ';
-		echo		'value="' . htmlspecialchars(\gp\tool\Nonce::Create('contact_post', true)) . '" />';
+		echo	'<input type="hidden" name="contact_nonce"';
+		echo		' value="' . htmlspecialchars(\gp\tool\Nonce::Create('contact_post', true)) . '" />';
 		echo	'<input type="text" name="contact_void" value="" />';
 		echo '</div>';
 
@@ -184,39 +184,45 @@ class ContactGadget extends \gp\special\Base{
 		echo	'<span class="title">';
 		echo		\gp\tool\Output::ReturnText('your_name');
 		echo	'</span>';
-		echo	'<input id="contact_name" class="input text" type="text" name="name" ';
-		echo		'value="' . htmlspecialchars($_POST['name']) . '" ' . $attr . ' />';
+		echo	'<input id="contact_name" class="input text" type="text" name="name"';
+		echo		' value="' . htmlspecialchars($_POST['name']) . '"' . $readonly_attr . '/>';
 		echo '</label>';
 
 		echo '<label for="contact_email">';
 		echo	'<span class="title">';
 		echo		\gp\tool\Output::ReturnText('your_email');
+		$required_attr = '';
 		if( strpos($require_email, 'email') !== false ){
-			echo '*';
+			echo '<span class="required">*</span>';
+			$required_attr = ' required="required"';
 		}
 		echo	'</span>';
-		echo	'<input id="contact_email" class="input text" type="text" name="email" ';
-		echo		'value="' . htmlspecialchars($_POST['email']) . '" ' . $attr . '/>';
+		echo	'<input id="contact_email" class="input text" type="text" name="email"' . $required_attr;
+		echo		' value="' . htmlspecialchars($_POST['email']) . '"' . $readonly_attr . '/>';
 		echo '</label>';
 
 		echo '<label for="contact_subject">';
 		echo	'<span class="title">';
 		echo		\gp\tool\Output::ReturnText('subject');
-		if( strpos($require_email,'none') === false ){
-			echo '*';
+		$required_attr = '';
+		if( strpos($require_email, 'none') === false ){
+			echo '<span class="required">*</span>';
+			$required_attr = ' required="required"';
 		}
 		echo	'</span>';
-		echo	'<input id="contact_subject" class="input text" type="text" name="subject" ';
-		echo		'value="' . htmlspecialchars($_POST['subject']) . '" ' . $attr . '/>';
+		echo	'<input id="contact_subject" class="input text" type="text" name="subject"' . $required_attr;
+		echo		' value="' . htmlspecialchars($_POST['subject']) . '"' . $readonly_attr . '/>';
 		echo '</label>';
 
 		echo '<label for="contact_message">';
 		echo	\gp\tool\Output::ReturnText('message');
+		$required_attr = '';
 		if( strpos($require_email, 'none') === false ){
-			echo '*';
+			echo '<span class="required">*</span>';
+			$required_attr = ' required="required"';
 		}
 		echo '</label>';
-		echo '<textarea id="contact_message" name="message" ' . $attr . ' rows="10" cols="10">';
+		echo '<textarea id="contact_message" name="message" rows="10" cols="10"' . $readonly_attr . $required_attr .'>';
 		echo 	htmlspecialchars($_POST['message']);
 		echo '</textarea>';
 

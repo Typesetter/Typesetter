@@ -21,7 +21,7 @@
 @import '../_common/search.scss';
 @import '../_common/mobile_menu.scss';
 @import '../_common/more_backgrounds.scss';
-@import '../_common/simple_blog_common.scss';
+@import '../_common/simple_blog_common.scss'; // adds ~40 KB css, comment this line if you're not using the Simple Blog (plugin)
 
 
 // ### Clearfixes and flex ###

@@ -1,54 +1,50 @@
-// Theme Bootswatch 4 Scss
-// 'Bootstrapify' Typesetter's built-in contact form
+// Typesetter's built-in contact form
 
 form.contactform {
-  width: 100%;
+	width: 100%;
 
-  label:not([for="contact_message"]) {
-    width: auto;
-    float: none;
-    clear: both;
-    margin: 0 0 0.6em 0;
-    @extend .clearfix;
-    > span {
-      margin: 0;
-    }
-    > input,
-    > select,
-    > textarea {
-      @extend .form-control;
-    }
-  }
+	label:not([for="contact_message"]) {
+		width: auto;
+		float: none;
+		clear: both;
+		margin: 0 0 0.6em 0;
+		> span.title {
+			display: block;
+			float: none;
+			width: auto;
+			margin: 0;
+		}
+		&:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+	}
+	input, textarea {
+		float: none;
+		width: 100%;
+		margin-top: 0.5rem;
+	}
 
-  > label[for="contact_message"] {
-    width: auto;
-    float: none;
-    clear: both;
-    margin: 0;
-  }
+	input.submit.btn {
+		float: none;
+		width: auto;
+		padding: $input-btn-padding-y $input-btn-padding-x;
+	}
 
-  > textarea#contact_message {
-    @extend .form-control;
-    margin-bottom: 0.6em;
-  }
+	> label[for="contact_message"] {
+		width: auto;
+		float: none;
+		clear: both;
+		margin: 0;
+	}
 
-  > input.submit {
-    @extend .btn, .btn-success, .col-sm-6, .offset-sm-3;
-  }
+	> textarea#contact_message {
+		margin-bottom: 0.6em;
+	}
 
-  > span.message_sent {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    @extend .alert, .alert-info;
-  }
+	> .alert {
+		text-align: center;
+		margin-top: 20px;
+	}
 }
-
-// @include media-breakpoint-up(md) {
-//   .filetype-special_contactform {
-//     @extend .row;
-//     form.contactform {
-//       @extend .offset-md-2, .col-md-8;
-//     }
-//   }
-// }

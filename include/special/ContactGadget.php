@@ -184,7 +184,7 @@ class ContactGadget extends \gp\special\Base{
 		echo	'<span class="title">';
 		echo		\gp\tool\Output::ReturnText('your_name');
 		echo	'</span>';
-		echo	'<input id="contact_name" class="input text" type="text" name="name"';
+		echo	'<input id="contact_name" class="input text form-control" type="text" name="name"';
 		echo		' value="' . htmlspecialchars($_POST['name']) . '"' . $readonly_attr . '/>';
 		echo '</label>';
 
@@ -197,7 +197,7 @@ class ContactGadget extends \gp\special\Base{
 			$required_attr = ' required="required"';
 		}
 		echo	'</span>';
-		echo	'<input id="contact_email" class="input text" type="text" name="email"' . $required_attr;
+		echo	'<input id="contact_email" class="input text form-control" type="text" name="email"' . $required_attr;
 		echo		' value="' . htmlspecialchars($_POST['email']) . '"' . $readonly_attr . '/>';
 		echo '</label>';
 
@@ -210,7 +210,7 @@ class ContactGadget extends \gp\special\Base{
 			$required_attr = ' required="required"';
 		}
 		echo	'</span>';
-		echo	'<input id="contact_subject" class="input text" type="text" name="subject"' . $required_attr;
+		echo	'<input id="contact_subject" class="input text form-control" type="text" name="subject"' . $required_attr;
 		echo		' value="' . htmlspecialchars($_POST['subject']) . '"' . $readonly_attr . '/>';
 		echo '</label>';
 
@@ -222,8 +222,9 @@ class ContactGadget extends \gp\special\Base{
 			$required_attr = ' required="required"';
 		}
 		echo '</label>';
-		echo '<textarea id="contact_message" name="message" rows="10" cols="10"' . $readonly_attr . $required_attr .'>';
-		echo 	htmlspecialchars($_POST['message']);
+		echo '<textarea id="contact_message" name="message" class="form-control"';
+		echo	' rows="10" cols="10"' . $readonly_attr . $required_attr . '>';
+		echo	htmlspecialchars($_POST['message']);
 		echo '</textarea>';
 
 		\gp\tool\Plugins::Action('contact_form_pre_captcha');
@@ -236,7 +237,9 @@ class ContactGadget extends \gp\special\Base{
 		}
 
 		if( $this->sent ){
+			echo '<div class="alert alert-info msg-sent">';
 			echo \gp\tool\Output::ReturnText('message_sent', '%s', 'message_sent');
+			echo '</div>';
 		}else{
 			echo '<input type="hidden" name="cmd" value="gp_send_message" />';
 			$key = 'send_message';
@@ -251,10 +254,11 @@ class ContactGadget extends \gp\special\Base{
 						$query,
 						' title="' . $key . '" data-cmd="gpabox" '
 					);
-				echo '<input type="submit" class="submit editable_area" ';
-				echo 	'id="ExtraEditArea' . $edit_index . '" name="aaa" value="' . $text . '" />';
+				echo '<input type="submit" class="submit editable_area btn btn-success"';
+				echo	' id="ExtraEditArea' . $edit_index . '" name="aaa" value="' . $text . '" />';
 			}else{
-				echo '<input type="submit" class="submit" name="aaa" value="' . $text . '" />';
+				echo '<input type="submit" class="submit btn btn-success"';
+				echo	' name="aaa" value="' . $text . '" />';
 			}
 		}
 

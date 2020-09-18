@@ -1072,7 +1072,7 @@ $customizer = [
 			],
 
 			'content_link_color'	=>	[
-				'default_value'	=> '#0073f5', // = $blue
+				'default_value'	=> '#1a73e8', // = $blue
 				'default_units'	=> '',
 
 				'control' => [
@@ -2061,7 +2061,7 @@ $customizer = [
 			],
 
 			'sidebar_left_link_color'	=>	[
-				'default_value'		=> '#0073f5', // = $blue
+				'default_value'		=> '#1a73e8', // = $blue
 				'default_units'		=> '',
 
 				'control' => [
@@ -2207,7 +2207,7 @@ $customizer = [
 			],
 
 			'sidebar_right_link_color'	=>	[
-				'default_value'		=> '#0073f5', // = $blue
+				'default_value'		=> '#1a73e8', // = $blue
 				'default_units'		=> '',
 
 				'control' => [

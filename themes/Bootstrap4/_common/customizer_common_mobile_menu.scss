@@ -8,6 +8,7 @@
 .navbar-light,
 .navbar-dark {
 	.navbar-toggler {
+		color: $main_menu_color; // customizer
 		&:hover,
 		&:focus {
 			color: $main_menu_hover_color; // customizer

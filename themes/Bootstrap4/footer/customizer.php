@@ -6,6 +6,8 @@
 
 defined('is_running') or die('Not an entry point...');
 
+global $dirPrefix;
+
 /**
  * Example customizer array key
  *
@@ -75,7 +77,6 @@ $font_list = [
 	'Zilla Slab'						=> 'zilla_slab',
 ];
 
-global $dirPrefix;
 
 $font_weights = [
 	'Thin'			=> '100',

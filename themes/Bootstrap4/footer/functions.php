@@ -78,7 +78,7 @@ if( isset($layout_config['complementary_header_show']['value']) ){
 if( isset($layout_config['complementary_header_use_container']['value']) &&
 	empty($layout_config['complementary_header_use_container']['value'])
 ){
-	$complementary_header_container_class = 'container';
+	$complementary_header_container_class = 'no-container';
 }
 
 if( !empty($layout_config['header_sticky']['value']) ){

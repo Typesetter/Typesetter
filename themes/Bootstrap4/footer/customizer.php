@@ -6,8 +6,6 @@
 
 defined('is_running') or die('Not an entry point...');
 
-global $dirPrefix;
-
 /**
  * Example customizer array key
  *
@@ -49,6 +47,7 @@ global $dirPrefix;
  *
  */
 
+global $dirPrefix;
 
 $font_list = [
 	'Default Sans-Serif'				=> 'default_sans',
@@ -819,6 +818,131 @@ $customizer = [
 				],
 			],
 
+			'dropdown_bg'	=>	[
+				'default_value'	=> '#ffffff',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Dropdown Menu Background',
+					'description'		=> 'pick the background color for the ' .
+						'dropdown menus',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'dropdown_border_color'	=>	[
+				'default_value'	=> 'rgba(0,0,0,0.15)',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Dropdown Menu Border',
+					'description'		=> 'pick the border color for the ' .
+						'dropdown menus. Use \'tranparent\' for no border',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'dropdown_link_color'	=>	[
+				'default_value'	=> '#212529',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Dropdown Link Color',
+					'description'		=> 'pick the color for links in ' .
+						'dropdown menus',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'dropdown_link_hover_color'	=>	[
+				'default_value'	=> '#16181b',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Dropdown Link Hover Color',
+					'description'		=> 'pick the color for ' .
+						'hovered links in dropdown menus',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'dropdown_link_hover_bg'	=>	[
+				'default_value'	=> '#f8f9fa',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Dropdown Link Hover Background',
+					'description'		=> 'pick the background color for hovered ' .
+						'links in dropdown menus',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'dropdown_link_active_color'	=>	[
+				'default_value'	=> '#ffffff',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Dropdown Link Active Color',
+					'description'		=> 'pick the color for ' .
+						'active links in dropdown menus',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
+
+			'dropdown_link_active_bg'	=>	[
+				'default_value'	=> '#1a73e8',
+				'default_units'	=> '',
+
+				'control' => [
+					'label'				=> 'Dropdown Link Active Background',
+					'description'		=> 'pick the background color for ' .
+						'active links in dropdown menus',
+					'placeholder'		=> '',
+
+					'type'				=> 'colorpicker',
+					'possible_values'	=> [],
+					'used_in'			=> ['scssless', 'css'],
+					'units'				=> [],
+					'pattern'			=> 'color',
+				],
+			],
 
 		], // end of items
 	], // end of collapsible UI area

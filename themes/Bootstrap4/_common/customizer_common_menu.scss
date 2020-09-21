@@ -1,0 +1,124 @@
+// Theme Bootstrap 4
+//
+// common stylesheet for the main menu
+// this file needs to be imported by customizer.scss
+//
+
+$main_menu_color:							rgba(255,255,255,0.6) !default;
+$main_menu_hover_color:						rgba(255,255,255,0.8) !default;
+$main_menu_active_color:					#ffffff !default;
+
+$dropdown_bg:								#ffffff !default;
+$dropdown_border_color:						rgba(0,0,0,0.15) !default;
+$dropdown_link_color:						#212529 !default;
+$dropdown_link_hover_color:					#16181b !default;
+$dropdown_link_hover_bg:					#f8f9fa !default;
+$dropdown_link_active_color:				#ffffff !default;
+$dropdown_link_active_bg:					#1a73e8 !default;
+
+html {
+	--main_menu_color:						#{$main_menu_color};
+	--main_menu_hover_color:				#{$main_menu_hover_color};
+	--main_menu_active_color:				#{$main_menu_active_color};
+
+	--dropdown_bg: 							#{$dropdown_bg};
+	--dropdown_border_color:				#{$dropdown_border_color};
+	--dropdown_link_color:					#{$dropdown_link_color};
+	--dropdown_link_hover_color:			#{$dropdown_link_hover_color};
+	--dropdown_link_hover_color:			#{$dropdown_link_hover_bg};
+	--dropdown_link_active_color:			#{$dropdown_link_active_color};
+	--dropdown_link_active_bg:				#{$dropdown_link_active_bg};
+}
+
+
+.main-nav .navbar-nav {
+	.nav-link:not(.btn) {
+		color: $main_menu_color;
+		&:hover,
+		&:focus{
+			color: $main_menu_hover_color;
+		}
+	}
+	.show > .nav-link:not(.btn),
+	.nav-link.show:not(.btn),
+	.active > .nav-link:not(.btn),
+	.nav-link.active:not(.btn) {
+		color: $main_menu_active_color;
+		&:hover,
+		&:focus{
+			color: $main_menu_active_color;
+		}
+	}
+	.dropdown-menu {
+		color: $dropdown_link_color;
+		background-color: $dropdown_bg;
+		border-color: $dropdown_border_color;
+		.dropdown-item {
+			color: $dropdown_link_color;
+			background-color: $dropdown_bg;
+			&:hover,
+			&:focus {
+				color: $dropdown_link_hover_color;
+				background-color: $dropdown_link_hover_bg;
+			}
+			&.active,
+			&:active {
+				color: $dropdown_link_active_color;
+				background-color: $dropdown_link_active_bg;
+			}
+		}
+	}
+}
+
+
+.navbar-light,
+.navbar-dark {
+	.navbar-toggler {
+		color: $main_menu_color;
+		&:hover,
+		&:focus {
+			color: $main_menu_hover_color;
+		}
+	}
+}
+
+
+@include media-breakpoint-down($navbar_collapsed_breakpoint_down) {
+	.main-nav {
+		.dropdown-menu { // = ul
+			.dropdown-item { // = a
+				&:hover,
+				&:focus {
+					color: $main_menu_hover_color;
+				}
+				&.active,
+				&:active {
+					color: $main_menu_active_color;
+				}
+			}
+		}
+	}
+}
+
+
+@include media-breakpoint-down($navbar_collapsed_breakpoint_down) {
+
+	html.mobile-menu-popup {
+		.navbar-collapse {
+			background: $header_bg;
+		}
+	}
+
+	html.mobile-menu-slideover {
+		.navbar-collapse {
+			background: $header_bg;
+		}
+	}
+
+	html.mobile-menu-offcanvas {
+		.navbar-collapse {
+			background: $header_bg;
+		}
+	}
+
+}

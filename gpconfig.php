@@ -5,7 +5,7 @@
  * Allow or deny the upload of files based on their file extensions
  * The default list of allowed extenstions is
  * array( '7z',
- *        'aiff', 'asf', 'avi',
+ *        'aiff', 'asf', 'avi', 'avif',
  *        'bmp', 'bz',
  *        'css', 'csv',
  *        'doc', 'docx',
@@ -21,7 +21,7 @@
  *        'pages', 'pdf', 'png', 'ppt', 'pptx',
  *        'qt',
  *        'ram', 'rar', 'rm', 'rmi', 'rmvb', 'rtf',
- *        'scss', 'swf', 'sxc', 'sxw', // 'svg' and 'svgz' can be enabled via Settings -> Configuration
+ *        'scss', 'swf', 'sxc', 'sxw', // 'svg' can be enabled via Settings -> Configuration
  *        'tar', 'tgz', 'tif', 'tiff', 'ttf', 'txt',
  *        'vsd',
  *        'wav', 'webmanifest', 'webm', 'webp', 'wma', 'wmv', 'woff', 'woff2',

@@ -254,7 +254,7 @@ $gp.EditLayout.customizer = {
 		// change file input value
 		$('.customizer_file_url').on('change', function(){
 			var value = $(this).val();
-			var is_image = value.match(/\.(jpg|jpeg|png|apng|gif|webp|svg|bmp|ico)$/i) !== null;
+			var is_image = value.match(/\.(jpg|jpeg|png|apng|gif|webp|avif|svg|bmp|ico)$/i) !== null;
 			// console.log('is_image = ', is_image);
 			$(this).closest('.customizer_file_group')
 				.find('.customizer_image_preview')

@@ -137,7 +137,7 @@ namespace gp\admin\Content{
 			$this->currentDir	= $this->baseDir;
 			$this->page->label	= $langmessage['uploaded_files'];
 
-			$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1,'svg'=>1,'svgz'=>1);
+			$this->imgTypes		= array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1,'svg'=>1);
 
 			$this->SetDirectory();
 
@@ -825,7 +825,7 @@ namespace gp\admin\Content{
 		 * @return bool
 		 */
 		public static function IsImg($file){
-			$img_types = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1,'svg'=>1, 'svgz'=>1);
+			$img_types = array('bmp'=>1,'png'=>1,'jpg'=>1,'jpeg'=>1,'gif'=>1,'tiff'=>1,'tif'=>1,'svg'=>1);
 
 			$type = self::GetFileType($file);
 

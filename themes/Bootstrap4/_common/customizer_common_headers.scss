@@ -191,7 +191,7 @@ html.header-sticky {
 		top: 0;
 		left: 0;
 		right: 0;
-		z-index: 2001;
+		z-index: $zindex-sticky;
 	}
 
 	.sidebar {
@@ -240,7 +240,7 @@ html.complementary-header-fixed {
 		top: 0;
 		left: 0;
 		right: 0;
-		z-index: 2002;
+		z-index: $zindex-fixed;
 	}
 
 	//header.main-header {

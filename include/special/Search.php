@@ -549,6 +549,8 @@ class Search extends \gp\special\Base{
 
 		//format content, remove html
 		$label_len		= strlen($label);
+		$content		= preg_replace('#<style[^>]*>.*?</style>#si', '', $content); 
+		$content		= preg_replace('#<script[^>]*>.*?</script>#si', '', $content); 
 		$content		= substr($content, $label_len);
 		$content		= str_replace('>', '> ', $content);
 		$content		= preg_replace('/\s+/', ' ', $content);

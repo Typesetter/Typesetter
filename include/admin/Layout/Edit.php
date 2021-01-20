@@ -523,6 +523,7 @@ class Edit extends \gp\admin\Layout{
 				echo	' name="' . $name_attr . '[value]"';
 				echo '>';
 				foreach( $control['possible_values'] as $key => $value ){
+					is_bool($current_value) && $current_value = $current_value ? 'on' : 'off';
 					$option_text = !is_numeric($key) ? $key : $value;
 					$selected = $current_value == $value ? ' selected="selected"' : '';
 					echo '<option value="' . $value . '"' . $selected . '>';

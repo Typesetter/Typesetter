@@ -134,7 +134,7 @@ class Port{
 		if( empty($this->avail_compress) ){
 			echo '<p class="bg-danger">';
 			echo 'None of PHP\'s archive extensions are enabled. ';
-			echo 'Please enable <a href="http://php.net/manual/en/class.phardata.php">PharData</a> or <a href="http://php.net/manual/en/class.ziparchive.php">ZipArchive</a> in your PHP installation';
+			echo 'Please enable <a href="https://php.net/manual/en/class.phardata.php">PharData</a> or <a href="https://php.net/manual/en/class.ziparchive.php">ZipArchive</a> in your PHP installation';
 			echo '</p>';
 
 		}else{

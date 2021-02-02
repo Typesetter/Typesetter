@@ -510,7 +510,7 @@ $(function(){
 			_debug		= b64Encode(_debug);
 			_debug		= _debug.replace(/\=/g, '');
 			_debug		= _debug.replace(/\+/g, '-').replace(/\//g, '_');
-			var url		= 'http://www.typesettercms.com/index.php/Debug?data=' + _debug;
+			var url		= 'https://www.typesettercms.com/index.php/Debug?data=' + _debug;
 			$gp.AdminBoxC(
 				'<div class="inline_box"><h3>Error</h3><p>' + $gp.error + '</p>' +
 				'<a href="' + url + '" target="_blank">More Info<?a></div>'

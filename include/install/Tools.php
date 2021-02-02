@@ -511,8 +511,8 @@ class Tools{
 		<p><a href="' . CMS_DOMAIN . '/Our_CMS" title="Features of Our CMS" rel="nofollow">And More...</a></p>
 		<p>If you like ' . CMS_NAME . ', then you might also like
 		<a href="http://lessphp.typesettercms.com" title="A Less to CSS compiler based on the official lesscss project" rel="nofollow">Less.php</a>,
-		<a href="http://whatcms.org" title="What CMS? Find out what CMS a site is using" rel="nofollow">WhatCMS.org</a> and
-		<a href="http://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for." rel="nofollow">WhichCMS.org</a>.
+		<a href="https://whatcms.org" title="What CMS? Find out what CMS a site is using" rel="nofollow">WhatCMS.org</a> and
+		<a href="https://whichcms.org" title="Which CMS? Find out which CMS has the features you\'re looking for." rel="nofollow">WhichCMS.org</a>.
 		</p>';
 		self::NewExtra($file, $content);
 

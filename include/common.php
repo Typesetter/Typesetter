@@ -42,7 +42,7 @@ gp_defined('notify_deprecated',			true);	// Since 5.2
 
 
 //gp_defined('CMS_DOMAIN',				'http://gpeasy.loc');
-gp_defined('CMS_DOMAIN',				'http://www.typesettercms.com');
+gp_defined('CMS_DOMAIN',				'https://www.typesettercms.com');
 gp_defined('CMS_READABLE_DOMAIN',		'TypesetterCMS.com');
 gp_defined('CMS_NAME',					'Typesetter');
 gp_defined('CMS_NAME_FULL',				'Typesetter CMS');

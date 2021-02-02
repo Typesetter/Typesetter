@@ -249,7 +249,7 @@ class Installer{
 		global $langmessage;
 
 		//make sure $_SERVER['SCRIPT_NAME'] is set
-		$checking		= '<a href="http://www.php.net/manual/reserved.variables.server.php" target="_blank">SCRIPT_NAME or PHP_SELF</a>';
+		$checking		= '<a href="https://www.php.net/manual/reserved.variables.server.php" target="_blank">SCRIPT_NAME or PHP_SELF</a>';
 		$can_install	= 2;
 		$expected		= $langmessage['Set'];
 		$curr			= $langmessage['Set'];
@@ -271,7 +271,7 @@ class Installer{
 
 		$checkValue 	= ini_get('memory_limit');
 		$expected		= '16M+ or Adjustable';
-		$checking		= '<a href="http://php.net/manual/ini.core.php#ini.memory-limit" target="_blank">Memory Limit</a>';
+		$checking		= '<a href="https://php.net/manual/ini.core.php#ini.memory-limit" target="_blank">Memory Limit</a>';
 
 
 		// adjustable
@@ -372,7 +372,7 @@ class Installer{
 
 
 
-		$checking				= '<a href="http://www.php.net/manual/en/book.image.php" target="_blank">'.$langmessage['image_functions'].'</a>';
+		$checking				= '<a href="https://www.php.net/manual/en/book.image.php" target="_blank">'.$langmessage['image_functions'].'</a>';
 		$supported_string		= implode(', ',$supported);
 
 		if( count($supported) >= 4 ){

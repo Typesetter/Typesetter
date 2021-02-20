@@ -39,6 +39,7 @@ body {
 
 	.full_height {
 		flex-grow: 1;
+		height: -webkit-fit-content;
 		@include box-sizing(border-box);
 	}
 

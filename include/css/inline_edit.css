@@ -320,6 +320,7 @@ html {
 	border-radius: 5px;
 	color: #444 !important;
 	text-shadow: 1px 1px 0 #fff;
+	max-width: 100%;
 }
 
 #ckeditor_wrap .ckeditor_control.nodisplay {

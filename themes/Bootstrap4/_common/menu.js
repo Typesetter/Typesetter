@@ -16,9 +16,9 @@ $(function(){
 
 		var $toggle = !$this.hasClass('dropdown-active');
 
-		if( !$toggle ){
-			$parent_li.find('.dropdown-item').removeClass('dropdown-active');
-			$parent_li.find('.show').removeClass('show');
+		if( $toggle ){
+			$parent_li.siblings('li').find('.dropdown-item').removeClass('dropdown-active');
+			$parent_li.siblings('li').find('.show').removeClass('show');
 		}
 
 		$this.toggleClass('dropdown-active', $toggle);

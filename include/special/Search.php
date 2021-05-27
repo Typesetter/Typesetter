@@ -384,7 +384,7 @@ class Search extends \gp\special\Base{
 			$sub_pattern2[] = preg_quote($word, '#');
 		}
 
-		$this->search_pattern = '#(?:(' . implode('|', $sub_pattern1) . ')|(' . implode('|', $sub_pattern2) . '))#Si';
+		$this->search_pattern = '#(?:(' . implode('|', $sub_pattern1) . ')|(' . implode('|', $sub_pattern2) . '))#Siu';
 	}
 
 

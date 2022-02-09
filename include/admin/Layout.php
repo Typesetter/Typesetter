@@ -1094,7 +1094,13 @@ class Layout extends \gp\admin\Addon\Install{
 			$success = false;
 		}
 
-		$this->SaveLayouts();
+		if (!empty($_POST['default'])){
+			$this->SaveLayouts(false);
+			$this->curr_layout = $layout_id;
+			$this->MakeDefault();
+		}else{
+			$this->SaveLayouts();
+		}
 	}
 
 
